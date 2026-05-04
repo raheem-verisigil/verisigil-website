@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VeriSigil AI — Trust Network</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/vis-network.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy:  #050E2B;
+      --blue:  #1455FF;
+      --cyan:  #00D4F5;
+      --green: #22C55E;
+      --amber: #F59E0B;
+      --red:   #EF4444;
+      --white: #FFFFFF;
+      --mid:   #94A3B8;
+      --card:  rgba(13,26,58,0.85);
+      --border: rgba(21,85,255,0.25);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(21,85,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21,85,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,14,43,0.8);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-dot {
+      width: 8px; height: 8px;
+      background: var(--cyan);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--mid);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--cyan); }
+
+    .nav-cta {
+      background: var(--blue);
+      color: var(--white) !important;
+      padding: 8px 20px;
+      border-radius: 6px;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(21,85,255,0.12);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: .8rem;
+      font-family: 'Space Mono', monospace;
+      color: var(--cyan);
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--mid);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    /* ── GRAPH SECTION ── */
+    .graph-section {
+      padding: 0 40px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: .72rem;
+      color: var(--cyan);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      color: var(--mid);
+      font-size: .95rem;
+      margin-bottom: 32px;
+    }
+
+    .graph-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .graph-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .agent-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .agent-input-row input {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      font-size: .82rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .agent-input-row input:focus { border-color: var(--cyan); }
+
+    .btn {
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: .88rem;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .btn-primary:hover { background: #1a6aff; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+    }
+
+    .btn-outline:hover { background: rgba(0,212,245,0.08); }
+
+    .graph-legend {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .8rem;
+      color: var(--mid);
+    }
+
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    #network-graph {
+      width: 100%;
+      height: 480px;
+      background: rgba(5,14,43,0.5);
+    }
+
+    .graph-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+    }
+
+    .graph-stat {
+      background: var(--card);
+      padding: 16px 24px;
+      text-align: center;
+    }
+
+    .graph-stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--cyan);
+      font-family: 'Space Mono', monospace;
+    }
+
+    .graph-stat-label {
+      font-size: .75rem;
+      color: var(--mid);
+      margin-top: 4px;
+    }
+
+    .graph-status {
+      padding: 12px 24px;
+      font-size: .82rem;
+      font-family: 'Space Mono', monospace;
+      color: var(--mid);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    /* ── SIGNUP SECTION ── */
+    .signup-section {
+      padding: 0 40px 100px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .signup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .signup-grid { grid-template-columns: 1fr; }
+      nav { padding: 16px 20px; }
+      section, .graph-section, .signup-section { padding-left: 20px; padding-right: 20px; }
+    }
+
+    .signup-info h2 { font-size: 2rem; font-weight: 800; margin-bottom: 16px; }
+    .signup-info p { color: var(--mid); line-height: 1.7; margin-bottom: 24px; }
+
+    .perks { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+    .perk {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: .95rem;
+    }
+
+    .perk-icon {
+      width: 28px; height: 28px;
+      background: rgba(21,85,255,0.15);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    .perk-text { color: var(--mid); line-height: 1.5; }
+    .perk-text strong { color: var(--white); }
+
+    .signup-form {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+    }
+
+    .form-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .form-sub {
+      color: var(--mid);
+      font-size: .88rem;
+      margin-bottom: 28px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-group label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--mid);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--cyan); }
+
+    .form-group select option { background: #0d1a3a; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all .2s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover { background: #1a6aff; transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .form-note {
+      text-align: center;
+      color: var(--mid);
+      font-size: .78rem;
+      margin-top: 14px;
+    }
+
+    /* ── SUCCESS STATE ── */
+    .success-box {
+      display: none;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .success-box.show { display: block; }
+
+    .success-box h3 {
+      color: var(--green);
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .api-key-display {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: .82rem;
+      color: var(--cyan);
+      margin: 16px 0;
+      word-break: break-all;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    .api-key-display:hover { border-color: var(--cyan); }
+
+    .copy-hint { font-size: .75rem; color: var(--mid); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: gap;
+      color: var(--mid);
+      font-size: .82rem;
+    }
+
+    footer a { color: var(--mid); text-decoration: none; }
+    footer a:hover { color: var(--cyan); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- NAV -->
+  <nav>
+    <a href="https://www.verisigilai.com" class="logo">
+      <div class="logo-dot"></div>
+      VeriSigil AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a></li>
+      <li><a href="https://github.com/raheem-verisigil/verisigil-ai">GitHub</a></li>
+      <li><a href="#signup" class="nav-cta">Get API Key</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">
+      <span class="logo-dot"></span>
+      Trust Network — Live
+    </div>
+    <h1>See Who Trusts<br/><em>Your AI Agent</em></h1>
+    <p>
+      Enter any agent ID to visualise its trust network —
+      which verifiers have confirmed it, their reputation scores,
+      and the agent's dynamic trust level.
+    </p>
+  </section>
+
+  <!-- GRAPH -->
+  <div class="graph-section">
+    <div class="section-label">Live Trust Graph</div>
+    <div class="section-title">Trust Network Visualiser</div>
+    <div class="section-sub">Nodes = verifiers + agents. Edges = verification events. Updated in real time.</div>
+
+    <div class="graph-container">
+      <div class="graph-toolbar">
+        <div class="agent-input-row">
+          <input type="text" id="agent-input"
+            placeholder="Enter agent_id — e.g. vsa_537e3974858f"
+            value="vsa_537e3974858f"/>
+          <button class="btn btn-primary" onclick="loadGraph()">Load Graph</button>
+          <button class="btn btn-outline" onclick="loadDemo()">Demo</button>
+        </div>
+        <div class="graph-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#00D4F5"></div>
+            Agent
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#1455FF"></div>
+            Verifier
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#22C55E"></div>
+            Admin
+          </div>
+        </div>
+      </div>
+
+      <div id="network-graph"></div>
+
+      <div class="graph-stats">
+        <div class="graph-stat">
+          <div class="graph-stat-value" id="stat-score">—</div>
+          <div class="graph-stat-label">Trust Score</div>
+        </div>
+        <div class="graph-stat">
+          <div class="graph-stat-value" id="stat-level">—</div>
+          <div class="graph-stat-label">Trust Level</div>
+        </div>
+        <div class="graph-stat">
+          <div class="graph-stat-value" id="stat-verifiers">—</div>
+          <div class="graph-stat-label">Unique Verifiers</div>
+        </div>
+        <div class="graph-stat">
+          <div class="graph-stat-value" id="stat-events">—</div>
+          <div class="graph-stat-label">Total Verifications</div>
+        </div>
+      </div>
+
+      <div class="graph-status">
+        <div class="status-dot"></div>
+        <span id="graph-status-text">Enter an agent ID and click Load Graph</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div class="signup-section" id="signup">
+    <div class="signup-grid">
+      <div class="signup-info">
+        <div class="section-label">Developer Access</div>
+        <h2>Get Your Free<br/>Verifier API Key</h2>
+        <p>
+          Every developer who integrates VeriSigil AI becomes
+          a verifier node in the trust network. Your verifications
+          contribute to agent trust scores across the ecosystem.
+        </p>
+        <ul class="perks">
+          <li class="perk">
+            <div class="perk-icon">🔐</div>
+            <div class="perk-text">
+              <strong>Unique verifier identity</strong><br/>
+              Your API key gives you a named node in the trust graph
+            </div>
+          </li>
+          <li class="perk">
+            <div class="perk-icon">📈</div>
+            <div class="perk-text">
+              <strong>Reputation grows with use</strong><br/>
+              The more you verify, the higher your verifier reputation
+            </div>
+          </li>
+          <li class="perk">
+            <div class="perk-icon">🛡️</div>
+            <div class="perk-text">
+              <strong>EU AI Act ready</strong><br/>
+              Your verifications create compliant audit trails automatically
+            </div>
+          </li>
+          <li class="perk">
+            <div class="perk-icon">⚡</div>
+            <div class="perk-text">
+              <strong>Free forever for developers</strong><br/>
+              No credit card. No limits on verifications during beta.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="signup-form">
+        <div class="form-title">Request Early Access</div>
+        <div class="form-sub">Get your verifier API key in seconds.</div>
+
+        <div id="signup-form-inner">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="f-name" placeholder="Raheem Babatunde"/>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="f-email" placeholder="you@company.com"/>
+          </div>
+          <div class="form-group">
+            <label>Company / Project</label>
+            <input type="text" id="f-company" placeholder="What are you building?"/>
+          </div>
+          <div class="form-group">
+            <label>Developer Type</label>
+            <select id="f-type">
+              <option value="developer">Independent Developer</option>
+              <option value="startup">Startup</option>
+              <option value="enterprise">Enterprise</option>
+              <option value="researcher">Researcher / Academic</option>
+            </select>
+          </div>
+          <button class="btn-submit" id="signup-btn" onclick="handleSignup()">
+            Get My Free API Key →
+          </button>
+          <div class="form-note">
+            Free during beta · No credit card · EU AI Act compliant
+          </div>
+        </div>
+
+        <div class="success-box" id="success-box">
+          <h3>✅ Welcome to the Trust Network</h3>
+          <p style="color:var(--mid);font-size:.88rem;margin:8px 0 4px">Your verifier API key:</p>
+          <div class="api-key-display" id="api-key-display" onclick="copyKey()">
+            Click to copy
+          </div>
+          <div class="copy-hint" id="copy-hint">Click the key above to copy it</div>
+          <p style="color:var(--mid);font-size:.82rem;margin-top:16px;line-height:1.6">
+            Use this key in the <code style="color:var(--cyan)">x-api-key</code> header
+            when calling <code style="color:var(--cyan)">/verify/{agent_id}</code>.<br/>
+            Your verifications will appear as a named node in the trust graph.
+          </p>
+          <a href="https://verisigil-api-production.up.railway.app/docs"
+             target="_blank"
+             style="display:inline-block;margin-top:16px;color:var(--cyan);font-size:.88rem;">
+            Open API Docs →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 VeriSigil AI · Making AI agents trustworthy by default.</span>
+    <div style="display:flex;gap:24px">
+      <a href="https://www.verisigilai.com">Website</a>
+      <a href="https://github.com/raheem-verisigil/verisigil-ai">GitHub</a>
+      <a href="mailto:info@verisigilai.com">info@verisigilai.com</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  const API = 'https://verisigil-api-production.up.railway.app';
+  let network = null;
+  let generatedKey = '';
+
+  // ── GRAPH ──────────────────────────────────────────────
+  function nodeColor(type, trust) {
+    if (type === 'agent') {
+      if (!trust) return '#1455FF';
+      if (trust >= 0.80) return '#22C55E';
+      if (trust >= 0.60) return '#F59E0B';
+      return '#EF4444';
+    }
+    const repColors = { admin: '#22C55E', enterprise: '#00D4F5',
+                        developer: '#1455FF', public: '#64748B', unknown: '#94A3B8' };
+    return repColors[type] || '#1455FF';
+  }
+
+  async function loadGraph() {
+    const agentId = document.getElementById('agent-input').value.trim();
+    if (!agentId) return;
+    setStatus('Loading trust graph...');
+    try {
+      const r = await fetch(`${API}/v1/trust/${agentId}/graph`);
+      if (!r.ok) { setStatus('Agent not found — try the demo agent'); return; }
+      const data = await r.json();
+      renderGraph(data);
+    } catch(e) {
+      setStatus('Error loading graph — check agent ID');
+    }
+  }
+
+  function loadDemo() {
+    document.getElementById('agent-input').value = 'vsa_537e3974858f';
+    loadGraph();
+  }
+
+  function renderGraph(data) {
+    const container = document.getElementById('network-graph');
+
+    const nodes = new vis.DataSet(data.nodes.map(n => ({
+      id:    n.id,
+      label: n.type === 'agent'
+        ? `🤖 ${n.id.slice(0,16)}\n${n.trust_level || ''}`
+        : `🔐 ${n.id}\nrep: ${n.reputation || '?'}`,
+      color: {
+        background: nodeColor(n.verifier_type || n.type, n.trust_score),
+        border:     'rgba(255,255,255,0.15)',
+        highlight:  { background: '#00D4F5', border: '#ffffff' },
+      },
+      font:  { color: '#ffffff', size: n.type === 'agent' ? 14 : 12, face: 'Space Mono' },
+      size:  n.type === 'agent' ? 38 : 24,
+      shape: n.type === 'agent' ? 'dot' : 'diamond',
+      shadow: { enabled: true, color: 'rgba(0,0,0,0.4)', size: 10 },
+    })));
+
+    const edges = new vis.DataSet(data.edges.map((e, i) => ({
+      id:     i,
+      from:   e.from,
+      to:     e.to,
+      label:  e.timestamp ? e.timestamp.slice(11,19) : '',
+      color:  { color: 'rgba(21,85,255,0.5)', highlight: '#00D4F5' },
+      arrows: { to: { enabled: true, scaleFactor: 0.6 } },
+      font:   { color: '#64748B', size: 9, face: 'Space Mono', align: 'middle' },
+      smooth: { type: 'curvedCW', roundness: 0.2 },
+      width:  1.5,
+    })));
+
+    const options = {
+      nodes: { borderWidth: 1 },
+      edges: { selectionWidth: 2 },
+      physics: {
+        enabled: true,
+        stabilization: { iterations: 80 },
+        barnesHut: { gravitationalConstant: -4000, springLength: 160 },
+      },
+      interaction: { hover: true, tooltipDelay: 200, zoomView: true },
+      background: { color: 'transparent' },
+    };
+
+    if (network) network.destroy();
+    network = new vis.Network(container, { nodes, edges }, options);
+
+    // Update stats
+    document.getElementById('stat-score').textContent     = data.trust_score || '—';
+    document.getElementById('stat-level').textContent     = data.trust_level || '—';
+    document.getElementById('stat-verifiers').textContent = data.unique_verifiers ?? '—';
+    document.getElementById('stat-events').textContent    = data.total_verifications ?? '—';
+
+    const levelColors = { TRUSTED: '#22C55E', FLAGGED: '#F59E0B', BLOCKED: '#EF4444' };
+    const el = document.getElementById('stat-level');
+    el.style.color = levelColors[data.trust_level] || '#00D4F5';
+
+    setStatus(`Loaded — ${data.nodes.length} nodes · ${data.edges.length} edges · live data`);
+  }
+
+  function setStatus(msg) {
+    document.getElementById('graph-status-text').textContent = msg;
+  }
+
+  // Load demo on page load
+  window.addEventListener('load', loadDemo);
+
+  // Enter key on input
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('agent-input')
+      .addEventListener('keydown', e => { if (e.key === 'Enter') loadGraph(); });
+  });
+
+  // ── SIGNUP ─────────────────────────────────────────────
+  async function handleSignup() {
+    const name    = document.getElementById('f-name').value.trim();
+    const email   = document.getElementById('f-email').value.trim();
+    const company = document.getElementById('f-company').value.trim();
+    const type    = document.getElementById('f-type').value;
+
+    if (!name || !email) {
+      alert('Please fill in your name and email.');
+      return;
+    }
+
+    const btn = document.getElementById('signup-btn');
+    btn.disabled = true;
+    btn.textContent = 'Registering you in the network...';
+
+    try {
+      // Call the real registration endpoint — saves to Supabase
+      const response = await fetch(`${API}/v1/verifier/register`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:    name,
+          email:   email,
+          company: company,
+          type:    type,
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || 'Registration failed');
+      }
+
+      const data = await response.json();
+      generatedKey = data.api_key;
+
+      // Show success
+      document.getElementById('signup-form-inner').style.display = 'none';
+      const successBox = document.getElementById('success-box');
+      successBox.classList.add('show');
+      document.getElementById('api-key-display').textContent = data.api_key;
+
+      // Also open email client with the key
+      const subject = encodeURIComponent('VeriSigil AI — Your Verifier API Key');
+      const body    = encodeURIComponent(
+        `Hi ${name},\n\nWelcome to the VeriSigil AI Trust Network!\n\n` +
+        `Your verifier ID: ${data.verifier_id}\n` +
+        `Your API key:     ${data.api_key}\n\n` +
+        `How to use it:\n` +
+        `Add x-api-key: ${data.api_key} to any /verify request.\n\n` +
+        `Your verifications will appear as a named node\n` +
+        `in the trust graph at:\n` +
+        `https://www.verisigilai.com/trust_network.html\n\n` +
+        `API Docs: https://verisigil-api-production.up.railway.app/docs\n\n` +
+        `— Raheem, VeriSigil AI\n` +
+        `raheem@verisigilai.com`
+      );
+      setTimeout(() => {
+        window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+      }, 2000);
+
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Get My Free API Key →';
+      alert(`Error: ${e.message}\n\nPlease email info@verisigilai.com`);
+    }
+  }
+
+  function copyKey() {
+    if (!generatedKey) return;
+    navigator.clipboard.writeText(generatedKey).then(() => {
+      document.getElementById('copy-hint').textContent = '✅ Copied to clipboard!';
+      document.getElementById('copy-hint').style.color = '#22C55E';
+    });
+  }
+</script>
+
+</body>
+</html>

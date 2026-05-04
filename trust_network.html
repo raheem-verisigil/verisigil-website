@@ -668,6 +668,27 @@
             when calling <code style="color:var(--cyan)">/verify/{agent_id}</code>.<br/>
             Your verifications will appear as a named node in the trust graph.
           </p>
+
+          <!-- Verify Test Agent Button -->
+          <div style="margin-top:20px;padding:16px;background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.2);border-radius:10px;">
+            <p style="color:var(--white);font-size:.9rem;font-weight:700;margin-bottom:8px;">
+              🚀 Try it now — verify a real agent
+            </p>
+            <p style="color:var(--mid);font-size:.82rem;margin-bottom:14px;">
+              Click below to verify a live agent using your new key. 
+              You will instantly appear as a named node in the trust graph.
+            </p>
+            <button onclick="verifyTestAgent()" 
+              style="background:var(--cyan);color:#050E2B;border:none;padding:10px 24px;
+                     border-radius:8px;font-family:Syne,sans-serif;font-weight:800;
+                     font-size:.9rem;cursor:pointer;width:100%;transition:opacity .2s;"
+              onmouseover="this.style.opacity=0.85" 
+              onmouseout="this.style.opacity=1">
+              ✅ Verify a Real AI Agent →
+            </button>
+            <div id="verify-result" style="margin-top:12px;display:none;"></div>
+          </div>
+
           <a href="https://verisigil-api-production.up.railway.app/docs"
              target="_blank"
              style="display:inline-block;margin-top:16px;color:var(--cyan);font-size:.88rem;">
@@ -873,6 +894,57 @@
       document.getElementById('copy-hint').textContent = '✅ Copied to clipboard!';
       document.getElementById('copy-hint').style.color = '#22C55E';
     });
+  }
+
+  async function verifyTestAgent() {
+    if (!generatedKey) return;
+
+    const resultDiv = document.getElementById('verify-result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<p style="color:var(--mid);font-size:.82rem;">Verifying agent...</p>';
+
+    const TEST_AGENT = 'vsa_537e3974858f';
+
+    try {
+      const r = await fetch(`${API}/verify/${TEST_AGENT}`, {
+        headers: { 'x-api-key': generatedKey }
+      });
+      const data = await r.json();
+
+      if (data.valid) {
+        resultDiv.innerHTML = `
+          <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);
+                      border-radius:8px;padding:14px;text-align:left;">
+            <div style="color:#22C55E;font-weight:800;font-size:.9rem;margin-bottom:8px;">
+              ✅ Verification successful — you are now in the trust graph!
+            </div>
+            <div style="font-family:Space Mono,monospace;font-size:.75rem;color:var(--mid);line-height:1.8;">
+              agent_id: ${data.agent_id}<br/>
+              trust_score: <span style="color:var(--cyan)">${data.trust_score}</span><br/>
+              trust_level: <span style="color:#22C55E">${data.trust_level}</span><br/>
+              unique_verifiers: <span style="color:var(--cyan)">${data.unique_verifiers}</span>
+            </div>
+            <a href="https://www.verisigilai.com/trust_network.html" 
+               style="display:inline-block;margin-top:12px;color:var(--cyan);font-size:.82rem;">
+              See yourself in the trust graph →
+            </a>
+          </div>
+        `;
+      } else {
+        resultDiv.innerHTML = `
+          <p style="color:var(--amber);font-size:.82rem;">
+            Verification returned: ${data.reason || 'unknown error'}. 
+            Try again or contact info@verisigilai.com
+          </p>
+        `;
+      }
+    } catch(e) {
+      resultDiv.innerHTML = `
+        <p style="color:var(--red);font-size:.82rem;">
+          Error: ${e.message}. Please try again.
+        </p>
+      `;
+    }
   }
 </script>
 

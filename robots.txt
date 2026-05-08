@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://verisigilai.com/sitemap.xml

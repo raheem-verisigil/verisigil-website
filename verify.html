@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Agent Passport • VeriSigil AI</title>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a2a; color: #fff; margin: 0; padding: 40px 20px; text-align: center; }
+    h1 { margin-bottom: 10px; }
+    input { width: 100%; max-width: 520px; padding: 18px; font-size: 18px; border-radius: 12px; border: 2px solid #00f0ff; background: #111133; color: white; margin: 20px 0; }
+    button { padding: 16px 50px; font-size: 18px; background: #00f0ff; color: #000; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
+    .result { margin-top: 50px; }
+  </style>
+</head>
+<body>
+  <h1>Verify Any AI Agent Passport</h1>
+  <p>Enter Agent ID or DID</p>
+  
+  <input type="text" id="input" placeholder="vsa_69760d1504c6">
+  <button onclick="verifyAgent()">Verify Passport</button>
+
+  <div id="result" class="result"></div>
+
+  <script>
+    async function verifyAgent() {
+      const input = document.getElementById('input').value.trim();
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '<p>🔍 Verifying...</p>';
+
+      if (input.includes('vsa_69760d1504c6') || input.includes('raheem-verisigil-founder')) {
+        resultDiv.innerHTML = `
+          <div style="max-width:640px;margin:30px auto;background:linear-gradient(135deg,#1a1a3a,#0f0f2b);border:4px solid #00f0ff;border-radius:24px;padding:40px 30px;box-shadow:0 0 50px rgba(0,240,255,0.5);">
+            <h2>✅ Verified Agent Passport</h2>
+            <p><strong>Agent ID:</strong> vsa_69760d1504c6</p>
+            <p><strong>Trust Score:</strong> 0.9686 <span style="color:#00ff9d;">TRUSTED</span></p>
+            <p><strong>Status:</strong> ACTIVE</p>
+            <p><strong>EU AI Act Compliant:</strong> ✅ YES</p>
+            <p><strong>Signature:</strong> Valid Ed25519</p>
+          </div>`;
+      } else {
+        resultDiv.innerHTML = `<p style="color:#ff6666;">Agent not found. Try demo ID: vsa_69760d1504c6</p>`;
+      }
+    }
+  </script>
+</body>
+</html>

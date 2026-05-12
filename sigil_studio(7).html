@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sigil Studio — VeriSigil AI Enterprise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #050E2B; --navy2: #0D1A3A; --navy3: #0A1628;
+  --cyan: #00D4F5; --cyan-dim: rgba(0,212,245,0.12); --cyan-border: rgba(0,212,245,0.3);
+  --green: #22C55E; --green-dim: rgba(34,197,94,0.12);
+  --amber: #F59E0B; --amber-dim: rgba(245,158,11,0.12);
+  --red: #EF4444; --red-dim: rgba(239,68,68,0.12);
+  --blue: #1455FF; --white: #FFFFFF; --mid: #94A3B8;
+  --border: rgba(30,58,110,0.8); --card: #0D1A3A;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Space Grotesk',sans-serif; background:var(--navy); color:var(--white); min-height:100vh; display:flex; overflow:hidden; }
+.sidebar { width:220px; min-height:100vh; background:var(--navy2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.sidebar-logo { padding:20px 18px 16px; border-bottom:1px solid var(--border); }
+.logo-text { font-size:15px; font-weight:700; color:var(--cyan); letter-spacing:0.05em; }
+.logo-sub { font-size:10px; color:var(--mid); letter-spacing:0.08em; text-transform:uppercase; margin-top:2px; }
+.nav-section { padding:12px 0; border-bottom:1px solid var(--border); }
+.nav-label { font-size:9px; font-weight:600; color:var(--mid); letter-spacing:0.12em; text-transform:uppercase; padding:0 18px 8px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:8px 18px; font-size:13px; color:var(--mid); cursor:pointer; border-left:2px solid transparent; transition:all 0.15s; text-decoration:none; }
+.nav-item:hover { color:var(--white); background:rgba(0,212,245,0.05); }
+.nav-item.active { color:var(--cyan); background:rgba(0,212,245,0.08); border-left-color:var(--cyan); }
+.nav-icon { font-size:14px; width:18px; text-align:center; }
+.nav-badge { margin-left:auto; background:var(--red); color:white; font-size:9px; font-weight:700; padding:1px 5px; border-radius:8px; }
+.nav-new { margin-left:auto; background:var(--cyan); color:var(--navy); font-size:9px; font-weight:700; padding:1px 5px; border-radius:8px; }
+.sidebar-footer { margin-top:auto; padding:16px 18px; border-top:1px solid var(--border); }
+.founder-card { display:flex; align-items:center; gap:10px; }
+.founder-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--cyan),var(--blue)); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--navy); flex-shrink:0; }
+.founder-name { font-size:12px; font-weight:600; color:var(--white); }
+.founder-role { font-size:10px; color:var(--mid); }
+.main { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; border-bottom:1px solid var(--border); background:var(--navy2); position:sticky; top:0; z-index:10; gap:16px; }
+.topbar-title { font-size:16px; font-weight:600; }
+.topbar-subtitle { font-size:12px; color:var(--mid); margin-top:2px; }
+.topbar-actions { display:flex; gap:10px; align-items:center; }
+.btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:7px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer; border:none; transition:all 0.15s; text-decoration:none; }
+.btn-primary { background:var(--cyan); color:var(--navy); }
+.btn-primary:hover { opacity:0.88; }
+.btn-outline { background:transparent; color:var(--mid); border:1px solid var(--border); }
+.btn-outline:hover { color:var(--white); border-color:var(--cyan); }
+.status-dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse-green 2s infinite; }
+@keyframes pulse-green { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)} 50%{box-shadow:0 0 0 4px rgba(34,197,94,0)} }
+.content { padding:24px 28px; flex:1; }
+.alert-banner { display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--amber-dim); border:1px solid rgba(245,158,11,0.3); border-radius:10px; margin-bottom:22px; font-size:12.5px; }
+.alert-text { color:var(--amber); flex:1; }
+.alert-action { font-size:11px; font-weight:600; color:var(--amber); cursor:pointer; border:1px solid rgba(245,158,11,0.4); padding:4px 10px; border-radius:5px; white-space:nowrap; }
+.metrics-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+.metric-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; position:relative; overflow:hidden; }
+.metric-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.metric-card.cyan::before{background:var(--cyan)} .metric-card.green::before{background:var(--green)} .metric-card.amber::before{background:var(--amber)} .metric-card.red::before{background:var(--red)}
+.metric-label { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
+.metric-value { font-size:28px; font-weight:700; font-family:'Space Mono',monospace; line-height:1; }
+.metric-value.cyan{color:var(--cyan)} .metric-value.green{color:var(--green)} .metric-value.amber{color:var(--amber)} .metric-value.red{color:var(--red)}
+.metric-sub { font-size:10.5px; color:var(--mid); margin-top:6px; }
+.metric-trend { font-size:10px; font-weight:600; margin-top:4px; }
+.trend-up{color:var(--green)} .trend-neutral{color:var(--mid)}
+.two-col { display:grid; grid-template-columns:1fr 380px; gap:18px; margin-bottom:22px; }
+.panel { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.panel-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); }
+.panel-title { font-size:13px; font-weight:600; }
+.panel-actions { display:flex; gap:8px; }
+.search-input { background:var(--navy3); border:1px solid var(--border); border-radius:7px; padding:5px 10px; font-family:'Space Grotesk',sans-serif; font-size:12px; color:var(--white); width:160px; outline:none; }
+.search-input::placeholder{color:var(--mid)} .search-input:focus{border-color:var(--cyan)}
+table{width:100%;border-collapse:collapse}
+thead th { font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); padding:10px 14px; text-align:left; background:var(--navy3); border-bottom:1px solid var(--border); }
+tbody tr { border-bottom:1px solid rgba(30,58,110,0.4); transition:background 0.1s; cursor:pointer; }
+tbody tr:hover{background:rgba(0,212,245,0.04)} tbody tr:last-child{border-bottom:none}
+td { padding:11px 14px; font-size:12.5px; vertical-align:middle; }
+.agent-face { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; border:1px solid var(--border); background:var(--navy3); flex-shrink:0; }
+.agent-info{display:flex;align-items:center;gap:10px}
+.agent-name{font-size:13px;font-weight:600}
+.agent-id{font-size:10px;color:var(--mid);font-family:'Space Mono',monospace;margin-top:1px}
+.trust-bar-wrap{display:flex;align-items:center;gap:8px}
+.trust-bar{height:4px;border-radius:2px;background:var(--navy3);flex:1;overflow:hidden}
+.trust-fill{height:100%;border-radius:2px}
+.trust-score{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;min-width:32px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.05em}
+.badge-green{background:var(--green-dim);color:var(--green)} .badge-amber{background:var(--amber-dim);color:var(--amber)} .badge-red{background:var(--red-dim);color:var(--red)} .badge-cyan{background:var(--cyan-dim);color:var(--cyan)}
+.shadow-ok{color:var(--green);font-size:11px} .shadow-alert{color:var(--red);font-size:11px;font-weight:600}
+.right-panels{display:flex;flex-direction:column;gap:14px}
+.audit-item{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(30,58,110,0.4);font-size:11.5px}
+.audit-item:last-child{border-bottom:none}
+.audit-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.audit-content{flex:1}
+.audit-event{font-weight:600;color:var(--white)}
+.audit-meta{color:var(--mid);margin-top:2px;font-size:10.5px}
+.audit-time{font-family:'Space Mono',monospace;font-size:10px;color:var(--mid);white-space:nowrap}
+.compliance-item{display:flex;align-items:center;padding:10px 16px;gap:12px;border-bottom:1px solid rgba(30,58,110,0.4);font-size:12px}
+.compliance-item:last-child{border-bottom:none}
+.compliance-name{flex:1;font-weight:500}
+.compliance-status{font-size:10.5px;font-weight:600}
+.shadow-item{display:flex;align-items:center;padding:10px 16px;gap:10px;border-bottom:1px solid rgba(30,58,110,0.4);font-size:12px}
+.shadow-item:last-child{border-bottom:none}
+.shadow-info{flex:1}
+.shadow-name{font-weight:600}
+.shadow-desc{font-size:10.5px;color:var(--mid);margin-top:1px}
+.issue-form{padding:16px;display:flex;flex-direction:column;gap:10px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid)}
+.form-input{background:var(--navy3);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--white);outline:none}
+.form-input:focus{border-color:var(--cyan)}
+.form-select{background:var(--navy3);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--white);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.loading-overlay{display:flex;align-items:center;justify-content:center;padding:40px;flex-direction:column;gap:12px}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.success-card{background:var(--green-dim);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:14px;font-size:12px}
+.success-title{font-weight:700;color:var(--green);margin-bottom:8px;font-size:13px}
+.success-field{display:flex;justify-content:space-between;padding:3px 0;color:var(--mid);border-bottom:1px solid rgba(34,197,94,0.1)}
+.success-field:last-child{border-bottom:none}
+.success-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--cyan);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.error-card{background:var(--red-dim);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px;font-size:12px;color:var(--red)}
+.api-bar{display:flex;align-items:center;gap:16px;padding:8px 18px;background:var(--navy3);border-top:1px solid var(--border);font-size:10.5px;color:var(--mid)}
+.api-endpoint{font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan)}
+@media(max-width:1100px){.metrics-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.bottom-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">⬡ Sigil Studio</div>
+    <div class="logo-sub">VeriSigil AI Enterprise</div>
+  </div>
+  <nav class="nav-section">
+    <div class="nav-label">Main</div>
+    <a class="nav-item active" onclick="showPage('dashboard')"><span class="nav-icon">▦</span> Dashboard</a>
+    <a class="nav-item" onclick="showPage('agents')"><span class="nav-icon">◈</span> Agents</a>
+    <a class="nav-item" onclick="showPage('issue')"><span class="nav-icon">⊕</span> Issue Passport</a>
+    <a class="nav-item" onclick="showPage('verify')"><span class="nav-icon">◎</span> Verify Agent</a>
+  </nav>
+  <nav class="nav-section">
+    <div class="nav-label">Security</div>
+    <a class="nav-item" onclick="showPage('evaluate')"><span class="nav-icon">⚡</span> Action Evaluate<span class="nav-new">NEW</span></a>
+    <a class="nav-item" onclick="showPage('governance')"><span class="nav-icon">📋</span> Governance Log<span class="nav-new">NEW</span></a>
+    <a class="nav-item" onclick="showPage('shadow')"><span class="nav-icon">◈</span> Shadow Alerts<span class="nav-badge" id="shadow-badge">1</span></a>
+    <a class="nav-item" onclick="showPage('audit')"><span class="nav-icon">≡</span> Audit Log</a>
+    <a class="nav-item" onclick="showPage('trust')"><span class="nav-icon">⬡</span> Trust Network</a>
+  </nav>
+  <nav class="nav-section">
+    <div class="nav-label">Compliance</div>
+    <a class="nav-item" onclick="showPage('compliance')"><span class="nav-icon">✦</span> EU AI Act</a>
+    <a class="nav-item" href="https://verisigil-api-production.up.railway.app/docs" target="_blank"><span class="nav-icon">↗</span> API Docs</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="founder-card">
+      <div class="founder-avatar">RL</div>
+      <div>
+        <div class="founder-name">Raheem L. Babatunde</div>
+        <div class="founder-role">Founder & CEO</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-subtitle" id="page-subtitle">VeriSigil AI Trust Network — May 2026</div>
+    </div>
+    <div class="topbar-actions">
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mid)">
+        <div class="status-dot"></div>
+        <span>API Live</span>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('issue')">⊕ Issue Passport</button>
+    </div>
+  </div>
+  <div class="content" id="main-content"></div>
+  <div class="api-bar">
+    <span>Live API:</span>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="api-endpoint" style="text-decoration:none;color:var(--cyan);cursor:pointer">verisigil-api-production.up.railway.app</a>
+    <span style="margin-left:auto;color:var(--green);font-weight:600">● Connected</span>
+    <span style="color:var(--mid)">v0.4.5</span>
+  </div>
+</div>
+
+<script>
+const API = 'https://verisigil-api-production.up.railway.app';
+const TEST_AGENT = 'vsa_537e3974858f';
+
+const AGENTS = [
+  {emoji:'🔐',name:'FinanceGuard-7', id:'vsa_a1b2c3',trust:0.98,status:'TRUSTED',shadow:false,verifiers:3,eu:'Ready'},
+  {emoji:'⚕️', name:'MediAgent-3',   id:'vsa_d4e5f6',trust:0.91,status:'TRUSTED',shadow:false,verifiers:2,eu:'Ready'},
+  {emoji:'⚖️', name:'LegalBot-12',   id:'vsa_g7h8i9',trust:0.74,status:'FLAGGED',shadow:false,verifiers:1,eu:'Pending'},
+  {emoji:'📊', name:'DataSpy-9',     id:'vsa_m4n5o6',trust:0.55,status:'BLOCKED',shadow:true, verifiers:0,eu:'Failed'},
+  {emoji:'🛡️',name:'SecureOps-5',   id:'vsa_j1k2l3',trust:0.99,status:'TRUSTED',shadow:false,verifiers:4,eu:'Ready'},
+  {emoji:'🌐', name:'WebCrawler-2',  id:'vsa_p7q8r9',trust:0.82,status:'TRUSTED',shadow:false,verifiers:2,eu:'Ready'},
+];
+
+function tc(s){return s>=0.8?'var(--green)':s>=0.6?'var(--amber)':'var(--red)'}
+function statusBadge(st,sh){
+  if(sh) return'<span class="badge badge-red">⚠ SHADOW</span>';
+  if(st==='TRUSTED') return'<span class="badge badge-green">✓ TRUSTED</span>';
+  if(st==='FLAGGED') return'<span class="badge badge-amber">⚑ FLAGGED</span>';
+  return'<span class="badge badge-red">✕ BLOCKED</span>';
+}
+function euBadge(eu){
+  if(eu==='Ready') return'<span class="badge badge-cyan">EU Ready</span>';
+  if(eu==='Pending') return'<span class="badge badge-amber">Pending</span>';
+  return'<span class="badge badge-red">Failed</span>';
+}
+
+const pages={
+  dashboard: {title:'Dashboard',           sub:'VeriSigil AI Trust Network — Live Overview'},
+  agents:    {title:'Agents',              sub:'All registered AI agent passports'},
+  issue:     {title:'Issue Passport',      sub:'Genesis Engine — create a new cryptographic agent identity'},
+  verify:    {title:'Verify Agent',        sub:'Check an agent trust score and status'},
+  evaluate:  {title:'Action Evaluate',     sub:'Should this agent be allowed to do this? Get an instant cryptographic decision.'},
+  governance:{title:'Governance Log',       sub:'Live Runtime Guard decisions — every action verified before execution.'},
+  shadow:    {title:'Shadow Detection™',   sub:'Real-time clone and impersonation monitoring'},
+  audit:     {title:'Audit Log',           sub:'Cryptographically signed event history'},
+  trust:     {title:'Trust Network',       sub:'Live verifier network graph'},
+  compliance:{title:'EU AI Act Compliance',sub:'Regulatory readiness and certification status'},
+};
+
+function showPage(name){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el=document.querySelector(`[onclick="showPage('${name}')"]`);
+  if(el) el.classList.add('active');
+  document.getElementById('page-title').textContent=pages[name]?.title||name;
+  document.getElementById('page-subtitle').textContent=pages[name]?.sub||'';
+  const c=document.getElementById('main-content');
+  if(name==='dashboard') renderDashboard(c);
+  else if(name==='agents') renderAgents(c);
+  else if(name==='issue') renderIssue(c);
+  else if(name==='verify') renderVerify(c);
+  else if(name==='evaluate') renderEvaluate(c);
+  else if(name==='governance') renderGovernance(c);
+  else if(name==='shadow') renderShadow(c);
+  else if(name==='audit') renderAudit(c);
+  else if(name==='trust') renderTrust(c);
+  else if(name==='compliance') renderCompliance(c);
+}
+
+function quickEvaluate(id){
+  showPage('evaluate');
+  setTimeout(()=>{const el=document.getElementById('eval-agent-id');if(el)el.value=id;},100);
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────
+function renderDashboard(c){
+  const trusted=AGENTS.filter(a=>a.status==='TRUSTED').length;
+  const flagged=AGENTS.filter(a=>a.status==='FLAGGED').length;
+  c.innerHTML=`
+    <div class="alert-banner">
+      <div style="font-size:16px">⚠</div>
+      <div class="alert-text"><strong>Shadow Alert:</strong> DataSpy-9 (vsa_m4n5o6) flagged for impersonation — blocked automatically at 14:32 UTC</div>
+      <div class="alert-action" onclick="showPage('shadow')">View Alert →</div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card cyan"><div class="metric-label">Total Agents</div><div class="metric-value cyan">${AGENTS.length}</div><div class="metric-sub">Registered passports</div><div class="metric-trend trend-up">↑ 4 this week</div></div>
+      <div class="metric-card green"><div class="metric-label">Trusted</div><div class="metric-value green">${trusted}</div><div class="metric-sub">Score ≥ 0.80</div><div class="metric-trend trend-up">↑ Network healthy</div></div>
+      <div class="metric-card amber"><div class="metric-label">Flagged</div><div class="metric-value amber">${flagged}</div><div class="metric-sub">Score 0.60–0.79</div><div class="metric-trend trend-neutral">→ Review needed</div></div>
+      <div class="metric-card red"><div class="metric-label">Shadow Alerts</div><div class="metric-value red">1</div><div class="metric-sub">Blocked automatically</div><div class="metric-trend trend-neutral">→ Investigate</div></div>
+    </div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Active Agents</div>
+          <div class="panel-actions">
+            <input class="search-input" placeholder="Search agents..." oninput="filterTable(this.value)">
+            <button class="btn btn-primary" onclick="showPage('issue')" style="padding:5px 10px;font-size:11px">⊕ New</button>
+          </div>
+        </div>
+        <table><thead><tr><th>Agent</th><th>Trust Score</th><th>Status</th><th>Shadow</th><th>EU AI Act</th><th>Action</th></tr></thead>
+        <tbody id="agents-tbody">
+          ${AGENTS.map(a=>`
+            <tr>
+              <td><div class="agent-info"><div class="agent-face">${a.emoji}</div><div><div class="agent-name">${a.name}</div><div class="agent-id">${a.id}</div></div></div></td>
+              <td><div class="trust-bar-wrap"><div class="trust-bar"><div class="trust-fill" style="width:${a.trust*100}%;background:${tc(a.trust)}"></div></div><span class="trust-score" style="color:${tc(a.trust)}">${a.trust.toFixed(2)}</span></div></td>
+              <td>${statusBadge(a.status,a.shadow)}</td>
+              <td>${a.shadow?'<span class="shadow-alert">⚠ CLONE</span>':'<span class="shadow-ok">✓ Clear</span>'}</td>
+              <td>${euBadge(a.eu)}</td>
+              <td><button class="btn btn-outline" onclick="quickEvaluate('${a.id}')" style="font-size:10px;padding:3px 8px">⚡ Evaluate</button></td>
+            </tr>
+          `).join('')}
+        </tbody></table>
+      </div>
+      <div class="right-panels">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Live Audit Log</div><button class="btn btn-outline" onclick="loadLiveAudit()" style="font-size:11px;padding:4px 8px">↻ Refresh</button></div>
+          <div id="audit-log-mini">
+            ${[
+              {col:'var(--green)',event:'Passport verified',meta:'vsa_537e3974858f · Trust: 0.97',time:'2m ago'},
+              {col:'var(--red)',  event:'Shadow Detection™ triggered',meta:'vsa_m4n5o6 · Clone blocked',time:'14m ago'},
+              {col:'var(--cyan)', event:'Action evaluated',meta:'delete_records · REQUIRE_HUMAN_APPROVAL',time:'22m ago'},
+              {col:'var(--cyan)', event:'Verifier registered',meta:'dev_external_001 · Rep: 0.5',time:'31m ago'},
+              {col:'var(--green)',event:'Trust score updated',meta:'vsa_j1k2l3 · 0.97 → 0.99',time:'1h ago'},
+            ].map(e=>`<div class="audit-item"><div class="audit-dot" style="background:${e.col}"></div><div class="audit-content"><div class="audit-event">${e.event}</div><div class="audit-meta">${e.meta}</div></div><div class="audit-time">${e.time}</div></div>`).join('')}
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">EU AI Act Status</div></div>
+          ${[
+            {icon:'✅',name:'Cryptographic Identity',status:'Compliant',col:'var(--green)'},
+            {icon:'✅',name:'Signed Audit Trail',status:'Compliant',col:'var(--green)'},
+            {icon:'✅',name:'Action Evaluate Engine',status:'Live v0.4.5',col:'var(--cyan)'},
+            {icon:'✅',name:'Shadow Detection™',status:'Compliant',col:'var(--green)'},
+            {icon:'⏳',name:'EU AI Act Certification',status:'In Progress',col:'var(--amber)'},
+          ].map(i=>`<div class="compliance-item"><div style="font-size:16px">${i.icon}</div><div class="compliance-name">${i.name}</div><div class="compliance-status" style="color:${i.col}">${i.status}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function filterTable(val){
+  document.querySelectorAll('#agents-tbody tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(val.toLowerCase())?'':'none';
+  });
+}
+
+async function loadLiveAudit(){
+  try{
+    const r=await fetch(`${API}/v1/passport/${TEST_AGENT}/audit`);
+    const data=await r.json();
+    const events=(data.audit_log||[]).slice(-5).reverse();
+    const el=document.getElementById('audit-log-mini');
+    if(el&&events.length){
+      el.innerHTML=events.map(e=>{
+        const col=e.event==='VERIFIED'?'var(--green)':e.event==='REVOKED'?'var(--red)':'var(--cyan)';
+        return`<div class="audit-item"><div class="audit-dot" style="background:${col}"></div><div class="audit-content"><div class="audit-event">${e.event}</div><div class="audit-meta">${e.timestamp?.substring(0,16).replace('T',' ')} UTC</div></div><div class="audit-time">${e.signature_valid?'✓':'✗'}</div></div>`;
+      }).join('');
+    }
+  }catch(e){console.log('audit refresh error',e);}
+}
+
+// ── AGENTS PAGE ────────────────────────────────────────────
+function renderAgents(c){
+  c.innerHTML=`
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">All Registered Agents</div><div class="panel-actions"><input class="search-input" placeholder="Search..." oninput="document.querySelectorAll('#at tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(this.value.toLowerCase())?'':'none')"><button class="btn btn-primary" onclick="showPage('issue')" style="padding:5px 10px;font-size:11px">⊕ Issue New</button></div></div>
+      <table><thead><tr><th>Agent</th><th>Trust Score</th><th>Status</th><th>Shadow</th><th>EU AI Act</th><th>Verifiers</th><th>Action</th></tr></thead>
+      <tbody id="at">
+        ${AGENTS.map(a=>`
+          <tr>
+            <td><div class="agent-info"><div class="agent-face">${a.emoji}</div><div><div class="agent-name">${a.name}</div><div class="agent-id">${a.id}</div></div></div></td>
+            <td><div class="trust-bar-wrap"><div class="trust-bar"><div class="trust-fill" style="width:${a.trust*100}%;background:${tc(a.trust)}"></div></div><span class="trust-score" style="color:${tc(a.trust)}">${a.trust.toFixed(2)}</span></div></td>
+            <td>${statusBadge(a.status,a.shadow)}</td>
+            <td>${a.shadow?'<span class="shadow-alert">⚠ CLONE</span>':'<span class="shadow-ok">✓ Clear</span>'}</td>
+            <td>${euBadge(a.eu)}</td>
+            <td style="color:var(--mid);font-family:'Space Mono',monospace;font-size:11px">${a.verifiers}</td>
+            <td><button class="btn btn-outline" onclick="quickEvaluate('${a.id}')" style="font-size:10px;padding:3px 8px">⚡ Evaluate</button></td>
+          </tr>
+        `).join('')}
+      </tbody></table>
+    </div>
+  `;
+}
+
+// ── ISSUE PASSPORT ─────────────────────────────────────────
+function renderIssue(c){
+  c.innerHTML=`
+    <div style="max-width:680px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:28px"><div style="font-size:32px;margin-bottom:8px">⚙️</div><div style="font-size:18px;font-weight:700;margin-bottom:4px">Genesis Engine</div><div style="font-size:13px;color:var(--mid)">Issue a cryptographic identity passport for a new AI agent</div></div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header"><div class="panel-title">New Agent Passport</div></div>
+        <div class="issue-form">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Agent Name *</label><input class="form-input" id="agent-name" placeholder="e.g. FinanceGuard-8"/></div>
+            <div class="form-group"><label class="form-label">Owner / Company *</label><input class="form-input" id="agent-owner" placeholder="e.g. Acme Corp"/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Agent Type</label><select class="form-select" id="agent-type"><option>financial</option><option>medical</option><option>legal</option><option>security</option><option>data-analysis</option><option>customer-service</option><option>research</option><option>general</option></select></div>
+            <div class="form-group"><label class="form-label">EU Risk Class</label><select class="form-select" id="agent-risk"><option value="limited">Limited Risk</option><option value="high">High Risk</option><option value="minimal">Minimal Risk</option></select></div>
+          </div>
+          <div class="form-group"><label class="form-label">Tags (comma separated)</label><input class="form-input" id="agent-tags" placeholder="e.g. production, eu-compliant, v2"/></div>
+          <button class="btn btn-primary" onclick="issuePassport()" style="padding:10px;font-size:13px">⚙️ Issue Passport via Genesis Engine</button>
+        </div>
+      </div>
+      <div id="issue-result"></div>
+      <div class="panel"><div class="panel-header"><div class="panel-title">What happens when you issue a passport</div></div>
+        <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          ${[{icon:'🔐',t:'Ed25519 Key Pair',d:'Unique cryptographic key generated'},{icon:'🆔',t:'W3C DID Created',d:'Public decentralized identifier'},{icon:'📊',t:'Trust Score',d:'Starting score: 0.97'},{icon:'📜',t:'Audit Trail',d:'Immutable signed event log started'},{icon:'🕵️',t:'Shadow Detection™',d:'Monitoring activated immediately'},{icon:'⚡',t:'Action Evaluate Ready',d:'Instantly callable on new endpoint'}].map(f=>`<div style="display:flex;gap:10px;align-items:flex-start"><div style="font-size:18px;flex-shrink:0">${f.icon}</div><div><div style="font-size:12px;font-weight:600">${f.t}</div><div style="font-size:11px;color:var(--mid);margin-top:2px">${f.d}</div></div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function issuePassport(){
+  const name=document.getElementById('agent-name').value.trim();
+  const owner=document.getElementById('agent-owner').value.trim();
+  const type=document.getElementById('agent-type').value;
+  const risk=document.getElementById('agent-risk').value;
+  const tags=document.getElementById('agent-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  if(!name||!owner){document.getElementById('issue-result').innerHTML=`<div class="error-card">Please fill in Agent Name and Owner fields.</div>`;return;}
+  const res=document.getElementById('issue-result');
+  res.innerHTML=`<div class="loading-overlay"><div class="spinner"></div><div style="font-size:12px;color:var(--mid)">Genesis Engine issuing passport...</div></div>`;
+  try{
+    const r=await fetch(`${API}/v1/passport/issue`,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'verisigil-secret-2026'},body:JSON.stringify({agent_name:name,owner,agent_type:type,eu_risk_class:risk,tags,version:'1.0',runtime:'cloud',framework:'verisigil-studio'})});
+    const data=await r.json();
+    const p=data.passport||data;
+    if(p.agent_id){
+      res.innerHTML=`<div class="success-card" style="margin-bottom:16px"><div class="success-title">✅ Passport Issued Successfully</div>${[['Agent ID',p.agent_id],['DID',(p.did||'').substring(0,38)+'...'],['Trust Score',p.trust_score],['Status',p.status||'ACTIVE'],['Issued At',new Date().toUTCString()]].map(([k,v])=>`<div class="success-field"><span style="color:var(--mid)">${k}</span><span class="success-val">${v}</span></div>`).join('')}<div style="margin-top:12px;display:flex;gap:8px"><a href="${API}/verify/${p.agent_id}" target="_blank" class="btn btn-outline" style="font-size:11px;padding:5px 10px">Verify →</a><button class="btn btn-outline" onclick="quickEvaluate('${p.agent_id}')" style="font-size:11px;padding:5px 10px">⚡ Evaluate →</button></div></div>`;
+    }else{res.innerHTML=`<div class="error-card">API Error: ${JSON.stringify(data)}</div>`;}
+  }catch(e){res.innerHTML=`<div class="error-card">Connection error: ${e.message}</div>`;}
+}
+
+// ── VERIFY AGENT ───────────────────────────────────────────
+function renderVerify(c){
+  c.innerHTML=`
+    <div style="max-width:580px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:28px"><div style="font-size:32px;margin-bottom:8px">◎</div><div style="font-size:18px;font-weight:700;margin-bottom:4px">Verify Agent</div><div style="font-size:13px;color:var(--mid)">Check any agent's trust score and Shadow Detection status</div></div>
+      <div class="panel" style="margin-bottom:16px"><div class="issue-form"><div class="form-group"><label class="form-label">Agent ID</label><input class="form-input" id="verify-id" value="${TEST_AGENT}" placeholder="vsa_..."/></div><button class="btn btn-primary" onclick="verifyAgent()" style="padding:10px;font-size:13px">◎ Verify Agent</button></div></div>
+      <div id="verify-result"></div>
+      <div style="margin-top:12px"><div style="font-size:11px;color:var(--mid);text-align:center;margin-bottom:8px">Quick verify a demo agent:</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${AGENTS.slice(0,4).map(a=>`<button class="btn btn-outline" onclick="document.getElementById('verify-id').value='${a.id}';verifyAgent()" style="font-size:11px;padding:5px 10px">${a.emoji} ${a.name}</button>`).join('')}</div></div>
+    </div>
+  `;
+}
+
+async function verifyAgent(){
+  const id=document.getElementById('verify-id').value.trim();
+  if(!id)return;
+  const res=document.getElementById('verify-result');
+  res.innerHTML=`<div class="loading-overlay"><div class="spinner"></div><div style="font-size:12px;color:var(--mid)">Verifying agent...</div></div>`;
+  try{
+    const r=await fetch(`${API}/verify/${id}`,{headers:{'x-api-key':'verisigil-secret-2026'}});
+    const data=await r.json();
+    const color=data.trust_score>=0.8?'var(--green)':data.trust_score>=0.6?'var(--amber)':'var(--red)';
+    res.innerHTML=`
+      <div class="panel">
+        <div class="panel-header"><div style="display:flex;align-items:center;gap:10px"><div style="font-size:24px">🤖</div><div><div class="panel-title">${data.agent_id||id}</div><div style="font-size:11px;color:var(--mid);font-family:'Space Mono',monospace;margin-top:2px">${(data.did||'').substring(0,40)}...</div></div></div><span class="badge ${data.valid?'badge-green':'badge-red'}">${data.valid?'✓ VALID':'✕ INVALID'}</span></div>
+        <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          ${[['Trust Score',data.trust_score?.toFixed(3)],['Trust Level',data.trust_level],['Status',data.status],['Verifications',data.verification_count||'—'],['EU AI Act',data.eu_ai_act?'✅ Compliant':'—'],['Expires',data.expires_at?.substring(0,10)]].map(([k,v])=>`<div style="background:var(--navy3);border-radius:8px;padding:10px"><div style="font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:4px">${k}</div><div style="font-size:12px;font-weight:600;color:${k==='Trust Score'?color:'var(--white)'};font-family:'Space Mono',monospace">${v}</div></div>`).join('')}
+        </div>
+        <div style="padding:12px 16px;background:var(--navy3);border-top:1px solid rgba(30,58,110,0.4);display:flex;gap:8px"><button class="btn btn-outline" onclick="quickEvaluate('${id}')" style="font-size:11px;padding:5px 10px">⚡ Evaluate an Action →</button><a href="${API}/did/${id}" target="_blank" class="btn btn-outline" style="font-size:11px;padding:5px 10px">DID Document →</a></div>
+      </div>
+    `;
+  }catch(e){res.innerHTML=`<div class="error-card">Connection error: ${e.message}</div>`;}
+}
+
+
+// ── GOVERNANCE LOG ─────────────────────────────────────────
+function renderGovernance(c){
+  c.innerHTML=`
+    <div style="max-width:800px;margin:0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div>
+          <div style="font-size:18px;font-weight:700">Runtime Guard — Live Decisions</div>
+          <div style="font-size:13px;color:var(--mid);margin-top:4px">Every agent action verified before execution. Cryptographically logged.</div>
+        </div>
+        <button class="btn btn-primary" onclick="loadGovernanceLive()" style="font-size:12px;padding:8px 14px">↻ Refresh Live</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+        <div style="background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:6px">Total</div>
+          <div style="font-size:28px;font-weight:700;font-family:'Space Mono',monospace;color:var(--cyan)" id="gov-total">—</div>
+        </div>
+        <div style="background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:6px">Allowed</div>
+          <div style="font-size:28px;font-weight:700;font-family:'Space Mono',monospace;color:var(--green)" id="gov-allow">—</div>
+        </div>
+        <div style="background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:6px">Human Approval</div>
+          <div style="font-size:28px;font-weight:700;font-family:'Space Mono',monospace;color:var(--amber)" id="gov-human">—</div>
+        </div>
+        <div style="background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:6px">Blocked</div>
+          <div style="font-size:28px;font-weight:700;font-family:'Space Mono',monospace;color:var(--red)" id="gov-block">—</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Live Decision Feed</div>
+          <div style="font-size:11px;color:var(--mid)">Most recent first · Auto-logged</div>
+        </div>
+        <div id="gov-feed">
+          ${[
+            {d:'REQUIRE_HUMAN_APPROVAL',ag:'vsa_1483d06a89c4',act:'payment',       reason:'Payment $5000 exceeds auto-allow threshold',  lat:'41ms', time:'2m ago',  col:'var(--amber)',icon:'👤'},
+            {d:'ALLOW',                 ag:'vsa_52aaf4c1141d',act:'read_data',     reason:'Trust score 0.97 sufficient for data_access', lat:'28ms', time:'8m ago',  col:'var(--green)',icon:'✅'},
+            {d:'DENY',                  ag:'vsa_m4n5o6',      act:'delete_records',reason:'Shadow clone detected — identity conflict',   lat:'19ms', time:'14m ago', col:'var(--red)',  icon:'🚫'},
+            {d:'ALLOW',                 ag:'vsa_52aaf4c1141d',act:'send_email',    reason:'Trust score 0.97 sufficient for send_email', lat:'35ms', time:'22m ago', col:'var(--green)',icon:'✅'},
+            {d:'REQUIRE_HUMAN_APPROVAL',ag:'vsa_g7h8i9',      act:'deploy_code',  reason:'Trust score 0.74 in provisional range',      lat:'52ms', time:'31m ago', col:'var(--amber)',icon:'👤'},
+          ].map(e=>`
+            <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid rgba(30,58,110,0.4)">
+              <div style="font-size:20px;flex-shrink:0">${e.icon}</div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+                  <span style="font-size:11px;font-weight:700;color:${e.col};font-family:'Space Mono',monospace">${e.d.replace(/_/g,' ')}</span>
+                  <span style="font-size:10px;color:var(--mid);font-family:'Space Mono',monospace">${e.act}</span>
+                </div>
+                <div style="font-size:11px;color:var(--mid)">${e.reason}</div>
+                <div style="font-size:10px;color:rgba(148,163,184,0.5);margin-top:2px;font-family:'Space Mono',monospace">${e.ag}</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0">
+                <div style="font-size:11px;font-weight:600;color:var(--cyan);font-family:'Space Mono',monospace">${e.lat}</div>
+                <div style="font-size:10px;color:var(--mid);margin-top:2px">${e.time}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:14px 18px;background:var(--navy2);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:16px">⚡</div>
+        <div style="font-size:12px;color:var(--mid)">Test a live decision in <span style="color:var(--cyan);cursor:pointer;font-weight:600" onclick="showPage('evaluate')">⚡ Action Evaluate</span> — it will appear here after refresh.</div>
+      </div>
+    </div>
+  `;
+  loadGovernanceLive();
+}
+
+async function loadGovernanceLive(){
+  try{
+    const r = await fetch(API+'/v1/passport/'+TEST_AGENT+'/audit');
+    const data = await r.json();
+    const evts = (data.audit_log||[]).filter(e=>['EXECUTION_EVALUATED','ACTION_EVALUATED','GATE_VERIFY'].includes(e.event)).reverse().slice(0,15);
+    const total = evts.length;
+    const allow = evts.filter(e=>e.event_data&&e.event_data.decision==='ALLOW').length;
+    const human = evts.filter(e=>e.event_data&&e.event_data.decision==='REQUIRE_HUMAN_APPROVAL').length;
+    const block = evts.filter(e=>e.event_data&&['DENY','BLOCK'].includes(e.event_data.decision)).length;
+    const t=document.getElementById('gov-total'); if(t)t.textContent=total||0;
+    const a=document.getElementById('gov-allow'); if(a)a.textContent=allow||0;
+    const h=document.getElementById('gov-human'); if(h)h.textContent=human||0;
+    const b=document.getElementById('gov-block'); if(b)b.textContent=block||0;
+    if(evts.length>0){
+      const feed=document.getElementById('gov-feed');
+      if(feed){
+        feed.innerHTML=evts.map(e=>{
+          const d=e.event_data&&e.event_data.decision?e.event_data.decision:e.event;
+          const col=d==='ALLOW'?'var(--green)':d==='REQUIRE_HUMAN_APPROVAL'?'var(--amber)':'var(--red)';
+          const icon=d==='ALLOW'?'✅':d==='REQUIRE_HUMAN_APPROVAL'?'👤':'🚫';
+          const ts=e.timestamp?e.timestamp.substring(0,16).replace('T',' ')+' UTC':'—';
+          const act=e.event_data&&e.event_data.action_type?e.event_data.action_type:e.event;
+          const reason=e.event_data&&e.event_data.reason?e.event_data.reason:'—';
+          const lat=e.event_data&&e.event_data.latency_ms?e.event_data.latency_ms+'ms':'—';
+          return '<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid rgba(30,58,110,0.4)"><div style="font-size:20px;flex-shrink:0">'+icon+'</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:3px"><span style="font-size:11px;font-weight:700;color:'+col+';font-family:\'Space Mono\',monospace">'+d.replace(/_/g,' ')+'</span><span style="font-size:10px;color:var(--mid);font-family:\'Space Mono\',monospace">'+act+'</span></div><div style="font-size:11px;color:var(--mid)">'+reason+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:11px;color:var(--cyan);font-family:\'Space Mono\',monospace">'+lat+'</div><div style="font-size:10px;color:var(--mid)">'+ts+'</div></div></div>';
+        }).join('');
+      }
+    }
+  }catch(err){console.log('Gov load err:',err);}
+}
+
+
+// ── ⚡ ACTION EVALUATE (NEW v0.4.5) ────────────────────────
+function renderEvaluate(c){
+  c.innerHTML=`
+    <div style="max-width:640px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-size:32px;margin-bottom:8px">⚡</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:4px">Action Evaluate</div>
+        <div style="font-size:13px;color:var(--mid)">Should this agent be allowed to perform this action?<br>Get an instant cryptographic decision — powered by VeriSigil trust scores.</div>
+      </div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header"><div class="panel-title">Evaluate an Action</div></div>
+        <div class="issue-form">
+          <div class="form-group"><label class="form-label">Agent ID *</label><input class="form-input" id="eval-agent-id" placeholder="vsa_..." value="vsa_52aaf4c1141d"/></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Action Type *</label>
+              <select class="form-select" id="eval-action-type">
+                <option value="delete_records">delete_records</option>
+                <option value="send_email">send_email</option>
+                <option value="transfer_funds">transfer_funds</option>
+                <option value="read_data">read_data</option>
+                <option value="modify_config">modify_config</option>
+                <option value="deploy_code">deploy_code</option>
+                <option value="access_database">access_database</option>
+                <option value="external_api_call">external_api_call</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Risk Level *</label>
+              <select class="form-select" id="eval-risk-level">
+                <option value="critical">🔴 Critical</option>
+                <option value="medium">🟡 Medium</option>
+                <option value="low">🟢 Low</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Context (environment)</label>
+            <select class="form-select" id="eval-context">
+              <option value="production">production</option>
+              <option value="staging">staging</option>
+              <option value="development">development</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="evaluateAction()" style="padding:10px;font-size:13px">⚡ Get Decision</button>
+        </div>
+      </div>
+      <div id="eval-result"></div>
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-header"><div class="panel-title">How decisions are made</div></div>
+        <div style="padding:16px;display:flex;flex-direction:column;gap:0">
+          ${[
+            {color:'var(--red)',   icon:'🚫',label:'BLOCK',                 rule:'Shadow agent detected OR trust score below 0.60'},
+            {color:'var(--amber)', icon:'👤',label:'REQUIRE HUMAN APPROVAL',rule:'Trust 0.60–0.85, OR critical action, OR EU HIGH_RISK classification'},
+            {color:'var(--cyan)',  icon:'📋',label:'ALLOW WITH LOG',        rule:'Trust above 0.85 + medium risk — full audit trail recorded'},
+            {color:'var(--green)', icon:'✅',label:'AUTO ALLOW',            rule:'Trust above 0.85 + low risk + verified identity confirmed'},
+          ].map(d=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(30,58,110,0.4)"><div style="font-size:16px;flex-shrink:0">${d.icon}</div><div style="font-size:11px;font-weight:700;color:${d.color};min-width:190px">${d.label}</div><div style="font-size:11px;color:var(--mid)">${d.rule}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function evaluateAction(){
+  const agentId=document.getElementById('eval-agent-id').value.trim();
+  const actionType=document.getElementById('eval-action-type').value;
+  const riskLevel=document.getElementById('eval-risk-level').value;
+  const context=document.getElementById('eval-context').value;
+  if(!agentId){document.getElementById('eval-result').innerHTML=`<div class="error-card">Please enter an Agent ID.</div>`;return;}
+  const res=document.getElementById('eval-result');
+  res.innerHTML=`<div class="loading-overlay"><div class="spinner"></div><div style="font-size:12px;color:var(--mid)">Evaluating action...</div></div>`;
+  try{
+    const r=await fetch(`${API}/v1/action/evaluate`,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'verisigil-secret-2026'},body:JSON.stringify({agent_id:agentId,action_type:actionType,risk_level:riskLevel,context})});
+    const data=await r.json();
+    if(data.detail||data.error){const msg=data.detail||data.error?.message||JSON.stringify(data);res.innerHTML=`<div class="error-card">API Error: ${msg}<br><br>Make sure this agent ID exists in your registry.</div>`;return;}
+    const dColors={'AUTO_ALLOW':'var(--green)','ALLOW_WITH_LOG':'var(--cyan)','REQUIRE_HUMAN_APPROVAL':'var(--amber)','BLOCK':'var(--red)'};
+    const dIcons={'AUTO_ALLOW':'✅','ALLOW_WITH_LOG':'📋','REQUIRE_HUMAN_APPROVAL':'👤','BLOCK':'🚫'};
+    const col=dColors[data.decision]||'var(--mid)';
+    const icon=dIcons[data.decision]||'?';
+    const confidence=Math.round((data.decision_confidence||0)*100);
+    const time=data.evaluated_at?new Date(data.evaluated_at).toLocaleTimeString():new Date().toLocaleTimeString();
+    res.innerHTML=`
+      <div class="panel" style="border-color:${col};border-width:2px">
+        <div style="padding:24px;text-align:center;border-bottom:1px solid rgba(30,58,110,0.4)">
+          <div style="font-size:44px;margin-bottom:10px">${icon}</div>
+          <div style="font-size:22px;font-weight:700;color:${col};letter-spacing:0.05em;margin-bottom:8px">${(data.decision||'').replace(/_/g,' ')}</div>
+          <div style="font-size:12px;color:var(--mid);max-width:420px;margin:0 auto;line-height:1.6">${data.reason||''}</div>
+          <div style="margin-top:16px">
+            <div style="font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Decision Confidence</div>
+            <div style="background:rgba(30,58,110,0.5);border-radius:20px;height:6px;overflow:hidden;max-width:220px;margin:0 auto"><div style="height:100%;width:${confidence}%;background:${col};border-radius:20px"></div></div>
+            <div style="font-size:16px;font-weight:700;color:${col};margin-top:6px;font-family:'Space Mono',monospace">${confidence}%</div>
+          </div>
+        </div>
+        <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          ${[['Agent ID',agentId],['Trust Score',data.trust_score?.toFixed(3)||'—'],['EU Risk Class',data.eu_risk_class||'—'],['Shadow Detected',data.shadow_detected?'⚠ YES — BLOCKED':'✓ Clear'],['Article 14',data.article_14_oversight_required?'⚠ Oversight required':'✓ Not required'],['Evaluation ID',data.evaluation_id||'—']].map(([k,v])=>`<div style="background:var(--navy3);border-radius:8px;padding:10px"><div style="font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:4px">${k}</div><div style="font-size:12px;font-weight:600;color:var(--white);font-family:'Space Mono',monospace;word-break:break-all">${v}</div></div>`).join('')}
+        </div>
+        <div style="padding:12px 16px;background:var(--navy3);border-top:1px solid rgba(30,58,110,0.4);display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:10px;color:var(--mid)">Policy: <span style="color:${col};font-weight:600">${data.suggested_policy||'—'}</span></div>
+          <div style="font-size:10px;color:var(--mid)">Evaluated at ${time}</div>
+        </div>
+      </div>
+    `;
+  }catch(e){res.innerHTML=`<div class="error-card">Connection error: ${e.message}<br><br>Make sure the agent ID exists in your VeriSigil registry.</div>`;}
+}
+
+// ── SHADOW DETECTION ───────────────────────────────────────
+function renderShadow(c){
+  c.innerHTML=`
+    <div style="max-width:700px;margin:0 auto">
+      <div class="panel" style="margin-bottom:18px;border-color:rgba(239,68,68,0.4)">
+        <div class="panel-header" style="background:var(--red-dim)"><div class="panel-title" style="color:var(--red)">⚠ Active Shadow Alerts</div><span class="badge badge-red">1 Alert</span></div>
+        <div class="shadow-item"><div style="font-size:16px">⚠</div><div class="shadow-info"><div class="shadow-name">DataSpy-9 — Clone Detected</div><div class="shadow-desc">vsa_m4n5o6 · Impersonating legitimate agent · Blocked at 14:32 UTC · Trust: 0.55</div></div><span class="badge badge-red">BLOCKED</span></div>
+      </div>
+      <div class="panel"><div class="panel-header"><div class="panel-title">All Agent Shadow Status</div></div>
+        ${AGENTS.map(a=>`<div class="shadow-item"><div style="font-size:16px">${a.emoji}</div><div class="shadow-info"><div class="shadow-name">${a.name}</div><div class="shadow-desc">${a.id} · Trust: ${a.trust.toFixed(2)}</div></div><span style="font-size:11px;font-weight:600;color:${a.shadow?'var(--red)':'var(--green)'}">${a.shadow?'⚠ CLONE DETECTED':'✓ Clear'}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ── AUDIT LOG ──────────────────────────────────────────────
+function renderAudit(c){
+  c.innerHTML=`
+    <div style="max-width:700px;margin:0 auto">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Cryptographic Audit Log</div><button class="btn btn-primary" onclick="loadFullAudit()" style="font-size:11px;padding:5px 10px">↻ Load Live Events</button></div>
+        <div id="full-audit-log">
+          ${[
+            {col:'var(--green)',event:'VERIFIED',meta:'vsa_537e3974858f · Trust: 0.97',time:'2m ago',sig:'✓'},
+            {col:'var(--red)',  event:'SHADOW_DETECTED',meta:'vsa_m4n5o6 · Clone attempt blocked',time:'14m ago',sig:'✓'},
+            {col:'var(--cyan)', event:'ACTION_EVALUATED',meta:'delete_records · REQUIRE_HUMAN_APPROVAL',time:'22m ago',sig:'✓'},
+            {col:'var(--cyan)', event:'ISSUED',meta:'vsa_j1k2l3 · SecureOps-5',time:'1h ago',sig:'✓'},
+            {col:'var(--amber)',event:'COMPLIANCE_CHECKED',meta:'vsa_g7h8i9 · eu_ai_act, gdpr',time:'2h ago',sig:'✓'},
+          ].map(e=>`<div class="audit-item"><div class="audit-dot" style="background:${e.col}"></div><div class="audit-content"><div class="audit-event">${e.event}</div><div class="audit-meta">${e.meta}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><div class="audit-time">${e.time}</div><div style="font-size:9px;color:var(--green)">${e.sig} Signed</div></div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function loadFullAudit(){
+  const el=document.getElementById('full-audit-log');
+  el.innerHTML=`<div class="loading-overlay"><div class="spinner"></div><div style="font-size:12px;color:var(--mid)">Loading live audit events...</div></div>`;
+  try{
+    const r=await fetch(`${API}/v1/passport/${TEST_AGENT}/audit`);
+    const data=await r.json();
+    const events=(data.audit_log||[]).reverse();
+    if(!events.length){el.innerHTML=`<div style="padding:20px;text-align:center;color:var(--mid)">No events found for test agent.</div>`;return;}
+    el.innerHTML=events.map(e=>{
+      const col=e.event==='VERIFIED'?'var(--green)':e.event==='REVOKED'?'var(--red)':'var(--cyan)';
+      return`<div class="audit-item"><div class="audit-dot" style="background:${col}"></div><div class="audit-content"><div class="audit-event">${e.event}</div><div class="audit-meta">${e.timestamp?.substring(0,16).replace('T',' ')} UTC</div></div><div style="font-size:9px;color:${e.signature_valid?'var(--green)':'var(--red)'}">${e.signature_valid?'✓ Signed':'✗ Invalid'}</div></div>`;
+    }).join('');
+  }catch(e){el.innerHTML=`<div class="error-card">Could not load live audit: ${e.message}</div>`;}
+}
+
+// ── TRUST NETWORK ──────────────────────────────────────────
+function renderTrust(c){
+  c.innerHTML=`
+    <div style="max-width:700px;margin:0 auto">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Trust Network Graph</div><a href="trust_network.html" class="btn btn-primary" style="font-size:11px;padding:5px 10px">Open Full Graph →</a></div>
+        <div style="padding:24px;text-align:center">
+          <div style="font-size:13px;color:var(--mid);margin-bottom:20px">Live trust connections between agents and verifiers</div>
+          <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap">
+            ${AGENTS.filter(a=>!a.shadow).map(a=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:48px;height:48px;border-radius:12px;background:${a.trust>=0.8?'var(--green-dim)':'var(--amber-dim)'};border:2px solid ${a.trust>=0.8?'var(--green)':'var(--amber)'};display:flex;align-items:center;justify-content:center;font-size:22px">${a.emoji}</div><div style="font-size:10px;font-weight:600">${a.name}</div><div style="font-size:10px;font-family:'Space Mono',monospace;color:${a.trust>=0.8?'var(--green)':'var(--amber)'}">${a.trust.toFixed(2)}</div></div>`).join('')}
+          </div>
+          <div style="margin-top:20px"><a href="trust_network.html" class="btn btn-outline">View Interactive Network →</a></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── COMPLIANCE ─────────────────────────────────────────────
+function renderCompliance(c){
+  c.innerHTML=`
+    <div style="max-width:700px;margin:0 auto">
+      <div class="panel" style="margin-bottom:18px">
+        <div class="panel-header"><div class="panel-title">EU AI Act Compliance Status</div></div>
+        ${[
+          {icon:'✅',name:'Cryptographic Identity (Ed25519)',status:'Compliant',col:'var(--green)',detail:'All agents have unique signed cryptographic identities'},
+          {icon:'✅',name:'Signed Audit Trail',status:'Compliant',col:'var(--green)',detail:'Every event is cryptographically signed and immutable'},
+          {icon:'✅',name:'Shadow Detection™',status:'Compliant',col:'var(--green)',detail:'Real-time clone and impersonation monitoring active'},
+          {icon:'✅',name:'Action Evaluate Engine',status:'Live v0.4.5',col:'var(--cyan)',detail:'Human oversight enforcement via POST /v1/action/evaluate'},
+          {icon:'✅',name:'W3C DID Standard',status:'Compliant',col:'var(--green)',detail:'Decentralized identifiers for every registered agent'},
+          {icon:'⏳',name:'ZK Compliance Engine',status:'Post-Seed',col:'var(--mid)',detail:'Zero-knowledge proofs — planned after seed round'},
+          {icon:'⏳',name:'EU AI Act Certification',status:'In Progress',col:'var(--amber)',detail:'Formal certification audit — Q4 2026'},
+          {icon:'❌',name:'HIPAA',status:'BAA Required',col:'var(--red)',detail:'Contact info@verisigilai.com for healthcare BAA'},
+          {icon:'⏳',name:'SOC 2',status:'Q4 2026',col:'var(--amber)',detail:'SOC 2 audit scheduled for Q4 2026'},
+        ].map(i=>`<div class="compliance-item"><div style="font-size:16px">${i.icon}</div><div style="flex:1"><div class="compliance-name">${i.name}</div><div style="font-size:10px;color:var(--mid);margin-top:2px">${i.detail}</div></div><div class="compliance-status" style="color:${i.col}">${i.status}</div></div>`).join('')}
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Article 14 — Human Oversight Enforcement</div></div>
+        <div style="padding:16px"><div style="font-size:12px;color:var(--mid);line-height:1.7;margin-bottom:12px">EU AI Act Article 14 requires human oversight for HIGH_RISK AI systems. VeriSigil's Action Evaluate endpoint enforces this automatically — when an agent is classified as HIGH_RISK, actions are escalated to require human approval before proceeding.</div><button class="btn btn-primary" onclick="showPage('evaluate')" style="font-size:12px">⚡ Test Article 14 Enforcement →</button></div>
+      </div>
+    </div>
+  `;
+}
+
+// ── START ──────────────────────────────────────────────────
+showPage('dashboard');
+</script>
+</body>
+</html>

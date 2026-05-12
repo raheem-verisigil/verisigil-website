@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — VeriSigil AI</title>
+<meta name="description" content="Technical insights on AI agent identity, EU AI Act compliance, and the future of AI trust infrastructure.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+:root{--bg:#030B1A;--card:#0A1930;--cyan:#00D4F5;--green:#00E676;--amber:#FFB800;--text:#E8F0FF;--muted:rgba(232,240,255,0.55);--border:rgba(0,212,245,0.12);--sans:'Syne',sans-serif;--mono:'Space Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:58px;background:rgba(3,11,26,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
+.nav-logo{font-size:16px;font-weight:800;color:var(--cyan);text-decoration:none;}
+.nav-logo span{color:var(--text);}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;margin-left:24px;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-cta a{background:var(--cyan);color:#030B1A;padding:7px 16px;border-radius:7px;font-weight:700;font-size:12px;text-decoration:none;margin-left:24px;}
+.page{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:60px 24px 100px;}
+h1{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-0.03em;margin-bottom:10px;}
+h1 span{color:var(--cyan);}
+.subtitle{font-size:15px;color:var(--muted);margin-bottom:48px;}
+.posts-grid{display:grid;gap:20px;}
+.post-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-decoration:none;display:block;transition:all 0.2s;}
+.post-card:hover{border-color:rgba(0,212,245,0.35);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+.post-tag{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.post-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em;line-height:1.3;}
+.post-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.post-meta{font-size:12px;color:rgba(232,240,255,0.35);}
+.post-arrow{color:var(--cyan);font-size:16px;margin-top:12px;}
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--muted);font-size:13px;position:relative;z-index:1;}
+footer a{color:var(--cyan);text-decoration:none;}
+@media(max-width:600px){nav .nav-links{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">Veri<span>Sigil</span> AI</a>
+  <div class="nav-links">
+    <a href="/quickstart.html">Quickstart</a>
+    <a href="/scanner.html">🔍 Scanner</a>
+    <a href="/security.html">Security</a>
+  </div>
+  <div><a href="/quickstart.html" class="nav-cta">Try Free →</a></div>
+</nav>
 
+<div class="page">
+  <h1>AI Trust <span>Insights</span></h1>
+  <p class="subtitle">Technical guides on AI agent identity, EU AI Act compliance, and the infrastructure of trustworthy AI.</p>
+
+  <div class="posts-grid">
+    <a href="/blog/eu-ai-act-compliance-checklist.html" class="post-card">
+      <div class="post-tag">⏱ EU AI Act · August 2026</div>
+      <div class="post-title">EU AI Act Compliance Checklist for AI Agents (2026 Deadline)</div>
+      <div class="post-desc">Everything your AI agent needs to comply with the EU AI Act before August 1, 2026. Step-by-step technical checklist covering identity, audit trails, human oversight, and registration.</div>
+      <div class="post-meta">May 7, 2026 · 8 min read</div>
+      <div class="post-arrow">Read article →</div>
+    </a>
+
+    <a href="/blog/high-risk-ai-agent-eu-ai-act.html" class="post-card">
+      <div class="post-tag">EU AI Act · High Risk</div>
+      <div class="post-title">What Happens If Your AI Agent Is Classified as High-Risk Under the EU AI Act?</div>
+      <div class="post-desc">High-risk AI agent classification triggers strict legal obligations. Learn which agents qualify as high-risk, what conformity assessment requires, and what fines look like.</div>
+      <div class="post-meta">May 7, 2026 · 6 min read</div>
+      <div class="post-arrow">Read article →</div>
+    </a>
+
+    <a href="/blog/compliance-report-5-minutes.html" class="post-card">
+      <div class="post-tag">How-To Guide</div>
+      <div class="post-title">How to Generate an EU AI Act Compliance Report for Your AI Agent in 5 Minutes</div>
+      <div class="post-desc">A step-by-step guide to generating verifiable EU AI Act compliance evidence for your AI agent. Free tools, no signup required, takes exactly 5 minutes.</div>
+      <div class="post-meta">May 7, 2026 · 4 min read</div>
+      <div class="post-arrow">Read article →</div>
+    </a>
+
+    <a href="/blog/ssl-moment-ai-agents.html" class="post-card">
+      <div class="post-tag">Technical Insight</div>
+      <div class="post-title">AI Agent Identity: The SSL Moment for Autonomous Systems</div>
+      <div class="post-desc">Why cryptographic agent identity is the defining infrastructure challenge of the agentic era — and how it mirrors the SSL moment that made the web trustworthy.</div>
+      <div class="post-meta">May 7, 2026 · 7 min read</div>
+      <div class="post-arrow">Read article →</div>
+    </a>
+
+    <a href="/blog/nist-ai-rmf-vs-eu-ai-act.html" class="post-card">
+      <div class="post-tag">Compliance Frameworks</div>
+      <div class="post-title">NIST AI Risk Management Framework vs EU AI Act: What Developers Need to Know</div>
+      <div class="post-desc">A practical comparison of NIST AI RMF and EU AI Act requirements for AI agent developers. Key differences, overlaps, and how to satisfy both frameworks simultaneously.</div>
+      <div class="post-meta">May 7, 2026 · 7 min read</div>
+      <div class="post-arrow">Read article →</div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p style="margin-bottom:8px;"><a href="/">Home</a> · <a href="/scanner.html">Scanner</a> · <a href="/quickstart.html">Quickstart</a> · <a href="/security.html">Security</a></p>
+  <p style="font-size:12px;color:rgba(255,255,255,0.25);">© 2026 VeriSigil AI</p>
+</footer>
+</body>
+</html>

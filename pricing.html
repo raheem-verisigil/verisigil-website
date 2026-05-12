@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — VeriSigil AI | Runtime Guard for AI Agents</title>
+<meta name="description" content="Simple, transparent pricing for VeriSigil AI Runtime Guard. Start free, scale as you grow. EU AI Act compliant AI agent verification.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #050E2B;
+  --navy2: #0D1A3A;
+  --navy3: #0A1628;
+  --cyan: #00D4F5;
+  --green: #22C55E;
+  --amber: #F59E0B;
+  --white: #FFFFFF;
+  --mid: #94A3B8;
+  --border: rgba(30,58,110,0.6);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Space Grotesk',sans-serif; background:var(--navy); color:var(--white); line-height:1.7; }
+
+nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 40px; border-bottom:1px solid var(--border);
+  background:var(--navy2);
+}
+.nav-logo { font-size:18px; font-weight:700; color:var(--cyan); text-decoration:none; }
+.nav-links { display:flex; gap:24px; }
+.nav-links a { color:var(--mid); text-decoration:none; font-size:13px; transition:color 0.15s; }
+.nav-links a:hover { color:var(--white); }
+.nav-cta { background:var(--cyan); color:var(--navy); padding:8px 16px; border-radius:7px; font-size:13px; font-weight:700; text-decoration:none; }
+
+.hero { text-align:center; padding:64px 24px 48px; }
+.hero-tag { display:inline-block; background:rgba(0,212,245,0.1); border:1px solid rgba(0,212,245,0.3); color:var(--cyan); font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:4px 14px; border-radius:20px; margin-bottom:20px; }
+.hero h1 { font-size:40px; font-weight:700; margin-bottom:16px; line-height:1.2; }
+.hero h1 span { color:var(--cyan); }
+.hero p { font-size:16px; color:var(--mid); max-width:540px; margin:0 auto 32px; }
+
+.deadline-bar { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:12px 24px; display:inline-flex; align-items:center; gap:10px; margin-bottom:48px; font-size:13px; }
+.deadline-bar strong { color:#EF4444; }
+
+.plans { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; max-width:1100px; margin:0 auto; padding:0 24px 80px; }
+
+.plan { background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:32px; position:relative; display:flex; flex-direction:column; }
+.plan.featured { border-color:var(--cyan); border-width:2px; }
+.plan.featured::before { content:'MOST POPULAR'; position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--cyan); color:var(--navy); font-size:10px; font-weight:700; letter-spacing:0.1em; padding:3px 14px; border-radius:20px; }
+
+.plan-name { font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
+.plan-price { font-size:42px; font-weight:700; font-family:'Space Mono',monospace; color:var(--white); line-height:1; margin-bottom:4px; }
+.plan-price span { font-size:16px; font-weight:400; color:var(--mid); }
+.plan-naira { font-size:12px; color:var(--mid); font-family:'Space Mono',monospace; margin-bottom:8px; }
+.plan-desc { font-size:13px; color:var(--mid); margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+
+.plan-features { list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:32px; flex:1; }
+.plan-features li { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--mid); }
+.plan-features li .check { color:var(--green); flex-shrink:0; margin-top:2px; }
+.plan-features li .cross { color:#475569; flex-shrink:0; margin-top:2px; }
+.plan-features li strong { color:var(--white); }
+
+.plan-btn { display:block; text-align:center; padding:13px; border-radius:9px; font-weight:700; font-size:14px; text-decoration:none; transition:all 0.15s; }
+.plan-btn.primary { background:var(--cyan); color:var(--navy); }
+.plan-btn.primary:hover { opacity:0.88; }
+.plan-btn.outline { background:transparent; color:var(--cyan); border:1px solid var(--cyan); }
+.plan-btn.outline:hover { background:rgba(0,212,245,0.08); }
+.plan-btn.dark { background:var(--navy3); color:var(--white); border:1px solid var(--border); }
+.plan-btn.dark:hover { border-color:var(--cyan); color:var(--cyan); }
+
+.calls-out { font-size:11px; color:var(--mid); text-align:center; margin-top:10px; }
+
+.faq { max-width:740px; margin:0 auto; padding:0 24px 80px; }
+.faq h2 { font-size:26px; font-weight:700; text-align:center; margin-bottom:40px; }
+.faq-item { border-bottom:1px solid var(--border); padding:20px 0; }
+.faq-q { font-size:15px; font-weight:600; color:var(--white); margin-bottom:8px; }
+.faq-a { font-size:13px; color:var(--mid); line-height:1.7; }
+
+.enterprise-banner { max-width:900px; margin:0 auto 80px; padding:0 24px; }
+.enterprise-box { background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:40px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+.enterprise-box h3 { font-size:22px; font-weight:700; margin-bottom:8px; }
+.enterprise-box p { font-size:14px; color:var(--mid); max-width:480px; }
+.enterprise-btns { display:flex; gap:12px; flex-shrink:0; flex-wrap:wrap; }
+.btn-primary { background:var(--cyan); color:var(--navy); padding:12px 24px; border-radius:8px; font-weight:700; font-size:14px; text-decoration:none; }
+.btn-outline { background:transparent; color:var(--cyan); border:1px solid var(--cyan); padding:12px 24px; border-radius:8px; font-weight:700; font-size:14px; text-decoration:none; }
+
+.compare { max-width:900px; margin:0 auto 80px; padding:0 24px; }
+.compare h2 { font-size:26px; font-weight:700; text-align:center; margin-bottom:40px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead th { background:var(--navy2); color:var(--mid); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
+thead th:not(:first-child) { text-align:center; }
+tbody td { padding:12px 16px; border-bottom:1px solid rgba(30,58,110,0.4); color:var(--mid); }
+tbody td:first-child { color:var(--white); font-weight:500; }
+tbody td:not(:first-child) { text-align:center; }
+tbody tr:last-child td { border-bottom:none; }
+.yes { color:var(--green); font-size:16px; }
+.no { color:#475569; font-size:16px; }
+.val { color:var(--white); font-weight:600; font-family:'Space Mono',monospace; font-size:12px; }
+
+footer { border-top:1px solid var(--border); padding:32px 40px; text-align:center; }
+footer p { color:var(--mid); font-size:13px; }
+footer a { color:var(--cyan); text-decoration:none; }
+
+@media(max-width:900px) { .plans { grid-template-columns:1fr; } .enterprise-box { flex-direction:column; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <div class="nav-links">
+    <a href="https://verisigilai.com/scanner.html">Scanner</a>
+    <a href="https://verisigilai.com/quickstart.html">Quickstart</a>
+    <a href="https://verisigilai.com/blog/">Blog</a>
+    <a href="https://verisigilai.com/sigil_studio.html">Studio</a>
+  </div>
+  <a href="https://verisigilai.com/scanner.html" class="nav-cta">Free Scanner →</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Pricing</div>
+  <h1>Simple Pricing for<br><span>AI Agent Governance</span></h1>
+  <p>Start free. Scale as your agents grow. Cancel anytime. Every plan includes EU AI Act compliance built in.</p>
+  <div class="deadline-bar">
+    ⏰ <strong>EU AI Act enforcement: August 2, 2026</strong> — Get compliant before the deadline
+  </div>
+</div>
+
+<div class="plans">
+
+  <!-- STARTER -->
+  <div class="plan">
+    <div class="plan-name">Starter</div>
+    <div class="plan-price">$49<span>/mo</span></div>
+    <div class="plan-naira">≈ NGN 78,400/month</div>
+    <div class="plan-desc">For developers and small teams building their first verified AI agents.</div>
+    <ul class="plan-features">
+      <li><span class="check">✓</span><div><strong>1,000</strong> Runtime Guard verifications/month</div></li>
+      <li><span class="check">✓</span><div><strong>5</strong> AI agent passports</div></li>
+      <li><span class="check">✓</span><div>Cryptographic identity (Ed25519)</div></li>
+      <li><span class="check">✓</span><div>Immutable audit trail</div></li>
+      <li><span class="check">✓</span><div>EU AI Act compliance reporting</div></li>
+      <li><span class="check">✓</span><div>Shadow Detection™</div></li>
+      <li><span class="check">✓</span><div>Email support</div></li>
+      <li><span class="cross">✗</span><div>Custom policies</div></li>
+      <li><span class="cross">✗</span><div>Slack alerts</div></li>
+      <li><span class="cross">✗</span><div>SLA guarantee</div></li>
+    </ul>
+    <a href="https://paystack.shop/pay/w2m0bx1-17" class="plan-btn outline" target="_blank">Get Started →</a>
+    <div class="calls-out">Billed monthly in NGN</div>
+  </div>
+
+  <!-- PROFESSIONAL -->
+  <div class="plan featured">
+    <div class="plan-name">Professional</div>
+    <div class="plan-price">$499<span>/mo</span></div>
+    <div class="plan-naira">≈ NGN 798,400/month</div>
+    <div class="plan-desc">For growing teams deploying AI agents in production environments.</div>
+    <ul class="plan-features">
+      <li><span class="check">✓</span><div><strong>50,000</strong> Runtime Guard verifications/month</div></li>
+      <li><span class="check">✓</span><div><strong>Unlimited</strong> AI agent passports</div></li>
+      <li><span class="check">✓</span><div>Cryptographic identity (Ed25519)</div></li>
+      <li><span class="check">✓</span><div>Immutable audit trail</div></li>
+      <li><span class="check">✓</span><div>EU AI Act compliance reporting</div></li>
+      <li><span class="check">✓</span><div>Shadow Detection™</div></li>
+      <li><span class="check">✓</span><div><strong>Custom policy rules</strong></div></li>
+      <li><span class="check">✓</span><div><strong>Slack alerts</strong></div></li>
+      <li><span class="check">✓</span><div><strong>SDK access</strong></div></li>
+      <li><span class="check">✓</span><div>Priority email support</div></li>
+    </ul>
+    <a href="https://paystack.shop/pay/y5t592t4q7" class="plan-btn primary" target="_blank">Get Started →</a>
+    <div class="calls-out">Billed monthly in NGN</div>
+  </div>
+
+  <!-- ENTERPRISE -->
+  <div class="plan">
+    <div class="plan-name">Enterprise</div>
+    <div class="plan-price">$2,499<span>/mo</span></div>
+    <div class="plan-naira">≈ NGN 3,998,400/month</div>
+    <div class="plan-desc">For enterprises requiring unlimited scale, dedicated support and SLA guarantees.</div>
+    <ul class="plan-features">
+      <li><span class="check">✓</span><div><strong>Unlimited</strong> Runtime Guard verifications</div></li>
+      <li><span class="check">✓</span><div><strong>Unlimited</strong> AI agent passports</div></li>
+      <li><span class="check">✓</span><div>Cryptographic identity (Ed25519)</div></li>
+      <li><span class="check">✓</span><div>Immutable audit trail</div></li>
+      <li><span class="check">✓</span><div>EU AI Act compliance reporting</div></li>
+      <li><span class="check">✓</span><div>Shadow Detection™</div></li>
+      <li><span class="check">✓</span><div>Custom policy rules</div></li>
+      <li><span class="check">✓</span><div>Slack + webhook alerts</div></li>
+      <li><span class="check">✓</span><div><strong>Dedicated support engineer</strong></div></li>
+      <li><span class="check">✓</span><div><strong>99.9% SLA guarantee</strong></div></li>
+    </ul>
+    <a href="https://paystack.shop/pay/1cgmezjnmg" class="plan-btn dark" target="_blank">Get Started →</a>
+    <div class="calls-out">Billed monthly in NGN</div>
+  </div>
+
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="compare">
+  <h2>Compare Plans</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Starter</th>
+        <th>Professional</th>
+        <th>Enterprise</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Monthly price (USD)</td><td class="val">$49</td><td class="val">$499</td><td class="val">$2,499</td></tr>
+      <tr><td>Runtime Guard verifications</td><td class="val">1,000</td><td class="val">50,000</td><td class="val">Unlimited</td></tr>
+      <tr><td>AI agent passports</td><td class="val">5</td><td class="val">Unlimited</td><td class="val">Unlimited</td></tr>
+      <tr><td>Cryptographic identity (Ed25519)</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>Immutable audit trail</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>Shadow Detection™</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>EU AI Act compliance reports</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>Custom policy rules</td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>Slack alerts</td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>SDK access</td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>Dedicated support engineer</td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>SLA guarantee</td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ENTERPRISE CONTACT -->
+<div class="enterprise-banner">
+  <div class="enterprise-box">
+    <div>
+      <h3>Need a custom plan?</h3>
+      <p>For BobSentry partnerships, white-label integrations, or volume pricing — let's talk directly. First 30 days free for integration partners.</p>
+    </div>
+    <div class="enterprise-btns">
+      <a href="mailto:raheem@verisigilai.com" class="btn-primary">Contact Raheem →</a>
+      <a href="https://verisigilai.com/quickstart.html" class="btn-outline">Free Trial →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq">
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">What is a Runtime Guard verification?</div>
+    <div class="faq-a">Every time your AI agent calls POST /v1/guard/verify before executing an action — that counts as one verification. The endpoint checks identity, trust score, shadow detection and policy in under 50ms and returns ALLOW, DENY or REQUIRE_HUMAN_APPROVAL.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can I try VeriSigil for free?</div>
+    <div class="faq-a">Yes. Use our free scanner at verisigilai.com/scanner.html and issue your first agent passport at verisigilai.com/quickstart.html — no credit card required. Integration partners get 30 days free on any plan.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Does VeriSigil help with EU AI Act compliance?</div>
+    <div class="faq-a">Yes. Every plan includes cryptographic audit trails, human oversight enforcement via Article 14, and compliance reports. VeriSigil was built specifically for EU AI Act alignment — the August 2026 deadline is 84 days away.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What payment methods are accepted?</div>
+    <div class="faq-a">All major cards, bank transfers, and mobile money via Paystack. For enterprise customers we also accept wire transfer and can issue invoices in USD, EUR or GBP. Contact raheem@verisigilai.com for invoice-based billing.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can I cancel anytime?</div>
+    <div class="faq-a">Yes. No contracts, no lock-in. Cancel anytime from your Paystack account. Your agents and audit trails remain accessible for 90 days after cancellation.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What is Shadow Detection™?</div>
+    <div class="faq-a">Shadow Detection monitors your registered AI agents in real time for clone and impersonation attempts. If another agent tries to use your agent's identity, VeriSigil detects and blocks it instantly — and logs the event to your immutable audit trail.</div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 VeriSigil AI · <a href="https://verisigilai.com">verisigilai.com</a> · Built in Lagos, Nigeria 🇳🇬 · <a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a></p>
+</footer>
+
+</body>
+</html>

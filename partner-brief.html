@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Partner Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#050E2B;--navy2:#0D1A3A;--cyan:#00D4F5;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--white:#fff;--mid:#94A3B8;--border:rgba(30,58,110,0.6);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--navy);color:var(--white);padding:40px 24px 80px;line-height:1.7;}
+.wrap{max-width:740px;margin:0 auto;}
+@media print{body{background:#fff;color:#000;padding:20px}.section{border:1px solid #ddd!important;background:#f9f9f9!important}.section-label{color:#0099cc!important}.no-print{display:none}}
+
+.header{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.logo{font-size:18px;font-weight:800;color:var(--cyan);margin-bottom:8px;}
+h1{font-size:26px;font-weight:700;margin-bottom:6px;}
+.meta{font-size:12px;color:var(--mid);}
+
+.promise{background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.2);border-radius:10px;padding:18px 20px;margin-bottom:28px;text-align:center;font-size:15px;font-weight:600;color:var(--white);line-height:1.6;}
+.promise em{font-style:normal;color:var(--cyan);}
+
+.section{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:18px;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;}
+.section h2{font-size:17px;font-weight:700;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(30,58,110,0.4);font-size:13px;}
+.item:last-child{border-bottom:none;}
+.item-icon{flex-shrink:0;font-size:15px;margin-top:1px;}
+.item-content{}
+.item-title{font-weight:600;color:var(--white);margin-bottom:2px;}
+.item-desc{color:var(--mid);font-size:12px;line-height:1.6;}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin:2px;}
+.tag-green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:var(--green);}
+.tag-amber{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber);}
+.tag-cyan{background:rgba(0,212,245,0.1);border:1px solid rgba(0,212,245,0.3);color:var(--cyan);}
+.tag-red{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);}
+
+.flow{display:flex;flex-direction:column;gap:0;}
+.flow-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(30,58,110,0.3);}
+.flow-item:last-child{border-bottom:none;}
+.flow-num{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--cyan);flex-shrink:0;font-family:'Space Mono',monospace;}
+.flow-text{font-size:13px;color:var(--mid);}
+.flow-text strong{color:var(--white);}
+
+.referral-box{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:18px;}
+.referral-title{font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.referral-item{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid rgba(34,197,94,0.1);}
+.referral-item:last-child{border-bottom:none;}
+.referral-label{color:var(--mid);}
+.referral-value{font-weight:600;color:var(--white);}
+
+.not-fit{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:8px;padding:14px;margin-top:12px;}
+.not-fit-title{font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.not-fit-item{font-size:12px;color:var(--mid);padding:3px 0;}
+
+.links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
+.link{background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;}
+.link-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:3px;}
+.link-url{font-size:10px;color:var(--cyan);font-family:'Space Mono',monospace;word-break:break-all;}
+
+.footer{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--mid);}
+.footer a{color:var(--cyan);text-decoration:none;}
+
+.print-btn{position:fixed;bottom:24px;right:24px;background:var(--cyan);color:var(--navy);border:none;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;}
+
+@media(max-width:600px){.two-col{grid-template-columns:1fr}.links{grid-template-columns:1fr}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo">⬡ VeriSigil AI</div>
+    <h1>Partner & Referral Brief</h1>
+    <div class="meta">Prepared for Altivon Labs · Saad Muzafar · May 2026 · Confidential</div>
+  </div>
+
+  <div class="promise">
+    "<em>No high-risk AI action executes</em> without policy evaluation,<br>
+    <em>human escalation</em> where needed, and an <em>audit trail.</em>"
+  </div>
+
+  <!-- 1. IDEAL CUSTOMER PROFILE -->
+  <div class="section">
+    <div class="section-label">Section 01</div>
+    <h2>Ideal Customer Profile</h2>
+
+    <div class="item">
+      <div class="item-icon">🏢</div>
+      <div class="item-content">
+        <div class="item-title">Company Stage</div>
+        <div class="item-desc">Early-stage to mid-market. Seed to Series B. Has at least one AI agent running or in development. Engineering team of 2–20 people. Moving from MVP into production deployment.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">🌍</div>
+      <div class="item-content">
+        <div class="item-title">Geography</div>
+        <div class="item-desc">Any company whose AI agents interact with EU users — regardless of where the company is based. EU AI Act applies to the user location not the company location. Also strong fit for UK, US, and Middle East companies with EU market exposure.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">⚠️</div>
+      <div class="item-content">
+        <div class="item-title">Industry — High Priority</div>
+        <div class="item-desc">
+          <span class="tag tag-red">Fintech</span>
+          <span class="tag tag-red">Healthcare AI</span>
+          <span class="tag tag-red">Legal Tech</span>
+          <span class="tag tag-red">HR / Recruitment AI</span>
+          <span class="tag tag-amber">Enterprise Automation</span>
+          <span class="tag tag-amber">Insurance Tech</span>
+          <span class="tag tag-amber">Regulatory Tech</span>
+        </div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">🤖</div>
+      <div class="item-content">
+        <div class="item-title">Technical Profile</div>
+        <div class="item-desc">Building with LangChain, CrewAI, AutoGen, OpenAI Assistants, or custom Python agent frameworks. Deploying agents that take real-world actions — not just generating text.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">😰</div>
+      <div class="item-content">
+        <div class="item-title">Pain Signal — What They Are Saying</div>
+        <div class="item-desc">"Our AI agent is making payments / accessing databases / sending emails autonomously and we have no audit trail." · "Our enterprise client is asking us to prove our AI is governed." · "We need EU AI Act compliance before our Q3 launch." · "We need a human in the loop before the agent executes high-risk actions."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. BEST FIT USE CASES -->
+  <div class="section">
+    <div class="section-label">Section 02</div>
+    <h2>Best-Fit Use Cases</h2>
+
+    <div class="item">
+      <div class="item-icon">💳</div>
+      <div class="item-content">
+        <div class="item-title">Fintech — AI Payment Approval</div>
+        <div class="item-desc">AI agent processes payments or approves transactions. Runtime Guard blocks anything above a threshold and routes to human approval. Audit trail proves every decision for regulators. <span class="tag tag-red">HIGH_RISK</span></div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">🗄️</div>
+      <div class="item-content">
+        <div class="item-title">Enterprise — Autonomous Database Operations</div>
+        <div class="item-desc">AI agent writes to, updates, or deletes records in production databases. Runtime Guard enforces PII policies and requires human approval for destructive operations. <span class="tag tag-amber">MEDIUM_RISK</span></div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">⚕️</div>
+      <div class="item-content">
+        <div class="item-title">Healthcare — AI Clinical Decision Support</div>
+        <div class="item-desc">AI agent recommends or triggers clinical workflows. EU AI Act classifies these as HIGH_RISK. VeriSigil provides the identity, oversight enforcement, and audit trail required for regulatory compliance. <span class="tag tag-red">HIGH_RISK</span></div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">⚖️</div>
+      <div class="item-content">
+        <div class="item-title">Legal Tech — AI Contract Execution</div>
+        <div class="item-desc">AI agent reviews contracts, flags clauses, or triggers signature workflows. Requires human oversight before any legally binding action executes. Audit trail provides defensible evidence. <span class="tag tag-red">HIGH_RISK</span></div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">🔗</div>
+      <div class="item-content">
+        <div class="item-title">Multi-Agent Systems — A2A Governance</div>
+        <div class="item-desc">Multiple AI agents communicating and triggering each other's actions. Runtime Guard verifies identity and admissibility at every agent-to-agent handoff. Prevents ungoverned cascading actions. <span class="tag tag-cyan">EMERGING</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. WHAT RUNTIME GUARD DOES TODAY -->
+  <div class="section">
+    <div class="section-label">Section 03</div>
+    <h2>What Runtime Guard Does Today — Live in Production</h2>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-text"><strong>Agent calls POST /v1/guard/verify</strong> before any action executes</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-text"><strong>Identity verified cryptographically</strong> — Ed25519 passport, shadow detection, expiry check</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-text"><strong>Trust score evaluated</strong> — live score 0.0–1.0, below 0.60 = automatic DENY</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-text"><strong>Policy applied</strong> — payment threshold, PII rules, blocked tools, action-specific rules</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-text"><strong>Decision returned in under 50ms</strong> — ALLOW · DENY · REQUIRE_HUMAN_APPROVAL</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-text"><strong>Approval request created automatically</strong> — unique URL, 24hr expiry, email sent to approver</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">7</div>
+        <div class="flow-text"><strong>Approver reviews and decides</strong> — standalone Approval Console, approve or reject with name and email</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">8</div>
+        <div class="flow-text"><strong>Decision cryptographically logged</strong> — immutable audit trail, Ed25519 signed, forever</div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+      <span class="tag tag-green">74 Active Passports</span>
+      <span class="tag tag-green">0.963 Avg Trust Score</span>
+      <span class="tag tag-green">&lt;50ms Latency</span>
+      <span class="tag tag-green">v0.5.4 Live</span>
+      <span class="tag tag-cyan">API Docs Live</span>
+      <span class="tag tag-cyan">15-min Integration</span>
+    </div>
+  </div>
+
+  <!-- 4. WORKFLOWS SUPPORTED TODAY -->
+  <div class="section">
+    <div class="section-label">Section 04</div>
+    <h2>AI Agent Workflows Supported Today</h2>
+
+    <div class="two-col">
+      <div>
+        <div class="item">
+          <div class="item-icon">✅</div>
+          <div class="item-content">
+            <div class="item-title">LangChain Agents</div>
+            <div class="item-desc">Wrap any tool call. 15-min integration. Copy-paste SDK.</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-icon">✅</div>
+          <div class="item-content">
+            <div class="item-title">CrewAI Agents</div>
+            <div class="item-desc">Guard agent tasks before execution. Works with any CrewAI tool.</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-icon">✅</div>
+          <div class="item-content">
+            <div class="item-title">OpenAI Assistants</div>
+            <div class="item-desc">Intercept function calls before they execute.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="item">
+          <div class="item-icon">✅</div>
+          <div class="item-content">
+            <div class="item-title">AutoGen</div>
+            <div class="item-desc">Override execute_code_blocks with Runtime Guard check.</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-icon">✅</div>
+          <div class="item-content">
+            <div class="item-title">Custom Python</div>
+            <div class="item-desc">Raw HTTP. Works with any language or framework.</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-icon">✅</div>
+          <div class="item-content">
+            <div class="item-title">Action Types</div>
+            <div class="item-desc">payment · data_access · tool_use · api_call · send_email · delete_records</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="not-fit">
+      <div class="not-fit-title">❌ Not The Right Fit Right Now</div>
+      <div class="not-fit-item">→ Pure text generation with no real-world actions (ChatGPT wrappers, content tools)</div>
+      <div class="not-fit-item">→ Internal tools with no external API calls or data mutations</div>
+      <div class="not-fit-item">→ Agents with no EU market exposure and no compliance requirements</div>
+      <div class="not-fit-item">→ Companies that need SOC2 or ISO 27001 certification (we are not there yet)</div>
+    </div>
+  </div>
+
+  <!-- 5. STAGE FIT -->
+  <div class="section">
+    <div class="section-label">Section 05</div>
+    <h2>What Stage of Product and Team Is The Best Fit</h2>
+
+    <div class="item">
+      <div class="item-icon">🟢</div>
+      <div class="item-content">
+        <div class="item-title">Best Fit — Agent in development or early production</div>
+        <div class="item-desc">Building AI agents now and want to get governance right from day one before bad habits form. EU AI Act deadline pressure — August 2026 enforcement is 80 days away. Engineer or technical founder who can integrate an API in an afternoon.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">🟢</div>
+      <div class="item-content">
+        <div class="item-title">Best Fit — Selling to enterprise buyers</div>
+        <div class="item-desc">Startup selling AI agent products to enterprise clients who are asking "how is this governed?" VeriSigil gives them a concrete, demonstrable answer — not a policy document.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">🟡</div>
+      <div class="item-content">
+        <div class="item-title">Good Fit — Agent already in production, retrofitting governance</div>
+        <div class="item-desc">One API call added to existing agent code. Does not require architectural changes. Can be added to a running system in a day.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-icon">🔴</div>
+      <div class="item-content">
+        <div class="item-title">Not Ready Yet — Large enterprise procurement</div>
+        <div class="item-desc">Fortune 500 procurement requires SOC2, ISO 27001, enterprise SLAs, and dedicated support. We are not there yet. Best fit is mid-market and fast-moving startups.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. REFERRAL TERMS -->
+  <div class="section">
+    <div class="section-label">Section 06</div>
+    <h2>Referral Terms — High Level</h2>
+
+    <div class="referral-box">
+      <div class="referral-title">Referral Arrangement</div>
+      <div class="referral-item">
+        <span class="referral-label">Compliance Sprint — $499 flat fee</span>
+        <span class="referral-value">20% referral — $100 per client</span>
+      </div>
+      <div class="referral-item">
+        <span class="referral-label">Starter Plan — $49/month</span>
+        <span class="referral-value">20% first 3 months — $29 total</span>
+      </div>
+      <div class="referral-item">
+        <span class="referral-label">Professional Plan — $499/month</span>
+        <span class="referral-value">20% first 3 months — $300 total</span>
+      </div>
+      <div class="referral-item">
+        <span class="referral-label">Enterprise — $2,499/month</span>
+        <span class="referral-value">Negotiated per introduction</span>
+      </div>
+      <div class="referral-item">
+        <span class="referral-label">Payment timing</span>
+        <span class="referral-value">After client pays — within 30 days</span>
+      </div>
+      <div class="referral-item">
+        <span class="referral-label">What counts as a referral</span>
+        <span class="referral-value">Named introduction that converts to paid</span>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;padding:12px 16px;background:rgba(0,212,245,0.04);border:1px solid rgba(0,212,245,0.15);border-radius:8px;font-size:12px;color:var(--mid);">
+      <strong style="color:var(--white)">Note:</strong> These terms are flexible. The most important thing is that the introduction is genuine and the client is a real fit. We can discuss terms case by case for larger opportunities.
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="links">
+    <a href="https://verisigilai.com/enterprise-pilot.html" class="link" target="_blank">
+      <div class="link-title">Enterprise Pilot Package</div>
+      <div class="link-url">verisigilai.com/enterprise-pilot.html</div>
+    </a>
+    <a href="https://verisigilai.com/flow-test.html" class="link" target="_blank">
+      <div class="link-title">Live End-to-End Demo</div>
+      <div class="link-url">verisigilai.com/flow-test.html</div>
+    </a>
+    <a href="https://verisigilai.com/sdk.html" class="link" target="_blank">
+      <div class="link-title">SDK Integration Guide</div>
+      <div class="link-url">verisigilai.com/sdk.html</div>
+    </a>
+    <a href="https://verisigilai.com/eu-ai-act-sprint.html" class="link" target="_blank">
+      <div class="link-title">Compliance Sprint — $499</div>
+      <div class="link-url">verisigilai.com/eu-ai-act-sprint.html</div>
+    </a>
+  </div>
+
+  <div class="footer">
+    <p style="margin-bottom:6px">Raheem Larry Babatunde · Founder & CEO, VeriSigil AI · Lagos, Nigeria 🇳🇬</p>
+    <p><a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a> · <a href="https://verisigilai.com">verisigilai.com</a></p>
+  </div>
+
+</div>
+
+<button class="print-btn no-print" onclick="window.print()">🖨️ Save as PDF</button>
+
+</body>
+</html>

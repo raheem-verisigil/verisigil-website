@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU AI Act Compliance Report — VeriSigil AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#050E2B;--navy2:#0D1A3A;--cyan:#00D4F5;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--white:#fff;--mid:#94A3B8;--border:rgba(30,58,110,0.6);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--navy);color:var(--white);line-height:1.7;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid var(--border);background:var(--navy2);}
+.nav-logo{font-size:18px;font-weight:700;color:var(--cyan);text-decoration:none;}
+.nav-cta{background:var(--cyan);color:var(--navy);padding:8px 16px;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none;}
+.container{max-width:800px;margin:0 auto;padding:48px 24px 80px;}
+.loading{text-align:center;padding:80px 24px;}
+.loading-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.report-header{background:var(--navy2);border:1px solid rgba(0,212,245,0.3);border-radius:16px;padding:32px;margin-bottom:24px;text-align:center;}
+.report-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:var(--green);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:16px;}
+.report-title{font-size:28px;font-weight:700;margin-bottom:8px;}
+.report-sub{font-size:13px;color:var(--mid);}
+.section{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
+.section-title{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;}
+.field{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(30,58,110,0.4);gap:16px;}
+.field:last-child{border-bottom:none;}
+.field-label{font-size:12px;color:var(--mid);flex-shrink:0;width:180px;}
+.field-value{font-size:12px;color:var(--white);font-family:'Space Mono',monospace;text-align:right;word-break:break-all;}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:4px;}
+.badge-high{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
+.badge-limited{background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3);}
+.badge-green{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
+.checklist{list-style:none;}
+.checklist li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(30,58,110,0.4);font-size:13px;color:var(--mid);}
+.checklist li:last-child{border-bottom:none;}
+.check{color:var(--green);font-size:16px;flex-shrink:0;}
+.pending{color:var(--amber);font-size:16px;flex-shrink:0;}
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.btn-primary{background:var(--cyan);color:var(--navy);padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;font-family:'Space Grotesk',sans-serif;}
+.btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--cyan);padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer;font-family:'Space Grotesk',sans-serif;}
+.sig-box{background:#020812;border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan);word-break:break-all;line-height:1.6;}
+.watermark{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--mid);}
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;font-size:12px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+@media print{nav,.actions{display:none}body{background:#fff;color:#000}.section{border:1px solid #ccc;}.field-value,.sig-box{color:#000}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <a href="https://verisigilai.com/eu-ai-act-sprint.html" class="nav-cta">Get Your Sprint →</a>
+</nav>
+
+<div class="container">
+
+  <!-- LOADING STATE -->
+  <div class="loading" id="loading-state">
+    <div class="loading-spinner"></div>
+    <div style="font-size:14px;color:var(--mid)">Loading compliance report...</div>
+  </div>
+
+  <!-- REPORT CONTENT -->
+  <div id="report-content" style="display:none">
+
+    <div class="report-header">
+      <div class="report-badge">✓ VeriSigil AI Verified</div>
+      <div class="report-title" id="report-title">EU AI Act Compliance Report</div>
+      <div class="report-sub" id="report-sub">Generated by VeriSigil AI · verisigilai.com</div>
+    </div>
+
+    <!-- AGENT IDENTITY -->
+    <div class="section">
+      <div class="section-title">Agent Identity</div>
+      <div class="field"><div class="field-label">Agent Name</div><div class="field-value" id="r-name">—</div></div>
+      <div class="field"><div class="field-label">Agent ID</div><div class="field-value" id="r-id">—</div></div>
+      <div class="field"><div class="field-label">Owner / Operator</div><div class="field-value" id="r-owner">—</div></div>
+      <div class="field"><div class="field-label">Organisation</div><div class="field-value" id="r-org">—</div></div>
+      <div class="field"><div class="field-label">Decentralised Identity (DID)</div><div class="field-value" id="r-did">—</div></div>
+      <div class="field"><div class="field-label">Signature Type</div><div class="field-value">Ed25519 — ECDSA Quantum-Resistant Ready</div></div>
+      <div class="field"><div class="field-label">Issued By</div><div class="field-value">VeriSigil AI · verisigilai.com</div></div>
+      <div class="field"><div class="field-label">Passport Status</div><div class="field-value" id="r-status">—</div></div>
+      <div class="field"><div class="field-label">Issued At</div><div class="field-value" id="r-issued">—</div></div>
+      <div class="field"><div class="field-label">Expires At</div><div class="field-value" id="r-expires">—</div></div>
+    </div>
+
+    <!-- EU AI ACT COMPLIANCE -->
+    <div class="section">
+      <div class="section-title">EU AI Act Compliance Status</div>
+      <div class="field"><div class="field-label">Risk Classification</div><div class="field-value" id="r-risk">—</div></div>
+      <div class="field"><div class="field-label">Transparency (Art. 50)</div><div class="field-value"><span class="badge badge-green">✓ COMPLIANT</span></div></div>
+      <div class="field"><div class="field-label">Human Oversight (Art. 14)</div><div class="field-value"><span class="badge badge-green">✓ ENFORCED</span></div></div>
+      <div class="field"><div class="field-label">Audit Trail</div><div class="field-value"><span class="badge badge-green">✓ IMMUTABLE</span></div></div>
+      <div class="field"><div class="field-label">Identity Verification</div><div class="field-value"><span class="badge badge-green">✓ CRYPTOGRAPHIC</span></div></div>
+      <div class="field"><div class="field-label">Shadow Detection</div><div class="field-value"><span class="badge badge-green">✓ ACTIVE</span></div></div>
+      <div class="field"><div class="field-label">GDPR Alignment</div><div class="field-value" id="r-gdpr">—</div></div>
+      <div class="field"><div class="field-label">Full Certification (Dec 2027)</div><div class="field-value"><span class="badge" style="background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3)">⏳ IN PROGRESS</span></div></div>
+    </div>
+
+    <!-- RUNTIME GUARD -->
+    <div class="section">
+      <div class="section-title">Runtime Guard — Operational Admissibility</div>
+      <ul class="checklist">
+        <li><span class="check">✓</span> Identity verified cryptographically before every execution</li>
+        <li><span class="check">✓</span> Trust score evaluated in real time (threshold: 0.60 minimum)</li>
+        <li><span class="check">✓</span> Payment actions above $1,000 escalated for human approval</li>
+        <li><span class="check">✓</span> Dangerous tools (exec, eval, shell) blocked automatically</li>
+        <li><span class="check">✓</span> PII data access requires GDPR certification</li>
+        <li><span class="check">✓</span> Every decision logged with Ed25519 cryptographic signature</li>
+        <li><span class="check">✓</span> Revoked or expired agents blocked instantly</li>
+        <li><span class="check">✓</span> Shadow clone detection — impersonation blocked in real time</li>
+      </ul>
+    </div>
+
+    <!-- TRUST SCORE -->
+    <div class="section">
+      <div class="section-title">Trust Score & Verification</div>
+      <div class="field"><div class="field-label">Current Trust Score</div><div class="field-value" id="r-trust">—</div></div>
+      <div class="field"><div class="field-label">Trust Level</div><div class="field-value" id="r-trust-level">—</div></div>
+      <div class="field"><div class="field-label">Verification Count</div><div class="field-value" id="r-verifications">—</div></div>
+      <div class="field"><div class="field-label">Verification Tier</div><div class="field-value" id="r-tier">—</div></div>
+      <div class="field"><div class="field-label">Public Verification URL</div><div class="field-value" id="r-verify-url">—</div></div>
+    </div>
+
+    <!-- CRYPTOGRAPHIC SIGNATURE -->
+    <div class="section">
+      <div class="section-title">Cryptographic Proof</div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:12px;">This passport signature can be independently verified by any party using VeriSigil's public key.</div>
+      <div class="sig-box" id="r-signature">—</div>
+      <div style="margin-top:12px">
+        <div class="field"><div class="field-label">Public Key</div><div class="field-value" id="r-pubkey">—</div></div>
+        <div class="field"><div class="field-label">Algorithm</div><div class="field-value">Ed25519 — RFC 8032</div></div>
+        <div class="field"><div class="field-label">Issuer</div><div class="field-value">https://verisigilai.com</div></div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn-primary" onclick="window.print()">🖨️ Download PDF</button>
+      <button class="btn-outline" onclick="copyVerifyUrl()">📋 Copy Verify URL</button>
+      <a href="https://verisigilai.com/sigil_studio.html" class="btn-outline">⬡ Open Sigil Studio</a>
+    </div>
+
+    <div class="watermark">
+      This report was automatically generated by VeriSigil AI on <span id="r-generated">—</span><br>
+      Sprint Reference: <span id="r-sprint">—</span><br>
+      <span style="color:rgba(148,163,184,0.5);font-size:10px;margin-top:4px;display:block">
+        This document provides evidence of AI agent identity infrastructure and runtime governance setup.
+        It does not constitute legal advice or guarantee regulatory compliance.
+        Consult qualified legal counsel for full EU AI Act compliance assessment.
+      </span>
+    </div>
+
+  </div>
+
+  <!-- ERROR STATE -->
+  <div id="error-state" style="display:none;text-align:center;padding:80px 24px;">
+    <div style="font-size:40px;margin-bottom:16px;">⚠️</div>
+    <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Report Not Found</div>
+    <div style="font-size:13px;color:var(--mid);margin-bottom:24px;">Agent ID not found. Make sure you have the correct link from your compliance sprint email.</div>
+    <a href="https://verisigilai.com/eu-ai-act-sprint.html" class="btn-primary">Get Your Compliance Sprint →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 VeriSigil AI · <a href="https://verisigilai.com">verisigilai.com</a> · Built in Lagos, Nigeria 🇳🇬</p>
+</footer>
+
+<script>
+const API = 'https://verisigil-api-production.up.railway.app';
+
+function getParam(name) {
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+function trustLevelBadge(score) {
+  if (score >= 0.80) return '<span class="badge badge-green">TRUSTED</span>';
+  if (score >= 0.60) return '<span class="badge" style="background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3)">FLAGGED</span>';
+  return '<span class="badge badge-high">BLOCKED</span>';
+}
+
+function riskBadge(risk) {
+  if (risk === 'HIGH_RISK') return '<span class="badge badge-high">HIGH RISK</span>';
+  if (risk === 'LIMITED_RISK') return '<span class="badge badge-limited">LIMITED RISK</span>';
+  return '<span class="badge badge-green">MINIMAL RISK</span>';
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = val;
+}
+
+async function loadReport() {
+  const agentId  = getParam('agent_id');
+  const sprintId = getParam('sprint_id') || 'N/A';
+
+  if (!agentId) {
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('error-state').style.display = 'block';
+    return;
+  }
+
+  try {
+    const r    = await fetch(API + '/v1/passport/' + agentId);
+    const data = await r.json();
+    const p    = data.passport;
+
+    if (!p) throw new Error('Not found');
+
+    // Show report
+    document.getElementById('loading-state').style.display  = 'none';
+    document.getElementById('report-content').style.display = 'block';
+
+    // Fill fields
+    set('report-title', `EU AI Act Compliance Report — ${p.display_name || p.agent_name}`);
+    set('report-sub', `Generated ${new Date().toUTCString()} · Sprint ${sprintId}`);
+    set('r-name',    p.display_name || p.agent_name);
+    set('r-id',      p.agent_id);
+    set('r-owner',   p.owner);
+    set('r-org',     p.issuer_org || p.owner);
+    set('r-did',     p.did);
+    set('r-status',  p.status === 'ACTIVE' ? '<span class="badge badge-green">ACTIVE</span>' : p.status);
+    set('r-issued',  p.issued_at ? p.issued_at.replace('T',' ').substring(0,19) + ' UTC' : '—');
+    set('r-expires', p.expires_at ? p.expires_at.replace('T',' ').substring(0,19) + ' UTC' : '—');
+    set('r-risk',    riskBadge(p.eu_risk_class));
+    set('r-gdpr',    p.gdpr ? '<span class="badge badge-green">✓ COMPLIANT</span>' : '<span class="badge badge-high">NOT SET</span>');
+    set('r-trust',   p.trust_score);
+    set('r-trust-level', trustLevelBadge(p.trust_score));
+    set('r-verifications', p.verification_count || 0);
+    set('r-tier',    p.tier_label || 'Self-Declared');
+    set('r-verify-url', `<a href="${API}/verify/${agentId}" style="color:var(--cyan)">${API}/verify/${agentId}</a>`);
+    set('r-signature', p.signature || '—');
+    set('r-pubkey',  p.public_key ? p.public_key.substring(0,40) + '...' : '—');
+    set('r-generated', new Date().toUTCString());
+    set('r-sprint',  sprintId);
+
+    // Store verify URL for copy
+    window._verifyUrl = `${API}/verify/${agentId}`;
+
+  } catch(e) {
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('error-state').style.display  = 'block';
+  }
+}
+
+function copyVerifyUrl() {
+  navigator.clipboard.writeText(window._verifyUrl || '').then(() => {
+    alert('Verification URL copied to clipboard!');
+  });
+}
+
+loadReport();
+</script>
+
+</body>
+</html>

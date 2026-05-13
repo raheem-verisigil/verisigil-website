@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Pilot Welcome Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#050E2B;--navy2:#0D1A3A;--navy3:#0A1628;--cyan:#00D4F5;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--white:#fff;--mid:#94A3B8;--border:rgba(30,58,110,0.6);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--navy);color:var(--white);padding:40px 24px 80px;line-height:1.7;}
+.wrap{max-width:760px;margin:0 auto;}
+@media print{body{background:#fff;color:#000;padding:20px}.section{border:1px solid #ddd!important;background:#f9f9f9!important}.no-print{display:none}}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.logo{font-size:18px;font-weight:800;color:var(--cyan);margin-bottom:16px;}
+.kit-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,245,0.1);border:1px solid rgba(0,212,245,0.3);color:var(--cyan);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 16px;border-radius:20px;margin-bottom:16px;}
+h1{font-size:30px;font-weight:700;margin-bottom:8px;}
+.header-sub{font-size:14px;color:var(--mid);max-width:500px;margin:0 auto;}
+
+/* WELCOME BOX */
+.welcome{background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.2);border-radius:12px;padding:20px 24px;margin-bottom:28px;display:flex;align-items:flex-start;gap:16px;}
+.welcome-icon{font-size:28px;flex-shrink:0;}
+.welcome-text{font-size:13px;color:var(--mid);line-height:1.7;}
+.welcome-text strong{color:var(--white);}
+
+/* TIMELINE BAR */
+.timeline{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.timeline-item{text-align:center;}
+.timeline-day{font-size:18px;font-weight:700;font-family:'Space Mono',monospace;color:var(--cyan);}
+.timeline-label{font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;}
+.timeline-arrow{font-size:18px;color:var(--border);}
+
+/* SECTION */
+.section{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:18px;}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.section-icon{font-size:24px;flex-shrink:0;}
+.section-num{font-size:10px;font-weight:700;color:var(--cyan);font-family:'Space Mono',monospace;margin-bottom:2px;}
+.section-title{font-size:16px;font-weight:700;color:var(--white);}
+
+/* ITEMS */
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(30,58,110,0.4);}
+.item:last-child{border-bottom:none;}
+.item-check{color:var(--green);font-size:14px;flex-shrink:0;margin-top:2px;}
+.item-content{}
+.item-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.item-desc{font-size:12px;color:var(--mid);line-height:1.6;}
+.item-code{font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan);background:rgba(0,212,245,0.06);padding:2px 8px;border-radius:4px;margin-top:4px;display:inline-block;}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;}
+.metric{background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;}
+.metric-val{font-size:18px;font-weight:700;font-family:'Space Mono',monospace;color:var(--cyan);margin-bottom:3px;}
+.metric-label{font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:0.06em;}
+.metric-target{font-size:10px;color:var(--green);margin-top:3px;}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid rgba(30,58,110,0.3);position:relative;}
+.step:last-child{border-bottom:none;}
+.step::before{content:'';position:absolute;left:15px;top:44px;bottom:-12px;width:2px;background:rgba(0,212,245,0.15);}
+.step:last-child::before{display:none;}
+.step-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--cyan);background:var(--navy3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--cyan);font-family:'Space Mono',monospace;flex-shrink:0;}
+.step-content{}
+.step-title{font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px;}
+.step-desc{font-size:12px;color:var(--mid);line-height:1.6;}
+.step-code{font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan);background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.1);border-radius:5px;padding:6px 10px;margin-top:6px;display:block;word-break:break-all;}
+
+/* SUPPORT */
+.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.support-card{background:var(--navy3);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.support-icon{font-size:20px;margin-bottom:8px;}
+.support-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.support-desc{font-size:11px;color:var(--mid);line-height:1.6;}
+.support-link{font-size:11px;color:var(--cyan);font-family:'Space Mono',monospace;margin-top:6px;display:block;word-break:break-all;}
+
+/* PERKS */
+.perks{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.perk{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:16px;}
+.perk-icon{font-size:20px;margin-bottom:8px;}
+.perk-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:4px;}
+.perk-desc{font-size:12px;color:var(--mid);line-height:1.6;}
+
+/* CODE BLOCK */
+pre{background:#020812;border:1px solid var(--border);border-radius:8px;padding:14px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.7;overflow-x:auto;margin-top:12px;color:var(--mid);}
+.kw{color:#C792EA}.fn{color:#82AAFF}.st{color:#C3E88D}.cm{color:#546E7A}.cn{color:#F78C6C}
+
+/* SCOPE BOX */
+.scope{background:rgba(0,212,245,0.04);border:1px solid rgba(0,212,245,0.15);border-radius:10px;padding:16px;margin-bottom:14px;}
+.scope-title{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.scope-row{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid rgba(0,212,245,0.08);}
+.scope-row:last-child{border-bottom:none;}
+.scope-label{color:var(--mid);}
+.scope-value{color:var(--white);font-weight:600;font-family:'Space Mono',monospace;font-size:11px;}
+
+/* FOOTER */
+.footer{text-align:center;margin-top:32px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--mid);}
+.footer a{color:var(--cyan);text-decoration:none;}
+
+.print-btn{position:fixed;bottom:24px;right:24px;background:var(--cyan);color:var(--navy);border:none;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;}
+
+@media(max-width:600px){.metrics{grid-template-columns:1fr 1fr}.support-grid,.perks{grid-template-columns:1fr}.timeline{justify-content:flex-start}.timeline-arrow{display:none}.print-btn{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">⬡ VeriSigil AI</div>
+    <div class="kit-badge">📦 Pilot Welcome Kit</div>
+    <h1>Welcome to Your Runtime Guard Pilot</h1>
+    <p class="header-sub">Everything you need to integrate, test, and prove Runtime Guard in your AI agent workflow — in 14 days.</p>
+  </div>
+
+  <!-- WELCOME MESSAGE -->
+  <div class="welcome">
+    <div class="welcome-icon">👋</div>
+    <div class="welcome-text">
+      <strong>Welcome to VeriSigil AI.</strong> You are one of the first teams to run a Runtime Guard pilot. This kit covers your pilot scope, integration steps, support path, and what you get when you convert. If anything is unclear — message Raheem directly. Every question gets a personal reply.
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-day">Day 1</div>
+      <div class="timeline-label">Integrate</div>
+    </div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-item">
+      <div class="timeline-day">Day 3</div>
+      <div class="timeline-label">First Live Decision</div>
+    </div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-item">
+      <div class="timeline-day">Day 7</div>
+      <div class="timeline-label">Approval Flow Live</div>
+    </div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-item">
+      <div class="timeline-day">Day 14</div>
+      <div class="timeline-label">Pilot Complete</div>
+    </div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-item">
+      <div class="timeline-day">Day 15</div>
+      <div class="timeline-label">Review Call</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — PILOT SPEC -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div>
+        <div class="section-num">SECTION 01</div>
+        <div class="section-title">Pilot Spec — One of Each Rule</div>
+      </div>
+    </div>
+
+    <div class="scope">
+      <div class="scope-title">Pilot Scope</div>
+      <div class="scope-row"><span class="scope-label">Agent</span><span class="scope-value">One agent in your system</span></div>
+      <div class="scope-row"><span class="scope-label">Action Type</span><span class="scope-value">One sensitive action type</span></div>
+      <div class="scope-row"><span class="scope-label">Policy Rule</span><span class="scope-value">One threshold or approval rule</span></div>
+      <div class="scope-row"><span class="scope-label">Approval Interface</span><span class="scope-value">Standalone web console</span></div>
+      <div class="scope-row"><span class="scope-label">Audit View</span><span class="scope-value">Chronological decision log</span></div>
+      <div class="scope-row"><span class="scope-label">Duration</span><span class="scope-value">14 days · Day 15 review</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em">Recommended First Use Case</div>
+    <div class="item">
+      <div class="item-check">→</div>
+      <div class="item-content">
+        <div class="item-title">Fintech — Payment Approval</div>
+        <div class="item-desc">Agent attempts a payment above your threshold → Runtime Guard returns REQUIRE_HUMAN_APPROVAL → approval email sent → approver reviews and decides → decision logged. Most obvious consequence. Easiest to explain and demo.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-check">→</div>
+      <div class="item-content">
+        <div class="item-title">Alternative — Database Write Approval</div>
+        <div class="item-desc">Agent attempts to write, update, or delete production records → Runtime Guard intercepts → human approves before data is mutated. Works for any enterprise automation use case.</div>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--white);margin:16px 0 10px;text-transform:uppercase;letter-spacing:0.06em">Success Metrics</div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-val">&lt;2 min</div>
+        <div class="metric-label">Time to Approval</div>
+        <div class="metric-target">Target: approver decides in under 2 minutes</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">&lt;5%</div>
+        <div class="metric-label">False Positive Rate</div>
+        <div class="metric-target">Target: less than 5% of escalations unnecessary</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">&lt;30s</div>
+        <div class="metric-label">Audit Retrieval</div>
+        <div class="metric-target">Target: find any decision in under 30 seconds</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — INTEGRATION CHECKLIST -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔗</div>
+      <div>
+        <div class="section-num">SECTION 02</div>
+        <div class="section-title">Integration Checklist — 4 Steps</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-circle">1</div>
+        <div class="step-content">
+          <div class="step-title">Add Runtime Guard call before your action executes</div>
+          <div class="step-desc">One API call. Add it before any sensitive action in your agent code.</div>
+          <div class="step-code">POST /v1/guard/verify
+Headers: x-api-key: your_api_key
+Body: { agent_id, action_type, action_details, resource }</div>
+          <pre><span class="kw">import</span> <span class="cn">requests</span>, <span class="cn">os</span>
+
+<span class="kw">def</span> <span class="fn">verify_before_execution</span>(<span class="cn">action_type</span>, <span class="cn">details</span>, <span class="cn">resource</span>):
+    r = <span class="cn">requests</span>.<span class="fn">post</span>(
+        <span class="st">"https://verisigil-api-production.up.railway.app/v1/guard/verify"</span>,
+        headers={<span class="st">"x-api-key"</span>: os.<span class="fn">getenv</span>(<span class="st">"VERISIGIL_API_KEY"</span>)},
+        json={<span class="st">"agent_id"</span>: <span class="st">"your_agent_id"</span>, <span class="st">"action_type"</span>: action_type,
+              <span class="st">"action_details"</span>: details, <span class="st">"resource"</span>: resource}
+    ).<span class="fn">json</span>()
+    <span class="kw">if</span> r[<span class="st">"decision"</span>] == <span class="st">"DENY"</span>:
+        <span class="kw">raise</span> <span class="fn">PermissionError</span>(r[<span class="st">"reason"</span>])
+    <span class="kw">return</span> r</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">2</div>
+        <div class="step-content">
+          <div class="step-title">Handle approval_url in REQUIRE_HUMAN_APPROVAL response</div>
+          <div class="step-desc">When Runtime Guard returns REQUIRE_HUMAN_APPROVAL — pause execution and surface the approval URL to your team. The approver will receive an email automatically.</div>
+          <pre><span class="cn">result</span> = <span class="fn">verify_before_execution</span>(<span class="st">"payment"</span>, {<span class="st">"amount_usd"</span>: 5000}, <span class="st">"stripe"</span>)
+
+<span class="kw">if</span> <span class="cn">result</span>[<span class="st">"decision"</span>] == <span class="st">"ALLOW"</span>:
+    <span class="fn">execute_payment</span>()  <span class="cm"># proceed normally</span>
+
+<span class="kw">elif</span> <span class="cn">result</span>[<span class="st">"decision"</span>] == <span class="st">"REQUIRE_HUMAN_APPROVAL"</span>:
+    <span class="cm"># Email sent automatically to approver</span>
+    <span class="cm"># approval_url is in the response</span>
+    <span class="fn">pause_execution</span>(<span class="cn">result</span>[<span class="st">"approval_url"</span>])
+
+<span class="kw">elif</span> <span class="cn">result</span>[<span class="st">"decision"</span>] == <span class="st">"DENY"</span>:
+    <span class="fn">block_and_log</span>(<span class="cn">result</span>[<span class="st">"reason"</span>])  <span class="cm"># blocked</span></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">3</div>
+        <div class="step-content">
+          <div class="step-title">Test with flow-test.html before going live</div>
+          <div class="step-desc">Run the full end-to-end test in your browser. Click Run, approve the action, verify the audit trail. Confirms everything works before connecting your real agent.</div>
+          <div class="step-code">verisigilai.com/flow-test.html</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">4</div>
+        <div class="step-content">
+          <div class="step-title">Go live — connect your real agent</div>
+          <div class="step-desc">Replace the test agent ID with your real agent ID. Point at production. Every real action now goes through Runtime Guard before executing.</div>
+          <div class="step-code">Replace: "your_agent_id" → your real vsa_xxxxxxxx
+Set env: VERISIGIL_API_KEY=your_key
+Done.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — SUPPORT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📞</div>
+      <div>
+        <div class="section-num">SECTION 03</div>
+        <div class="section-title">Support Path During Your Pilot</div>
+      </div>
+    </div>
+
+    <div class="support-grid">
+      <div class="support-card">
+        <div class="support-icon">📧</div>
+        <div class="support-title">Primary — Email</div>
+        <div class="support-desc">Async-first. Every message read and replied to personally by Raheem. Response within 4 hours during Lagos business hours.</div>
+        <a class="support-link" href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">💬</div>
+        <div class="support-title">Urgent — WhatsApp / SMS</div>
+        <div class="support-desc">For integration blockers or production issues during the pilot. Text or WhatsApp — Raheem responds personally.</div>
+        <span class="support-link">+234-811-205-1880</span>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">📖</div>
+        <div class="support-title">SDK Documentation</div>
+        <div class="support-desc">Full integration guide with copy-paste code for LangChain, CrewAI, AutoGen, OpenAI, and raw Python.</div>
+        <a class="support-link" href="https://verisigilai.com/sdk.html" target="_blank">verisigilai.com/sdk.html</a>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">🔬</div>
+        <div class="support-title">Live API Docs</div>
+        <div class="support-desc">Interactive API documentation. Test every endpoint directly in the browser without writing any code.</div>
+        <a class="support-link" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — PERKS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🎁</div>
+      <div>
+        <div class="section-num">SECTION 04</div>
+        <div class="section-title">Pilot Perks — What You Get</div>
+      </div>
+    </div>
+
+    <div class="perks">
+      <div class="perk">
+        <div class="perk-icon">🆓</div>
+        <div class="perk-title">3 Months Free Post-Pilot</div>
+        <div class="perk-desc">If you convert to a paid plan after the pilot — your first 3 months are free. No credit card during the pilot. Pay only when it is working for you.</div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon">📰</div>
+        <div class="perk-title">Co-Branded Case Study</div>
+        <div class="perk-desc">We write a case study together about your integration. Published on verisigilai.com and LinkedIn. Visibility for your product. Social proof for ours.</div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon">🗺️</div>
+        <div class="perk-title">Priority Roadmap Input</div>
+        <div class="perk-desc">Your feedback shapes what gets built next. Pilot customers get direct input on the product roadmap — Slack integrations, policy management UI, audit exports.</div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon">👤</div>
+        <div class="perk-title">Founder Direct Access</div>
+        <div class="perk-desc">During the pilot you have direct access to Raheem — not a support bot. Every question, suggestion, and blocker gets a personal response from the person who built it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px;">
+    <a href="https://verisigilai.com/flow-test.html" style="background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;display:block;">
+      <div style="font-size:16px;margin-bottom:4px">⚡</div>
+      <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:2px">Full Flow Test</div>
+      <div style="font-size:10px;color:var(--cyan);font-family:'Space Mono',monospace">flow-test.html</div>
+    </a>
+    <a href="https://verisigilai.com/approve.html" style="background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;display:block;">
+      <div style="font-size:16px;margin-bottom:4px">✅</div>
+      <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:2px">Approval Console</div>
+      <div style="font-size:10px;color:var(--cyan);font-family:'Space Mono',monospace">approve.html</div>
+    </a>
+    <a href="https://verisigilai.com/sdk.html" style="background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;display:block;">
+      <div style="font-size:16px;margin-bottom:4px">📡</div>
+      <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:2px">SDK Guide</div>
+      <div style="font-size:10px;color:var(--cyan);font-family:'Space Mono',monospace">sdk.html</div>
+    </a>
+  </div>
+
+  <div class="footer">
+    <p style="margin-bottom:6px">Raheem Larry Babatunde · Founder & CEO, VeriSigil AI · Lagos, Nigeria 🇳🇬</p>
+    <p><a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a> · <a href="https://verisigilai.com">verisigilai.com</a> · WhatsApp: +234-811-205-1880</p>
+  </div>
+
+</div>
+<button class="print-btn no-print" onclick="window.print()">🖨️ Save as PDF</button>
+</body>
+</html>

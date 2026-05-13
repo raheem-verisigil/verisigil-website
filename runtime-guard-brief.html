@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Runtime Guard Technical Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#050E2B;--navy2:#0D1A3A;--cyan:#00D4F5;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--white:#fff;--mid:#94A3B8;--border:rgba(30,58,110,0.6);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--navy);color:var(--white);line-height:1.7;padding:40px 24px 80px;}
+.wrap{max-width:760px;margin:0 auto;}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.logo{font-size:20px;font-weight:800;color:var(--cyan);}
+.header-meta{font-size:12px;color:var(--mid);text-align:right;}
+.header-meta strong{color:var(--white);display:block;}
+
+/* TITLE */
+.title-section{margin-bottom:40px;}
+.label{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;}
+h1{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:12px;}
+h1 span{color:var(--cyan);}
+.subtitle{font-size:15px;color:var(--mid);max-width:600px;line-height:1.7;}
+
+/* THE PROBLEM */
+.problem{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:24px;margin-bottom:24px;}
+.problem h2{font-size:13px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.problem p{font-size:14px;color:var(--mid);line-height:1.7;}
+.problem strong{color:var(--white);}
+
+/* 2 MINUTE EXPLANATION */
+.section{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+.section h2{font-size:13px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;}
+
+/* FLOW */
+.flow{display:flex;flex-direction:column;gap:0;}
+.flow-step{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);}
+.flow-step:last-child{border-bottom:none;}
+.flow-num{width:28px;height:28px;border-radius:50%;background:rgba(0,212,245,0.15);border:1px solid rgba(0,212,245,0.3);color:var(--cyan);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Mono',monospace;}
+.flow-content{}
+.flow-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.flow-desc{font-size:13px;color:var(--mid);}
+.flow-code{font-family:'Space Mono',monospace;font-size:11px;color:var(--cyan);background:rgba(0,212,245,0.08);padding:2px 8px;border-radius:4px;margin-top:4px;display:inline-block;}
+
+/* DECISIONS */
+.decisions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px;}
+.decision{border-radius:8px;padding:12px;border:1px solid;text-align:center;}
+.decision.allow{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.3);}
+.decision.human{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3);}
+.decision.deny{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.3);}
+.decision-icon{font-size:18px;margin-bottom:4px;}
+.decision-name{font-size:10px;font-weight:700;font-family:'Space Mono',monospace;}
+.decision.allow .decision-name{color:var(--green);}
+.decision.human .decision-name{color:var(--amber);}
+.decision.deny .decision-name{color:var(--red);}
+.decision-desc{font-size:10px;color:var(--mid);margin-top:3px;line-height:1.4;}
+
+/* CODE BLOCK */
+.code-wrap{margin-top:16px;}
+.code-label{font-size:10px;font-weight:600;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
+pre{background:#020812;border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.7;overflow-x:auto;}
+.kw{color:#C792EA}.fn{color:#82AAFF}.st{color:#C3E88D}.cm{color:#546E7A}.cn{color:#F78C6C}.num{color:#F78C6C}.dec{color:#00D4F5}
+
+/* WHAT IT SOLVES */
+.solves-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.solve-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--mid);padding:10px;background:rgba(0,212,245,0.04);border:1px solid rgba(0,212,245,0.1);border-radius:8px;}
+.solve-check{color:var(--green);flex-shrink:0;font-size:15px;}
+.solve-text strong{color:var(--white);display:block;font-size:12px;margin-bottom:2px;}
+
+/* LIVE PROOF */
+.live-proof{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:12px;padding:20px;margin-bottom:20px;}
+.live-proof h2{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;}
+.proof-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mid);padding:6px 0;border-bottom:1px solid rgba(34,197,94,0.1);}
+.proof-item:last-child{border-bottom:none;}
+.proof-check{color:var(--green);flex-shrink:0;}
+.proof-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--cyan);margin-left:auto;}
+
+/* LINKS */
+.links-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;}
+.link-card{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;transition:border-color 0.15s;}
+.link-card:hover{border-color:var(--cyan);}
+.link-icon{font-size:20px;margin-bottom:8px;}
+.link-title{font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.link-url{font-size:10px;color:var(--cyan);font-family:'Space Mono',monospace;word-break:break-all;}
+
+/* FOOTER */
+.footer{text-align:center;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--mid);}
+.footer a{color:var(--cyan);text-decoration:none;}
+.footer strong{color:var(--white);}
+
+@media(max-width:600px){
+  .decisions{grid-template-columns:1fr;}
+  .solves-grid{grid-template-columns:1fr;}
+  .links-grid{grid-template-columns:1fr;}
+  .header{flex-direction:column;gap:12px;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">⬡ VeriSigil AI</div>
+    <div class="header-meta">
+      <strong>Technical Brief — Runtime Guard</strong>
+      Prepared for Altivon Labs · May 2026
+    </div>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title-section">
+    <div class="label">2-Minute Technical Overview</div>
+    <h1>Runtime Guard — <span>Verify Before Execution</span></h1>
+    <p class="subtitle">VeriSigil Runtime Guard is the operational trust layer that sits between an AI agent's decision and its execution. Every action is verified before it runs — identity checked, trust scored, policy applied, decision logged.</p>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="problem">
+    <h2>⚠️ The Problem Runtime Guard Solves</h2>
+    <p>Autonomous AI agents make decisions and execute actions — payments, data access, API calls, deletions — <strong>without any verification of whether they should.</strong> There is no layer that asks: is this agent who it claims to be? Is this action within policy? Should a human approve this first? Runtime Guard is that layer.</p>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <h2>⚡ How Runtime Guard Works</h2>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">Agent initiates an action</div>
+          <div class="flow-desc">Before executing anything — payment, database write, API call, tool use — the agent calls Runtime Guard first.</div>
+          <div class="flow-code">POST /v1/guard/verify</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">Identity verified cryptographically</div>
+          <div class="flow-desc">VeriSigil checks the agent's Ed25519 signed passport. Confirms the agent is real, active, not expired, not cloned by another system (Shadow Detection™).</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">Trust score evaluated in real time</div>
+          <div class="flow-desc">Each agent has a live trust score (0.0–1.0) updated by verifications, security scans, and threat events. Score below 0.60 = blocked automatically.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <div class="flow-title">Policy applied to the action</div>
+          <div class="flow-desc">Action-specific rules enforced automatically — payments above $1,000 escalated, dangerous tools blocked, PII access requires GDPR certification.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <div class="flow-title">Decision returned in under 50ms</div>
+          <div class="flow-desc">One of three decisions returned with confidence score, reason, and execution ID. Every decision cryptographically logged to immutable audit trail.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECISIONS -->
+    <div class="decisions">
+      <div class="decision allow">
+        <div class="decision-icon">✅</div>
+        <div class="decision-name">ALLOW</div>
+        <div class="decision-desc">Identity verified, trust sufficient, action within policy. Proceed.</div>
+      </div>
+      <div class="decision human">
+        <div class="decision-icon">👤</div>
+        <div class="decision-name">REQUIRE_HUMAN_APPROVAL</div>
+        <div class="decision-desc">Risky action or policy threshold exceeded. Human must approve first.</div>
+      </div>
+      <div class="decision deny">
+        <div class="decision-icon">🚫</div>
+        <div class="decision-name">DENY</div>
+        <div class="decision-desc">Agent revoked, expired, cloned, or trust too low. Block immediately.</div>
+      </div>
+    </div>
+
+    <!-- CODE -->
+    <div class="code-wrap">
+      <div class="code-label">Integration — 3 lines of code</div>
+      <pre><span class="kw">import</span> <span class="cn">requests</span>, <span class="cn">os</span>
+
+<span class="kw">def</span> <span class="fn">verify_before_execution</span>(<span class="cn">action_type</span>, <span class="cn">details</span>, <span class="cn">resource</span>):
+    <span class="cn">r</span> = <span class="cn">requests</span>.<span class="fn">post</span>(
+        <span class="st">"https://verisigil-api-production.up.railway.app/v1/guard/verify"</span>,
+        <span class="cn">headers</span>={<span class="st">"x-api-key"</span>: <span class="cn">os</span>.<span class="fn">getenv</span>(<span class="st">"VERISIGIL_API_KEY"</span>)},
+        <span class="cn">json</span>={<span class="st">"agent_id"</span>: <span class="st">"vsa_your_agent"</span>, <span class="st">"action_type"</span>: <span class="cn">action_type</span>,
+              <span class="st">"action_details"</span>: <span class="cn">details</span>, <span class="st">"resource"</span>: <span class="cn">resource</span>}
+    ).<span class="fn">json</span>()
+    <span class="kw">if</span> <span class="cn">r</span>[<span class="st">"decision"</span>] == <span class="st">"DENY"</span>:
+        <span class="kw">raise</span> <span class="fn">PermissionError</span>(<span class="cn">r</span>[<span class="st">"reason"</span>])
+    <span class="kw">return</span> <span class="cn">r</span>[<span class="st">"decision"</span>]  <span class="cm"># ALLOW or REQUIRE_HUMAN_APPROVAL</span>
+
+<span class="cm"># Example — before a $5,000 payment</span>
+<span class="fn">verify_before_execution</span>(<span class="st">"payment"</span>, {<span class="st">"amount_usd"</span>: <span class="num">5000</span>}, <span class="st">"stripe_api"</span>)
+<span class="cm"># Returns: REQUIRE_HUMAN_APPROVAL — Payment $5000 exceeds auto-allow threshold</span></pre>
+    </div>
+  </div>
+
+  <!-- WHAT IT SOLVES FOR ALTIVON -->
+  <div class="section">
+    <h2>🎯 What This Solves For Altivon Labs Clients</h2>
+    <div class="solves-grid">
+      <div class="solve-item">
+        <span class="solve-check">✓</span>
+        <div class="solve-text">
+          <strong>Workflow boundaries</strong>
+          Defines exactly where agent autonomy ends and human oversight begins — enforced in code, not just policy documents.
+        </div>
+      </div>
+      <div class="solve-item">
+        <span class="solve-check">✓</span>
+        <div class="solve-text">
+          <strong>Permission logic</strong>
+          Action-level permission rules per agent — payments, data access, tool use, outbound communication all governed separately.
+        </div>
+      </div>
+      <div class="solve-item">
+        <span class="solve-check">✓</span>
+        <div class="solve-text">
+          <strong>Human approval routing</strong>
+          REQUIRE_HUMAN_APPROVAL escalates automatically — the framework for building approval UI is built in from day one.
+        </div>
+      </div>
+      <div class="solve-item">
+        <span class="solve-check">✓</span>
+        <div class="solve-text">
+          <strong>Execution visibility</strong>
+          Every decision logged with timestamp, reason, confidence, and Ed25519 signature — full audit trail from day one.
+        </div>
+      </div>
+      <div class="solve-item">
+        <span class="solve-check">✓</span>
+        <div class="solve-text">
+          <strong>EU AI Act compliance</strong>
+          Article 14 human oversight enforced automatically. Compliance documentation generated in 60 seconds.
+        </div>
+      </div>
+      <div class="solve-item">
+        <span class="solve-check">✓</span>
+        <div class="solve-text">
+          <strong>First adoption path</strong>
+          15-minute integration. Works with LangChain, CrewAI, AutoGen, OpenAI. No infra changes required.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE PROOF -->
+  <div class="live-proof">
+    <h2>✅ Live Infrastructure — Not A Prototype</h2>
+    <div class="proof-item">
+      <span class="proof-check">✓</span>
+      <span>Active agent passports in database</span>
+      <span class="proof-val">74 passports</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-check">✓</span>
+      <span>Average trust score across network</span>
+      <span class="proof-val">0.963</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-check">✓</span>
+      <span>Runtime Guard average latency</span>
+      <span class="proof-val">&lt;50ms</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-check">✓</span>
+      <span>API version live on Railway</span>
+      <span class="proof-val">v0.5.3</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-check">✓</span>
+      <span>Compliance sprint — fully automatic</span>
+      <span class="proof-val">$499 flat fee</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-check">✓</span>
+      <span>EU AI Act enforcement deadline</span>
+      <span class="proof-val">80 days</span>
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="label" style="margin-bottom:12px">Key Links</div>
+  <div class="links-grid">
+    <a href="https://verisigilai.com/eu-ai-act-sprint.html" class="link-card" target="_blank">
+      <div class="link-icon">🚀</div>
+      <div class="link-title">Compliance Sprint</div>
+      <div class="link-url">verisigilai.com/eu-ai-act-sprint.html</div>
+    </a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" class="link-card" target="_blank">
+      <div class="link-icon">📡</div>
+      <div class="link-title">Live API Docs</div>
+      <div class="link-url">verisigil-api-production.up.railway.app/docs</div>
+    </a>
+    <a href="https://verisigilai.com/sdk.html" class="link-card" target="_blank">
+      <div class="link-icon">⚡</div>
+      <div class="link-title">SDK Integration</div>
+      <div class="link-url">verisigilai.com/sdk.html</div>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p style="margin-bottom:6px">Built by <strong>Raheem Larry Babatunde</strong> · Founder, VeriSigil AI · Lagos, Nigeria 🇳🇬</p>
+    <p><a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a> · <a href="https://verisigilai.com">verisigilai.com</a></p>
+  </div>
+
+</div>
+</body>
+</html>

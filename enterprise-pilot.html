@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Enterprise Pilot Package</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#050E2B;--navy2:#0D1A3A;--navy3:#0A1628;--cyan:#00D4F5;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--white:#fff;--mid:#94A3B8;--border:rgba(30,58,110,0.6);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--navy);color:var(--white);line-height:1.7;}
+@media print{body{background:#fff;color:#000;}.no-print{display:none}.section{page-break-inside:avoid;border:1px solid #ddd!important;background:#fff!important;}.section-label{color:#0099cc!important}.flow-step .step-circle{border-color:#0099cc!important;color:#0099cc!important}}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid var(--border);background:var(--navy2);position:sticky;top:0;z-index:100;}
+.nav-logo{font-size:18px;font-weight:700;color:var(--cyan);text-decoration:none;}
+.nav-links{display:flex;gap:16px;}
+.nav-links a{color:var(--mid);text-decoration:none;font-size:12px;font-weight:600;}
+.nav-links a:hover{color:var(--cyan);}
+.btn-print{background:var(--cyan);color:var(--navy);padding:8px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Space Grotesk',sans-serif;}
+
+/* HERO */
+.hero{max-width:900px;margin:0 auto;padding:56px 24px 40px;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,245,0.1);border:1px solid rgba(0,212,245,0.3);color:var(--cyan);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:20px;}
+.hero h1{font-size:36px;font-weight:700;line-height:1.2;margin-bottom:12px;}
+.hero h1 span{color:var(--cyan);}
+.hero-sub{font-size:15px;color:var(--mid);max-width:640px;margin-bottom:32px;line-height:1.7;}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;}
+.meta-item{font-size:12px;color:var(--mid);}
+.meta-item strong{color:var(--white);}
+
+/* TOC */
+.toc{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:900px;margin:0 auto 32px;display:grid;grid-template-columns:1fr 1fr;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;grid-column:1/-1;}
+.toc-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;color:var(--mid);text-decoration:none;border-bottom:1px solid rgba(30,58,110,0.3);}
+.toc-item:hover{color:var(--cyan);}
+.toc-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan);width:20px;flex-shrink:0;}
+
+/* WRAP */
+.content{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+/* SECTION */
+.section{background:var(--navy2);border:1px solid var(--border);border-radius:14px;padding:32px;margin-bottom:24px;}
+.section-label{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;}
+.section h2{font-size:22px;font-weight:700;margin-bottom:6px;}
+.section-sub{font-size:13px;color:var(--mid);margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+
+/* PROMISE BOX */
+.promise{background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.2);border-radius:10px;padding:20px;margin-bottom:24px;text-align:center;}
+.promise-text{font-size:18px;font-weight:700;color:var(--white);line-height:1.5;}
+.promise-text em{font-style:normal;color:var(--cyan);}
+
+/* USE CASE */
+.use-case-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.uc-card{background:var(--navy3);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.uc-icon{font-size:22px;margin-bottom:8px;}
+.uc-title{font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.uc-desc{font-size:12px;color:var(--mid);line-height:1.6;}
+.uc-risk{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px;}
+.risk-high{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
+.risk-limited{background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3);}
+
+/* PILOT SPEC */
+.spec-table{width:100%;border-collapse:collapse;margin-bottom:16px;}
+.spec-table th{background:var(--navy3);color:var(--mid);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);}
+.spec-table td{padding:11px 14px;border-bottom:1px solid rgba(30,58,110,0.4);font-size:13px;color:var(--mid);}
+.spec-table td:first-child{color:var(--white);font-weight:600;width:200px;}
+.spec-table tr:last-child td{border-bottom:none;}
+
+/* WORKFLOW MAP */
+.flow{display:flex;flex-direction:column;gap:0;}
+.flow-step{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);position:relative;}
+.flow-step:last-child{border-bottom:none;}
+.flow-step::before{content:'';position:absolute;left:19px;top:52px;bottom:-16px;width:2px;background:var(--border);}
+.flow-step:last-child::before{display:none;}
+.step-circle{width:40px;height:40px;border-radius:50%;border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--cyan);font-family:'Space Mono',monospace;flex-shrink:0;background:var(--navy3);}
+.step-content{flex:1;}
+.step-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.step-desc{font-size:13px;color:var(--mid);line-height:1.6;}
+.step-technical{font-family:'Space Mono',monospace;font-size:11px;color:var(--cyan);background:rgba(0,212,245,0.06);padding:4px 10px;border-radius:4px;margin-top:6px;display:inline-block;}
+.step-decision{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.decision-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.pill-allow{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
+.pill-deny{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
+.pill-human{background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3);}
+
+/* CONSOLE SCOPE */
+.scope-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.scope-card{border-radius:10px;padding:16px;border:1px solid;}
+.scope-card.in{background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2);}
+.scope-card.out{background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2);}
+.scope-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.scope-card.in .scope-title{color:var(--green);}
+.scope-card.out .scope-title{color:var(--red);}
+.scope-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--mid);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.scope-item:last-child{border-bottom:none;}
+.scope-icon{flex-shrink:0;margin-top:2px;}
+
+/* AUDIT SCOPE */
+.audit-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.audit-field{background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.audit-field-name{font-size:12px;font-weight:700;color:var(--white);margin-bottom:3px;}
+.audit-field-desc{font-size:11px;color:var(--mid);line-height:1.5;}
+
+/* ROADMAP */
+.roadmap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.phase{border-radius:10px;padding:20px;border:1px solid;}
+.phase-1{background:rgba(0,212,245,0.06);border-color:rgba(0,212,245,0.2);}
+.phase-2{background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.2);}
+.phase-3{background:rgba(148,163,184,0.06);border-color:rgba(148,163,184,0.2);}
+.phase-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.phase-1 .phase-label{color:var(--cyan);}
+.phase-2 .phase-label{color:var(--amber);}
+.phase-3 .phase-label{color:var(--mid);}
+.phase-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:12px;}
+.phase-item{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--mid);padding:4px 0;}
+.phase-check{flex-shrink:0;margin-top:2px;}
+
+/* METRICS */
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.metric{background:var(--navy3);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.metric-val{font-size:24px;font-weight:700;font-family:'Space Mono',monospace;color:var(--cyan);margin-bottom:4px;}
+.metric-label{font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:0.08em;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 40px;text-align:center;font-size:12px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+
+@media(max-width:768px){
+  nav .nav-links{display:none;}
+  .use-case-grid,.scope-grid,.audit-fields,.roadmap,.metrics-grid{grid-template-columns:1fr;}
+  .toc{grid-template-columns:1fr;}
+  .hero h1{font-size:26px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="no-print">
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <div class="nav-links">
+    <a href="#use-case">Use Case</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#console">Console</a>
+    <a href="#audit">Audit Log</a>
+    <a href="#roadmap">Roadmap</a>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ Download PDF</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Enterprise Pilot Package · May 2026</div>
+  <h1>VeriSigil AI —<br><span>Runtime Governance for Autonomous AI Agents</span></h1>
+  <p class="hero-sub">This document defines the first enterprise pilot package for VeriSigil Runtime Guard — the operational trust layer that sits between an AI agent's decision and its execution.</p>
+  <div class="hero-meta">
+    <div class="meta-item"><strong>Version</strong> v0.5.4</div>
+    <div class="meta-item"><strong>API</strong> verisigil-api-production.up.railway.app</div>
+    <div class="meta-item"><strong>Prepared by</strong> Raheem Larry Babatunde</div>
+    <div class="meta-item"><strong>Date</strong> May 2026</div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc content">
+  <div class="toc-title">Contents</div>
+  <a href="#use-case" class="toc-item"><span class="toc-num">01</span> Enterprise Pilot Use Case Definition</a>
+  <a href="#workflow" class="toc-item"><span class="toc-num">02</span> Runtime Guard Workflow Map</a>
+  <a href="#console" class="toc-item"><span class="toc-num">03</span> Approval Console v1 Scope</a>
+  <a href="#audit" class="toc-item"><span class="toc-num">04</span> Audit & Trust Log v1 Scope</a>
+  <a href="#roadmap" class="toc-item"><span class="toc-num">05</span> Enterprise Adoption Roadmap</a>
+</div>
+
+<div class="content">
+
+  <!-- PROMISE -->
+  <div class="promise">
+    <div class="promise-text">"No high-risk AI action executes without <em>policy evaluation</em>,<br><em>human escalation</em> where needed, and an <em>audit trail</em>."</div>
+  </div>
+
+  <!-- LIVE METRICS -->
+  <div class="metrics-grid" style="margin-bottom:24px;">
+    <div class="metric"><div class="metric-val">74</div><div class="metric-label">Active Passports</div></div>
+    <div class="metric"><div class="metric-val">0.963</div><div class="metric-label">Avg Trust Score</div></div>
+    <div class="metric"><div class="metric-val">&lt;50ms</div><div class="metric-label">Guard Latency</div></div>
+    <div class="metric"><div class="metric-val">v0.5.4</div><div class="metric-label">API Version Live</div></div>
+  </div>
+
+  <!-- DOC 1 — USE CASE -->
+  <div class="section" id="use-case">
+    <div class="section-label">Document 01</div>
+    <h2>Enterprise Pilot Use Case Definition</h2>
+    <p class="section-sub">The first enterprise pilot is deliberately narrow. One agent. One action type. One policy. One workflow. This keeps adoption friction minimal while proving operational value clearly.</p>
+
+    <div style="background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.15);border-radius:10px;padding:18px;margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">First Pilot Use Case</div>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px">Fintech AI Agent — High-Risk Payment Approval</div>
+      <div style="font-size:13px;color:var(--mid)">A fintech AI agent requests to process a payment transfer above a defined threshold. Runtime Guard evaluates the request, classifies the risk, and either allows it automatically, blocks it outright, or escalates to a human approver before the transaction executes.</div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:12px">Why This Use Case First</div>
+    <div class="use-case-grid">
+      <div class="uc-card">
+        <div class="uc-icon">💳</div>
+        <div class="uc-title">Obvious Consequence</div>
+        <div class="uc-desc">An ungoverned $50,000 payment by an AI agent is immediately understandable as a risk. No explanation required.</div>
+        <div class="uc-risk risk-high">HIGH_RISK</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">📋</div>
+        <div class="uc-title">Clear Policy Rule</div>
+        <div class="uc-desc">Amounts below $1,000 auto-approve. Above $1,000 escalate to human. Above $10,000 deny automatically. Simple and auditable.</div>
+        <div class="uc-risk risk-high">POLICY ENFORCED</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">⚖️</div>
+        <div class="uc-title">EU AI Act Aligned</div>
+        <div class="uc-desc">Financial AI agents are classified HIGH_RISK under the EU AI Act. Human oversight enforcement is legally required by August 2026.</div>
+        <div class="uc-risk risk-high">ARTICLE 14</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🔧</div>
+        <div class="uc-title">15-Minute Integration</div>
+        <div class="uc-desc">One API call before the payment executes. Works with LangChain, CrewAI, AutoGen, OpenAI, and raw Python.</div>
+        <div class="uc-risk risk-limited">LOW FRICTION</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;color:var(--white);margin:20px 0 12px">First Pilot Specification — The One of Each Rule</div>
+    <table class="spec-table">
+      <thead><tr><th>Dimension</th><th>Pilot Constraint</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Agent</td><td>One fintech payment agent</td><td>Clear risk profile, easy to explain</td></tr>
+        <tr><td>Action Type</td><td>Payment transfers only</td><td>High consequence, unambiguous need</td></tr>
+        <tr><td>Policy Rule</td><td>Auto-allow &lt;$1K · Escalate $1K–$10K · Deny &gt;$10K</td><td>Simple, testable, auditable</td></tr>
+        <tr><td>Approval Interface</td><td>Standalone web console</td><td>One experience before expanding channels</td></tr>
+        <tr><td>Audit View</td><td>Chronological decision log</td><td>Meet baseline compliance needs</td></tr>
+        <tr><td>Notification</td><td>Email with approval URL</td><td>Universal, no extra tools required</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DOC 2 — WORKFLOW MAP -->
+  <div class="section" id="workflow">
+    <div class="section-label">Document 02</div>
+    <h2>Runtime Guard Workflow Map</h2>
+    <p class="section-sub">The complete execution path from agent action to final audit record. Every step is live and working in production today.</p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-circle">1</div>
+        <div class="step-content">
+          <div class="step-title">Agent Initiates Action</div>
+          <div class="step-desc">The AI agent makes a decision — for example, to process a $5,000 payment transfer. Before executing, it must call Runtime Guard.</div>
+          <div class="step-technical">Agent decision → calls POST /v1/guard/verify</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">2</div>
+        <div class="step-content">
+          <div class="step-title">Identity Verified Cryptographically</div>
+          <div class="step-desc">VeriSigil checks the agent's Ed25519 signed passport. Confirms the agent is real, active, not expired, not a shadow clone of another system.</div>
+          <div class="step-technical">Signature validated · Status checked · Shadow Detection™ active</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">3</div>
+        <div class="step-content">
+          <div class="step-title">Trust Score Evaluated</div>
+          <div class="step-desc">Each agent has a live trust score (0.0–1.0). Score below 0.60 means automatic DENY. Score 0.60–0.85 means REQUIRE_HUMAN_APPROVAL. Score above 0.85 proceeds to policy check.</div>
+          <div class="step-technical">Trust score: 0.97 → TRUSTED · Threshold: 0.60 minimum</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">4</div>
+        <div class="step-content">
+          <div class="step-title">Policy Applied to Action</div>
+          <div class="step-desc">Action-specific rules enforced automatically. Payment above $1,000 escalated for human approval. Dangerous tools blocked. PII access requires GDPR certification.</div>
+          <div class="step-technical">payment policy · amount_threshold: $1,000 · auto_deny: $10,000</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">5</div>
+        <div class="step-content">
+          <div class="step-title">Decision Returned in Under 50ms</div>
+          <div class="step-desc">One of three decisions returned with confidence score, reason, execution ID, and approval URL if escalation required.</div>
+          <div class="step-decision">
+            <span class="decision-pill pill-allow">✅ ALLOW</span>
+            <span class="decision-pill pill-human">👤 REQUIRE_HUMAN_APPROVAL</span>
+            <span class="decision-pill pill-deny">🚫 DENY</span>
+          </div>
+          <div class="step-technical">latency: &lt;50ms · confidence: 0.94 · audit_log_id: exec_xxxxxx</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">6</div>
+        <div class="step-content">
+          <div class="step-title">Approval Request Created (if escalated)</div>
+          <div class="step-desc">When REQUIRE_HUMAN_APPROVAL is returned, an approval request is automatically created in the database with a 24-hour expiry. A unique review URL is generated.</div>
+          <div class="step-technical">approval_id: apr_xxxxxxxx · review_url: verisigilai.com/approve.html?id=apr_xxx</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">7</div>
+        <div class="step-content">
+          <div class="step-title">Email Notification Sent to Approver</div>
+          <div class="step-desc">The approver receives an email instantly with agent identity, action details, risk reason, and a button linking to the Approval Console.</div>
+          <div class="step-technical">From: raheem@verisigilai.com · Subject: Approval Required — [Agent] is requesting [action]</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">8</div>
+        <div class="step-content">
+          <div class="step-title">Approver Reviews and Decides</div>
+          <div class="step-desc">Approver opens the Approval Console. Sees full context — agent identity, trust score, action details, risk reason, confidence score. Approves or rejects with name and email.</div>
+          <div class="step-technical">verisigilai.com/approve.html?id=apr_xxxxxxxx</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">9</div>
+        <div class="step-content">
+          <div class="step-title">Decision Cryptographically Logged</div>
+          <div class="step-desc">Every decision — who approved, when, why, what action was requested — is signed with Ed25519 and written to the immutable audit trail. Cannot be altered or deleted.</div>
+          <div class="step-technical">Ed25519 signature · immutable · timestamp · approver identity logged</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOC 3 — APPROVAL CONSOLE -->
+  <div class="section" id="console">
+    <div class="section-label">Document 03</div>
+    <h2>Approval Console v1 Scope</h2>
+    <p class="section-sub">What is in v1. What is deliberately excluded from v1. Enterprise trust requires that the approval surface feels controlled and auditable from day one.</p>
+
+    <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:12px">Core Principle</div>
+    <div style="background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.15);border-radius:10px;padding:16px;margin-bottom:20px;font-size:13px;color:var(--mid);">
+      <strong style="color:var(--white)">Notification can happen anywhere. Approval must happen inside the trust system.</strong><br>
+      Email and Slack bring the approver to the decision. The actual approve/reject action happens inside VeriSigil — creating a single system of record that is auditable, trusted, and enterprise-grade.
+    </div>
+
+    <div class="scope-grid">
+      <div class="scope-card in">
+        <div class="scope-title">✅ In v1 — Built Today</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Agent identity — name, ID, issuer organisation</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Trust score with visual indicator</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Requested action type and resource</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Amount or value if applicable</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Risk reason — why it was escalated</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Confidence score with progress bar</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Approve button — requires name and email</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Reject button — requires reason</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Audit reference ID and expiry time</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> 24-hour expiry — auto-expires if no action</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Mobile responsive — approver can act on phone</div>
+        <div class="scope-item"><span class="scope-icon">✓</span> Email notification with approval link</div>
+      </div>
+      <div class="scope-card out">
+        <div class="scope-title">❌ Not In v1 — Phase 2 and Beyond</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Slack or Teams native approval buttons</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> SSO — Okta, Azure AD, Google Workspace</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Role-based access — who can approve what</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Bulk approval — approve multiple requests at once</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Escalation chains — auto-escalate if no response</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Approver dashboard — all pending requests in one view</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Custom branding for enterprise clients</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Multi-language support</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Webhooks to enterprise tools — Jira, ServiceNow</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Approver comment threads</div>
+        <div class="scope-item"><span class="scope-icon">✗</span> Approval delegation — assign to another approver</div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;padding:14px 18px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:10px;font-size:13px;color:var(--mid);">
+      <strong style="color:var(--white)">Live today:</strong> verisigilai.com/approve.html — test with any real approval ID from the Runtime Guard API.
+    </div>
+  </div>
+
+  <!-- DOC 4 — AUDIT LOG -->
+  <div class="section" id="audit">
+    <div class="section-label">Document 04</div>
+    <h2>Audit & Trust Log v1 Scope</h2>
+    <p class="section-sub">What an enterprise buyer needs to review, search, verify, and trust after decisions are made. The audit trail is what turns Runtime Guard from a tool into a governance system.</p>
+
+    <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:12px">Every Decision Record Contains</div>
+    <div class="audit-fields">
+      <div class="audit-field">
+        <div class="audit-field-name">Agent Identity</div>
+        <div class="audit-field-desc">Who initiated the action — agent ID, name, issuer organisation, trust score at time of decision.</div>
+      </div>
+      <div class="audit-field">
+        <div class="audit-field-name">Requested Action</div>
+        <div class="audit-field-desc">What was attempted — action type, details, resource or system targeted, timestamp.</div>
+      </div>
+      <div class="audit-field">
+        <div class="audit-field-name">Policy Triggered</div>
+        <div class="audit-field-desc">Why it was evaluated — which policy rule fired, threshold exceeded, or trust score threshold breached.</div>
+      </div>
+      <div class="audit-field">
+        <div class="audit-field-name">Decision</div>
+        <div class="audit-field-desc">ALLOW, DENY, or REQUIRE_HUMAN_APPROVAL — with confidence score and execution ID.</div>
+      </div>
+      <div class="audit-field">
+        <div class="audit-field-name">Human Approver</div>
+        <div class="audit-field-desc">If escalated — who approved or rejected, their name, email, and the timestamp of their decision.</div>
+      </div>
+      <div class="audit-field">
+        <div class="audit-field-name">Cryptographic Proof</div>
+        <div class="audit-field-desc">Ed25519 signature on every event. Independently verifiable. Cannot be altered after the fact.</div>
+      </div>
+      <div class="audit-field">
+        <div class="audit-field-name">Final Outcome</div>
+        <div class="audit-field-desc">Whether the action proceeded, was blocked, or is pending. Complete lifecycle of every agent action.</div>
+      </div>
+      <div class="audit-field">
+        <div class="audit-field-name">Latency</div>
+        <div class="audit-field-desc">How long the Runtime Guard evaluation took in milliseconds — proof of operational performance.</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;color:var(--white);margin:20px 0 12px">v1 vs Later Versions</div>
+    <table class="spec-table">
+      <thead><tr><th>Feature</th><th>v1 — Built Today</th><th>Phase 2</th></tr></thead>
+      <tbody>
+        <tr><td>Cryptographic logging</td><td style="color:var(--green)">✅ Live</td><td>—</td></tr>
+        <tr><td>Basic governance view in Sigil Studio</td><td style="color:var(--green)">✅ Live</td><td>—</td></tr>
+        <tr><td>Per-agent audit trail via API</td><td style="color:var(--green)">✅ Live</td><td>—</td></tr>
+        <tr><td>Searchable compliance interface</td><td style="color:var(--amber)">⏳ Next build</td><td>Search by agent, decision, date</td></tr>
+        <tr><td>Export to PDF compliance pack</td><td style="color:var(--amber)">⏳ Next build</td><td>One-click EU AI Act report</td></tr>
+        <tr><td>Filter by decision type</td><td style="color:var(--amber)">⏳ Next build</td><td>DENY / ALLOW / REQUIRE filter</td></tr>
+        <tr><td>Role-based audit views</td><td style="color:var(--red)">Phase 2</td><td>Finance / Security / Legal views</td></tr>
+        <tr><td>SIEM export — Splunk, Datadog</td><td style="color:var(--red)">Phase 3</td><td>Enterprise security operations</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DOC 5 — ROADMAP -->
+  <div class="section" id="roadmap">
+    <div class="section-label">Document 05</div>
+    <h2>Enterprise Adoption Roadmap</h2>
+    <p class="section-sub">Clear separation between the first pilot, the enterprise scale version, and the full platform. Build only what is needed for the first pilot to succeed. Expand based on real customer demand.</p>
+
+    <div class="roadmap">
+      <div class="phase phase-1">
+        <div class="phase-label">Phase 1 — Now</div>
+        <div class="phase-title">First Enterprise Pilot</div>
+        <div class="phase-item"><span class="phase-check">✅</span> Decision API live</div>
+        <div class="phase-item"><span class="phase-check">✅</span> Approval Console — standalone</div>
+        <div class="phase-item"><span class="phase-check">✅</span> Email notification</div>
+        <div class="phase-item"><span class="phase-check">✅</span> Cryptographic audit trail</div>
+        <div class="phase-item"><span class="phase-check">✅</span> Compliance Sprint — $499</div>
+        <div class="phase-item"><span class="phase-check">✅</span> One agent · one action · one policy</div>
+        <div class="phase-item"><span class="phase-check">⏳</span> Searchable audit interface</div>
+        <div class="phase-item"><span class="phase-check">⏳</span> First paying pilot customer</div>
+      </div>
+      <div class="phase phase-2">
+        <div class="phase-label">Phase 2 — After First Customer</div>
+        <div class="phase-title">Enterprise Scale</div>
+        <div class="phase-item"><span class="phase-check">○</span> Slack notification integration</div>
+        <div class="phase-item"><span class="phase-check">○</span> Approver dashboard</div>
+        <div class="phase-item"><span class="phase-check">○</span> Role-based access control</div>
+        <div class="phase-item"><span class="phase-check">○</span> PDF compliance export</div>
+        <div class="phase-item"><span class="phase-check">○</span> Multiple action types</div>
+        <div class="phase-item"><span class="phase-check">○</span> Policy management UI</div>
+        <div class="phase-item"><span class="phase-check">○</span> SSO — Google / Azure AD</div>
+        <div class="phase-item"><span class="phase-check">○</span> Multiple agents per account</div>
+      </div>
+      <div class="phase phase-3">
+        <div class="phase-label">Phase 3 — After Series A</div>
+        <div class="phase-title">Full Platform</div>
+        <div class="phase-item"><span class="phase-check">○</span> SIEM export — Splunk, Datadog</div>
+        <div class="phase-item"><span class="phase-check">○</span> Teams / Jira / ServiceNow</div>
+        <div class="phase-item"><span class="phase-check">○</span> Behavioural fingerprinting</div>
+        <div class="phase-item"><span class="phase-check">○</span> Multi-agent workflow governance</div>
+        <div class="phase-item"><span class="phase-check">○</span> Enterprise SLA guarantees</div>
+        <div class="phase-item"><span class="phase-check">○</span> Dedicated support engineer</div>
+        <div class="phase-item"><span class="phase-check">○</span> Custom policy engine</div>
+        <div class="phase-item"><span class="phase-check">○</span> On-premise deployment option</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:18px;background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.15);border-radius:10px;">
+      <div style="font-size:12px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Priority Rule</div>
+      <div style="font-size:13px;color:var(--mid)">Every feature in Phase 2 and beyond gets built <strong style="color:var(--white)">only when a paying customer needs it</strong>. Not before. The first pilot proves demand. Revenue funds the roadmap.</div>
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px;">
+    <a href="https://verisigilai.com/eu-ai-act-sprint.html" style="background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:block;">
+      <div style="font-size:18px;margin-bottom:6px">🚀</div>
+      <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px">Compliance Sprint</div>
+      <div style="font-size:11px;color:var(--cyan)">verisigilai.com/eu-ai-act-sprint.html</div>
+    </a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" style="background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:block;">
+      <div style="font-size:18px;margin-bottom:6px">📡</div>
+      <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px">Live API Docs</div>
+      <div style="font-size:11px;color:var(--cyan)">verisigil-api-production.up.railway.app/docs</div>
+    </a>
+    <a href="https://verisigilai.com/flow-test.html" style="background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:block;">
+      <div style="font-size:18px;margin-bottom:6px">⚡</div>
+      <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px">Full Flow Demo</div>
+      <div style="font-size:11px;color:var(--cyan)">verisigilai.com/flow-test.html</div>
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  <p style="margin-bottom:6px">© 2026 VeriSigil AI · <a href="https://verisigilai.com">verisigilai.com</a> · Built in Lagos, Nigeria 🇳🇬</p>
+  <p><a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a> · Raheem Larry Babatunde · Founder & CEO</p>
+</footer>
+
+</body>
+</html>

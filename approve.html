@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Action Requires Approval — VeriSigil AI</title>
+<meta name="description" content="Review and approve or reject an AI agent action request.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#050E2B;--navy2:#0D1A3A;--navy3:#0A1628;--cyan:#00D4F5;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--white:#fff;--mid:#94A3B8;--border:rgba(30,58,110,0.6);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+
+.card{background:var(--navy2);border:1px solid var(--border);border-radius:20px;max-width:600px;width:100%;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.5);}
+
+/* HEADER */
+.card-header{background:rgba(245,158,11,0.08);border-bottom:1px solid rgba(245,158,11,0.25);padding:28px 32px;text-align:center;}
+.header-icon{font-size:44px;margin-bottom:12px;}
+.header-title{font-size:20px;font-weight:700;color:var(--amber);margin-bottom:6px;}
+.header-sub{font-size:13px;color:var(--mid);}
+
+/* CONTENT */
+.card-body{padding:28px 32px;}
+
+/* SECTIONS */
+.section{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border);}
+.section:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;}
+
+/* AGENT */
+.agent-row{display:flex;align-items:center;gap:14px;}
+.agent-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),#7C3AED);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.agent-name{font-size:16px;font-weight:700;margin-bottom:2px;}
+.agent-org{font-size:12px;color:var(--mid);}
+.trust-pill{margin-left:auto;display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:var(--green);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;}
+
+/* ACTION DETAILS */
+.detail-box{background:var(--navy3);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid var(--border);font-size:13px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-label{color:var(--mid);}
+.detail-value{font-weight:600;font-family:'Space Mono',monospace;font-size:12px;text-align:right;word-break:break-all;max-width:280px;}
+.detail-value.high{color:var(--red);}
+.detail-value.amount{color:var(--amber);font-size:15px;}
+
+/* POLICY */
+.policy-box{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:14px 16px;}
+.policy-reason{font-size:13px;color:var(--amber);font-weight:600;margin-bottom:6px;}
+.policy-meta{font-size:12px;color:var(--mid);}
+
+/* CONFIDENCE */
+.confidence-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;}
+.confidence-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+.confidence-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--amber),var(--red));}
+.confidence-val{font-size:12px;font-weight:700;color:var(--amber);font-family:'Space Mono',monospace;flex-shrink:0;}
+
+/* APPROVER FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-field{}
+.form-label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;display:block;}
+.form-input{width:100%;background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--white);font-size:13px;font-family:'Space Grotesk',sans-serif;outline:none;transition:border-color 0.15s;}
+.form-input:focus{border-color:var(--cyan);}
+.form-input.full{grid-column:1/-1;}
+textarea.form-input{resize:vertical;min-height:72px;}
+
+/* BUTTONS */
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}
+.btn{padding:14px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-approve{background:var(--green);color:var(--navy);}
+.btn-approve:hover{opacity:0.88;transform:translateY(-1px);}
+.btn-reject{background:transparent;border:1px solid var(--red);color:var(--red);}
+.btn-reject:hover{background:rgba(239,68,68,0.08);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+/* REJECT REASON */
+.reject-reason{margin-top:12px;display:none;}
+
+/* AUDIT */
+.audit-row{display:flex;justify-content:space-between;font-size:11px;color:var(--mid);margin-top:16px;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap;gap:6px;}
+.audit-row span{font-family:'Space Mono',monospace;}
+
+/* STATES */
+.state-wrap{text-align:center;padding:60px 32px;}
+.state-icon{font-size:56px;margin-bottom:16px;}
+.state-title{font-size:22px;font-weight:700;margin-bottom:8px;}
+.state-sub{font-size:14px;color:var(--mid);line-height:1.6;}
+.state-wrap.approved .state-title{color:var(--green);}
+.state-wrap.rejected .state-title{color:var(--red);}
+.state-wrap.expired .state-title{color:var(--mid);}
+
+/* LOGO */
+.logo-bar{text-align:center;padding:16px;border-top:1px solid var(--border);font-size:13px;color:var(--mid);}
+.logo-bar a{color:var(--cyan);text-decoration:none;font-weight:600;}
+
+@media(max-width:500px){
+  .form-grid{grid-template-columns:1fr;}
+  .btn-row{grid-template-columns:1fr;}
+  .card-body{padding:20px;}
+  .card-header{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div style="text-align:center;padding:60px 32px;color:var(--mid)">
+    <div style="font-size:32px;margin-bottom:12px">⏳</div>
+    <div>Loading approval request...</div>
+  </div>
+</div>
+
+<script>
+const API = 'https://verisigil-api-production.up.railway.app';
+const params = new URLSearchParams(window.location.search);
+const APPROVAL_ID = params.get('id');
+
+if (!APPROVAL_ID) {
+  renderError('No approval ID in URL. Please use the link from your email or notification.');
+}
+
+// ── Load Approval ─────────────────────────────────────────
+async function load() {
+  if (!APPROVAL_ID) return;
+  try {
+    const r    = await fetch(`${API}/v1/approvals/${APPROVAL_ID}`);
+    const data = await r.json();
+    if (r.status === 404) return renderError('Approval request not found.');
+    render(data);
+  } catch(e) {
+    renderError('Could not load approval request. Check your connection and try again.');
+  }
+}
+
+// ── Main Render ───────────────────────────────────────────
+function render(data) {
+  if (data.status === 'approved') return renderDecided(data, 'approved');
+  if (data.status === 'rejected') return renderDecided(data, 'rejected');
+  if (data.status === 'expired')  return renderExpired(data);
+
+  const details = data.action?.details || {};
+  const amount  = details.amount_usd ? `$${Number(details.amount_usd).toLocaleString()} USD` : null;
+  const conf    = Math.round((data.trust_score_at_decision || 0.9) * 100);
+
+  document.getElementById('card').innerHTML = `
+    <div class="card-header">
+      <div class="header-icon">⚠️</div>
+      <div class="header-title">Action Requires Your Approval</div>
+      <div class="header-sub">An AI agent is requesting to perform a high-risk action. Please review and decide.</div>
+    </div>
+
+    <div class="card-body">
+
+      <!-- AGENT -->
+      <div class="section">
+        <div class="section-label">Agent Identity</div>
+        <div class="agent-row">
+          <div class="agent-avatar">🤖</div>
+          <div>
+            <div class="agent-name">${data.agent?.display_name || 'Unknown Agent'}</div>
+            <div class="agent-org">${data.agent?.issuer_org || 'Unknown Organisation'}</div>
+          </div>
+          <div class="trust-pill">✓ ${data.agent?.trust_score || '—'} Trust</div>
+        </div>
+      </div>
+
+      <!-- ACTION -->
+      <div class="section">
+        <div class="section-label">Requested Action</div>
+        <div class="detail-box">
+          <div class="detail-row">
+            <span class="detail-label">Action Type</span>
+            <span class="detail-value">${data.action?.type || '—'}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Resource / System</span>
+            <span class="detail-value">${data.action?.resource || '—'}</span>
+          </div>
+          ${amount ? `
+          <div class="detail-row">
+            <span class="detail-label">Amount</span>
+            <span class="detail-value amount">${amount}</span>
+          </div>` : ''}
+          ${Object.entries(details)
+            .filter(([k]) => k !== 'amount_usd')
+            .map(([k, v]) => `
+          <div class="detail-row">
+            <span class="detail-label">${k.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())}</span>
+            <span class="detail-value">${v}</span>
+          </div>`).join('')}
+          <div class="detail-row">
+            <span class="detail-label">Agent ID</span>
+            <span class="detail-value" style="color:var(--mid);font-size:11px">${data.agent?.agent_id || '—'}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- POLICY -->
+      <div class="section">
+        <div class="section-label">Why This Needs Approval</div>
+        <div class="policy-box">
+          <div class="policy-reason">⚡ ${data.policy_trigger || 'Policy threshold exceeded'}</div>
+          <div class="policy-meta">VeriSigil Runtime Guard flagged this action for human review before execution.</div>
+        </div>
+        <div class="confidence-wrap" style="margin-top:12px">
+          <span style="font-size:12px;color:var(--mid)">Confidence</span>
+          <div class="confidence-bar-bg">
+            <div class="confidence-bar" style="width:${conf}%"></div>
+          </div>
+          <span class="confidence-val">${conf}%</span>
+        </div>
+      </div>
+
+      <!-- APPROVER FORM -->
+      <div class="section">
+        <div class="section-label">Your Decision</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">Your Full Name *</label>
+            <input id="inp-name" class="form-input" type="text" placeholder="e.g. John Smith">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Your Email *</label>
+            <input id="inp-email" class="form-input" type="email" placeholder="you@company.com">
+          </div>
+        </div>
+
+        <div class="reject-reason" id="reject-wrap">
+          <label class="form-label">Reason for Rejection *</label>
+          <textarea id="inp-reason" class="form-input" placeholder="Why are you rejecting this action?"></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-approve" onclick="decide('approved')">✓ Approve Action</button>
+          <button class="btn btn-reject"  onclick="showReject()">✗ Reject Action</button>
+        </div>
+
+        <div id="reject-confirm" style="display:none;margin-top:12px">
+          <button class="btn btn-reject" style="width:100%" onclick="decide('rejected')">✗ Confirm Rejection</button>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <span>Approval ID: ${APPROVAL_ID}</span>
+        <span>Expires: ${new Date(data.expires_at).toLocaleString()}</span>
+      </div>
+
+    </div>
+
+    <div class="logo-bar">
+      Powered by <a href="https://verisigilai.com" target="_blank">VeriSigil AI</a> — Runtime Governance for Autonomous AI Agents
+    </div>
+  `;
+}
+
+// ── Show Reject Reason ────────────────────────────────────
+function showReject() {
+  document.getElementById('reject-wrap').style.display    = 'block';
+  document.getElementById('reject-confirm').style.display = 'block';
+}
+
+// ── Submit Decision ───────────────────────────────────────
+async function decide(decision) {
+  const name   = document.getElementById('inp-name')?.value?.trim();
+  const email  = document.getElementById('inp-email')?.value?.trim();
+  const reason = document.getElementById('inp-reason')?.value?.trim();
+
+  if (!name || !email) {
+    alert('Please enter your name and email before submitting.');
+    return;
+  }
+  if (decision === 'rejected' && !reason) {
+    alert('Please provide a reason for rejection.');
+    return;
+  }
+
+  // Disable buttons
+  document.querySelectorAll('.btn').forEach(b => b.disabled = true);
+
+  try {
+    const r = await fetch(`${API}/v1/approvals/${APPROVAL_ID}/decide`, {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({ decision, approver_name: name, approver_email: email, reason })
+    });
+    const data = await r.json();
+
+    if (r.ok) {
+      renderDecided({ decision_by: name, rejection_reason: reason }, decision);
+    } else {
+      alert(data.detail || 'Error submitting decision. Please try again.');
+      document.querySelectorAll('.btn').forEach(b => b.disabled = false);
+    }
+  } catch(e) {
+    alert('Connection error. Please try again.');
+    document.querySelectorAll('.btn').forEach(b => b.disabled = false);
+  }
+}
+
+// ── Decided State ─────────────────────────────────────────
+function renderDecided(data, status) {
+  const isApproved = status === 'approved';
+  document.getElementById('card').innerHTML = `
+    <div class="card-header" style="background:${isApproved ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)'};border-bottom-color:${isApproved ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}">
+      <div class="header-icon">${isApproved ? '✅' : '❌'}</div>
+      <div class="header-title" style="color:${isApproved ? 'var(--green)' : 'var(--red)'}">Action ${isApproved ? 'Approved' : 'Rejected'}</div>
+      <div class="header-sub">Decision made by ${data.decision_by || 'Approver'} · Cryptographically logged by VeriSigil AI</div>
+    </div>
+    <div class="card-body">
+      <div style="text-align:center;padding:20px 0">
+        <p style="font-size:14px;color:var(--mid);margin-bottom:${data.rejection_reason ? '16px' : '0'}">
+          ${isApproved
+            ? 'The agent action has been approved and the decision logged to the immutable audit trail.'
+            : 'The agent action has been rejected. The agent cannot proceed with this action.'}
+        </p>
+        ${data.rejection_reason ? `
+        <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:12px 16px;text-align:left;margin-top:12px">
+          <div style="font-size:11px;color:var(--mid);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.08em">Rejection Reason</div>
+          <div style="font-size:13px;color:var(--white)">${data.rejection_reason}</div>
+        </div>` : ''}
+      </div>
+    </div>
+    <div class="logo-bar">
+      Powered by <a href="https://verisigilai.com" target="_blank">VeriSigil AI</a> — Runtime Governance for Autonomous AI Agents
+    </div>
+  `;
+}
+
+// ── Expired State ─────────────────────────────────────────
+function renderExpired(data) {
+  document.getElementById('card').innerHTML = `
+    <div class="card-header" style="background:rgba(148,163,184,0.06);border-bottom-color:rgba(148,163,184,0.2)">
+      <div class="header-icon">⏰</div>
+      <div class="header-title" style="color:var(--mid)">Approval Request Expired</div>
+      <div class="header-sub">This request expired after 24 hours. The agent action cannot proceed.</div>
+    </div>
+    <div class="card-body" style="text-align:center;padding:32px">
+      <p style="font-size:14px;color:var(--mid)">If this action still needs to be performed, the agent must request a new approval.</p>
+    </div>
+    <div class="logo-bar">
+      Powered by <a href="https://verisigilai.com" target="_blank">VeriSigil AI</a>
+    </div>
+  `;
+}
+
+// ── Error State ───────────────────────────────────────────
+function renderError(msg) {
+  document.getElementById('card').innerHTML = `
+    <div class="card-header" style="background:rgba(239,68,68,0.06);border-bottom-color:rgba(239,68,68,0.2)">
+      <div class="header-icon">⚠️</div>
+      <div class="header-title" style="color:var(--red)">Error</div>
+      <div class="header-sub">${msg}</div>
+    </div>
+    <div class="logo-bar">
+      Powered by <a href="https://verisigilai.com" target="_blank">VeriSigil AI</a>
+    </div>
+  `;
+}
+
+load();
+</script>
+</body>
+</html>

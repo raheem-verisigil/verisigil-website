@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil × BobSentry — Integration Spec</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0A0F1E;--ink2:#111827;--ink3:#1C2333;--cyan:#00E5FF;--green:#00FF88;--amber:#FFB300;--red:#FF4560;--white:#F8FAFC;--slate:#94A3B8;--border:rgba(255,255,255,0.07);--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--ink);color:var(--white);padding:40px 24px 80px;line-height:1.7;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.wrap{max-width:820px;margin:0 auto;position:relative;z-index:1;}
+
+.header{margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.logo{font-family:var(--mono);font-size:14px;color:var(--cyan);margin-bottom:12px;}
+h1{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-0.03em;margin-bottom:6px;}
+h1 .x{color:var(--amber);}
+.meta{font-size:12px;color:var(--slate);}
+
+.section{background:var(--ink2);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:18px;}
+.section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;}
+.section h2{font-size:16px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+
+pre{background:#020812;border:1px solid var(--border);border-radius:7px;padding:16px;font-family:var(--mono);font-size:11px;line-height:1.8;overflow-x:auto;margin:12px 0;color:#94A3B8;}
+.kw{color:#C792EA}.st{color:#C3E88D}.num{color:#F78C6C}.cm{color:#546E7A}.key{color:#82AAFF}.bool{color:#FF9580}.cn{color:#00E5FF}
+
+.arch{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;margin:16px 0;}
+.arch-box{background:var(--ink3);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;}
+.arch-box.vs{border-color:rgba(0,229,255,0.3);}
+.arch-box.bs{border-color:rgba(255,179,0,0.3);}
+.arch-title{font-family:var(--mono);font-size:12px;font-weight:700;margin-bottom:6px;}
+.arch-box.vs .arch-title{color:var(--cyan);}
+.arch-box.bs .arch-title{color:var(--amber);}
+.arch-items{font-size:11px;color:var(--slate);line-height:1.8;}
+.arch-arrow{text-align:center;padding:0 12px;font-size:20px;color:var(--border);}
+
+.scenario{background:var(--ink3);border-left:3px solid;border-radius:0 8px 8px 0;padding:16px;margin-bottom:12px;}
+.scenario.payment{border-color:var(--amber);}
+.scenario.data{border-color:var(--cyan);}
+.scenario.destruct{border-color:var(--red);}
+.scenario-title{font-family:var(--mono);font-size:12px;font-weight:700;margin-bottom:8px;}
+.scenario.payment .scenario-title{color:var(--amber);}
+.scenario.data .scenario-title{color:var(--cyan);}
+.scenario.destruct .scenario-title{color:var(--red);}
+.scenario-flow{font-size:12px;color:var(--slate);line-height:1.8;}
+.scenario-flow strong{color:var(--white);}
+
+.field-table{width:100%;border-collapse:collapse;margin:12px 0;}
+.field-table th{background:var(--ink3);color:var(--slate);font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.field-table td{padding:9px 12px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;}
+.field-table td:first-child{font-family:var(--mono);font-size:11px;color:var(--cyan);}
+.field-table td:nth-child(2){color:var(--amber);font-family:var(--mono);font-size:11px;}
+.field-table td:nth-child(3){color:var(--slate);}
+.field-table tr:last-child td{border-bottom:none;}
+
+.decision-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0;}
+.decision-card{border-radius:8px;padding:14px;border:1px solid;}
+.decision-card.allow{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.2);}
+.decision-card.deny{background:rgba(255,69,96,0.06);border-color:rgba(255,69,96,0.2);}
+.decision-card.human{background:rgba(255,179,0,0.06);border-color:rgba(255,179,0,0.2);}
+.decision-name{font-family:var(--mono);font-size:11px;font-weight:700;margin-bottom:6px;}
+.decision-card.allow .decision-name{color:var(--green);}
+.decision-card.deny .decision-name{color:var(--red);}
+.decision-card.human .decision-name{color:var(--amber);}
+.decision-meaning{font-size:11px;color:var(--slate);line-height:1.6;}
+
+.latency-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.latency-row:last-child{border-bottom:none;}
+.latency-label{color:var(--slate);}
+.latency-val{font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:600;}
+
+.retry-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.retry-item:last-child{border-bottom:none;}
+.retry-code{font-family:var(--mono);color:var(--red);flex-shrink:0;min-width:60px;}
+.retry-desc{color:var(--slate);}
+
+.footer{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--slate);}
+.footer a{color:var(--cyan);text-decoration:none;}
+
+@media(max-width:600px){.arch{grid-template-columns:1fr}.arch-arrow{transform:rotate(90deg)}.decision-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo">⬡ VeriSigil AI — Integration Specification</div>
+    <h1>VeriSigil <span class="x">×</span> BobSentry</h1>
+    <div class="meta">Runtime Trust Integration Spec · v1.0 · May 2026 · Confidential</div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="section">
+    <div class="section-label">Section 01</div>
+    <h2>Architecture — Separation of Responsibilities</h2>
+
+    <div class="arch">
+      <div class="arch-box vs">
+        <div class="arch-title">⬡ VeriSigil</div>
+        <div class="arch-items">
+          Cryptographic identity<br>
+          Trust score evaluation<br>
+          Risk signal generation<br>
+          Policy threshold check<br>
+          Passport verification<br>
+          Shadow detection
+        </div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box bs">
+        <div class="arch-title">◆ BobSentry</div>
+        <div class="arch-items">
+          Runtime authorization<br>
+          Approval workflow<br>
+          Execution enforcement<br>
+          Audit evidence<br>
+          Decision replay<br>
+          Deterministic outcomes
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.12);border-radius:8px;padding:14px;font-size:13px;color:var(--slate);margin-top:8px;">
+      <strong style="color:var(--white)">Integration principle:</strong> VeriSigil is the trust oracle. BobSentry consumes the trust signal and makes the final runtime enforcement decision. The boundary is clean and modular — each system remains independently operable.
+    </div>
+  </div>
+
+  <!-- RESPONSE CONTRACT -->
+  <div class="section">
+    <div class="section-label">Section 02</div>
+    <h2>Response Contract — Full JSON Schema</h2>
+
+    <div style="font-size:12px;font-weight:600;color:var(--white);margin-bottom:8px;">Request</div>
+    <pre><span class="cm">// POST https://verisigil-api-production.up.railway.app/v1/guard/verify
+// Headers: x-api-key: {your_api_key}, Content-Type: application/json</span>
+
+{
+  <span class="key">"agent_id"</span>:        <span class="st">"vsa_1483d06a89c4"</span>,   <span class="cm">// VeriSigil agent passport ID</span>
+  <span class="key">"action_type"</span>:    <span class="st">"payment"</span>,           <span class="cm">// payment | data_access | tool_use | delete | api_call</span>
+  <span class="key">"action_details"</span>: {
+    <span class="key">"amount_usd"</span>:     <span class="num">5000</span>,              <span class="cm">// for payment actions</span>
+    <span class="key">"approver_email"</span>: <span class="st">"ops@bobsentry.com"</span>, <span class="cm">// optional — who receives approval email</span>
+    <span class="key">"destination"</span>:    <span class="st">"vendor_acct_123"</span>,  <span class="cm">// optional context</span>
+    <span class="key">"risk_context"</span>:   <span class="st">"production"</span>        <span class="cm">// optional — production | staging | test</span>
+  },
+  <span class="key">"resource"</span>:       <span class="st">"stripe_api"</span>,        <span class="cm">// target system or resource</span>
+  <span class="key">"context"</span>:        <span class="st">"production"</span>         <span class="cm">// execution context</span>
+}</pre>
+
+    <div style="font-size:12px;font-weight:600;color:var(--white);margin:16px 0 8px;">Response — ALLOW</div>
+    <pre>{
+  <span class="key">"decision"</span>:       <span class="st">"ALLOW"</span>,
+  <span class="key">"confidence"</span>:     <span class="num">0.96</span>,              <span class="cm">// 0.0–1.0 decision confidence</span>
+  <span class="key">"reason"</span>:         <span class="st">"Trust score 0.97 sufficient for payment"</span>,
+  <span class="key">"agent_id"</span>:       <span class="st">"vsa_1483d06a89c4"</span>,
+  <span class="key">"trust_score"</span>:    <span class="num">0.97</span>,              <span class="cm">// live trust score 0.0–1.0</span>
+  <span class="key">"trust_level"</span>:    <span class="st">"TRUSTED"</span>,         <span class="cm">// TRUSTED | FLAGGED | BLOCKED</span>
+  <span class="key">"policy_applied"</span>: <span class="st">"payment"</span>,
+  <span class="key">"execution_id"</span>:   <span class="st">"exec_6aeb8067"</span>,   <span class="cm">// unique per evaluation — use for audit linkage</span>
+  <span class="key">"timestamp"</span>:      <span class="st">"2026-05-14T04:47:11.620Z"</span>,
+  <span class="key">"audit_log_id"</span>:   <span class="st">"exec_6aeb8067"</span>,   <span class="cm">// same as execution_id — links to VeriSigil audit trail</span>
+  <span class="key">"latency_ms"</span>:     <span class="num">47.3</span>,              <span class="cm">// actual evaluation time</span>
+  <span class="key">"approval_url"</span>:   <span class="bool">null</span>,              <span class="cm">// null when ALLOW</span>
+  <span class="key">"approval_id"</span>:    <span class="bool">null</span>               <span class="cm">// null when ALLOW</span>
+}</pre>
+
+    <div style="font-size:12px;font-weight:600;color:var(--white);margin:16px 0 8px;">Response — REQUIRE_HUMAN_APPROVAL</div>
+    <pre>{
+  <span class="key">"decision"</span>:       <span class="st">"REQUIRE_HUMAN_APPROVAL"</span>,
+  <span class="key">"confidence"</span>:     <span class="num">0.94</span>,
+  <span class="key">"reason"</span>:         <span class="st">"Payment $5000 exceeds auto-allow threshold"</span>,
+  <span class="key">"agent_id"</span>:       <span class="st">"vsa_1483d06a89c4"</span>,
+  <span class="key">"trust_score"</span>:    <span class="num">0.97</span>,
+  <span class="key">"trust_level"</span>:    <span class="st">"TRUSTED"</span>,
+  <span class="key">"policy_applied"</span>: <span class="st">"payment"</span>,
+  <span class="key">"execution_id"</span>:   <span class="st">"exec_a1b2c3d4"</span>,
+  <span class="key">"timestamp"</span>:      <span class="st">"2026-05-14T04:47:11.620Z"</span>,
+  <span class="key">"audit_log_id"</span>:   <span class="st">"exec_a1b2c3d4"</span>,
+  <span class="key">"latency_ms"</span>:     <span class="num">52.1</span>,
+  <span class="key">"approval_url"</span>:   <span class="st">"https://verisigilai.com/approve.html?id=apr_0dfc3a03"</span>,
+  <span class="key">"approval_id"</span>:    <span class="st">"apr_0dfc3a03"</span>     <span class="cm">// use to poll approval status</span>
+}</pre>
+
+    <div style="font-size:12px;font-weight:600;color:var(--white);margin:16px 0 8px;">Response — DENY</div>
+    <pre>{
+  <span class="key">"decision"</span>:       <span class="st">"DENY"</span>,
+  <span class="key">"confidence"</span>:     <span class="num">0.99</span>,
+  <span class="key">"reason"</span>:         <span class="st">"Shadow clone detected — identity conflict"</span>,
+  <span class="key">"agent_id"</span>:       <span class="st">"vsa_1483d06a89c4"</span>,
+  <span class="key">"trust_score"</span>:    <span class="num">0.42</span>,
+  <span class="key">"trust_level"</span>:    <span class="st">"BLOCKED"</span>,
+  <span class="key">"policy_applied"</span>: <span class="st">"identity_verification"</span>,
+  <span class="key">"execution_id"</span>:   <span class="st">"exec_b9c2d3e4"</span>,
+  <span class="key">"timestamp"</span>:      <span class="st">"2026-05-14T04:47:11.620Z"</span>,
+  <span class="key">"audit_log_id"</span>:   <span class="st">"exec_b9c2d3e4"</span>,
+  <span class="key">"latency_ms"</span>:     <span class="num">31.8</span>,
+  <span class="key">"approval_url"</span>:   <span class="bool">null</span>,
+  <span class="key">"approval_id"</span>:    <span class="bool">null</span>
+}</pre>
+  </div>
+
+  <!-- DECISION SEMANTICS -->
+  <div class="section">
+    <div class="section-label">Section 03</div>
+    <h2>Decision Semantics — What Each Decision Means for BobSentry</h2>
+
+    <div class="decision-grid">
+      <div class="decision-card allow">
+        <div class="decision-name">✓ ALLOW</div>
+        <div class="decision-meaning">Identity verified. Trust sufficient. Policy passed. BobSentry may proceed with execution. Log execution_id in your audit trail for linkage.</div>
+      </div>
+      <div class="decision-card human">
+        <div class="decision-name">👤 REQUIRE_HUMAN_APPROVAL</div>
+        <div class="decision-meaning">Identity verified but policy threshold exceeded. BobSentry must pause execution. Approval email sent automatically. Poll approval_id for decision or wait for webhook. Do not execute until approved.</div>
+      </div>
+      <div class="decision-card deny">
+        <div class="decision-name">✗ DENY</div>
+        <div class="decision-meaning">Hard block. Identity invalid, passport revoked/expired, shadow clone detected, or trust below 0.60. BobSentry must reject and log. Do not retry without remediation.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;background:rgba(255,179,0,0.05);border:1px solid rgba(255,179,0,0.15);border-radius:8px;padding:14px;font-size:12px;color:var(--slate);">
+      <strong style="color:var(--white)">Polling approval status:</strong> GET <span style="color:var(--cyan);font-family:var(--mono)">https://verisigil-api-production.up.railway.app/v1/approvals/{approval_id}</span> — returns <span style="color:var(--amber)">status: pending | approved | rejected | expired</span>. Poll every 30s or implement webhook callback when available.
+    </div>
+  </div>
+
+  <!-- TRUST/RISK FIELD DEFINITIONS -->
+  <div class="section">
+    <div class="section-label">Section 04</div>
+    <h2>Trust & Risk Field Definitions</h2>
+
+    <table class="field-table">
+      <thead><tr><th>Field</th><th>Type</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>trust_score</td><td>float 0.0–1.0</td><td>Live composite score. Updated on every verification, security scan, and threat event. Decays slightly over time without re-verification.</td></tr>
+        <tr><td>trust_level</td><td>enum</td><td>TRUSTED (≥0.80) — proceed with standard policy. FLAGGED (0.60–0.80) — escalate all actions. BLOCKED (&lt;0.60) — deny all actions.</td></tr>
+        <tr><td>confidence</td><td>float 0.0–1.0</td><td>Decision confidence. How certain VeriSigil is about this specific decision. Below 0.85 — treat with caution in BobSentry policy.</td></tr>
+        <tr><td>execution_id</td><td>string exec_xxxxxxxx</td><td>Unique per evaluation. Use as foreign key to link BobSentry audit records to VeriSigil audit trail. Critical for deterministic replay.</td></tr>
+        <tr><td>audit_log_id</td><td>string</td><td>Same as execution_id in current version. Will diverge in v2 when full chain provenance is added. Store both for forward compatibility.</td></tr>
+        <tr><td>policy_applied</td><td>string</td><td>Which policy rule was evaluated. payment | data_access | tool_use | identity_verification. Tells BobSentry which policy tree produced this decision.</td></tr>
+        <tr><td>approval_id</td><td>string apr_xxxxxxxx</td><td>Only present when REQUIRE_HUMAN_APPROVAL. Use to poll decision status or surface to BobSentry approval UI.</td></tr>
+        <tr><td>approval_url</td><td>string URL</td><td>Direct link to VeriSigil Approval Console for this request. Surface to approver via BobSentry notification or embed in your UI.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3 SCENARIOS -->
+  <div class="section">
+    <div class="section-label">Section 05</div>
+    <h2>3 Concrete Runtime Scenarios End-to-End</h2>
+
+    <div class="scenario payment">
+      <div class="scenario-title">💳 Scenario 1 — Financial Transfer Requiring Approval</div>
+      <div class="scenario-flow">
+        <strong>Trigger:</strong> BobSentry agent initiates $5,000 payment transfer<br>
+        <strong>Step 1:</strong> BobSentry calls POST /v1/guard/verify with action_type: payment, amount_usd: 5000<br>
+        <strong>Step 2:</strong> VeriSigil evaluates — trust 0.97 TRUSTED but $5,000 exceeds $1,000 auto-allow threshold<br>
+        <strong>Step 3:</strong> Returns REQUIRE_HUMAN_APPROVAL + approval_url + approval_id<br>
+        <strong>Step 4:</strong> VeriSigil sends email to approver_email automatically<br>
+        <strong>Step 5:</strong> BobSentry pauses execution, logs execution_id, polls approval_id every 30s<br>
+        <strong>Step 6:</strong> Approver opens approval_url → sees agent identity, amount, risk reason → approves<br>
+        <strong>Step 7:</strong> BobSentry polls → status: approved → proceeds with transfer<br>
+        <strong>Step 8:</strong> Both systems log execution_id to their audit trails — linked records<br>
+        <strong>Decision:</strong> <span style="color:var(--amber)">REQUIRE_HUMAN_APPROVAL → approved → executed</span>
+      </div>
+    </div>
+
+    <div class="scenario data">
+      <div class="scenario-title">🗄️ Scenario 2 — Sensitive Data Export Block/Escalation</div>
+      <div class="scenario-flow">
+        <strong>Trigger:</strong> BobSentry agent attempts to export user PII to external system<br>
+        <strong>Step 1:</strong> BobSentry calls POST /v1/guard/verify with action_type: data_access, contains_pii: true<br>
+        <strong>Step 2:</strong> VeriSigil evaluates — PII access requires GDPR-certified agent. Agent not GDPR certified.<br>
+        <strong>Step 3:</strong> Returns DENY with reason: "PII access requires GDPR-certified agent"<br>
+        <strong>Step 4:</strong> BobSentry blocks export immediately, logs execution_id<br>
+        <strong>Step 5:</strong> No retry until agent passport updated with GDPR certification<br>
+        <strong>Alternative:</strong> If agent IS GDPR certified — returns REQUIRE_HUMAN_APPROVAL for compliance escalation<br>
+        <strong>Decision:</strong> <span style="color:var(--red)">DENY → blocked → no retry</span>
+      </div>
+    </div>
+
+    <div class="scenario destruct">
+      <div class="scenario-title">💥 Scenario 3 — Destructive Action Policy Enforcement</div>
+      <div class="scenario-flow">
+        <strong>Trigger:</strong> BobSentry agent attempts to delete production database records<br>
+        <strong>Step 1:</strong> BobSentry calls POST /v1/guard/verify with action_type: tool_use, tool_name: file_delete<br>
+        <strong>Step 2:</strong> VeriSigil evaluates — file_delete is in blocked_tools list for this action type<br>
+        <strong>Step 3:</strong> Returns DENY with reason: "Tool 'file_delete' is blocked for this agent"<br>
+        <strong>Step 4:</strong> BobSentry blocks immediately. Logs execution_id. Alerts operations team.<br>
+        <strong>Alternative path:</strong> If trust score is 0.60–0.80 on ANY destructive action — auto-escalates to REQUIRE_HUMAN_APPROVAL regardless of tool policy<br>
+        <strong>Decision:</strong> <span style="color:var(--red)">DENY → hard block → ops alert</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LATENCY -->
+  <div class="section">
+    <div class="section-label">Section 06</div>
+    <h2>Latency Expectations</h2>
+
+    <div class="latency-row"><span class="latency-label">Average Runtime Guard evaluation</span><span class="latency-val">&lt;50ms</span></div>
+    <div class="latency-row"><span class="latency-label">P95 latency</span><span class="latency-val">&lt;120ms</span></div>
+    <div class="latency-row"><span class="latency-label">P99 latency (cold start)</span><span class="latency-val">&lt;2,500ms</span></div>
+    <div class="latency-row"><span class="latency-label">Approval email delivery</span><span class="latency-val">&lt;5s</span></div>
+    <div class="latency-row"><span class="latency-label">Approval status poll endpoint</span><span class="latency-val">&lt;30ms</span></div>
+    <div class="latency-row"><span class="latency-label">Database write (approval record)</span><span class="latency-val">&lt;100ms</span></div>
+
+    <div style="margin-top:14px;padding:12px 14px;background:rgba(255,179,0,0.05);border:1px solid rgba(255,179,0,0.15);border-radius:8px;font-size:12px;color:var(--slate);">
+      <strong style="color:var(--white)">Note on cold starts:</strong> Railway deployment may show P99 latency of 1,500–2,500ms on first request after idle period. Subsequent requests return to under 50ms. For production integration recommend keeping warm with a health check ping every 5 minutes to <span style="font-family:var(--mono);color:var(--cyan)">GET /health</span>.
+    </div>
+  </div>
+
+  <!-- RETRY / FAILURE -->
+  <div class="section">
+    <div class="section-label">Section 07</div>
+    <h2>Retry & Failure Behavior</h2>
+
+    <div class="retry-item"><span class="retry-code">ALLOW</span><span class="retry-desc" style="color:var(--slate)">No retry needed. Execute and log execution_id.</span></div>
+    <div class="retry-item"><span class="retry-code">DENY</span><span class="retry-desc" style="color:var(--slate)">Do not retry automatically. DENY is deterministic — same request will return DENY again. Remediation required (trust score improvement, passport renewal, policy update) before retry.</span></div>
+    <div class="retry-item"><span class="retry-code">REQUIRE_HUMAN</span><span class="retry-desc" style="color:var(--slate)">Do not re-call /v1/guard/verify. Poll /v1/approvals/{approval_id} for decision. Approval requests expire after 24 hours — if expired, agent must re-request the action which triggers a new evaluation.</span></div>
+    <div class="retry-item"><span class="retry-code">HTTP 401</span><span class="retry-desc" style="color:var(--slate)">Invalid API key. Do not retry. Fix credentials.</span></div>
+    <div class="retry-item"><span class="retry-code">HTTP 429</span><span class="retry-desc" style="color:var(--slate)">Rate limit — 10 requests/minute per IP. Retry after 60 seconds with exponential backoff.</span></div>
+    <div class="retry-item"><span class="retry-code">HTTP 404</span><span class="retry-desc" style="color:var(--slate)">Agent not found in registry. Do not retry. Agent must be registered via POST /v1/passport/issue first.</span></div>
+    <div class="retry-item"><span class="retry-code">HTTP 500</span><span class="retry-desc" style="color:var(--slate)">Infrastructure error. Retry once after 2 seconds. If fails again — fail open or closed depending on your policy. Recommend fail-closed for high-risk actions (DENY by default on VeriSigil error).</span></div>
+    <div class="retry-item"><span class="retry-code">Timeout</span><span class="retry-desc" style="color:var(--slate)">Set client timeout to 5,000ms. On timeout — treat as DENY for safety. Log timeout event. Alert ops team. Do not execute action.</span></div>
+
+    <div style="margin-top:14px;padding:12px 14px;background:rgba(255,69,96,0.05);border:1px solid rgba(255,69,96,0.15);border-radius:8px;font-size:12px;color:var(--slate);">
+      <strong style="color:var(--white)">Fail-safe recommendation:</strong> For high-risk actions (payments, data deletion, production writes) — if VeriSigil is unreachable, BobSentry should default to DENY. Never fail open on destructive operations.
+    </div>
+  </div>
+
+  <!-- QUICK START -->
+  <div class="section">
+    <div class="section-label">Section 08</div>
+    <h2>Quick Start — BobSentry Integration</h2>
+
+    <pre><span class="cm">// BobSentry integration — Python example</span>
+<span class="kw">import</span> requests, os
+
+<span class="kw">class</span> <span class="cn">VeriSigilClient</span>:
+    BASE = <span class="st">"https://verisigil-api-production.up.railway.app"</span>
+
+    <span class="kw">def</span> __init__(self, api_key: str):
+        self.session = requests.Session()
+        self.session.headers.update({
+            <span class="st">"x-api-key"</span>: api_key,
+            <span class="st">"Content-Type"</span>: <span class="st">"application/json"</span>
+        })
+
+    <span class="kw">def</span> verify(self, agent_id, action_type, action_details, resource):
+        <span class="kw">try</span>:
+            r = self.session.post(
+                f<span class="st">"{self.BASE}/v1/guard/verify"</span>,
+                json={
+                    <span class="st">"agent_id"</span>:       agent_id,
+                    <span class="st">"action_type"</span>:    action_type,
+                    <span class="st">"action_details"</span>: action_details,
+                    <span class="st">"resource"</span>:       resource,
+                    <span class="st">"context"</span>:        <span class="st">"production"</span>
+                },
+                timeout=<span class="num">5.0</span>
+            )
+            <span class="kw">return</span> r.json()
+        <span class="kw">except</span> requests.Timeout:
+            <span class="cm"># Fail-safe: DENY on timeout for high-risk actions</span>
+            <span class="kw">return</span> {<span class="st">"decision"</span>: <span class="st">"DENY"</span>, <span class="st">"reason"</span>: <span class="st">"VeriSigil timeout — fail-safe DENY"</span>}
+
+    <span class="kw">def</span> poll_approval(self, approval_id):
+        r = self.session.get(f<span class="st">"{self.BASE}/v1/approvals/{approval_id}"</span>)
+        <span class="kw">return</span> r.json().get(<span class="st">"status"</span>)  <span class="cm"># pending | approved | rejected | expired</span>
+
+<span class="cm"># Usage in BobSentry agent pipeline</span>
+guard = <span class="cn">VeriSigilClient</span>(os.getenv(<span class="st">"VERISIGIL_API_KEY"</span>))
+
+result = guard.verify(
+    agent_id       = <span class="st">"vsa_your_agent"</span>,
+    action_type    = <span class="st">"payment"</span>,
+    action_details = {<span class="st">"amount_usd"</span>: <span class="num">5000</span>, <span class="st">"approver_email"</span>: <span class="st">"ops@bobsentry.com"</span>},
+    resource       = <span class="st">"stripe_api"</span>
+)
+
+<span class="kw">if</span>   result[<span class="st">"decision"</span>] == <span class="st">"ALLOW"</span>:
+    execute_payment()
+<span class="kw">elif</span> result[<span class="st">"decision"</span>] == <span class="st">"REQUIRE_HUMAN_APPROVAL"</span>:
+    pause_and_poll(result[<span class="st">"approval_id"</span>])
+<span class="kw">elif</span> result[<span class="st">"decision"</span>] == <span class="st">"DENY"</span>:
+    block_and_alert(result[<span class="st">"reason"</span>])</pre>
+
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <a href="https://verisigil-api-production.up.railway.app/docs" style="background:var(--ink3);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;display:block;">
+        <div style="font-size:11px;font-weight:700;color:var(--white);margin-bottom:3px;">📡 Live API Docs</div>
+        <div style="font-size:10px;font-family:var(--mono);color:var(--cyan);">verisigil-api-production.up.railway.app/docs</div>
+      </a>
+      <a href="https://verisigilai.com/flow-test.html" style="background:var(--ink3);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;display:block;">
+        <div style="font-size:11px;font-weight:700;color:var(--white);margin-bottom:3px;">⚡ Full Flow Demo</div>
+        <div style="font-size:10px;font-family:var(--mono);color:var(--cyan);">verisigilai.com/flow-test.html</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p style="margin-bottom:4px">Raheem Larry Babatunde · Founder, VeriSigil AI · <a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a></p>
+    <p><a href="https://verisigilai.com">verisigilai.com</a> · Built in Lagos, Nigeria 🇳🇬</p>
+  </div>
+
+</div>
+</body>
+</html>

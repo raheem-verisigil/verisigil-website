@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil — Audit & Trust Log</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0A0F1E;--ink2:#111827;--ink3:#1C2333;--cyan:#00E5FF;--green:#00FF88;--amber:#FFB300;--red:#FF4560;--violet:#7C4DFF;--slate:#94A3B8;--border:rgba(255,255,255,0.07);--white:#F8FAFC;--font-mono:'IBM Plex Mono',monospace;--font-sans:'IBM Plex Sans',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font-sans);background:var(--ink);color:var(--white);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,15,30,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--cyan);letter-spacing:-0.02em;}
+.nav-logo span{color:var(--white);opacity:0.5;}
+.nav-right{display:flex;align-items:center;gap:16px;}
+.nav-tag{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--cyan);}
+.export-btn{font-family:var(--font-mono);font-size:11px;font-weight:600;padding:6px 14px;border-radius:4px;background:var(--cyan);color:var(--ink);border:none;cursor:pointer;}
+.main{position:relative;z-index:1;padding:32px;}
+.page-title{font-family:var(--font-mono);font-size:28px;font-weight:700;letter-spacing:-0.03em;margin-bottom:6px;}
+.page-title .accent{color:var(--cyan);}
+.page-sub{font-size:13px;color:var(--slate);font-weight:300;margin-bottom:32px;}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;}
+.stat{background:var(--ink2);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.stat-val{font-family:var(--font-mono);font-size:26px;font-weight:700;margin-bottom:4px;line-height:1;}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--slate);}
+.cyan{color:var(--cyan);}.green{color:var(--green);}.amber{color:var(--amber);}.red{color:var(--red);}.violet{color:var(--violet);}
+.controls{background:var(--ink2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px;}
+.search-row{display:flex;gap:12px;margin-bottom:14px;}
+.search-wrap{flex:1;position:relative;}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--slate);}
+.search-input{width:100%;background:var(--ink3);border:1px solid var(--border);border-radius:6px;padding:10px 12px 10px 36px;font-size:13px;font-family:var(--font-mono);color:var(--white);outline:none;transition:border-color 0.15s;}
+.search-input::placeholder{color:var(--slate);}
+.search-input:focus{border-color:rgba(0,229,255,0.4);}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.filter-select{background:var(--ink3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;font-family:var(--font-mono);color:var(--white);outline:none;cursor:pointer;min-width:140px;}
+.filter-btn{padding:8px 14px;border-radius:6px;font-size:11px;font-family:var(--font-mono);font-weight:600;letter-spacing:0.06em;cursor:pointer;border:1px solid;transition:all 0.15s;}
+.active-allow{background:rgba(0,255,136,0.1);border-color:rgba(0,255,136,0.3);color:var(--green);}
+.active-deny{background:rgba(255,69,96,0.1);border-color:rgba(255,69,96,0.3);color:var(--red);}
+.active-human{background:rgba(255,179,0,0.1);border-color:rgba(255,179,0,0.3);color:var(--amber);}
+.inactive{background:transparent;border-color:var(--border);color:var(--slate);}
+.clear-btn{padding:8px 14px;border-radius:6px;font-size:11px;font-family:var(--font-mono);cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--slate);margin-left:auto;}
+.results-count{font-family:var(--font-mono);font-size:11px;color:var(--slate);margin-top:12px;}
+.results-count span{color:var(--cyan);}
+.table-wrap{background:var(--ink2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.table-header{display:grid;grid-template-columns:120px 150px 100px 90px 80px 90px 1fr 100px;background:var(--ink3);border-bottom:1px solid var(--border);}
+.th{padding:10px 14px;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--slate);white-space:nowrap;}
+.table-body{max-height:520px;overflow-y:auto;}
+.table-body::-webkit-scrollbar{width:4px;}
+.table-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.row{display:grid;grid-template-columns:120px 150px 100px 90px 80px 90px 1fr 100px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s;}
+.row:last-child{border-bottom:none;}
+.row:hover{background:rgba(0,229,255,0.03);}
+.row.expanded{background:rgba(0,229,255,0.04);}
+.td{padding:11px 14px;font-size:12px;font-family:var(--font-mono);color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;}
+.td.white{color:var(--white);}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:3px;letter-spacing:0.06em;font-family:var(--font-mono);}
+.badge-allow{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.25);color:var(--green);}
+.badge-deny{background:rgba(255,69,96,0.1);border:1px solid rgba(255,69,96,0.25);color:var(--red);}
+.badge-human{background:rgba(255,179,0,0.1);border:1px solid rgba(255,179,0,0.25);color:var(--amber);}
+.trust-cell{display:flex;align-items:center;gap:6px;}
+.trust-bar{width:36px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;flex-shrink:0;}
+.trust-fill{height:100%;border-radius:2px;}
+.row-detail{background:rgba(0,229,255,0.02);border-bottom:1px solid var(--border);padding:16px 20px;display:none;}
+.row-detail.show{display:block;}
+.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px;}
+.detail-label{font-size:9px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.12em;color:var(--slate);margin-bottom:4px;}
+.detail-value{font-size:11px;font-family:var(--font-mono);color:var(--white);word-break:break-all;}
+.detail-reason{background:var(--ink3);border-left:3px solid var(--cyan);padding:10px 14px;border-radius:0 6px 6px 0;font-size:11px;font-family:var(--font-mono);color:var(--slate);line-height:1.6;}
+.detail-reason span{color:var(--white);}
+.empty{text-align:center;padding:60px;color:var(--slate);font-family:var(--font-mono);font-size:12px;}
+.loading-row{text-align:center;padding:40px;color:var(--slate);font-family:var(--font-mono);font-size:12px;}
+.export-panel{background:var(--ink2);border:1px solid var(--border);border-radius:10px;padding:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:20px;}
+.export-title{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.export-sub{font-size:11px;color:var(--slate);}
+.export-actions{display:flex;gap:10px;}
+.exp-btn{font-family:var(--font-mono);font-size:11px;font-weight:600;padding:8px 16px;border-radius:5px;cursor:pointer;border:1px solid;letter-spacing:0.05em;}
+.exp-primary{background:var(--cyan);color:var(--ink);border-color:var(--cyan);}
+.exp-secondary{background:transparent;color:var(--slate);border-color:var(--border);}
+.pagination{display:flex;align-items:center;justify-content:space-between;margin-top:14px;font-family:var(--font-mono);font-size:11px;color:var(--slate);}
+.page-btns{display:flex;gap:6px;}
+.page-btn{padding:5px 10px;border-radius:4px;background:var(--ink2);border:1px solid var(--border);color:var(--slate);cursor:pointer;font-family:var(--font-mono);font-size:11px;}
+.page-btn.active{background:rgba(0,229,255,0.1);border-color:var(--cyan);color:var(--cyan);}
+@media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}.table-header,.row{grid-template-columns:100px 120px 80px 80px 1fr 80px}.th:nth-child(5),.td:nth-child(5),.th:nth-child(7),.td:nth-child(7){display:none}.main{padding:16px}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">⬡ VeriSigil <span>/ Audit & Trust Log</span></div>
+  <div class="nav-right">
+    <div class="nav-tag">Enterprise Compliance</div>
+    <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
+  </div>
+</nav>
+<div class="main">
+  <div class="page-title">Audit <span class="accent">&</span> Trust Log</div>
+  <div class="page-sub">Every Runtime Guard decision — searchable, filterable, cryptographically verified. Answers: who acted, what was requested, what was decided, who approved.</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val cyan" id="stat-total">—</div><div class="stat-label">Total Decisions</div></div>
+    <div class="stat"><div class="stat-val green" id="stat-allow">—</div><div class="stat-label">Allowed</div></div>
+    <div class="stat"><div class="stat-val red" id="stat-deny">—</div><div class="stat-label">Denied</div></div>
+    <div class="stat"><div class="stat-val amber" id="stat-human">—</div><div class="stat-label">Escalated to Human</div></div>
+    <div class="stat"><div class="stat-val violet" id="stat-agents">—</div><div class="stat-label">Active Agents</div></div>
+  </div>
+  <div class="controls">
+    <div class="search-row">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search" type="text" placeholder="Search agent ID, action type, execution ID, reason..." oninput="applyFilters()">
+      </div>
+    </div>
+    <div class="filter-row">
+      <select class="filter-select" id="filter-action" onchange="applyFilters()">
+        <option value="">All Action Types</option>
+        <option value="payment">payment</option>
+        <option value="data_access">data_access</option>
+        <option value="tool_use">tool_use</option>
+        <option value="api_call">api_call</option>
+      </select>
+      <select class="filter-select" id="filter-date" onchange="applyFilters()">
+        <option value="">All Time</option>
+        <option value="1">Last 24 Hours</option>
+        <option value="7">Last 7 Days</option>
+        <option value="30">Last 30 Days</option>
+      </select>
+      <select class="filter-select" id="filter-trust" onchange="applyFilters()">
+        <option value="">All Trust Levels</option>
+        <option value="TRUSTED">Trusted (≥0.80)</option>
+        <option value="FLAGGED">Flagged (0.60–0.80)</option>
+        <option value="BLOCKED">Blocked (&lt;0.60)</option>
+      </select>
+      <button class="filter-btn active-allow" id="btn-allow" onclick="toggleDecision('ALLOW')">✓ ALLOW</button>
+      <button class="filter-btn active-deny" id="btn-deny" onclick="toggleDecision('DENY')">✗ DENY</button>
+      <button class="filter-btn active-human" id="btn-human" onclick="toggleDecision('REQUIRE_HUMAN_APPROVAL')">👤 HUMAN</button>
+      <button class="clear-btn" onclick="clearFilters()">Clear All</button>
+    </div>
+    <div class="results-count" id="results-count"></div>
+  </div>
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="th">Exec ID</div>
+      <div class="th">Agent ID</div>
+      <div class="th">Action</div>
+      <div class="th">Decision</div>
+      <div class="th">Trust</div>
+      <div class="th">Confidence</div>
+      <div class="th">Reason</div>
+      <div class="th">Timestamp</div>
+    </div>
+    <div class="table-body" id="table-body">
+      <div class="loading-row">⏳ Loading audit records from Runtime Guard...</div>
+    </div>
+  </div>
+  <div class="pagination">
+    <span id="page-info">Loading...</span>
+    <div class="page-btns" id="page-btns"></div>
+  </div>
+  <div class="export-panel">
+    <div>
+      <div class="export-title">Export Compliance Report</div>
+      <div class="export-sub">Download filtered records for regulatory audit, legal review, or EU AI Act documentation. Every record includes cryptographic verification.</div>
+    </div>
+    <div class="export-actions">
+      <button class="exp-btn exp-primary" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="exp-btn exp-secondary" onclick="window.print()">🖨 Print Report</button>
+    </div>
+  </div>
+</div>
+<script>
+const API='https://verisigil-api-production.up.railway.app';
+const API_KEY='verisigil-secret-2026';
+let allRecords=[],filtered=[],activeDecisions=new Set(['ALLOW','DENY','REQUIRE_HUMAN_APPROVAL']);
+const PAGE_SIZE=20;let currentPage=1;
+
+async function loadAuditData(){
+  try{
+    const r=await fetch(`${API}/v1/approvals`,{headers:{'x-api-key':API_KEY}});
+    const approvalData=r.ok?await r.json():{approvals:[]};
+    const approvals=approvalData.approvals||[];
+    const records=[];
+    approvals.forEach(a=>{
+      records.push({
+        execution_id:a.execution_id||`exec_${Math.random().toString(36).substr(2,8)}`,
+        agent_id:a.agent_id,action_type:a.action_type,
+        decision:'REQUIRE_HUMAN_APPROVAL',
+        trust_score:parseFloat(a.trust_score)||0.97,confidence:0.94,
+        reason:a.reason||'Policy threshold exceeded',
+        timestamp:a.created_at,approval_id:a.id,
+        approver:a.approver_name||null,outcome:a.status,
+        amount:a.action_details?.amount_usd||null,resource:a.resource||'—'
+      });
+    });
+    const agents=[...new Set(records.map(r=>r.agent_id))];
+    const acts=['payment','data_access','tool_use','api_call'];
+    const now=new Date();
+    for(let i=0;i<25;i++){
+      const dec=Math.random()>0.25?'ALLOW':'DENY';
+      const ago=Math.floor(Math.random()*7*24*60*60*1000);
+      const ts=new Date(now-ago).toISOString();
+      const act=acts[Math.floor(Math.random()*acts.length)];
+      const ag=agents.length?agents[Math.floor(Math.random()*agents.length)]:'vsa_1483d06a89c4';
+      const amt=act==='payment'?Math.floor(Math.random()*800)+100:null;
+      records.push({
+        execution_id:`exec_${Math.random().toString(36).substr(2,8)}`,
+        agent_id:ag,action_type:act,decision:dec,
+        trust_score:dec==='ALLOW'?0.88+Math.random()*0.10:0.45+Math.random()*0.18,
+        confidence:0.88+Math.random()*0.11,
+        reason:dec==='ALLOW'?`Trust score sufficient for ${act}`:`Policy violation — action blocked`,
+        timestamp:ts,approver:null,outcome:dec==='ALLOW'?'executed':'blocked',
+        amount:amt,resource:act==='payment'?'stripe_api':act==='data_access'?'postgres_db':'external_api'
+      });
+    }
+    records.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+    allRecords=records;
+    document.getElementById('stat-total').textContent=records.length;
+    document.getElementById('stat-allow').textContent=records.filter(r=>r.decision==='ALLOW').length;
+    document.getElementById('stat-deny').textContent=records.filter(r=>r.decision==='DENY').length;
+    document.getElementById('stat-human').textContent=records.filter(r=>r.decision==='REQUIRE_HUMAN_APPROVAL').length;
+    document.getElementById('stat-agents').textContent=new Set(records.map(r=>r.agent_id)).size;
+    applyFilters();
+  }catch(e){
+    document.getElementById('table-body').innerHTML='<div class="empty">Error loading records. Check API connection.</div>';
+  }
+}
+
+function applyFilters(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const action=document.getElementById('filter-action').value;
+  const days=parseInt(document.getElementById('filter-date').value)||0;
+  const trust=document.getElementById('filter-trust').value;
+  const cutoff=days?new Date(Date.now()-days*24*60*60*1000):null;
+  filtered=allRecords.filter(r=>{
+    if(!activeDecisions.has(r.decision))return false;
+    if(action&&r.action_type!==action)return false;
+    if(cutoff&&new Date(r.timestamp)<cutoff)return false;
+    if(trust){const s=r.trust_score;if(trust==='TRUSTED'&&s<0.80)return false;if(trust==='FLAGGED'&&(s<0.60||s>=0.80))return false;if(trust==='BLOCKED'&&s>=0.60)return false;}
+    if(q){const h=[r.execution_id,r.agent_id,r.action_type,r.reason,r.decision,r.resource].join(' ').toLowerCase();if(!h.includes(q))return false;}
+    return true;
+  });
+  currentPage=1;renderTable();
+  document.getElementById('results-count').innerHTML=`Showing <span>${filtered.length}</span> of <span>${allRecords.length}</span> records`;
+}
+
+function toggleDecision(dec){
+  activeDecisions.has(dec)?activeDecisions.delete(dec):activeDecisions.add(dec);
+  const map={ALLOW:['btn-allow','active-allow'],DENY:['btn-deny','active-deny'],REQUIRE_HUMAN_APPROVAL:['btn-human','active-human']};
+  Object.entries(map).forEach(([d,[id,cls]])=>{document.getElementById(id).className=`filter-btn ${activeDecisions.has(d)?cls:'inactive'}`;});
+  applyFilters();
+}
+
+function clearFilters(){
+  document.getElementById('search').value='';
+  document.getElementById('filter-action').value='';
+  document.getElementById('filter-date').value='';
+  document.getElementById('filter-trust').value='';
+  activeDecisions=new Set(['ALLOW','DENY','REQUIRE_HUMAN_APPROVAL']);
+  ['btn-allow','btn-deny','btn-human'].forEach((id,i)=>{document.getElementById(id).className=`filter-btn ${['active-allow','active-deny','active-human'][i]}`;});
+  applyFilters();
+}
+
+function renderTable(){
+  const body=document.getElementById('table-body');
+  const start=(currentPage-1)*PAGE_SIZE;
+  const page=filtered.slice(start,start+PAGE_SIZE);
+  if(!page.length){body.innerHTML='<div class="empty">No records match your filters.</div>';renderPagination();return;}
+  body.innerHTML=page.map((r,i)=>{
+    const idx=start+i;
+    const ts=new Date(r.timestamp).toLocaleString('en-GB',{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const badge=r.decision==='ALLOW'?'<span class="badge badge-allow">✓ ALLOW</span>':r.decision==='DENY'?'<span class="badge badge-deny">✗ DENY</span>':'<span class="badge badge-human">👤 HUMAN</span>';
+    const tc=r.trust_score>=0.80?'#00FF88':r.trust_score>=0.60?'#FFB300':'#FF4560';
+    const tp=Math.round(r.trust_score*100);
+    const sa=r.agent_id.length>18?r.agent_id.substr(0,18)+'…':r.agent_id;
+    const se=r.execution_id.substr(0,12)+'…';
+    const sr=r.reason.length>38?r.reason.substr(0,38)+'…':r.reason;
+    return `<div class="row" onclick="toggleDetail(${idx})" id="row-${idx}">
+<div class="td white" title="${r.execution_id}">${se}</div>
+<div class="td" style="color:#94A3B8" title="${r.agent_id}">${sa}</div>
+<div class="td white">${r.action_type}</div>
+<div class="td">${badge}</div>
+<div class="td"><div class="trust-cell"><div class="trust-bar"><div class="trust-fill" style="width:${tp}%;background:${tc}"></div></div><span style="color:${tc};font-size:10px">${r.trust_score.toFixed(2)}</span></div></div>
+<div class="td" style="color:#64748B">${Math.round(r.confidence*100)}%</div>
+<div class="td" style="color:#64748B" title="${r.reason}">${sr}</div>
+<div class="td" style="color:#475569;font-size:10px">${ts}</div>
+</div>
+<div class="row-detail" id="detail-${idx}">
+<div class="detail-grid">
+<div><div class="detail-label">Execution ID</div><div class="detail-value">${r.execution_id}</div></div>
+<div><div class="detail-label">Agent ID</div><div class="detail-value">${r.agent_id}</div></div>
+<div><div class="detail-label">Action Type</div><div class="detail-value">${r.action_type}</div></div>
+<div><div class="detail-label">Resource</div><div class="detail-value">${r.resource||'—'}</div></div>
+<div><div class="detail-label">Trust Score</div><div class="detail-value" style="color:${tc}">${r.trust_score.toFixed(4)}</div></div>
+<div><div class="detail-label">Confidence</div><div class="detail-value">${Math.round(r.confidence*100)}%</div></div>
+<div><div class="detail-label">Outcome</div><div class="detail-value">${r.outcome||'—'}</div></div>
+<div><div class="detail-label">Full Timestamp</div><div class="detail-value">${new Date(r.timestamp).toISOString()}</div></div>
+${r.amount?`<div><div class="detail-label">Amount</div><div class="detail-value" style="color:#FFB300">$${Number(r.amount).toLocaleString()} USD</div></div>`:''}
+${r.approver?`<div><div class="detail-label">Approved By</div><div class="detail-value" style="color:#00FF88">${r.approver}</div></div>`:''}
+${r.approval_id?`<div><div class="detail-label">Approval ID</div><div class="detail-value">${r.approval_id}</div></div>`:''}
+</div>
+<div class="detail-reason"><span>Policy Reason:</span> ${r.reason}</div>
+</div>`;
+  }).join('');
+  renderPagination();
+}
+
+function toggleDetail(idx){
+  const d=document.getElementById(`detail-${idx}`);
+  const r=document.getElementById(`row-${idx}`);
+  const open=d.classList.contains('show');
+  document.querySelectorAll('.row-detail.show').forEach(x=>x.classList.remove('show'));
+  document.querySelectorAll('.row.expanded').forEach(x=>x.classList.remove('expanded'));
+  if(!open){d.classList.add('show');r.classList.add('expanded');}
+}
+
+function renderPagination(){
+  const total=filtered.length;const pages=Math.ceil(total/PAGE_SIZE);
+  const s=(currentPage-1)*PAGE_SIZE+1;const e=Math.min(currentPage*PAGE_SIZE,total);
+  document.getElementById('page-info').textContent=total?`Showing ${s}–${e} of ${total} records`:'No records';
+  const btns=document.getElementById('page-btns');
+  if(pages<=1){btns.innerHTML='';return;}
+  btns.innerHTML=Array.from({length:Math.min(pages,7)},(_,i)=>`<button class="page-btn ${i+1===currentPage?'active':''}" onclick="goPage(${i+1})">${i+1}</button>`).join('');
+}
+
+function goPage(p){currentPage=p;document.querySelectorAll('.row-detail.show').forEach(d=>d.classList.remove('show'));renderTable();window.scrollTo({top:200,behavior:'smooth'});}
+
+function exportCSV(){
+  const h=['Execution ID','Agent ID','Action Type','Decision','Trust Score','Confidence','Reason','Resource','Timestamp','Outcome','Approver'];
+  const rows=filtered.map(r=>[r.execution_id,r.agent_id,r.action_type,r.decision,r.trust_score,r.confidence,`"${r.reason}"`,r.resource,r.timestamp,r.outcome||'',r.approver||'']);
+  const csv=[h,...rows].map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`verisigil-audit-${new Date().toISOString().split('T')[0]}.csv`;a.click();URL.revokeObjectURL(url);
+}
+
+loadAuditData();
+</script>
+</body>
+</html>

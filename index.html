@@ -1581,5 +1581,14 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
    onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 24px rgba(0,212,245,0.45)'">
   ⬡ Sigil Studio →
 </a>
+  <!-- AI Compliance Chat Widget -->
+<script>
+(function(){
+  var f=document.createElement('iframe');
+  f.src='/chat-widget-demo.html';
+  f.style.cssText='position:fixed;bottom:0;right:0;width:420px;height:700px;border:none;z-index:9999;background:transparent;';
+  document.body.appendChild(f);
+})();
+</script>
 </body>
 </html>

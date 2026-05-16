@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progression Admissibility Engine — VeriSigil AI</title>
+<meta name="description" content="Live demo: VeriSigil Progression Admissibility Engine. Should this specific AI agent progression be permitted now? Try it live.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020810;--bg2:#060F1E;--bg3:#0A1628;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --red:#FF4D6A;--purple:#7C3AED;
+  --white:#F0F8FF;--mid:#4A6FA5;--dim:#1A2E4A;
+  --border:rgba(0,212,245,0.1);
+  --mono:'JetBrains Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--mono);background:var(--bg);color:var(--white);font-size:12px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(0,212,245,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
+*{position:relative;z-index:1;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--border);background:rgba(2,8,16,0.95);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:var(--display);font-size:15px;font-weight:800;color:var(--cyan);text-decoration:none;}
+.nav-back{font-size:11px;color:var(--mid);text-decoration:none;}
+.nav-back:hover{color:var(--cyan);}
+
+/* HEADER */
+.header{text-align:center;padding:52px 24px 36px;max-width:720px;margin:0 auto;}
+.header-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--cyan);background:rgba(0,212,245,0.06);border:1px solid var(--border);padding:5px 14px;border-radius:20px;margin-bottom:20px;}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.header h1{font-family:var(--display);font-size:clamp(26px,5vw,48px);font-weight:800;letter-spacing:-0.03em;line-height:1.08;margin-bottom:14px;}
+.header h1 em{font-style:normal;color:var(--cyan);}
+.header p{font-size:13px;color:var(--mid);max-width:560px;margin:0 auto 8px;line-height:1.8;}
+.header .question{font-size:16px;font-weight:700;color:var(--white);margin-top:16px;padding:14px 24px;background:rgba(0,212,245,0.05);border:1px solid rgba(0,212,245,0.15);border-radius:10px;display:inline-block;}
+
+/* 4 DIMENSIONS */
+.dimensions{display:grid;grid-template-columns:repeat(4,1fr);max-width:960px;margin:0 auto 40px;gap:12px;padding:0 24px;}
+.dim-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+.dim-icon{font-size:22px;margin-bottom:8px;}
+.dim-name{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.dim-card:nth-child(1) .dim-name{color:var(--purple);}
+.dim-card:nth-child(2) .dim-name{color:var(--amber);}
+.dim-card:nth-child(3) .dim-name{color:var(--cyan);}
+.dim-card:nth-child(4) .dim-name{color:var(--green);}
+.dim-desc{font-size:10px;color:var(--dim);line-height:1.5;}
+
+/* MAIN DEMO */
+.demo-wrap{max-width:960px;margin:0 auto;padding:0 24px 80px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* SCENARIO SELECTOR */
+.scenarios{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;}
+.scenario-btn{padding:7px 14px;border-radius:7px;font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;letter-spacing:0.06em;border:1px solid var(--border);color:var(--mid);background:var(--bg2);}
+.scenario-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.scenario-btn.active{background:rgba(0,212,245,0.08);border-color:var(--cyan);color:var(--cyan);}
+.scenario-label{font-size:10px;color:var(--dim);align-self:center;margin-right:4px;}
+
+/* PANELS */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.panel.full{grid-column:1/-1;}
+.panel-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(0,212,245,0.02);}
+.panel-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.pd-cyan{background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.pd-amber{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.pd-green{background:var(--green);box-shadow:0 0 6px var(--green);}
+.pd-purple{background:var(--purple);box-shadow:0 0 6px var(--purple);}
+.pd-grey{background:var(--mid);}
+.panel-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--white);}
+.panel-badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.badge-live{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.badge-idle{background:rgba(74,111,165,0.1);color:var(--mid);border:1px solid rgba(74,111,165,0.2);}
+.badge-wait{background:rgba(255,184,0,0.1);color:var(--amber);border:1px solid rgba(255,184,0,0.2);}
+.panel-body{padding:16px;}
+
+/* FORM */
+.form-group{margin-bottom:12px;}
+.form-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:5px;display:block;}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:var(--mono);font-size:11px;color:var(--white);outline:none;transition:border-color 0.15s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:rgba(0,212,245,0.35);}
+.form-textarea{resize:vertical;min-height:80px;}
+.form-select option{background:var(--bg3);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+/* STEP BUILDER */
+.steps-wrap{margin-bottom:12px;}
+.step-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;font-size:11px;}
+.step-num{width:20px;height:20px;border-radius:50%;background:rgba(0,212,245,0.1);border:1px solid rgba(0,212,245,0.2);color:var(--cyan);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-action{flex:1;color:var(--white);}
+.step-status{font-size:9px;padding:2px 7px;border-radius:4px;}
+.status-completed{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.status-failed{background:rgba(255,77,106,0.1);color:var(--red);border:1px solid rgba(255,77,106,0.2);}
+.step-remove{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:0 4px;}
+.step-remove:hover{color:var(--red);}
+.add-step-row{display:flex;gap:6px;}
+.add-step-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:var(--mono);font-size:11px;color:var(--white);outline:none;}
+.add-step-btn{background:rgba(0,212,245,0.08);border:1px solid rgba(0,212,245,0.2);color:var(--cyan);padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;}
+
+/* EVIDENCE BUILDER */
+.evidence-wrap{margin-bottom:12px;}
+.evidence-item{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.ev-key{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-family:var(--mono);font-size:10px;color:var(--mid);outline:none;}
+.ev-val{flex:2;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-family:var(--mono);font-size:10px;color:var(--white);outline:none;}
+.ev-remove{background:none;border:none;color:var(--dim);cursor:pointer;font-size:12px;}
+.ev-remove:hover{color:var(--red);}
+.add-ev-btn{background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.15);color:var(--cyan);padding:5px 12px;border-radius:5px;font-family:var(--mono);font-size:10px;cursor:pointer;width:100%;}
+
+/* RUN BUTTON */
+.run-btn{width:100%;padding:12px;background:var(--cyan);color:var(--bg);border:none;border-radius:9px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.08em;box-shadow:0 0 20px rgba(0,212,245,0.3);transition:all 0.15s;margin-top:4px;}
+.run-btn:hover{box-shadow:0 0 36px rgba(0,212,245,0.5);transform:translateY(-1px);}
+.run-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+/* DECISION DISPLAY */
+.decision-display{text-align:center;padding:20px;border-radius:10px;margin-bottom:14px;border:1px solid;}
+.dd-allowed{background:rgba(0,230,118,0.05);border-color:rgba(0,230,118,0.25);}
+.dd-evidence{background:rgba(0,212,245,0.05);border-color:rgba(0,212,245,0.25);}
+.dd-authority{background:rgba(255,184,0,0.05);border-color:rgba(255,184,0,0.25);}
+.dd-human{background:rgba(124,58,237,0.05);border-color:rgba(124,58,237,0.25);}
+.dd-anomaly{background:rgba(255,77,106,0.05);border-color:rgba(255,77,106,0.25);}
+.dd-blocked{background:rgba(255,77,106,0.05);border-color:rgba(255,77,106,0.25);}
+.dd-pending{background:rgba(74,111,165,0.05);border-color:rgba(74,111,165,0.2);}
+.dd-icon{font-size:32px;margin-bottom:10px;}
+.dd-decision{font-size:14px;font-weight:700;letter-spacing:0.06em;margin-bottom:6px;}
+.dd-allowed .dd-decision{color:var(--green);}
+.dd-evidence .dd-decision{color:var(--cyan);}
+.dd-authority .dd-decision{color:var(--amber);}
+.dd-human .dd-decision,.dd-anomaly .dd-decision,.dd-blocked .dd-decision{color:var(--red);}
+.dd-pending .dd-decision{color:var(--mid);}
+.dd-latency{font-size:10px;color:var(--dim);}
+
+/* RESULT ROWS */
+.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;}
+.result-row:last-child{border-bottom:none;}
+.rk{color:var(--mid);}
+.rv{color:var(--white);text-align:right;}
+.rv.green{color:var(--green);}
+.rv.amber{color:var(--amber);}
+.rv.red{color:var(--red);}
+.rv.cyan{color:var(--cyan);}
+
+/* REASONS */
+.reasons-list{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+.reason-item{font-size:11px;color:var(--mid);padding:5px 10px;background:rgba(255,255,255,0.02);border-radius:5px;border-left:2px solid var(--cyan);line-height:1.5;}
+.reason-item.warn{border-left-color:var(--amber);color:var(--amber);}
+.reason-item.ok{border-left-color:var(--green);color:var(--mid);}
+
+/* CHAIN BLOCK */
+.chain-block{background:#010608;border:1px solid rgba(0,230,118,0.15);border-radius:8px;padding:12px;margin-top:10px;}
+.chain-label{font-size:9px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;}
+.chain-row{display:flex;justify-content:space-between;padding:3px 0;font-size:10px;}
+.chain-key{color:var(--dim);}
+.chain-val{color:var(--cyan);word-break:break-all;text-align:right;max-width:240px;font-size:9px;}
+
+/* JSON OUTPUT */
+.json-output{background:#010608;border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin-top:10px;}
+.json-output pre{font-family:var(--mono);font-size:10px;line-height:1.7;color:#94A3B8;white-space:pre-wrap;word-break:break-all;}
+
+/* SHARE */
+.share-box{grid-column:1/-1;background:var(--bg2);border:1px solid rgba(0,212,245,0.2);border-radius:14px;padding:24px;text-align:center;}
+.share-box h3{font-family:var(--display);font-size:20px;font-weight:800;margin-bottom:8px;}
+.share-box p{font-size:12px;color:var(--mid);margin-bottom:16px;line-height:1.7;}
+.share-url{background:#010608;border:1px solid var(--border);border-radius:7px;padding:10px 14px;font-size:11px;color:var(--cyan);word-break:break-all;margin-bottom:14px;text-align:left;}
+.share-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.sbtn{padding:9px 20px;border-radius:7px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.sbtn-copy{background:var(--cyan);color:var(--bg);border:none;}
+.sbtn-li{background:rgba(0,119,181,0.15);border:1px solid rgba(0,119,181,0.3);color:#0077B5;}
+.sbtn-tw{background:rgba(29,161,242,0.1);border:1px solid rgba(29,161,242,0.3);color:#1DA1F2;}
+
+footer{border-top:1px solid var(--border);padding:20px 28px;text-align:center;font-size:11px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+
+@media(max-width:768px){
+  .demo-wrap{grid-template-columns:1fr;}
+  .dimensions{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <a href="https://verisigilai.com" class="nav-back">← Home</a>
+</nav>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag"><span class="tag-dot"></span>World's First · Live · v0.6.0</div>
+  <h1>Progression<br><em>Admissibility Engine</em></h1>
+  <p>Beyond identity and action enforcement. VeriSigil evaluates whether a specific AI agent state transition should be permitted — given evidence, authority, context, and consequence.</p>
+  <div class="question">"Should this specific progression be permitted now?"</div>
+</div>
+
+<!-- 4 DIMENSIONS -->
+<div class="dimensions">
+  <div class="dim-card">
+    <div class="dim-icon">🔍</div>
+    <div class="dim-name">Trajectory</div>
+    <div class="dim-desc">Does this progression make logical sense given prior workflow steps?</div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-icon">⚖️</div>
+    <div class="dim-name">Authority</div>
+    <div class="dim-desc">Does the agent carry sufficient authority for this consequence level?</div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-icon">📋</div>
+    <div class="dim-name">Evidence</div>
+    <div class="dim-desc">Is the proof complete and sufficient for this specific action?</div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-icon">⚡</div>
+    <div class="dim-name">Consequence</div>
+    <div class="dim-desc">LOW / MEDIUM / HIGH / CRITICAL — governs required authority and evidence.</div>
+  </div>
+</div>
+
+<!-- DEMO -->
+<div class="demo-wrap">
+
+  <!-- SCENARIO BUTTONS -->
+  <div class="scenarios">
+    <span class="scenario-label">Try a scenario:</span>
+    <button class="scenario-btn active" onclick="loadScenario('payment_high')">💳 High-Value Payment</button>
+    <button class="scenario-btn" onclick="loadScenario('deploy_prod')">🚀 Production Deploy</button>
+    <button class="scenario-btn" onclick="loadScenario('data_delete')">🗑 Bulk Delete</button>
+    <button class="scenario-btn" onclick="loadScenario('missing_evidence')">⚠ Missing Evidence</button>
+    <button class="scenario-btn" onclick="loadScenario('trajectory_anomaly')">🔴 Trajectory Anomaly</button>
+    <button class="scenario-btn" onclick="loadScenario('critical')">🚨 Critical Action</button>
+  </div>
+
+  <!-- INPUT PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-dot pd-cyan"></div>
+      <div class="panel-title">Progression Request</div>
+      <div class="panel-badge badge-live" id="input-badge">READY</div>
+    </div>
+    <div class="panel-body">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Agent ID</label>
+          <input class="form-input" id="f-agent-id" value="vsa_1483d06a89c4">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Workflow ID</label>
+          <input class="form-input" id="f-workflow-id" value="wf_payment_001">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Current Step</label>
+          <input class="form-input" id="f-current-step" type="number" value="3">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total Steps</label>
+          <input class="form-input" id="f-total-steps" type="number" value="5">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Intended Action</label>
+        <select class="form-select" id="f-action">
+          <option value="transfer_funds">transfer_funds</option>
+          <option value="payment">payment</option>
+          <option value="deploy">deploy</option>
+          <option value="delete_records">delete_records</option>
+          <option value="data_access">data_access</option>
+          <option value="send_email">send_email</option>
+          <option value="api_call">api_call</option>
+          <option value="database_write">database_write</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Consequence Level</label>
+        <select class="form-select" id="f-consequence">
+          <option value="LOW">LOW</option>
+          <option value="MEDIUM">MEDIUM</option>
+          <option value="HIGH" selected>HIGH</option>
+          <option value="CRITICAL">CRITICAL</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Previous Steps</label>
+        <div class="steps-wrap" id="steps-wrap"></div>
+        <div class="add-step-row">
+          <input class="add-step-input" id="new-step-action" placeholder="action name (e.g. verify_recipient)">
+          <select class="form-select" id="new-step-status" style="width:auto;flex-shrink:0;">
+            <option value="completed">completed</option>
+            <option value="failed">failed</option>
+          </select>
+          <button class="add-step-btn" onclick="addStep()">+ Add</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Evidence</label>
+        <div class="evidence-wrap" id="evidence-wrap"></div>
+        <button class="add-ev-btn" onclick="addEvidence()">+ Add Evidence Field</button>
+      </div>
+
+      <button class="run-btn" id="run-btn" onclick="runEvaluation()">▶ Evaluate Progression</button>
+
+    </div>
+  </div>
+
+  <!-- OUTPUT PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-dot pd-grey" id="result-dot"></div>
+      <div class="panel-title">Progression Decision</div>
+      <div class="panel-badge badge-idle" id="result-badge">PENDING</div>
+    </div>
+    <div class="panel-body">
+
+      <!-- Decision Display -->
+      <div class="decision-display dd-pending" id="decision-display">
+        <div class="dd-icon">⏳</div>
+        <div class="dd-decision">AWAITING EVALUATION</div>
+        <div class="dd-latency">Configure request and click Evaluate</div>
+      </div>
+
+      <!-- Result Rows -->
+      <div id="result-rows" style="display:none;">
+        <div class="result-row"><span class="rk">execution_id</span><span class="rv cyan" id="r-exec-id">—</span></div>
+        <div class="result-row"><span class="rk">workflow_id</span><span class="rv" id="r-wf-id">—</span></div>
+        <div class="result-row"><span class="rk">authority_level</span><span class="rv" id="r-authority">—</span></div>
+        <div class="result-row"><span class="rk">trust_score</span><span class="rv green" id="r-trust">—</span></div>
+        <div class="result-row"><span class="rk">trajectory_coherent</span><span class="rv" id="r-trajectory">—</span></div>
+        <div class="result-row"><span class="rk">evidence_sufficient</span><span class="rv" id="r-evidence">—</span></div>
+        <div class="result-row"><span class="rk">latency_ms</span><span class="rv cyan" id="r-latency">—</span></div>
+        <div class="result-row"><span class="rk">timestamp</span><span class="rv" id="r-timestamp" style="font-size:9px">—</span></div>
+      </div>
+
+      <!-- Reasons -->
+      <div id="reasons-section" style="display:none;margin-top:12px;">
+        <div style="font-size:9px;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Evaluation Reasons</div>
+        <div class="reasons-list" id="reasons-list"></div>
+      </div>
+
+      <!-- Missing Evidence -->
+      <div id="missing-section" style="display:none;margin-top:10px;">
+        <div style="font-size:9px;color:var(--amber);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">⚠ Missing Evidence Required</div>
+        <div id="missing-list"></div>
+      </div>
+
+      <!-- Chain Block -->
+      <div id="chain-section" style="display:none;">
+        <div class="chain-block">
+          <div class="chain-label">⛓ Merkle Chain Block</div>
+          <div class="chain-row"><span class="chain-key">block_hash</span><span class="chain-val" id="c-hash">—</span></div>
+          <div class="chain-row"><span class="chain-key">merkle_root</span><span class="chain-val" id="c-merkle">—</span></div>
+          <div class="chain-row"><span class="chain-key">block_index</span><span class="chain-val" id="c-index">—</span></div>
+          <div class="chain-row"><span class="chain-key">tamper_evident</span><span class="chain-val" style="color:var(--green)">true</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JSON OUTPUT -->
+  <div class="panel full">
+    <div class="panel-header">
+      <div class="panel-dot pd-purple"></div>
+      <div class="panel-title">Raw API Response</div>
+      <div class="panel-badge badge-idle" id="json-badge">JSON</div>
+    </div>
+    <div class="panel-body">
+      <div class="json-output">
+        <pre id="json-out">// Response will appear here after evaluation
+// POST /v1/progression/evaluate
+// verisigil-api-production.up.railway.app</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE -->
+  <div class="share-box">
+    <h3>Try It. Share It. Prove It.</h3>
+    <p>This is a live endpoint — every evaluation calls the real VeriSigil API and chains the decision to an immutable Merkle audit trail. Share this page so others can test it themselves.</p>
+    <div class="share-url">https://verisigilai.com/progression-demo.html</div>
+    <div class="share-btns">
+      <button class="sbtn sbtn-copy" onclick="copyUrl()">📋 Copy Link</button>
+      <a class="sbtn sbtn-li" href="https://www.linkedin.com/sharing/share-offsite/?url=https://verisigilai.com/progression-demo.html" target="_blank">Share on LinkedIn</a>
+      <a class="sbtn sbtn-tw" href="https://twitter.com/intent/tweet?text=VeriSigil%20Progression%20Admissibility%20Engine%20is%20live%20%E2%80%94%20should%20this%20AI%20agent%20progression%20be%20permitted%20now%3F%20Try%20it%3A%20verisigilai.com%2Fprogression-demo.html&hashtags=AgenticAI,AIGovernance,VeriSigilAI" target="_blank">Share on X</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · Progression Admissibility Engine · v0.6.0 · Built in Lagos, Nigeria 🇳🇬</p>
+  <p style="margin-top:4px;font-size:10px;">Every evaluation calls the live API · Every decision chained to Merkle audit trail · <a href="https://verisigil-api-production.up.railway.app/docs#/Progression%20Admissibility">API Docs →</a></p>
+</footer>
+
+<script>
+const API     = 'https://verisigil-api-production.up.railway.app';
+const API_KEY = 'verisigil-secret-2026';
+
+let previousSteps = [
+  {action:'verify_recipient', status:'completed'},
+  {action:'check_balance',    status:'completed'},
+];
+let evidenceFields = [
+  {key:'amount_usd',             val:'50000'},
+  {key:'business_justification', val:'Vendor payment Q2'},
+  {key:'requestor_id',           val:'user_123'},
+  {key:'approval_chain',         val:'manager_approved'},
+];
+
+// ── SCENARIOS ─────────────────────────────────────────────
+const SCENARIOS = {
+  payment_high: {
+    agent_id:'vsa_1483d06a89c4', workflow_id:'wf_payment_001',
+    current_step:3, total_steps:5, action:'transfer_funds', consequence:'HIGH',
+    steps:[
+      {action:'verify_recipient',status:'completed'},
+      {action:'check_balance',   status:'completed'},
+    ],
+    evidence:[
+      {key:'amount_usd',             val:'50000'},
+      {key:'business_justification', val:'Vendor payment Q2'},
+      {key:'requestor_id',           val:'user_123'},
+      {key:'approval_chain',         val:'manager_approved'},
+    ],
+  },
+  deploy_prod: {
+    agent_id:'vsa_1483d06a89c4', workflow_id:'wf_deploy_prod',
+    current_step:4, total_steps:6, action:'deploy', consequence:'CRITICAL',
+    steps:[
+      {action:'run_tests',        status:'completed'},
+      {action:'staging_approval', status:'completed'},
+      {action:'backup_confirmed', status:'completed'},
+    ],
+    evidence:[
+      {key:'environment',         val:'production'},
+      {key:'business_justification', val:'Q2 release'},
+      {key:'requestor_id',        val:'devops_lead'},
+      {key:'approval_chain',      val:'cto_approved'},
+      {key:'dual_authorization',  val:'true'},
+      {key:'risk_acknowledgment', val:'accepted'},
+    ],
+  },
+  data_delete: {
+    agent_id:'vsa_1483d06a89c4', workflow_id:'wf_delete_001',
+    current_step:2, total_steps:4, action:'delete_records', consequence:'HIGH',
+    steps:[
+      {action:'backup_confirmed', status:'completed'},
+    ],
+    evidence:[
+      {key:'record_count',           val:'500'},
+      {key:'business_justification', val:'GDPR compliance purge'},
+      {key:'requestor_id',           val:'data_officer'},
+      {key:'approval_chain',         val:'legal_approved'},
+    ],
+  },
+  missing_evidence: {
+    agent_id:'vsa_1483d06a89c4', workflow_id:'wf_payment_002',
+    current_step:3, total_steps:5, action:'transfer_funds', consequence:'HIGH',
+    steps:[
+      {action:'verify_recipient', status:'completed'},
+    ],
+    evidence:[
+      {key:'amount_usd', val:'75000'},
+      {key:'requestor_id', val:'user_456'},
+    ],
+  },
+  trajectory_anomaly: {
+    agent_id:'vsa_1483d06a89c4', workflow_id:'wf_anomaly_001',
+    current_step:4, total_steps:5, action:'payment', consequence:'MEDIUM',
+    steps:[
+      {action:'permission_request', status:'completed'},
+      {action:'permission_request', status:'completed'},
+      {action:'permission_request', status:'completed'},
+      {action:'verify_recipient',   status:'failed'},
+    ],
+    evidence:[
+      {key:'amount_usd', val:'5000'},
+      {key:'requestor_id', val:'user_789'},
+    ],
+  },
+  critical: {
+    agent_id:'vsa_1483d06a89c4', workflow_id:'wf_critical_001',
+    current_step:5, total_steps:7, action:'transfer_funds', consequence:'CRITICAL',
+    steps:[
+      {action:'identity_verified',   status:'completed'},
+      {action:'board_approval',      status:'completed'},
+      {action:'legal_review',        status:'completed'},
+      {action:'dual_auth_confirmed', status:'completed'},
+    ],
+    evidence:[
+      {key:'amount_usd',             val:'2500000'},
+      {key:'business_justification', val:'Acquisition payment'},
+      {key:'requestor_id',           val:'cfo_001'},
+      {key:'approval_chain',         val:'board_approved'},
+      {key:'dual_authorization',     val:'true'},
+      {key:'risk_acknowledgment',    val:'accepted'},
+    ],
+  },
+};
+
+function loadScenario(name) {
+  const s = SCENARIOS[name];
+  if(!s) return;
+
+  document.getElementById('f-agent-id').value    = s.agent_id;
+  document.getElementById('f-workflow-id').value  = s.workflow_id;
+  document.getElementById('f-current-step').value = s.current_step;
+  document.getElementById('f-total-steps').value  = s.total_steps;
+  document.getElementById('f-action').value        = s.action;
+  document.getElementById('f-consequence').value   = s.consequence;
+
+  previousSteps = [...s.steps];
+  evidenceFields = [...s.evidence];
+
+  renderSteps();
+  renderEvidence();
+
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Reset output
+  resetOutput();
+}
+
+// ── STEPS ────────────────────────────────────────────────
+function renderSteps() {
+  const wrap = document.getElementById('steps-wrap');
+  wrap.innerHTML = '';
+  previousSteps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'step-item';
+    div.innerHTML = `
+      <div class="step-num">${i+1}</div>
+      <div class="step-action">${step.action}</div>
+      <div class="step-status status-${step.status}">${step.status}</div>
+      <button class="step-remove" onclick="removeStep(${i})">✕</button>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function addStep() {
+  const action = document.getElementById('new-step-action').value.trim();
+  const status = document.getElementById('new-step-status').value;
+  if(!action) return;
+  previousSteps.push({action, status});
+  document.getElementById('new-step-action').value = '';
+  renderSteps();
+}
+
+function removeStep(i) {
+  previousSteps.splice(i,1);
+  renderSteps();
+}
+
+// ── EVIDENCE ─────────────────────────────────────────────
+function renderEvidence() {
+  const wrap = document.getElementById('evidence-wrap');
+  wrap.innerHTML = '';
+  evidenceFields.forEach((ev, i) => {
+    const div = document.createElement('div');
+    div.className = 'evidence-item';
+    div.innerHTML = `
+      <input class="ev-key" value="${ev.key}" onchange="evidenceFields[${i}].key=this.value" placeholder="key">
+      <input class="ev-val" value="${ev.val}" onchange="evidenceFields[${i}].val=this.value" placeholder="value">
+      <button class="ev-remove" onclick="removeEvidence(${i})">✕</button>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function addEvidence() {
+  evidenceFields.push({key:'', val:''});
+  renderEvidence();
+  const inputs = document.querySelectorAll('.ev-key');
+  inputs[inputs.length-1].focus();
+}
+
+function removeEvidence(i) {
+  evidenceFields.splice(i,1);
+  renderEvidence();
+}
+
+// ── EVALUATE ─────────────────────────────────────────────
+async function runEvaluation() {
+  const btn = document.getElementById('run-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Evaluating...';
+
+  // Build evidence object
+  const evidence = {};
+  evidenceFields.forEach(ev => { if(ev.key) evidence[ev.key] = ev.val; });
+
+  const payload = {
+    agent_id:         document.getElementById('f-agent-id').value.trim(),
+    workflow_id:      document.getElementById('f-workflow-id').value.trim(),
+    current_step:     parseInt(document.getElementById('f-current-step').value),
+    total_steps:      parseInt(document.getElementById('f-total-steps').value),
+    previous_steps:   previousSteps,
+    intended_action:  document.getElementById('f-action').value,
+    evidence:         evidence,
+    consequence_level:document.getElementById('f-consequence').value,
+  };
+
+  try {
+    const res  = await fetch(`${API}/v1/progression/evaluate`, {
+      method:  'POST',
+      headers: {'Content-Type':'application/json','x-api-key':API_KEY},
+      body:    JSON.stringify(payload),
+    });
+    const data = await res.json();
+    displayResult(data);
+  } catch(e) {
+    displayError(e.message);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '▶ Evaluate Progression';
+}
+
+function displayResult(data) {
+  // Decision display
+  const dec     = data.decision || '';
+  const display = document.getElementById('decision-display');
+  const badge   = document.getElementById('result-badge');
+  const dot     = document.getElementById('result-dot');
+
+  const config = {
+    'PROGRESSION_ALLOWED':              {cls:'dd-allowed',  icon:'✅', dotCls:'pd-green',  badgeTxt:'ALLOWED',    badgeCls:'badge-live'},
+    'PROGRESSION_REQUIRES_EVIDENCE':    {cls:'dd-evidence', icon:'📋', dotCls:'pd-cyan',   badgeTxt:'NEEDS EVIDENCE', badgeCls:'badge-wait'},
+    'PROGRESSION_REQUIRES_AUTHORITY':   {cls:'dd-authority',icon:'⚖️', dotCls:'pd-amber',  badgeTxt:'NEEDS AUTHORITY', badgeCls:'badge-wait'},
+    'PROGRESSION_REQUIRES_HUMAN_REVIEW':{cls:'dd-human',    icon:'👤', dotCls:'pd-purple', badgeTxt:'HUMAN REVIEW',badgeCls:'badge-wait'},
+    'PROGRESSION_TRAJECTORY_ANOMALY':   {cls:'dd-anomaly',  icon:'🔴', dotCls:'pd-amber',  badgeTxt:'ANOMALY',    badgeCls:'badge-wait'},
+    'PROGRESSION_BLOCKED':              {cls:'dd-blocked',  icon:'🚫', dotCls:'pd-amber',  badgeTxt:'BLOCKED',    badgeCls:'badge-wait'},
+  };
+
+  const c = config[dec] || {cls:'dd-pending', icon:'❓', dotCls:'pd-grey', badgeTxt:'UNKNOWN', badgeCls:'badge-idle'};
+  display.className   = `decision-display ${c.cls}`;
+  display.innerHTML   = `
+    <div class="dd-icon">${c.icon}</div>
+    <div class="dd-decision">${dec}</div>
+    <div class="dd-latency">${data.latency_ms}ms · ${data.timestamp?.slice(11,19)||''} UTC</div>
+  `;
+  dot.className       = `panel-dot ${c.dotCls}`;
+  badge.textContent   = c.badgeTxt;
+  badge.className     = `panel-badge ${c.badgeCls}`;
+
+  // Result rows
+  document.getElementById('result-rows').style.display = 'block';
+  const set = (id, val, cls='') => {
+    const el = document.getElementById(id);
+    if(el){ el.textContent = val; if(cls) el.className = `rv ${cls}`; }
+  };
+  set('r-exec-id',   data.execution_id  || '—', 'cyan');
+  set('r-wf-id',     data.workflow_id   || '—');
+  set('r-authority', data.authority_level || '—',
+      data.authority_level === 'SOVEREIGN' || data.authority_level === 'ADMIN' ? 'green' : 'amber');
+  set('r-trust',     data.trust_score   || '—', 'green');
+  set('r-trajectory',String(data.trajectory_coherent ?? '—'),
+      data.trajectory_coherent ? 'green' : 'red');
+  set('r-evidence',  String(data.evidence_sufficient ?? '—'),
+      data.evidence_sufficient ? 'green' : 'amber');
+  set('r-latency',   `${data.latency_ms}ms`, 'cyan');
+  set('r-timestamp', data.timestamp?.replace('T',' ').slice(0,19)||'—');
+
+  // Reasons
+  const reasonsSec  = document.getElementById('reasons-section');
+  const reasonsList = document.getElementById('reasons-list');
+  const reasons     = data.reasons || data.required_actions || [];
+  if(reasons.length) {
+    reasonsSec.style.display = 'block';
+    reasonsList.innerHTML = reasons.map(r =>
+      `<div class="reason-item ${dec==='PROGRESSION_ALLOWED'?'ok':'warn'}">${r}</div>`
+    ).join('');
+  }
+
+  // Missing evidence
+  const missingSec  = document.getElementById('missing-section');
+  const missingList = document.getElementById('missing-list');
+  if(data.missing_evidence?.length) {
+    missingSec.style.display = 'block';
+    missingList.innerHTML = data.missing_evidence.map(m =>
+      `<div style="font-size:11px;color:var(--amber);padding:4px 10px;background:rgba(255,184,0,0.05);border-radius:5px;margin-bottom:4px;">→ ${m}</div>`
+    ).join('');
+  }
+
+  // Chain block
+  if(data.chain_block) {
+    document.getElementById('chain-section').style.display = 'block';
+    document.getElementById('c-hash').textContent   = data.chain_block.block_hash?.slice(0,32)+'...';
+    document.getElementById('c-merkle').textContent = data.chain_block.merkle_root?.slice(0,32)+'...';
+    document.getElementById('c-index').textContent  = data.chain_block.block_index;
+  }
+
+  // JSON output
+  document.getElementById('json-out').textContent  = JSON.stringify(data, null, 2);
+  document.getElementById('json-badge').textContent = '200 OK';
+  document.getElementById('json-badge').className   = 'panel-badge badge-live';
+}
+
+function displayError(msg) {
+  document.getElementById('decision-display').innerHTML = `
+    <div class="dd-icon">❌</div>
+    <div class="dd-decision" style="color:var(--red)">ERROR</div>
+    <div class="dd-latency">${msg}</div>
+  `;
+  document.getElementById('json-out').textContent = `Error: ${msg}`;
+}
+
+function resetOutput() {
+  document.getElementById('decision-display').className = 'decision-display dd-pending';
+  document.getElementById('decision-display').innerHTML = `
+    <div class="dd-icon">⏳</div>
+    <div class="dd-decision">AWAITING EVALUATION</div>
+    <div class="dd-latency">Configure request and click Evaluate</div>
+  `;
+  document.getElementById('result-rows').style.display    = 'none';
+  document.getElementById('reasons-section').style.display = 'none';
+  document.getElementById('missing-section').style.display = 'none';
+  document.getElementById('chain-section').style.display   = 'none';
+  document.getElementById('json-out').textContent = '// Response will appear here after evaluation';
+  document.getElementById('result-badge').textContent = 'PENDING';
+  document.getElementById('result-badge').className   = 'panel-badge badge-idle';
+  document.getElementById('result-dot').className     = 'panel-dot pd-grey';
+  document.getElementById('json-badge').textContent   = 'JSON';
+  document.getElementById('json-badge').className     = 'panel-badge badge-idle';
+}
+
+function copyUrl() {
+  navigator.clipboard.writeText('https://verisigilai.com/progression-demo.html');
+  const btn = event.target;
+  btn.textContent = '✓ Copied!';
+  setTimeout(() => btn.textContent = '📋 Copy Link', 2000);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+renderSteps();
+renderEvidence();
+</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Reference — VeriSigil AI</title>
+<meta name="description" content="VeriSigil AI complete API reference. Runtime Guard, Progression Admissibility, Merkle Chain, Operational State Governance — every endpoint documented with examples.">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#03070F;--bg2:#070E1D;--bg3:#0B1526;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --red:#FF4D6A;--purple:#7C3AED;
+  --white:#EFF6FF;--slate:#64748B;--dim:#1E3A5F;
+  --border:rgba(0,212,245,0.08);
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--white);line-height:1.7;overflow-x:hidden;display:flex;}
+
+/* SIDEBAR */
+.sidebar{width:260px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;position:fixed;top:0;left:0;overflow-y:auto;z-index:50;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);}
+.sb-logo{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.sb-logo a{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--cyan);text-decoration:none;}
+.sb-logo p{font-size:10px;color:var(--slate);margin-top:4px;font-family:var(--mono);}
+.sb-section{padding:4px 20px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-top:16px;margin-bottom:6px;}
+.sb-link{display:flex;align-items:center;gap:8px;padding:6px 20px;font-size:12px;color:var(--slate);text-decoration:none;transition:all 0.15s;}
+.sb-link:hover{color:var(--white);background:rgba(0,212,245,0.04);}
+.sb-link.active{color:var(--cyan);background:rgba(0,212,245,0.06);border-left:2px solid var(--cyan);}
+.sb-method{font-family:var(--mono);font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;}
+.sm-get{background:rgba(0,230,118,0.1);color:var(--green);}
+.sm-post{background:rgba(0,212,245,0.1);color:var(--cyan);}
+.sb-base{padding:12px 20px;margin-top:16px;border-top:1px solid var(--border);}
+.sb-base-label{font-family:var(--mono);font-size:9px;color:var(--dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.1em;}
+.sb-base-url{font-family:var(--mono);font-size:10px;color:var(--cyan);word-break:break-all;}
+
+/* MAIN */
+.main{margin-left:260px;flex:1;min-height:100vh;}
+.main-header{padding:32px 48px 24px;border-bottom:1px solid var(--border);background:rgba(3,7,15,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;}
+.main-header h1{font-size:18px;font-weight:700;letter-spacing:-0.02em;}
+.header-meta{display:flex;gap:16px;align-items:center;}
+.version-badge{font-family:var(--mono);font-size:10px;color:var(--green);background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);padding:4px 12px;border-radius:4px;}
+.docs-link{font-family:var(--mono);font-size:11px;color:var(--cyan);text-decoration:none;border:1px solid rgba(0,212,245,0.2);padding:6px 14px;border-radius:5px;}
+
+/* CONTENT */
+.content{padding:48px;}
+.endpoint-section{margin-bottom:72px;scroll-margin-top:80px;}
+.ep-header{margin-bottom:24px;}
+.ep-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+.ep-title{font-size:24px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;}
+.ep-title em{font-style:normal;color:var(--cyan);}
+.ep-desc{font-size:14px;color:var(--slate);line-height:1.7;max-width:580px;}
+.ep-route{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;margin:20px 0;font-family:var(--mono);}
+.ep-method-badge{font-size:11px;font-weight:700;padding:4px 12px;border-radius:5px;}
+.method-get{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.method-post{background:rgba(0,212,245,0.1);color:var(--cyan);border:1px solid rgba(0,212,245,0.2);}
+.ep-url{font-size:13px;color:var(--white);}
+.ep-auth{margin-left:auto;font-size:10px;color:var(--slate);display:flex;align-items:center;gap:5px;}
+.auth-dot{width:5px;height:5px;border-radius:50%;background:var(--amber);}
+.auth-dot.green{background:var(--green);}
+
+/* PARAMS */
+.params-table{width:100%;border-collapse:collapse;margin:16px 0 24px;}
+.params-table th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--slate);}
+.params-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:12px;vertical-align:top;}
+.pt-name{font-family:var(--mono);color:var(--cyan);}
+.pt-type{font-family:var(--mono);color:var(--amber);font-size:11px;}
+.pt-req{font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;}
+.req-yes{background:rgba(255,77,106,0.1);color:var(--red);}
+.req-no{background:rgba(74,111,165,0.08);color:var(--slate);}
+.pt-desc{color:var(--slate);}
+
+/* CODE */
+.code-wrap{background:#010508;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:16px 0;}
+.code-tabs{display:flex;border-bottom:1px solid var(--border);}
+.code-tab{padding:8px 16px;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--slate);cursor:pointer;transition:all 0.15s;border-bottom:2px solid transparent;}
+.code-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+.code-pane{padding:20px;overflow-x:auto;display:none;}
+.code-pane.active{display:block;}
+pre{font-family:var(--mono);font-size:12px;line-height:1.8;white-space:pre;}
+.ck{color:var(--cyan);}
+.cv{color:var(--amber);}
+.cs{color:var(--green);}
+.cc{color:var(--slate);font-style:italic;}
+.cw{color:var(--white);}
+.cp{color:var(--purple);}
+
+/* RESPONSE */
+.response-wrap{margin:16px 0;}
+.response-label{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.response-label::before{content:'200';background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);padding:2px 8px;border-radius:4px;font-size:10px;}
+
+/* DIVIDER */
+.section-divider{border:none;border-top:1px solid var(--border);margin:48px 0;}
+
+/* QUICK START */
+.quickstart{background:var(--bg2);border:1px solid rgba(0,212,245,0.12);border-radius:12px;padding:28px;margin-bottom:48px;}
+.qs-title{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;}
+.qs-steps{display:flex;flex-direction:column;gap:12px;}
+.qs-step{display:flex;gap:14px;align-items:flex-start;}
+.qs-num{width:24px;height:24px;border-radius:50%;background:rgba(0,212,245,0.1);border:1px solid rgba(0,212,245,0.2);color:var(--cyan);font-family:var(--mono);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qs-text{font-size:13px;color:var(--slate);padding-top:3px;}
+.qs-text code{font-family:var(--mono);font-size:11px;color:var(--cyan);background:rgba(0,212,245,0.06);padding:1px 6px;border-radius:3px;}
+
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{margin-left:0;}
+  .main-header{padding:20px 24px;}
+  .content{padding:24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <a href="https://verisigilai.com">⬡ VeriSigil AI</a>
+    <p>API Reference · v0.6.1</p>
+  </div>
+
+  <div class="sb-section">Core</div>
+  <a href="#health" class="sb-link"><span class="sb-method sm-get">GET</span>/health</a>
+  <a href="#passport" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/passport/issue</a>
+  <a href="#guard" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/guard/verify</a>
+
+  <div class="sb-section">Policy</div>
+  <a href="#policy-get" class="sb-link"><span class="sb-method sm-get">GET</span>/v1/policy</a>
+  <a href="#policy-set" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/policy</a>
+  <a href="#policy-test" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/policy/test</a>
+
+  <div class="sb-section">Approvals</div>
+  <a href="#approvals" class="sb-link"><span class="sb-method sm-get">GET</span>/v1/approvals</a>
+
+  <div class="sb-section">Progression</div>
+  <a href="#progression" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/progression/evaluate</a>
+  <a href="#simulation" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/progression/simulate</a>
+
+  <div class="sb-section">Operational State</div>
+  <a href="#transitions-map" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/transitions/map</a>
+  <a href="#binding-point" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/transitions/binding-point</a>
+  <a href="#conditions" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/conditions/update</a>
+
+  <div class="sb-section">Runtime Governance</div>
+  <a href="#continuous" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/continuous/start</a>
+  <a href="#survivability" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/survivability/score</a>
+  <a href="#revalidate" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/revalidate</a>
+  <a href="#provenance" class="sb-link"><span class="sb-method sm-post">POST</span>/v1/chain/provenance/start</a>
+
+  <div class="sb-section">Audit Chain</div>
+  <a href="#chain" class="sb-link"><span class="sb-method sm-get">GET</span>/v1/chain</a>
+  <a href="#chain-verify" class="sb-link"><span class="sb-method sm-get">GET</span>/v1/chain/verify</a>
+  <a href="#chain-replay" class="sb-link"><span class="sb-method sm-get">GET</span>/v1/chain/replay/{id}</a>
+
+  <div class="sb-section">Dashboards</div>
+  <a href="#governance" class="sb-link"><span class="sb-method sm-get">GET</span>/v1/governance/summary</a>
+  <a href="#enforcement" class="sb-link"><span class="sb-method sm-get">GET</span>/v1/enforcement/summary</a>
+
+  <div class="sb-base">
+    <div class="sb-base-label">Base URL</div>
+    <div class="sb-base-url">verisigil-api-production.up.railway.app</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="main-header">
+    <h1>API Reference</h1>
+    <div class="header-meta">
+      <div class="version-badge">v0.6.1 · Live</div>
+      <a href="https://verisigil-api-production.up.railway.app/docs" class="docs-link" target="_blank">Swagger →</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- QUICKSTART -->
+    <div class="quickstart">
+      <div class="qs-title">⚡ Quickstart — 3 Steps</div>
+      <div class="qs-steps">
+        <div class="qs-step"><div class="qs-num">1</div><div class="qs-text">All requests require <code>x-api-key: your-api-key</code> header. Get your key at <code>verisigilai.com/pricing.html</code></div></div>
+        <div class="qs-step"><div class="qs-num">2</div><div class="qs-text">Before any agent action — call <code>POST /v1/guard/verify</code> with your <code>agent_id</code> and <code>action_type</code></div></div>
+        <div class="qs-step"><div class="qs-num">3</div><div class="qs-text">Handle the 3 decisions: <code>ALLOW</code> → execute · <code>DENY</code> → block · <code>REQUIRE_HUMAN_APPROVAL</code> → pause and poll <code>approval_url</code></div></div>
+      </div>
+    </div>
+
+    <!-- HEALTH -->
+    <div class="endpoint-section" id="health">
+      <div class="ep-header">
+        <div class="ep-tag">System</div>
+        <h2 class="ep-title">Health <em>Check</em></h2>
+        <p class="ep-desc">Returns system health, version, uptime, and feature status. No authentication required.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-get">GET</div>
+        <div class="ep-url">/health</div>
+        <div class="ep-auth"><div class="auth-dot green"></div>No auth required</div>
+      </div>
+      <div class="response-wrap">
+        <div class="response-label">Response</div>
+        <div class="code-wrap"><div class="code-pane active"><pre>{
+  <span class="ck">"status"</span>:         <span class="cs">"healthy"</span>,
+  <span class="ck">"version"</span>:        <span class="cs">"0.6.1"</span>,
+  <span class="ck">"env"</span>:            <span class="cs">"production"</span>,
+  <span class="ck">"uptime"</span>:         <span class="cs">"4h 12m 33s"</span>,
+  <span class="ck">"maintenance"</span>:    <span class="cv">false</span>,
+  <span class="ck">"runtime_guard"</span>:  <span class="cs">"online"</span>,
+  <span class="ck">"audit_trail"</span>:    <span class="cs">"online"</span>,
+  <span class="ck">"human_approval"</span>: <span class="cs">"online"</span>
+}</pre></div></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- RUNTIME GUARD -->
+    <div class="endpoint-section" id="guard">
+      <div class="ep-header">
+        <div class="ep-tag">Core · Runtime Guard</div>
+        <h2 class="ep-title">Verify Agent <em>Action</em></h2>
+        <p class="ep-desc">The primary enforcement endpoint. Call this before every agent action. Returns ALLOW, DENY, or REQUIRE_HUMAN_APPROVAL in under 50ms. Every decision chained to Merkle audit trail.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-post">POST</div>
+        <div class="ep-url">/v1/guard/verify</div>
+        <div class="ep-auth"><div class="auth-dot"></div>x-api-key required</div>
+      </div>
+
+      <table class="params-table">
+        <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="pt-name">agent_id</td><td class="pt-type">string</td><td><span class="pt-req req-yes">required</span></td><td class="pt-desc">Agent passport ID — format: vsa_xxxxxx</td></tr>
+          <tr><td class="pt-name">action_type</td><td class="pt-type">string</td><td><span class="pt-req req-yes">required</span></td><td class="pt-desc">payment · delete_records · deploy · data_access · send_email · api_call · tool_use · database_write · file_write · web_search</td></tr>
+          <tr><td class="pt-name">action_details</td><td class="pt-type">object</td><td><span class="pt-req req-no">optional</span></td><td class="pt-desc">Action-specific context. For payment: {amount_usd, recipient}. For delete: {record_count}.</td></tr>
+          <tr><td class="pt-name">resource</td><td class="pt-type">string</td><td><span class="pt-req req-no">optional</span></td><td class="pt-desc">Resource being accessed or modified</td></tr>
+          <tr><td class="pt-name">context</td><td class="pt-type">string</td><td><span class="pt-req req-no">optional</span></td><td class="pt-desc">Execution context — default: "production"</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap">
+        <div class="code-tabs">
+          <div class="code-tab active" onclick="showTab(this,'req-guard')">Request</div>
+          <div class="code-tab" onclick="showTab(this,'res-guard')">Response · ALLOW</div>
+          <div class="code-tab" onclick="showTab(this,'res-guard-h')">Response · HUMAN</div>
+          <div class="code-tab" onclick="showTab(this,'res-guard-d')">Response · DENY</div>
+        </div>
+        <div class="code-pane active" id="req-guard"><pre><span class="cc">// POST /v1/guard/verify</span>
+{
+  <span class="ck">"agent_id"</span>:       <span class="cs">"vsa_1483d06a89c4"</span>,
+  <span class="ck">"action_type"</span>:    <span class="cs">"payment"</span>,
+  <span class="ck">"action_details"</span>: {
+    <span class="ck">"amount_usd"</span>: <span class="cv">50000</span>,
+    <span class="ck">"recipient"</span>:  <span class="cs">"vendor@acme.com"</span>
+  }
+}</pre></div>
+        <div class="code-pane" id="res-guard"><pre>{
+  <span class="ck">"decision"</span>:    <span class="cs">"ALLOW"</span>,
+  <span class="ck">"confidence"</span>:  <span class="cv">0.96</span>,
+  <span class="ck">"reason"</span>:      <span class="cs">"Trust 0.963 sufficient · payment within policy bounds"</span>,
+  <span class="ck">"trust_score"</span>: <span class="cv">0.963</span>,
+  <span class="ck">"latency_ms"</span>:  <span class="cv">42</span>,
+  <span class="ck">"chain_block"</span>: { <span class="ck">"block_hash"</span>: <span class="cs">"9eea84dc..."</span>, <span class="ck">"tamper_evident"</span>: <span class="cv">true</span> }
+}</pre></div>
+        <div class="code-pane" id="res-guard-h"><pre>{
+  <span class="ck">"decision"</span>:     <span class="cs">"REQUIRE_HUMAN_APPROVAL"</span>,
+  <span class="ck">"confidence"</span>:   <span class="cv">0.94</span>,
+  <span class="ck">"reason"</span>:       <span class="cs">"Payment $50,000 exceeds auto-allow threshold ($1,000)"</span>,
+  <span class="ck">"trust_score"</span>:  <span class="cv">0.963</span>,
+  <span class="ck">"approval_url"</span>: <span class="cs">"https://verisigilai.com/approve.html?id=apr_x7f2a1b"</span>,
+  <span class="ck">"approval_id"</span>:  <span class="cs">"apr_x7f2a1b"</span>,
+  <span class="ck">"latency_ms"</span>:   <span class="cv">42</span>
+}</pre></div>
+        <div class="code-pane" id="res-guard-d"><pre>{
+  <span class="ck">"decision"</span>:   <span class="cs">"DENY"</span>,
+  <span class="ck">"confidence"</span>: <span class="cv">0.99</span>,
+  <span class="ck">"reason"</span>:     <span class="cs">"Agent passport revoked — access terminated"</span>,
+  <span class="ck">"trust_score"</span>:<span class="cv">0.0</span>,
+  <span class="ck">"latency_ms"</span>: <span class="cv">12</span>
+}</pre></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- PROGRESSION -->
+    <div class="endpoint-section" id="progression">
+      <div class="ep-header">
+        <div class="ep-tag">Progression Admissibility</div>
+        <h2 class="ep-title">Evaluate Progression <em>Admissibility</em></h2>
+        <p class="ep-desc">Should this specific state transition be permitted now? Evaluates 4 dimensions: trajectory coherence, authority sufficiency, evidence completeness, consequence level.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-post">POST</div>
+        <div class="ep-url">/v1/progression/evaluate</div>
+        <div class="ep-auth"><div class="auth-dot"></div>x-api-key required</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-tabs">
+          <div class="code-tab active" onclick="showTab(this,'req-prog')">Request</div>
+          <div class="code-tab" onclick="showTab(this,'res-prog-a')">Response · ALLOWED</div>
+          <div class="code-tab" onclick="showTab(this,'res-prog-e')">Response · NEEDS EVIDENCE</div>
+        </div>
+        <div class="code-pane active" id="req-prog"><pre>{
+  <span class="ck">"agent_id"</span>:         <span class="cs">"vsa_1483d06a89c4"</span>,
+  <span class="ck">"workflow_id"</span>:      <span class="cs">"wf_payment_001"</span>,
+  <span class="ck">"current_step"</span>:     <span class="cv">3</span>,
+  <span class="ck">"total_steps"</span>:      <span class="cv">5</span>,
+  <span class="ck">"previous_steps"</span>: [
+    {<span class="ck">"action"</span>: <span class="cs">"verify_recipient"</span>, <span class="ck">"status"</span>: <span class="cs">"completed"</span>},
+    {<span class="ck">"action"</span>: <span class="cs">"check_balance"</span>,    <span class="ck">"status"</span>: <span class="cs">"completed"</span>}
+  ],
+  <span class="ck">"intended_action"</span>:  <span class="cs">"transfer_funds"</span>,
+  <span class="ck">"evidence"</span>: {
+    <span class="ck">"amount_usd"</span>:             <span class="cv">50000</span>,
+    <span class="ck">"business_justification"</span>: <span class="cs">"Vendor Q2 payment"</span>,
+    <span class="ck">"requestor_id"</span>:           <span class="cs">"user_123"</span>,
+    <span class="ck">"approval_chain"</span>:         <span class="cs">"manager_approved"</span>
+  },
+  <span class="ck">"consequence_level"</span>: <span class="cs">"HIGH"</span>
+}</pre></div>
+        <div class="code-pane" id="res-prog-a"><pre>{
+  <span class="ck">"decision"</span>:            <span class="cs">"PROGRESSION_ALLOWED"</span>,
+  <span class="ck">"trajectory_coherent"</span>: <span class="cv">true</span>,
+  <span class="ck">"authority_level"</span>:     <span class="cs">"SOVEREIGN"</span>,
+  <span class="ck">"evidence_sufficient"</span>: <span class="cv">true</span>,
+  <span class="ck">"trust_score"</span>:         <span class="cv">0.97</span>,
+  <span class="ck">"latency_ms"</span>:          <span class="cv">0.12</span>,
+  <span class="ck">"chain_block"</span>: { <span class="ck">"block_hash"</span>: <span class="cs">"9eea84dc..."</span>, <span class="ck">"tamper_evident"</span>: <span class="cv">true</span> }
+}</pre></div>
+        <div class="code-pane" id="res-prog-e"><pre>{
+  <span class="ck">"decision"</span>:           <span class="cs">"PROGRESSION_REQUIRES_EVIDENCE"</span>,
+  <span class="ck">"authority_level"</span>:    <span class="cs">"SOVEREIGN"</span>,
+  <span class="ck">"evidence_sufficient"</span>:<span class="cv">false</span>,
+  <span class="ck">"missing_evidence"</span>:   [<span class="cs">"approval_chain"</span>],
+  <span class="ck">"required_actions"</span>:   [<span class="cs">"Provide: approval_chain"</span>]
+}</pre></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- TRANSITIONS MAP -->
+    <div class="endpoint-section" id="transitions-map">
+      <div class="ep-header">
+        <div class="ep-tag">Operational State Governance</div>
+        <h2 class="ep-title">Map Permissible <em>Transitions</em></h2>
+        <p class="ep-desc">Given current operational state — returns exactly which transitions remain permissible, which require approval, and which bind consequence irreversibly.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-post">POST</div>
+        <div class="ep-url">/v1/transitions/map?agent_id=&workflow_id=&current_step=</div>
+        <div class="ep-auth"><div class="auth-dot"></div>x-api-key required</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-pane active"><pre><span class="cc">// Response</span>
+{
+  <span class="ck">"authority_level"</span>:   <span class="cs">"SOVEREIGN"</span>,
+  <span class="ck">"conditions_stable"</span>: <span class="cv">true</span>,
+  <span class="ck">"transition_space"</span>: {
+    <span class="ck">"total_possible"</span>:          <span class="cv">15</span>,
+    <span class="ck">"permissible_count"</span>:       <span class="cv">6</span>,  <span class="cc">// autonomous execution allowed</span>
+    <span class="ck">"requires_approval_count"</span>: <span class="cv">9</span>,  <span class="cc">// human gate required</span>
+    <span class="ck">"consequence_binding_count"</span>:<span class="cv">8</span>   <span class="cc">// irreversible if taken</span>
+  },
+  <span class="ck">"recommendation"</span>: <span class="cs">"PROCEED_WITH_CAUTION — 8 irreversible transitions available"</span>
+}</pre></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- BINDING POINT -->
+    <div class="endpoint-section" id="binding-point">
+      <div class="ep-header">
+        <div class="ep-tag">Operational State Governance</div>
+        <h2 class="ep-title">Detect Consequence <em>Binding Point</em></h2>
+        <p class="ep-desc">Find the exact step where a decision becomes irreversible. Before binding point — governance can intervene. After — consequence has propagated.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-post">POST</div>
+        <div class="ep-url">/v1/transitions/binding-point</div>
+        <div class="ep-auth"><div class="auth-dot"></div>x-api-key required</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-pane active"><pre><span class="cc">// Response — transfer_funds at step 3</span>
+{
+  <span class="ck">"binding_point"</span>:             <span class="cs">"transfer_confirmed"</span>,
+  <span class="ck">"binding_risk"</span>:              <span class="cv">0.9</span>,
+  <span class="ck">"reversible"</span>:                <span class="cv">false</span>,
+  <span class="ck">"intervention_window_open"</span>:  <span class="cv">false</span>,
+  <span class="ck">"propagation_risk"</span>:          <span class="cs">"CATASTROPHIC — consequence propagates immediately"</span>,
+  <span class="ck">"governance_recommendation"</span>: <span class="cs">"INTERVENE_NOW — last opportunity before consequence binds"</span>
+}</pre></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- CONDITIONS -->
+    <div class="endpoint-section" id="conditions">
+      <div class="ep-header">
+        <div class="ep-tag">Operational State Governance</div>
+        <h2 class="ep-title">Update Operational <em>Conditions</em></h2>
+        <p class="ep-desc">When operational conditions change — automatically re-evaluates all active permissions. Trust degrades → permissions auto-revoked. Zero manual intervention required.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-post">POST</div>
+        <div class="ep-url">/v1/conditions/update</div>
+        <div class="ep-auth"><div class="auth-dot"></div>x-api-key required</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-pane active"><pre><span class="cc">// Trust 0.963 → 0.72 + anomaly detected</span>
+<span class="cc">// Response — automatic revocation</span>
+{
+  <span class="ck">"conditions_changed"</span>: <span class="cv">true</span>,
+  <span class="ck">"authority_level"</span>:    <span class="cs">"BASIC"</span>,
+  <span class="ck">"revoked"</span>: [
+    {<span class="ck">"permission"</span>: <span class="cs">"payment"</span>,       <span class="ck">"reason"</span>: <span class="cs">"BASIC insufficient for HIGH"</span>},
+    {<span class="ck">"permission"</span>: <span class="cs">"transfer_funds"</span>, <span class="ck">"reason"</span>: <span class="cs">"BASIC insufficient for HIGH"</span>}
+  ],
+  <span class="ck">"maintained"</span>:   [<span class="cs">"web_search"</span>],
+  <span class="ck">"auto_revoked"</span>: <span class="cv">true</span>,
+  <span class="ck">"recommendation"</span>: <span class="cs">"IMMEDIATE_ACTION — 2 permissions auto-revoked"</span>
+}</pre></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- CHAIN REPLAY -->
+    <div class="endpoint-section" id="chain-replay">
+      <div class="ep-header">
+        <div class="ep-tag">Audit Chain</div>
+        <h2 class="ep-title">Replay <em>Validation</em></h2>
+        <p class="ep-desc">Prove any past governance decision is deterministic. Same inputs always produce same hash. Satisfies Article 12 EU AI Act — tamper-proof, reproducible audit evidence.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-get">GET</div>
+        <div class="ep-url">/v1/chain/replay/{execution_id}</div>
+        <div class="ep-auth"><div class="auth-dot"></div>x-api-key required</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-pane active"><pre>{
+  <span class="ck">"execution_id"</span>:   <span class="cs">"exec_4d8f2a1b"</span>,
+  <span class="ck">"original_hash"</span>:  <span class="cs">"9eea84dceb9eace9d5bae660a792596..."</span>,
+  <span class="ck">"replay_hash"</span>:    <span class="cs">"9eea84dceb9eace9d5bae660a792596..."</span>,
+  <span class="ck">"hash_match"</span>:     <span class="cv">true</span>,
+  <span class="ck">"policy_match"</span>:   <span class="cv">true</span>,
+  <span class="ck">"decision_match"</span>: <span class="cv">true</span>,
+  <span class="ck">"deterministic"</span>:  <span class="cv">true</span>,
+  <span class="ck">"drift_detected"</span>: <span class="cv">false</span>,
+  <span class="ck">"immutable_audit"</span>: {
+    <span class="ck">"chain_integrity"</span>: <span class="cs">"verified"</span>,
+    <span class="ck">"tamper_evident"</span>:  <span class="cv">true</span>
+  }
+}</pre></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- GOVERNANCE SUMMARY -->
+    <div class="endpoint-section" id="governance">
+      <div class="ep-header">
+        <div class="ep-tag">Dashboards</div>
+        <h2 class="ep-title">Governance <em>Summary</em></h2>
+        <p class="ep-desc">Full runtime governance summary — all layers in one call. Chain provenance, continuous monitoring, revalidation history, and audit chain status.</p>
+      </div>
+      <div class="ep-route">
+        <div class="ep-method-badge method-get">GET</div>
+        <div class="ep-url">/v1/governance/summary</div>
+        <div class="ep-auth"><div class="auth-dot"></div>x-api-key required</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-pane active"><pre>{
+  <span class="ck">"version"</span>: <span class="cs">"0.6.1"</span>,
+  <span class="ck">"governance"</span>: {
+    <span class="ck">"chain_provenance"</span>:         { <span class="ck">"total_chains"</span>: <span class="cv">3</span>, <span class="ck">"total_calls"</span>: <span class="cv">12</span> },
+    <span class="ck">"continuous_admissibility"</span>: { <span class="ck">"active_monitors"</span>: <span class="cv">2</span>, <span class="ck">"total_checks"</span>: <span class="cv">48</span> },
+    <span class="ck">"revalidation"</span>:             { <span class="ck">"total_revalidations"</span>: <span class="cv">7</span> },
+    <span class="ck">"audit_chain"</span>: {
+      <span class="ck">"total_blocks"</span>:    <span class="cv">124</span>,
+      <span class="ck">"merkle_root"</span>:     <span class="cs">"8b9c8af3c97d2bf5..."</span>,
+      <span class="ck">"chain_integrity"</span>: <span class="cs">"verified"</span>,
+      <span class="ck">"tamper_evident"</span>:  <span class="cv">true</span>,
+      <span class="ck">"drift_detected"</span>:  <span class="cv">false</span>
+    }
+  }
+}</pre></div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+
+<script>
+function showTab(tab, paneId) {
+  const wrap = tab.closest('.code-wrap');
+  wrap.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+  wrap.querySelectorAll('.code-pane').forEach(p => p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById(paneId).classList.add('active');
+}
+
+// Highlight active sidebar link on scroll
+const sections = document.querySelectorAll('.endpoint-section');
+const links    = document.querySelectorAll('.sb-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if(window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  links.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>

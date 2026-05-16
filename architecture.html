@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture — VeriSigil AI Runtime Governance Infrastructure</title>
+<meta name="description" content="VeriSigil AI technical architecture. How runtime governance is embedded in the execution path — not layered on top of it. Ed25519, Merkle chain, progression admissibility, operational state governance.">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#03070F;--bg2:#070E1D;--bg3:#0B1526;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --red:#FF4D6A;--purple:#7C3AED;--blue:#1455FF;
+  --white:#EFF6FF;--slate:#64748B;--mid:#334155;
+  --border:rgba(0,212,245,0.08);
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--white);line-height:1.7;overflow-x:hidden;}
+
+/* GRID BG */
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,212,245,0.02) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,212,245,0.02) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none;z-index:0;}
+*{position:relative;z-index:1;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;border-bottom:1px solid var(--border);background:rgba(3,7,15,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--cyan);text-decoration:none;letter-spacing:-0.02em;}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{color:var(--slate);text-decoration:none;font-size:13px;transition:color 0.15s;}
+.nav-links a:hover{color:var(--white);}
+.nav-api{font-family:var(--mono);font-size:11px;color:var(--cyan);border:1px solid rgba(0,212,245,0.2);padding:6px 14px;border-radius:5px;text-decoration:none;transition:all 0.15s;}
+.nav-api:hover{background:rgba(0,212,245,0.06);}
+
+/* HERO */
+.hero{max-width:1000px;margin:0 auto;padding:72px 36px 56px;}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--cyan);}
+.hero h1{font-size:clamp(32px,5vw,56px);font-weight:700;letter-spacing:-0.04em;line-height:1.06;margin-bottom:20px;color:var(--white);}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero-desc{font-size:16px;color:var(--slate);max-width:640px;line-height:1.75;margin-bottom:36px;}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;}
+.meta-item{font-family:var(--mono);font-size:11px;color:var(--slate);display:flex;align-items:center;gap:6px;}
+.meta-dot{width:5px;height:5px;border-radius:50%;}
+.md-green{background:var(--green);}
+.md-cyan{background:var(--cyan);}
+.md-amber{background:var(--amber);}
+
+/* TOC */
+.toc{max-width:1000px;margin:0 auto 56px;padding:0 36px;}
+.toc-inner{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 28px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.toc-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);grid-column:1/-1;margin-bottom:8px;}
+.toc-item{font-size:13px;color:var(--slate);text-decoration:none;padding:4px 0;transition:color 0.15s;display:flex;align-items:center;gap:8px;}
+.toc-item::before{content:'→';color:var(--border);font-size:11px;}
+.toc-item:hover{color:var(--cyan);}
+.toc-item:hover::before{color:var(--cyan);}
+
+/* SECTIONS */
+.section{max-width:1000px;margin:0 auto;padding:0 36px 80px;}
+.section-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.section-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.15);padding:4px 10px;border-radius:4px;flex-shrink:0;margin-top:4px;}
+.section h2{font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-0.03em;line-height:1.2;color:var(--white);}
+.section h2 em{font-style:normal;color:var(--cyan);}
+.section-desc{font-size:14px;color:var(--slate);margin-top:8px;line-height:1.7;max-width:600px;}
+
+/* ARCHITECTURE DIAGRAM — ASCII style */
+.arch-diagram{background:#010508;border:1px solid rgba(0,212,245,0.12);border-radius:12px;padding:32px;margin-bottom:32px;overflow-x:auto;}
+.arch-diagram pre{font-family:var(--mono);font-size:12px;line-height:1.9;color:#94A3B8;white-space:pre;}
+.arch-diagram .ac{color:var(--cyan);}
+.arch-diagram .ag{color:var(--green);}
+.arch-diagram .aa{color:var(--amber);}
+.arch-diagram .ar{color:var(--red);}
+.arch-diagram .ap{color:var(--purple);}
+.arch-diagram .aw{color:var(--white);}
+
+/* LAYER CARDS */
+.layers{display:flex;flex-direction:column;gap:2px;margin-bottom:32px;}
+.layer-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:200px 1fr auto;gap:20px;align-items:start;transition:border-color 0.15s;}
+.layer-card:hover{border-color:rgba(0,212,245,0.2);}
+.lc-left{}
+.lc-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
+.lc-endpoint{font-family:var(--mono);font-size:10px;color:var(--slate);}
+.lc-desc{font-size:13px;color:var(--slate);line-height:1.65;}
+.lc-status{font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 10px;border-radius:4px;white-space:nowrap;align-self:start;}
+.ls-live{background:rgba(0,230,118,0.08);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.ls-new{background:rgba(0,212,245,0.08);color:var(--cyan);border:1px solid rgba(0,212,245,0.2);}
+
+/* COLOR CODING BY LAYER */
+.l1 .lc-name{color:var(--purple);}
+.l2 .lc-name{color:var(--cyan);}
+.l3 .lc-name{color:var(--amber);}
+.l4 .lc-name{color:var(--green);}
+.l5 .lc-name{color:var(--red);}
+.l6 .lc-name{color:#60A5FA;}
+.l7 .lc-name{color:var(--cyan);}
+.l8 .lc-name{color:var(--green);}
+
+/* DECISION FLOW */
+.decision-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px;}
+.df-card{border-radius:10px;padding:20px;border:1px solid;}
+.df-allow{background:rgba(0,230,118,0.04);border-color:rgba(0,230,118,0.2);}
+.df-deny{background:rgba(255,77,106,0.04);border-color:rgba(255,77,106,0.2);}
+.df-human{background:rgba(255,184,0,0.04);border-color:rgba(255,184,0,0.2);}
+.df-icon{font-size:24px;margin-bottom:10px;}
+.df-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.06em;margin-bottom:8px;}
+.df-allow .df-name{color:var(--green);}
+.df-deny  .df-name{color:var(--red);}
+.df-human .df-name{color:var(--amber);}
+.df-desc{font-size:12px;color:var(--slate);line-height:1.6;}
+.df-chain{font-family:var(--mono);font-size:10px;color:var(--slate);margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);}
+
+/* CODE BLOCKS */
+.code-block{background:#010508;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;}
+.code-header{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.code-title{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--cyan);letter-spacing:0.08em;}
+.code-lang{font-family:var(--mono);font-size:9px;color:var(--slate);}
+.code-body{padding:20px;overflow-x:auto;}
+.code-body pre{font-family:var(--mono);font-size:12px;line-height:1.8;color:#94A3B8;white-space:pre;}
+.ck{color:var(--cyan);}
+.cv{color:var(--amber);}
+.cs{color:var(--green);}
+.cc{color:var(--mid);font-style:italic;}
+.cm{color:var(--purple);}
+.cw{color:var(--white);}
+
+/* MERKLE DIAGRAM */
+.merkle-diagram{background:#010508;border:1px solid rgba(0,230,118,0.12);border-radius:12px;padding:28px;margin-bottom:32px;}
+.md-title{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--green);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:20px;}
+
+/* COMPARISON TABLE */
+.compare-table{width:100%;border-collapse:collapse;margin-bottom:32px;font-size:13px;}
+.compare-table th{text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--slate);}
+.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--slate);vertical-align:top;}
+.compare-table td:first-child{color:var(--white);font-weight:500;}
+.compare-table tr:last-child td{border-bottom:none;}
+.ct-yes{color:var(--green);font-family:var(--mono);font-size:11px;font-weight:700;}
+.ct-no{color:var(--slate);font-family:var(--mono);font-size:11px;}
+.ct-partial{color:var(--amber);font-family:var(--mono);font-size:11px;}
+
+/* ENDPOINTS TABLE */
+.endpoints{display:flex;flex-direction:column;gap:8px;margin-bottom:32px;}
+.endpoint{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;display:grid;grid-template-columns:60px 280px 1fr;gap:16px;align-items:center;}
+.ep-method{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-align:center;}
+.ep-get{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.ep-post{background:rgba(0,212,245,0.1);color:var(--cyan);border:1px solid rgba(0,212,245,0.2);}
+.ep-path{font-family:var(--mono);font-size:11px;color:var(--white);}
+.ep-desc{font-size:12px;color:var(--slate);}
+.ep-tag{font-family:var(--mono);font-size:9px;color:var(--slate);margin-left:auto;white-space:nowrap;}
+
+/* PRINCIPLE CARDS */
+.principles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:32px;}
+.principle{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.p-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--cyan);margin-bottom:8px;}
+.p-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.p-desc{font-size:12px;color:var(--slate);line-height:1.65;}
+
+/* CTA */
+.cta-bar{max-width:1000px;margin:0 auto 80px;padding:0 36px;}
+.cta-inner{background:var(--bg2);border:1px solid rgba(0,212,245,0.15);border-radius:14px;padding:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.cta-text h3{font-size:20px;font-weight:700;margin-bottom:6px;}
+.cta-text p{font-size:13px;color:var(--slate);}
+.cta-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-c{padding:10px 22px;border-radius:7px;font-family:var(--mono);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.06em;transition:all 0.15s;}
+.btn-primary{background:var(--cyan);color:var(--bg);}
+.btn-primary:hover{box-shadow:0 0 24px rgba(0,212,245,0.4);}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,245,0.25);}
+.btn-ghost:hover{background:rgba(0,212,245,0.06);}
+
+footer{border-top:1px solid var(--border);padding:24px 36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+footer p{font-size:12px;color:var(--slate);}
+footer a{color:var(--cyan);text-decoration:none;}
+
+@media(max-width:768px){
+  nav .nav-links{display:none;}
+  .toc-inner{grid-template-columns:1fr;}
+  .layer-card{grid-template-columns:1fr;gap:8px;}
+  .decision-flow{grid-template-columns:1fr;}
+  .principles{grid-template-columns:1fr;}
+  .endpoint{grid-template-columns:50px 1fr;gap:8px;}
+  .ep-desc{grid-column:1/-1;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <div class="nav-links">
+    <a href="#overview">Overview</a>
+    <a href="#stack">Governance Stack</a>
+    <a href="#decisions">Decisions</a>
+    <a href="#chain">Merkle Chain</a>
+    <a href="#endpoints">Endpoints</a>
+    <a href="#principles">Principles</a>
+  </div>
+  <a href="https://verisigil-api-production.up.railway.app/docs" class="nav-api" target="_blank">API Docs →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="overview">
+  <div class="hero-eyebrow">Technical Architecture</div>
+  <h1>Governance Embedded in the<br><em>Execution Path</em></h1>
+  <p class="hero-desc">VeriSigil is not a compliance dashboard layered on top of AI systems. It is governance infrastructure embedded directly in the execution path — between agent intent and agent action. No agent action executes without passing through the governance layer.</p>
+  <div class="hero-meta">
+    <div class="meta-item"><div class="meta-dot md-green"></div>v0.6.1 · Production</div>
+    <div class="meta-item"><div class="meta-dot md-cyan"></div>Ed25519 · Merkle Chain · &lt;50ms</div>
+    <div class="meta-item"><div class="meta-dot md-amber"></div>Built in Lagos, Nigeria 🇳🇬</div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-inner">
+    <div class="toc-label">Contents</div>
+    <a href="#overview" class="toc-item">1. Architecture Overview</a>
+    <a href="#stack" class="toc-item">2. Governance Stack</a>
+    <a href="#decisions" class="toc-item">3. Decision Model</a>
+    <a href="#chain" class="toc-item">4. Merkle Chain Audit</a>
+    <a href="#progression" class="toc-item">5. Progression Admissibility</a>
+    <a href="#operational" class="toc-item">6. Operational State Governance</a>
+    <a href="#endpoints" class="toc-item">7. Full Endpoint Reference</a>
+    <a href="#compare" class="toc-item">8. Comparison</a>
+    <a href="#principles" class="toc-item">9. Design Principles</a>
+  </div>
+</div>
+
+<!-- 1. ARCHITECTURE OVERVIEW -->
+<div class="section" id="overview">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div>
+      <h2>Architecture <em>Overview</em></h2>
+      <p class="section-desc">The complete governance flow — from agent intent to cryptographic audit trail.</p>
+    </div>
+  </div>
+
+  <div class="arch-diagram">
+    <pre>
+<span class="aw">                    VERISIGIL GOVERNANCE ARCHITECTURE v0.6.1</span>
+<span class="ac">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="aw">  AI AGENT</span>
+  <span class="ac">│</span>
+  <span class="ac">│  wants to execute: payment($50,000) · delete(500 records) · deploy(prod)</span>
+  <span class="ac">│</span>
+  <span class="ac">▼</span>
+<span class="ac">┌─────────────────────────────────────────────────────────────────────────┐</span>
+<span class="ac">│                    LAYER 1 — IDENTITY GATE                              │</span>
+<span class="ac">│  Ed25519 passport verification · trust score check · shadow detection   │</span>
+<span class="ac">│  POST /v1/guard/verify                                          &lt;50ms   │</span>
+<span class="ac">└─────────────────────────────────────────────────────────────────────────┘</span>
+  <span class="ac">│</span>
+  <span class="ac">├──────────────────┬──────────────────────────────┐</span>
+  <span class="ac">│</span>                  <span class="ac">│</span>                              <span class="ac">│</span>
+  <span class="ag">▼ ALLOW</span>           <span class="aa">▼ REQUIRE_HUMAN_APPROVAL</span>       <span class="ar">▼ DENY</span>
+<span class="ag">┌──────────┐</span>      <span class="aa">┌──────────────────────┐</span>       <span class="ar">┌──────────┐</span>
+<span class="ag">│  EXECUTE │</span>      <span class="aa">│  EMAIL → APPROVER    │</span>       <span class="ar">│  BLOCK   │</span>
+<span class="ag">│  action  │</span>      <span class="aa">│  approve.html        │</span>       <span class="ar">│  reason  │</span>
+<span class="ag">└──────────┘</span>      <span class="aa">│  → APPROVED → exec   │</span>       <span class="ar">│  returned│</span>
+                  <span class="aa">│  → REJECTED → block  │</span>       <span class="ar">└──────────┘</span>
+                  <span class="aa">└──────────────────────┘</span>
+  <span class="ac">│</span>                  <span class="ac">│</span>                              <span class="ac">│</span>
+  <span class="ac">└──────────────────┴──────────────────────────────┘</span>
+  <span class="ac">│</span>
+  <span class="ac">▼  ALL PATHS — every decision logged</span>
+<span class="ag">┌─────────────────────────────────────────────────────────────────────────┐</span>
+<span class="ag">│                    MERKLE CHAIN AUDIT TRAIL                              │</span>
+<span class="ag">│  Ed25519 signed · hash_chained · merkle_root · tamper_evident: true     │</span>
+<span class="ag">│  drift_detected: false · replay_verifiable · 6mo+ retention             │</span>
+<span class="ag">└─────────────────────────────────────────────────────────────────────────┘</span>
+
+<span class="ac">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="aw">  ADVANCED GOVERNANCE LAYERS (v0.6.x)</span>
+
+<span class="ap">  PROGRESSION ADMISSIBILITY</span>  <span class="ac">→ POST /v1/progression/evaluate</span>
+  <span class="ac">Should this state transition be permitted given trajectory +</span>
+  <span class="ac">authority + evidence + consequence level?</span>
+
+<span class="ac">  OPERATIONAL STATE GOVERNANCE</span>  <span class="ac">→ POST /v1/transitions/map</span>
+  <span class="ac">What transitions remain permissible before consequence binds?</span>
+  <span class="ac">Conditions change → permissions auto-revoked. Zero manual intervention.</span>
+
+<span class="ag">  CHAIN PROVENANCE</span>  <span class="ac">→ POST /v1/chain/provenance/start</span>
+  <span class="ac">Agent A → Agent B → Agent C · full attribution · cryptographic proof</span>
+
+<span class="aa">  CONTINUOUS ADMISSIBILITY</span>  <span class="ac">→ POST /v1/continuous/check</span>
+  <span class="ac">Long-running agents monitored every 30s · trust degraded? PAUSE</span>
+    </pre>
+  </div>
+</div>
+
+<!-- 2. GOVERNANCE STACK -->
+<div class="section" id="stack">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div>
+      <h2>The Governance <em>Stack</em></h2>
+      <p class="section-desc">Eight layers of enforcement — from cryptographic identity to operational state governance.</p>
+    </div>
+  </div>
+
+  <div class="layers">
+    <div class="layer-card l1">
+      <div class="lc-left">
+        <div class="lc-name">Layer 1 · Identity</div>
+        <div class="lc-endpoint">POST /v1/passport/issue</div>
+      </div>
+      <div class="lc-desc">Ed25519 cryptographic passport issued to every AI agent. W3C DID standard. Publicly verifiable. Signature checked on every Runtime Guard call. Shadow clone detection blocks impersonation.</div>
+      <div class="lc-status ls-live">LIVE</div>
+    </div>
+    <div class="layer-card l2">
+      <div class="lc-left">
+        <div class="lc-name">Layer 2 · Runtime Guard</div>
+        <div class="lc-endpoint">POST /v1/guard/verify</div>
+      </div>
+      <div class="lc-desc">Every agent action intercepted before execution. Identity verified, trust scored, policy evaluated. Returns ALLOW / DENY / REQUIRE_HUMAN_APPROVAL in under 50ms. The mandatory gate.</div>
+      <div class="lc-status ls-live">LIVE</div>
+    </div>
+    <div class="layer-card l3">
+      <div class="lc-left">
+        <div class="lc-name">Layer 3 · Policy Engine</div>
+        <div class="lc-endpoint">POST /v1/policy</div>
+      </div>
+      <div class="lc-desc">Customer-configurable enforcement rules per action type, per organization. Payment thresholds, data access controls, tool use restrictions, delete safeguards. Customer policy overrides platform defaults.</div>
+      <div class="lc-status ls-live">LIVE</div>
+    </div>
+    <div class="layer-card l4">
+      <div class="lc-left">
+        <div class="lc-name">Layer 4 · Human Approval</div>
+        <div class="lc-endpoint">GET /v1/approvals</div>
+      </div>
+      <div class="lc-desc">When Runtime Guard escalates — approver emailed automatically. Secure web console shows agent identity, action, risk reason. Approve or reject with one click. Agent cannot execute without explicit human approval. Article 14 EU AI Act enforced by infrastructure.</div>
+      <div class="lc-status ls-live">LIVE</div>
+    </div>
+    <div class="layer-card l5">
+      <div class="lc-left">
+        <div class="lc-name">Layer 5 · Merkle Chain</div>
+        <div class="lc-endpoint">GET /v1/chain</div>
+      </div>
+      <div class="lc-desc">Every governance decision chained to previous with Ed25519 signature. hash_match, policy_match, decision_match all verifiable. Replay any decision — same hash every time. Article 12 EU AI Act satisfied from first decision.</div>
+      <div class="lc-status ls-live">LIVE</div>
+    </div>
+    <div class="layer-card l6">
+      <div class="lc-left">
+        <div class="lc-name">Layer 6 · Progression Admissibility</div>
+        <div class="lc-endpoint">POST /v1/progression/evaluate</div>
+      </div>
+      <div class="lc-desc">Not just 'is this agent trusted' but 'should this specific state transition be permitted now?' Evaluates trajectory coherence, authority sufficiency, evidence completeness, consequence level. The layer beyond action enforcement.</div>
+      <div class="lc-status ls-new">v0.6.0</div>
+    </div>
+    <div class="layer-card l7">
+      <div class="lc-left">
+        <div class="lc-name">Layer 7 · Operational State</div>
+        <div class="lc-endpoint">POST /v1/transitions/map</div>
+      </div>
+      <div class="lc-desc">Maps the full space of permissible transitions given current operational state. Detects consequence binding points — the exact moment a decision becomes irreversible. Conditions change → permissions auto-revoked. Zero manual intervention.</div>
+      <div class="lc-status ls-new">v0.6.1</div>
+    </div>
+    <div class="layer-card l8">
+      <div class="lc-left">
+        <div class="lc-name">Layer 8 · Runtime Governance</div>
+        <div class="lc-endpoint">POST /v1/continuous/check</div>
+      </div>
+      <div class="lc-desc">Agent Chain Provenance tracks A→B→C attribution. Continuous Admissibility monitors long-running agents every 30 seconds. Survivability Scoring predicts failure recovery. Runtime Revalidation re-checks approvals at every workflow checkpoint.</div>
+      <div class="lc-status ls-new">v0.6.0</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. DECISION MODEL -->
+<div class="section" id="decisions">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div>
+      <h2>The Decision <em>Model</em></h2>
+      <p class="section-desc">Three outcomes. Every path cryptographically logged.</p>
+    </div>
+  </div>
+
+  <div class="decision-flow">
+    <div class="df-card df-allow">
+      <div class="df-icon">✅</div>
+      <div class="df-name">ALLOW</div>
+      <div class="df-desc">Identity verified. Trust sufficient. Action within policy bounds. Agent executes immediately. Full audit entry written to Merkle chain.</div>
+      <div class="df-chain">chain_block: { hash, merkle_root, tamper_evident: true }</div>
+    </div>
+    <div class="df-card df-deny">
+      <div class="df-icon">🚫</div>
+      <div class="df-name">DENY</div>
+      <div class="df-desc">Hard block. Passport revoked, expired, cloned — or trust below minimum. Policy violation. Agent cannot proceed under any circumstances.</div>
+      <div class="df-chain">reason + confidence returned · decision chained</div>
+    </div>
+    <div class="df-card df-human">
+      <div class="df-icon">👤</div>
+      <div class="df-name">REQUIRE_HUMAN_APPROVAL</div>
+      <div class="df-desc">Action paused. Approver emailed automatically with full context. Agent waits. Executes only after explicit human approval on secure console.</div>
+      <div class="df-chain">approval_url + approval_id returned · 24hr expiry</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-title">RUNTIME GUARD RESPONSE</div>
+      <div class="code-lang">JSON</div>
+    </div>
+    <div class="code-body"><pre>{
+  <span class="ck">"decision"</span>:     <span class="cs">"REQUIRE_HUMAN_APPROVAL"</span>,
+  <span class="ck">"confidence"</span>:   <span class="cv">0.94</span>,
+  <span class="ck">"reason"</span>:       <span class="cs">"Payment $50,000 exceeds auto-allow threshold ($1,000)"</span>,
+  <span class="ck">"trust_score"</span>:  <span class="cv">0.963</span>,
+  <span class="ck">"trust_level"</span>:  <span class="cs">"TRUSTED"</span>,
+  <span class="ck">"approval_url"</span>: <span class="cs">"https://verisigilai.com/approve.html?id=apr_x7f2a1b"</span>,
+  <span class="ck">"execution_id"</span>: <span class="cs">"exec_4d8f2a1b"</span>,
+  <span class="ck">"latency_ms"</span>:   <span class="cv">42</span>,
+  <span class="ck">"chain_block"</span>: {
+    <span class="ck">"block_hash"</span>:    <span class="cs">"9eea84dceb9eace9d5bae660a7925968..."</span>,
+    <span class="ck">"merkle_root"</span>:   <span class="cs">"9eea84dceb9eace9d5bae660a7925968..."</span>,
+    <span class="ck">"block_index"</span>:   <span class="cv">47</span>,
+    <span class="ck">"tamper_evident"</span>:<span class="cv">true</span>
+  }
+}</pre></div>
+  </div>
+</div>
+
+<!-- 4. MERKLE CHAIN -->
+<div class="section" id="chain">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div>
+      <h2>Merkle Chain <em>Audit Trail</em></h2>
+      <p class="section-desc">Every governance decision chained. Tamper-evident. Replay-verifiable. Article 12 EU AI Act satisfied.</p>
+    </div>
+  </div>
+
+  <div class="merkle-diagram">
+    <div class="md-title">⛓ Chain Structure</div>
+    <pre style="font-family:var(--mono);font-size:11px;line-height:2;color:#64748B;">
+  <span style="color:var(--slate)">GENESIS</span>
+      │
+      ▼
+  <span style="color:var(--cyan)">Block #0</span>  hash: <span style="color:var(--green)">sha256(genesis|exec_001|agent|payment|ALLOW|...)</span>
+      │       merkle_root: <span style="color:var(--green)">sha256(block_0_hash)</span>
+      │
+      ▼
+  <span style="color:var(--cyan)">Block #1</span>  hash: <span style="color:var(--green)">sha256(block_0_hash|exec_002|agent|delete|DENY|...)</span>
+      │       merkle_root: <span style="color:var(--green)">sha256(block_0_hash + block_1_hash)</span>
+      │
+      ▼
+  <span style="color:var(--cyan)">Block #N</span>  hash: <span style="color:var(--green)">sha256(block_N-1_hash|exec_N|agent|action|decision|...)</span>
+              merkle_root: <span style="color:var(--green)">sha256(all previous hashes)</span>
+
+  <span style="color:var(--amber)">Verification:</span> replay(exec_id) → same inputs → same hash → <span style="color:var(--green)">hash_match: true</span>
+  <span style="color:var(--amber)">Tampering:</span>    change any field → hash mismatch → <span style="color:var(--red)">drift_detected: true</span>
+    </pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-title">REPLAY VALIDATION — SAME DECISION 6 MONTHS LATER</div>
+      <div class="code-lang">JSON · GET /v1/chain/replay/{execution_id}</div>
+    </div>
+    <div class="code-body"><pre>{
+  <span class="ck">"execution_id"</span>:   <span class="cs">"exec_4d8f2a1b"</span>,
+  <span class="ck">"original_hash"</span>:  <span class="cs">"9eea84dceb9eace9d5bae660a7925968cc134d45..."</span>,
+  <span class="ck">"replay_hash"</span>:    <span class="cs">"9eea84dceb9eace9d5bae660a7925968cc134d45..."</span>,
+  <span class="ck">"hash_match"</span>:     <span class="cv">true</span>,
+  <span class="ck">"policy_match"</span>:   <span class="cv">true</span>,
+  <span class="ck">"decision_match"</span>: <span class="cv">true</span>,
+  <span class="ck">"deterministic"</span>:  <span class="cv">true</span>,
+  <span class="ck">"drift_detected"</span>: <span class="cv">false</span>,
+  <span class="ck">"immutable_audit"</span>: {
+    <span class="ck">"chain_integrity"</span>: <span class="cs">"verified"</span>,
+    <span class="ck">"tamper_evident"</span>:  <span class="cv">true</span>
+  }
+}</pre></div>
+  </div>
+</div>
+
+<!-- 5. PROGRESSION ADMISSIBILITY -->
+<div class="section" id="progression">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div>
+      <h2>Progression <em>Admissibility</em></h2>
+      <p class="section-desc">"Should this specific state transition be permitted now?" — four dimensions evaluated before any workflow step proceeds.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-title">PROGRESSION EVALUATION — 4 DIMENSIONS</div>
+      <div class="code-lang">JSON · POST /v1/progression/evaluate</div>
+    </div>
+    <div class="code-body"><pre><span class="cc">// Input — workflow context</span>
+{
+  <span class="ck">"agent_id"</span>:        <span class="cs">"vsa_1483d06a89c4"</span>,
+  <span class="ck">"workflow_id"</span>:     <span class="cs">"wf_payment_001"</span>,
+  <span class="ck">"current_step"</span>:    <span class="cv">3</span>,
+  <span class="ck">"total_steps"</span>:     <span class="cv">5</span>,
+  <span class="ck">"previous_steps"</span>:  [
+    {<span class="ck">"action"</span>: <span class="cs">"verify_recipient"</span>, <span class="ck">"status"</span>: <span class="cs">"completed"</span>},
+    {<span class="ck">"action"</span>: <span class="cs">"check_balance"</span>,    <span class="ck">"status"</span>: <span class="cs">"completed"</span>}
+  ],
+  <span class="ck">"intended_action"</span>: <span class="cs">"transfer_funds"</span>,
+  <span class="ck">"evidence"</span>: {
+    <span class="ck">"amount_usd"</span>:             <span class="cv">50000</span>,
+    <span class="ck">"business_justification"</span>: <span class="cs">"Vendor Q2 payment"</span>,
+    <span class="ck">"approval_chain"</span>:         <span class="cs">"manager_approved"</span>
+  },
+  <span class="ck">"consequence_level"</span>: <span class="cs">"HIGH"</span>
+}
+
+<span class="cc">// Output — 4 dimensions evaluated</span>
+{
+  <span class="ck">"decision"</span>:             <span class="cs">"PROGRESSION_ALLOWED"</span>,
+  <span class="ck">"trajectory_coherent"</span>:  <span class="cv">true</span>,   <span class="cc">// ✓ prior steps logical</span>
+  <span class="ck">"authority_level"</span>:      <span class="cs">"SOVEREIGN"</span>, <span class="cc">// ✓ meets ADMIN requirement</span>
+  <span class="ck">"evidence_sufficient"</span>:  <span class="cv">true</span>,   <span class="cc">// ✓ approval_chain present</span>
+  <span class="ck">"trust_score"</span>:          <span class="cv">0.97</span>,
+  <span class="ck">"latency_ms"</span>:           <span class="cv">0.12</span>,
+  <span class="ck">"chain_block"</span>: {
+    <span class="ck">"block_hash"</span>:    <span class="cs">"9eea84dceb9eace9..."</span>,
+    <span class="ck">"tamper_evident"</span>:<span class="cv">true</span>
+  }
+}</pre></div>
+  </div>
+</div>
+
+<!-- 6. OPERATIONAL STATE -->
+<div class="section" id="operational">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div>
+      <h2>Operational State <em>Governance</em></h2>
+      <p class="section-desc">"What state transitions remain permissible under current conditions before consequence binds?" — the layer that answers Brian Hodak's question.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-title">CONDITION CHANGE → AUTO-REVOCATION</div>
+      <div class="code-lang">JSON · POST /v1/conditions/update</div>
+    </div>
+    <div class="code-body"><pre><span class="cc">// Trust degrades 0.963 → 0.72 + anomaly detected</span>
+{
+  <span class="ck">"conditions_changed"</span>: <span class="cv">true</span>,
+  <span class="ck">"changes_detected"</span>: [<span class="cs">"Trust degraded by 0.243"</span>, <span class="cs">"New alerts: anomaly_detected"</span>],
+  <span class="ck">"authority_level"</span>:   <span class="cs">"BASIC"</span>,
+  <span class="ck">"revoked"</span>: [
+    {<span class="ck">"permission"</span>: <span class="cs">"payment"</span>,        <span class="ck">"reason"</span>: <span class="cs">"BASIC insufficient for HIGH"</span>},
+    {<span class="ck">"permission"</span>: <span class="cs">"transfer_funds"</span>,  <span class="ck">"reason"</span>: <span class="cs">"BASIC insufficient for HIGH"</span>},
+    {<span class="ck">"permission"</span>: <span class="cs">"send_email"</span>,      <span class="ck">"reason"</span>: <span class="cs">"BASIC insufficient for MEDIUM"</span>}
+  ],
+  <span class="ck">"maintained"</span>:      [<span class="cs">"web_search"</span>],
+  <span class="ck">"auto_revoked"</span>:    <span class="cv">true</span>,
+  <span class="ck">"recommendation"</span>:  <span class="cs">"IMMEDIATE_ACTION — 3 permissions auto-revoked"</span>
+}
+<span class="cc">// Zero manual intervention required</span></pre></div>
+  </div>
+</div>
+
+<!-- 7. ENDPOINTS -->
+<div class="section" id="endpoints">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div>
+      <h2>Full <em>Endpoint Reference</em></h2>
+      <p class="section-desc">Every endpoint live at verisigil-api-production.up.railway.app</p>
+    </div>
+  </div>
+
+  <div class="endpoints">
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/health</div><div class="ep-desc">System health — version, uptime, feature status</div></div>
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/status</div><div class="ep-desc">Public status page — all services operational status</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/passport/issue</div><div class="ep-desc">Issue Ed25519 cryptographic passport to AI agent</div></div>
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/verify/{agent_id}</div><div class="ep-desc">Public passport verification — no auth required</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/guard/verify</div><div class="ep-desc">Runtime Guard — ALLOW/DENY/REQUIRE_HUMAN_APPROVAL in &lt;50ms</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/policy</div><div class="ep-desc">Set customer policy override per action type</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/policy/test</div><div class="ep-desc">Simulate policy decision without logging</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/progression/evaluate</div><div class="ep-desc">Progression admissibility — 4-dimension evaluation</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/transitions/map</div><div class="ep-desc">Map permissible transition space under current conditions</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/transitions/binding-point</div><div class="ep-desc">Detect consequence binding point — last intervention opportunity</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/conditions/update</div><div class="ep-desc">Update operational conditions — auto-revokes permissions</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/continuous/start</div><div class="ep-desc">Start continuous admissibility monitoring</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/continuous/check</div><div class="ep-desc">Periodic admissibility check — ADMISSIBLE/PAUSE/HALT</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/survivability/score</div><div class="ep-desc">Score execution survivability — 0.0 catastrophic → 1.0 recoverable</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/revalidate</div><div class="ep-desc">Revalidate approval at new workflow checkpoint</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/chain/provenance/start</div><div class="ep-desc">Start agent chain — multi-agent provenance tracking</div></div>
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/v1/chain</div><div class="ep-desc">Get Merkle chain — all blocks with root</div></div>
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/v1/chain/verify</div><div class="ep-desc">Verify chain integrity — recomputes every hash</div></div>
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/v1/chain/replay/{id}</div><div class="ep-desc">Replay any past decision — proves determinism</div></div>
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/v1/governance/summary</div><div class="ep-desc">Full governance summary — all layers in one call</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/approvals/create</div><div class="ep-desc">Create approval request manually</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/sprint/run</div><div class="ep-desc">EU AI Act Compliance Sprint — passport + report + email in 60s</div></div>
+    <div class="endpoint"><div class="ep-method ep-post">POST</div><div class="ep-path">/v1/scan</div><div class="ep-desc">Agent config risk scanner</div></div>
+    <div class="endpoint"><div class="ep-method ep-get">GET</div><div class="ep-path">/v1/enforcement/summary</div><div class="ep-desc">Enforcement dashboard — decisions, chain, policy overview</div></div>
+  </div>
+</div>
+
+<!-- 8. COMPARISON -->
+<div class="section" id="compare">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div>
+      <h2>How VeriSigil <em>Compares</em></h2>
+      <p class="section-desc">Governance infrastructure vs observability vs compliance documentation.</p>
+    </div>
+  </div>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>Policy Documents</th>
+        <th>Observability Tools</th>
+        <th>VeriSigil</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Pre-execution enforcement</td><td class="ct-no">✗ None</td><td class="ct-no">✗ None</td><td class="ct-yes">✓ Runtime Guard</td></tr>
+      <tr><td>Cryptographic audit trail</td><td class="ct-no">✗ None</td><td class="ct-partial">~ Logs only</td><td class="ct-yes">✓ Merkle chain</td></tr>
+      <tr><td>Replay verification</td><td class="ct-no">✗ None</td><td class="ct-no">✗ None</td><td class="ct-yes">✓ hash_match: true</td></tr>
+      <tr><td>Human oversight gate</td><td class="ct-partial">~ Policy only</td><td class="ct-no">✗ None</td><td class="ct-yes">✓ Hard gate enforced</td></tr>
+      <tr><td>Article 12 EU AI Act</td><td class="ct-no">✗ Documentation</td><td class="ct-partial">~ Partial</td><td class="ct-yes">✓ Satisfied from day 1</td></tr>
+      <tr><td>Article 14 EU AI Act</td><td class="ct-no">✗ Documentation</td><td class="ct-no">✗ None</td><td class="ct-yes">✓ Enforced by infrastructure</td></tr>
+      <tr><td>Progression admissibility</td><td class="ct-no">✗ None</td><td class="ct-no">✗ None</td><td class="ct-yes">✓ 4-dimension evaluation</td></tr>
+      <tr><td>Consequence binding detection</td><td class="ct-no">✗ None</td><td class="ct-no">✗ None</td><td class="ct-yes">✓ Binding point mapped</td></tr>
+      <tr><td>Auto permission revocation</td><td class="ct-no">✗ None</td><td class="ct-no">✗ None</td><td class="ct-yes">✓ Conditions → auto-revoke</td></tr>
+      <tr><td>Multi-agent provenance</td><td class="ct-no">✗ None</td><td class="ct-partial">~ Tracing only</td><td class="ct-yes">✓ Cryptographic attribution</td></tr>
+      <tr><td>Continuous monitoring</td><td class="ct-no">✗ None</td><td class="ct-partial">~ Alerts only</td><td class="ct-yes">✓ 30s admissibility checks</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 9. DESIGN PRINCIPLES -->
+<div class="section" id="principles">
+  <div class="section-header">
+    <div class="section-num">09</div>
+    <div>
+      <h2>Design <em>Principles</em></h2>
+      <p class="section-desc">The architectural decisions that make VeriSigil different.</p>
+    </div>
+  </div>
+
+  <div class="principles">
+    <div class="principle">
+      <div class="p-num">01</div>
+      <div class="p-title">Enforcement Before Observation</div>
+      <div class="p-desc">Governance must happen before execution — not after. A log proves what happened. A runtime gate prevents the wrong thing from happening. Both matter. Prevention is the harder problem.</div>
+    </div>
+    <div class="principle">
+      <div class="p-num">02</div>
+      <div class="p-title">Infrastructure Not Documentation</div>
+      <div class="p-desc">Compliance documents do not stop high-risk AI actions. Runtime enforcement does. VeriSigil embeds governance in the execution path — structurally mandatory, not voluntarily adopted.</div>
+    </div>
+    <div class="principle">
+      <div class="p-num">03</div>
+      <div class="p-title">Cryptographic Proof Not Logging</div>
+      <div class="p-desc">Standard logs can be altered. Ed25519 signed, hash-chained Merkle blocks cannot. The same decision replayed six months later produces the same hash. That is evidence, not logging.</div>
+    </div>
+    <div class="principle">
+      <div class="p-num">04</div>
+      <div class="p-title">Deterministic Governance</div>
+      <div class="p-desc">Same inputs always produce same governance decision. Same hash. Same outcome. Governance is not probabilistic. It is deterministic, verifiable, and reproducible by any party.</div>
+    </div>
+    <div class="principle">
+      <div class="p-num">05</div>
+      <div class="p-title">Consequence Before Binding</div>
+      <div class="p-desc">Governance must intervene before consequence binds irreversibly. VeriSigil maps consequence binding points and keeps the intervention window open until the last possible moment.</div>
+    </div>
+    <div class="principle">
+      <div class="p-num">06</div>
+      <div class="p-title">Conditions Drive Permissions</div>
+      <div class="p-desc">Operational conditions change — trust degrades, alerts fire, regulations update. Permissions must auto-revoke when conditions change. No manual intervention. No governance gaps.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-bar">
+  <div class="cta-inner">
+    <div class="cta-text">
+      <h3>Try The Live Infrastructure</h3>
+      <p>Every endpoint live. Every demo calls the real API. Every decision chains to an immutable Merkle audit trail.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="/governed-agent-demo.html" class="btn-c btn-primary">▶ Governed Agent Demo</a>
+      <a href="/progression-demo.html" class="btn-c btn-ghost">Progression Demo</a>
+      <a href="https://verisigil-api-production.up.railway.app/docs" class="btn-c btn-ghost" target="_blank">API Docs →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · Runtime Governance Infrastructure · v0.6.1 · Built in Lagos, Nigeria 🇳🇬</p>
+  <p><a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a> · <a href="/security.html">Security</a> · <a href="/ROADMAP.md">Roadmap</a></p>
+</footer>
+
+</body>
+</html>

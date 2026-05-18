@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Execution Control Infrastructure — VeriSigil AI</title>
+<meta name="description" content="VeriSigil AI is Execution Control Infrastructure — the runtime control layer between AI capability and real-world consequence. Formally verified. Jurisdiction-aware. Offline verifiable.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020810;--bg2:#060F1E;--bg3:#0A1628;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --red:#FF4D6A;--purple:#7C3AED;
+  --white:#F0F8FF;--mid:#4A6FA5;--dim:#1A2E4A;
+  --mono:'JetBrains Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--mono);background:var(--bg);color:var(--white);font-size:13px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;border-bottom:1px solid rgba(0,212,245,0.1);background:rgba(2,8,16,0.95);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:var(--display);font-size:16px;font-weight:800;color:var(--cyan);text-decoration:none;}
+.nav-links{display:flex;gap:24px;}
+.nav-links a{font-size:11px;color:var(--mid);text-decoration:none;}
+.nav-links a:hover{color:var(--cyan);}
+
+/* HERO */
+.hero{text-align:center;padding:80px 24px 60px;max-width:800px;margin:0 auto;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--cyan);background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.2);padding:5px 16px;border-radius:20px;margin-bottom:24px;}
+.hero h1{font-family:var(--display);font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-0.03em;line-height:1.05;margin-bottom:20px;}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero-sub{font-size:14px;color:var(--mid);max-width:600px;margin:0 auto 32px;line-height:1.8;}
+.hero-quote{font-size:13px;color:rgba(0,212,245,0.7);border-left:2px solid var(--cyan);padding:12px 20px;text-align:left;margin:0 auto;max-width:580px;font-style:italic;}
+
+/* THESIS */
+.thesis{max-width:760px;margin:0 auto 60px;padding:0 24px;text-align:center;}
+.thesis-flow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:32px 0;}
+.thesis-node{background:var(--bg2);border:1px solid rgba(0,212,245,0.15);padding:10px 20px;border-radius:8px;font-size:12px;font-weight:700;}
+.thesis-node.highlight{border-color:var(--cyan);color:var(--cyan);}
+.thesis-arrow{color:var(--mid);font-size:16px;}
+.thesis-statement{background:rgba(0,212,245,0.04);border:1px solid rgba(0,212,245,0.15);border-radius:12px;padding:24px;margin-top:24px;font-size:14px;line-height:1.8;color:var(--white);}
+.thesis-statement strong{color:var(--cyan);}
+
+/* SEVEN QUESTIONS */
+.seven{max-width:960px;margin:0 auto 60px;padding:0 24px;}
+.section-title{font-family:var(--display);font-size:22px;font-weight:800;margin-bottom:8px;text-align:center;}
+.section-sub{font-size:12px;color:var(--mid);text-align:center;margin-bottom:36px;}
+.questions-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.q-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;}
+.q-number{font-size:10px;color:var(--mid);margin-bottom:8px;}
+.q-question{font-size:13px;font-weight:700;color:var(--amber);margin-bottom:10px;}
+.q-answer{font-size:11px;color:var(--mid);line-height:1.6;margin-bottom:8px;}
+.q-spec{font-size:10px;color:var(--cyan);background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.15);padding:3px 10px;border-radius:10px;display:inline-block;}
+.q-endpoint{font-size:10px;color:rgba(0,230,118,0.8);margin-top:6px;}
+
+/* PROOF LAYER */
+.proofs{max-width:960px;margin:0 auto 60px;padding:0 24px;}
+.proofs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.proof-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;text-align:center;}
+.proof-icon{font-size:28px;margin-bottom:10px;}
+.proof-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.proof-detail{font-size:10px;color:var(--mid);line-height:1.6;}
+.proof-badge{display:inline-block;margin-top:8px;font-size:9px;font-weight:700;padding:2px 10px;border-radius:10px;background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+
+/* POSITIONING */
+.position{max-width:760px;margin:0 auto 60px;padding:0 24px;}
+.position-table{width:100%;border-collapse:collapse;}
+.position-table th{font-size:10px;font-weight:700;color:var(--mid);text-align:left;padding:8px 12px;border-bottom:1px solid var(--dim);}
+.position-table td{font-size:11px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.position-table td:first-child{color:var(--white);font-weight:700;}
+.position-table td.yes{color:var(--green);}
+.position-table td.partial{color:var(--amber);}
+.position-table td.no{color:var(--red);}
+
+/* CTA */
+.cta{text-align:center;padding:60px 24px;max-width:600px;margin:0 auto;}
+.cta h2{font-family:var(--display);font-size:28px;font-weight:800;margin-bottom:16px;}
+.cta p{font-size:13px;color:var(--mid);margin-bottom:28px;line-height:1.8;}
+.cta-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:var(--cyan);color:#000;font-family:var(--mono);font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;}
+.btn-secondary{background:transparent;color:var(--cyan);font-family:var(--mono);font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;border:1px solid rgba(0,212,245,0.3);}
+.doi-badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--mid);margin-top:20px;}
+.doi-badge a{color:var(--cyan);text-decoration:none;}
+
+footer{border-top:1px solid rgba(0,212,245,0.08);padding:24px 36px;text-align:center;font-size:11px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <div class="nav-links">
+    <a href="https://verisigilai.com/architecture.html">Architecture</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a>
+    <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank">Specification</a>
+    <a href="https://verisigilai.com">Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">⬡ Execution Control Infrastructure</div>
+  <h1>The Runtime Layer Between<br><em>AI Capability</em> and<br>Real-World Consequence</h1>
+  <p class="hero-sub">Models create capability. Agents create execution. Execution creates consequence. Consequence requires control. VeriSigil is the runtime enforcement layer that proves — before action becomes real — whether execution was admissible.</p>
+  <div class="hero-quote">"The scarce layer is no longer intelligence. The scarce layer is admissibility." — Philip Pinol, ThePraesidium.ai</div>
+</div>
+
+<!-- THESIS -->
+<div class="thesis">
+  <div class="thesis-flow">
+    <div class="thesis-node">Model</div>
+    <div class="thesis-arrow">→</div>
+    <div class="thesis-node">Agent</div>
+    <div class="thesis-arrow">→</div>
+    <div class="thesis-node highlight">⬡ VeriSigil</div>
+    <div class="thesis-arrow">→</div>
+    <div class="thesis-node">Execution</div>
+    <div class="thesis-arrow">→</div>
+    <div class="thesis-node">Consequence</div>
+  </div>
+  <div class="thesis-statement">
+    VeriSigil determines whether autonomous actions remain <strong>continuously admissible</strong> under changing authority, jurisdiction, and operational conditions <strong>before execution becomes consequential</strong> — and proves it cryptographically, formally, and offline.
+  </div>
+</div>
+
+<!-- SEVEN QUESTIONS -->
+<div class="seven">
+  <div class="section-title">The Seven Questions of Execution Control</div>
+  <div class="section-sub">VeriSigil answers all seven — at runtime, before action becomes real</div>
+  <div class="questions-grid">
+
+    <div class="q-card">
+      <div class="q-number">Question 01</div>
+      <div class="q-question">Was the action authorized?</div>
+      <div class="q-answer">Execution Authority Token binds authority at issuance time. Cannot be inflated after the fact. Monotonic authority reduction enforced.</div>
+      <span class="q-spec">VGS-006 EAT</span>
+      <div class="q-endpoint">POST /v1/eat/issue · POST /v1/eat/validate</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-number">Question 02</div>
+      <div class="q-question">Was the policy current?</div>
+      <div class="q-answer">Runtime Guard evaluates at execution time — no cached decisions, no stale policies. &lt;250ms latency bound. Fail-closed on timeout.</div>
+      <span class="q-spec">VGS-001 VER-INV-009</span>
+      <div class="q-endpoint">POST /v1/guard/verify</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-number">Question 03</div>
+      <div class="q-question">Was the evidence sufficient?</div>
+      <div class="q-answer">Classification hash binds evidence class + payload + timestamp at write time. Reclassification produces different hash — structurally detectable. Harold Nunes validated.</div>
+      <span class="q-spec">VGS-007 VER-INV-001</span>
+      <div class="q-endpoint">POST /v1/evidence/verify</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-number">Question 04</div>
+      <div class="q-question">Did the state change?</div>
+      <div class="q-answer">Governance state machine formally verified in TLA+. 3,497 states explored. 0 errors. All transitions proven. Unlisted transitions are impossible by construction.</div>
+      <span class="q-spec">VGS-002 TLA+ Verified</span>
+      <div class="q-endpoint">GET /v1/chain/verify</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-number">Question 05</div>
+      <div class="q-question">Was escalation required?</div>
+      <div class="q-answer">REFUSED vs DENY distinction. REFUSED = governance boundary correctly enforced (positive signal). DENY = trust failure. Named approver. Defined SLA. Immutable record.</div>
+      <span class="q-spec">VGS-003 ISDAIRE</span>
+      <div class="q-endpoint">POST /v1/isdaire/certificate</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-number">Question 06</div>
+      <div class="q-question">Was the outcome verifiable?</div>
+      <div class="q-answer">Temporal Admissibility Proof answers: "Was this STILL admissible at exact execution moment?" Cryptographically proven. Offline verifiable. No platform required.</div>
+      <span class="q-spec">VGS-011 TAP</span>
+      <div class="q-endpoint">POST /v1/temporal/prove · /v1/temporal/verify</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-number">Question 07</div>
+      <div class="q-question">Did proof survive?</div>
+      <div class="q-answer">Offline forensic verifier produces independent verification from exported package alone. No servers. No operator. No platform. Governance receipts survive the platform that issued them.</div>
+      <span class="q-spec">VGS-008 Zenodo DOI</span>
+      <div class="q-endpoint">POST /v1/governance/replay</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PROOF LAYER -->
+<div class="proofs">
+  <div class="section-title">Protocol-Grade. Not Application-Grade.</div>
+  <div class="section-sub">Not claims. Proofs.</div>
+  <div class="proofs-grid">
+
+    <div class="proof-card">
+      <div class="proof-icon">🔬</div>
+      <div class="proof-title">Z3 Formal Proofs</div>
+      <div class="proof-detail">4 critical invariants proven UNSAT. No counterexample exists for any possible input.</div>
+      <div class="proof-badge">MATHEMATICALLY PROVEN</div>
+    </div>
+
+    <div class="proof-card">
+      <div class="proof-icon">📐</div>
+      <div class="proof-title">TLA+ Model Checker</div>
+      <div class="proof-detail">3,497 states explored. 0 errors. 5 safety theorems. 2 liveness properties.</div>
+      <div class="proof-badge">TLC VERIFIED</div>
+    </div>
+
+    <div class="proof-card">
+      <div class="proof-icon">🧪</div>
+      <div class="proof-title">96 Conformance Vectors</div>
+      <div class="proof-detail">Deterministic. Python + Node.js cross-runtime parity verified. All passing.</div>
+      <div class="proof-badge">ALL PASSING</div>
+    </div>
+
+    <div class="proof-card">
+      <div class="proof-icon">🔐</div>
+      <div class="proof-title">Post-Quantum Crypto</div>
+      <div class="proof-detail">Dilithium-3 (NIST FIPS 204) + Ed25519 dual signing on every governance receipt.</div>
+      <div class="proof-badge">PQ SECURE</div>
+    </div>
+
+    <div class="proof-card">
+      <div class="proof-icon">📜</div>
+      <div class="proof-title">Zenodo DOI</div>
+      <div class="proof-detail">VGS-001 through VGS-012 formally published. Permanently citable. CC BY 4.0.</div>
+      <div class="proof-badge">DOI PUBLISHED</div>
+    </div>
+
+    <div class="proof-card">
+      <div class="proof-icon">🌍</div>
+      <div class="proof-title">Jurisdiction-Aware</div>
+      <div class="proof-detail">EU AI Act · US NIST · China AI Law · GCC DIFC. Multi-sovereign conflict resolution.</div>
+      <div class="proof-badge">4 SOVEREIGN REGIMES</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- POSITIONING TABLE -->
+<div class="position">
+  <div class="section-title">How VeriSigil Compares</div>
+  <div class="section-sub">Execution Control Infrastructure requires all seven layers</div>
+  <table class="position-table">
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>VeriSigil</th>
+        <th>Dashboards</th>
+        <th>Audit Logs</th>
+        <th>Guardrails</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Pre-execution enforcement</td><td class="yes">✓ Runtime</td><td class="no">✗</td><td class="no">✗ Post-hoc</td><td class="partial">~ Partial</td></tr>
+      <tr><td>Formal mathematical proofs</td><td class="yes">✓ Z3 + TLA+</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Jurisdiction-aware</td><td class="yes">✓ EU/US/CN/GCC</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Offline verification</td><td class="yes">✓ No platform</td><td class="no">✗</td><td class="partial">~ Partial</td><td class="no">✗</td></tr>
+      <tr><td>Temporal admissibility proof</td><td class="yes">✓ Cryptographic</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Conformance vectors</td><td class="yes">✓ 96 vectors</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Published DOI specification</td><td class="yes">✓ Zenodo</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Post-quantum cryptography</td><td class="yes">✓ Dilithium-3</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Execution Control Infrastructure — Live Today</h2>
+  <p>VGS-001 through VGS-012. Formally verified. Jurisdiction-aware. Offline verifiable. The runtime layer between AI capability and real-world consequence.</p>
+  <div class="cta-buttons">
+    <a href="https://verisigil-api-production.up.railway.app/docs" class="btn-primary">Try Live API</a>
+    <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank" class="btn-secondary">Read Specification</a>
+  </div>
+  <div class="doi-badge">
+    Formally published · <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank">DOI: 10.5281/zenodo.20264923</a> · CC BY 4.0
+  </div>
+</div>
+
+<footer>
+  <p>⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · Execution Control Infrastructure · VGS-001 to VGS-012 · Built in Lagos, Nigeria 🇳🇬</p>
+</footer>
+
+</body>
+</html>

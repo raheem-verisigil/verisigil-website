@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governance Failure Simulator — VeriSigil AI</title>
+<meta name="description" content="Simulate real AI governance failures: stale authority, expired delegation, spoofed invoice, jurisdiction conflict. Watch VeriSigil detect and halt each one.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020810;--bg2:#060F1E;--bg3:#0A1628;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --red:#FF4D6A;--purple:#7C3AED;
+  --white:#F0F8FF;--mid:#4A6FA5;--dim:#1A2E4A;
+  --mono:'JetBrains Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--mono);background:var(--bg);color:var(--white);font-size:12px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+*{position:relative;z-index:1;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid rgba(0,212,245,0.1);background:rgba(2,8,16,0.95);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:var(--display);font-size:15px;font-weight:800;color:var(--cyan);text-decoration:none;}
+.nav-back{font-size:11px;color:var(--mid);text-decoration:none;}
+
+.header{text-align:center;padding:48px 24px 32px;max-width:760px;margin:0 auto;}
+.header-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);background:rgba(255,77,106,0.06);border:1px solid rgba(255,77,106,0.2);padding:5px 14px;border-radius:20px;margin-bottom:20px;}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.header h1{font-family:var(--display);font-size:clamp(22px,4vw,40px);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:12px;}
+.header h1 em{font-style:normal;color:var(--red);}
+.header p{font-size:13px;color:var(--mid);max-width:560px;margin:0 auto;}
+
+/* SCENARIO GRID */
+.scenarios{max-width:1000px;margin:0 auto;padding:0 24px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:768px){.scenarios{grid-template-columns:1fr;}}
+
+.scenario-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.2s;}
+.scenario-card:hover{border-color:rgba(255,77,106,0.3);transform:translateY(-2px);}
+.scenario-card.active{border-color:var(--red);box-shadow:0 0 24px rgba(255,77,106,0.15);}
+.sc-header{padding:16px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.sc-icon{font-size:24px;margin-bottom:8px;}
+.sc-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.sc-desc{font-size:10px;color:var(--mid);line-height:1.5;}
+.sc-severity{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.sev-critical{background:rgba(255,77,106,0.1);color:var(--red);border:1px solid rgba(255,77,106,0.2);}
+.sev-high{background:rgba(255,184,0,0.1);color:var(--amber);border:1px solid rgba(255,184,0,0.2);}
+.sc-btn{width:100%;padding:10px;background:rgba(255,77,106,0.08);border:none;color:var(--red);font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;letter-spacing:0.06em;}
+.sc-btn:hover{background:rgba(255,77,106,0.15);}
+
+/* SIMULATION PANEL */
+.sim-panel{max-width:1000px;margin:0 auto 40px;padding:0 24px;display:none;}
+.sim-panel.active{display:block;}
+.sim-inner{background:var(--bg2);border:1px solid rgba(255,77,106,0.2);border-radius:14px;overflow:hidden;}
+.sim-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:space-between;}
+.sim-title{font-size:13px;font-weight:700;color:var(--white);}
+.sim-status{font-size:10px;font-weight:700;padding:4px 12px;border-radius:10px;}
+.status-running{background:rgba(255,184,0,0.1);color:var(--amber);border:1px solid rgba(255,184,0,0.2);}
+.status-failed{background:rgba(255,77,106,0.1);color:var(--red);border:1px solid rgba(255,77,106,0.2);}
+.status-caught{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+
+/* TIMELINE */
+.sim-timeline{padding:16px 20px;display:flex;flex-direction:column;gap:8px;min-height:200px;}
+.sim-step{display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(8px);transition:all 0.3s;}
+.sim-step.visible{opacity:1;transform:translateY(0);}
+.step-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.icon-ok{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.2);}
+.icon-warn{background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.2);}
+.icon-fail{background:rgba(255,77,106,0.1);border:1px solid rgba(255,77,106,0.2);}
+.icon-halt{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);}
+.step-content{flex:1;}
+.step-label{font-size:11px;font-weight:700;color:var(--white);margin-bottom:2px;}
+.step-detail{font-size:10px;color:var(--mid);line-height:1.5;}
+.step-code{font-size:10px;color:var(--cyan);background:#010508;border:1px solid rgba(0,212,245,0.1);border-radius:6px;padding:6px 10px;margin-top:6px;white-space:pre-wrap;}
+
+/* VERDICT */
+.sim-verdict{margin:0 20px 20px;border-radius:10px;padding:16px;display:none;}
+.sim-verdict.show{display:block;}
+.verdict-caught{background:rgba(0,230,118,0.04);border:1px solid rgba(0,230,118,0.2);}
+.verdict-failed{background:rgba(255,77,106,0.04);border:1px solid rgba(255,77,106,0.2);}
+.verdict-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.verdict-caught .verdict-title{color:var(--green);}
+.verdict-failed .verdict-title{color:var(--red);}
+.verdict-body{font-size:11px;color:var(--mid);line-height:1.6;}
+.verdict-endpoint{font-size:10px;color:var(--cyan);margin-top:8px;}
+
+footer{border-top:1px solid rgba(0,212,245,0.08);padding:20px 28px;text-align:center;font-size:11px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <a href="https://verisigilai.com" class="nav-back">← Home</a>
+</nav>
+
+<div class="header">
+  <div class="header-tag"><span class="tag-dot"></span>Governance Failure Simulator · Live</div>
+  <h1>Real Failures.<br><em>Caught Before Damage.</em></h1>
+  <p>Select a failure scenario. Watch VeriSigil detect it at the execution boundary — before the action becomes real.</p>
+</div>
+
+<!-- SCENARIO CARDS -->
+<div class="scenarios">
+
+  <div class="scenario-card" onclick="runScenario('spoofed_invoice')">
+    <div class="sc-header">
+      <div class="sc-icon">🧾</div>
+      <div class="sc-title">Spoofed Invoice Payment</div>
+      <div class="sc-desc">AI agent approves $340,000 vendor payment based on spoofed invoice. Governance documentation complete. Dashboards green.</div>
+      <div class="sc-severity sev-critical">CRITICAL · Financial</div>
+    </div>
+    <button class="sc-btn">▶ Simulate This Failure</button>
+  </div>
+
+  <div class="scenario-card" onclick="runScenario('stale_authority')">
+    <div class="sc-header">
+      <div class="sc-icon">⏰</div>
+      <div class="sc-title">Stale Authorization</div>
+      <div class="sc-desc">Agent executes action 47 minutes after approval expired. Upstream authorization granted. Execution boundary not re-checked.</div>
+      <div class="sc-severity sev-critical">CRITICAL · Authority</div>
+    </div>
+    <button class="sc-btn">▶ Simulate This Failure</button>
+  </div>
+
+  <div class="scenario-card" onclick="runScenario('delegation_collapse')">
+    <div class="sc-header">
+      <div class="sc-icon">⛓</div>
+      <div class="sc-title">Delegation Chain Collapse</div>
+      <div class="sc-desc">Agent B revoked mid-workflow. Agent C continues executing under B's delegation. No governance system detects the collapse.</div>
+      <div class="sc-severity sev-critical">CRITICAL · Continuity</div>
+    </div>
+    <button class="sc-btn">▶ Simulate This Failure</button>
+  </div>
+
+  <div class="scenario-card" onclick="runScenario('jurisdiction_conflict')">
+    <div class="sc-header">
+      <div class="sc-icon">🌍</div>
+      <div class="sc-title">Jurisdiction Conflict</div>
+      <div class="sc-desc">CN agent processes EU customer data on EU infrastructure. EU AI Act and CN AI Law both apply. Conflicting requirements. No system resolves.</div>
+      <div class="sc-severity sev-critical">CRITICAL · Sovereign</div>
+    </div>
+    <button class="sc-btn">▶ Simulate This Failure</button>
+  </div>
+
+  <div class="scenario-card" onclick="runScenario('evidence_tampering')">
+    <div class="sc-header">
+      <div class="sc-icon">🔏</div>
+      <div class="sc-title">Evidence Reclassification</div>
+      <div class="sc-desc">Policy Violation Record reclassified as Approval Decision Receipt after the fact. Audit trail appears clean. Forensic integrity compromised.</div>
+      <div class="sc-severity sev-critical">CRITICAL · Forensic</div>
+    </div>
+    <button class="sc-btn">▶ Simulate This Failure</button>
+  </div>
+
+  <div class="scenario-card" onclick="runScenario('trust_degradation')">
+    <div class="sc-header">
+      <div class="sc-icon">📉</div>
+      <div class="sc-title">Silent Trust Degradation</div>
+      <div class="sc-desc">Agent trust drops from 0.963 to 0.71 due to anomaly. Permissions not revoked. Agent continues executing HIGH consequence actions.</div>
+      <div class="sc-severity sev-high">HIGH · Identity</div>
+    </div>
+    <button class="sc-btn">▶ Simulate This Failure</button>
+  </div>
+
+</div>
+
+<!-- SIMULATION PANEL -->
+<div class="sim-panel" id="sim-panel">
+  <div class="sim-inner">
+    <div class="sim-header">
+      <div class="sim-title" id="sim-title">Running simulation...</div>
+      <div class="sim-status status-running" id="sim-status">RUNNING</div>
+    </div>
+    <div class="sim-timeline" id="sim-timeline"></div>
+    <div class="sim-verdict" id="sim-verdict"></div>
+  </div>
+</div>
+
+<footer>
+  <p>⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · Governance Failure Simulator · v0.7.2 · Every detection calls the live API</p>
+</footer>
+
+<script>
+const API     = 'https://verisigil-api-production.up.railway.app';
+const API_KEY = 'verisigil-secret-2026';
+
+const SCENARIOS = {
+
+  spoofed_invoice: {
+    title: "Spoofed Invoice — $340,000 Payment",
+    steps: [
+      { icon:"ok",   label:"Agent identity check",         detail:"Agent vsa_invoice_processor presents passport", delay:400 },
+      { icon:"warn", label:"Passport found — no Dilithium-3 binding",  detail:"Ed25519 signature valid. But invoice source not cryptographically bound to agent identity.", delay:800 },
+      { icon:"fail", label:"Runtime Guard intercepts payment",         detail:"POST /v1/guard/verify → amount_usd: $340,000", delay:1200,
+        code:'{\n  "decision": "REQUIRE_HUMAN_APPROVAL",\n  "reason": "Payment $340,000 exceeds auto-allow threshold ($1,000)",\n  "trust_score": 0.963,\n  "approval_url": "https://verisigilai.com/approve.html"\n}' },
+      { icon:"halt", label:"Agent execution HALTED",        detail:"Agent cannot proceed. Awaiting named human approval.", delay:1600 },
+      { icon:"ok",   label:"Merkle chain entry written",    detail:"REQUIRE_HUMAN_APPROVAL decision chained. tamper_evident: true. drift_detected: false.", delay:2000 },
+    ],
+    verdict: "caught",
+    verdict_title: "✓ CAUGHT — $340,000 payment halted before execution",
+    verdict_body: "VeriSigil Runtime Guard intercepted the payment at the execution boundary. Human approval required before any funds move. The spoofed invoice cannot authorize execution — only a named human approver can.",
+    endpoint: "POST /v1/guard/verify → REQUIRE_HUMAN_APPROVAL · VGS-001",
+    api_call: () => fetch(`${API}/v1/guard/verify`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-api-key':API_KEY},
+      body: JSON.stringify({agent_id:'vsa_1483d06a89c4',action_type:'payment',resource:'vendor_payment',action_details:{amount_usd:340000,recipient:'vendor@spoofed.com'}})
+    })
+  },
+
+  stale_authority: {
+    title: "Stale Authorization — 47 Minutes After Expiry",
+    steps: [
+      { icon:"ok",   label:"Original approval granted at T+0",   detail:"Human approved payment action. Approval valid for 24 hours.", delay:400 },
+      { icon:"warn", label:"System clock: T+25 hours",            detail:"Approval expired. No automatic notification sent.", delay:800 },
+      { icon:"fail", label:"Agent attempts execution at T+25h",   detail:"POST /v1/eat/validate → token_id: eat_expired_001", delay:1200,
+        code:'{\n  "valid": false,\n  "reason": "EAT expired at 2026-05-17T23:00:00",\n  "enforcement": "DENY",\n  "schema": "VGS-006"\n}' },
+      { icon:"halt", label:"Execution DENIED — stale authority",  detail:"VGS-006 EAT validation rejected. Expired token cannot authorize execution.", delay:1600 },
+      { icon:"ok",   label:"ATR evidence record created",         detail:"Authority Transition Record classified as ATR. classification_hash bound at write time.", delay:2000 },
+    ],
+    verdict: "caught",
+    verdict_title: "✓ CAUGHT — Stale authorization blocked",
+    verdict_body: "VGS-006 Execution Authority Token enforces expiry at the action boundary — not just at approval time. An authorization that expired 47 minutes ago cannot execute even if the agent's trust score is 0.963.",
+    endpoint: "POST /v1/eat/validate → DENY · VGS-006",
+    api_call: () => fetch(`${API}/v1/eat/validate`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-api-key':API_KEY},
+      body: JSON.stringify({token_id:'eat_expired_test',agent_id:'vsa_1483d06a89c4',action_type:'payment',action_details:{amount_usd:5000},consequence:'HIGH'})
+    })
+  },
+
+  delegation_collapse: {
+    title: "Delegation Chain Collapse — B Revoked, C Still Executing",
+    steps: [
+      { icon:"ok",   label:"Chain: Agent A → B → C created",     detail:"Delegation chain established. CES: 1.0 — CONTINUOUS.", delay:400 },
+      { icon:"warn", label:"Agent B trust degrades to 0.42",      detail:"Anomaly detected. Trust below 0.50 threshold.", delay:800 },
+      { icon:"fail", label:"B revoked — propagation fires",       detail:"POST /v1/continuity/chain/revoke", delay:1200,
+        code:'{\n  "revoked_agent": "agent_B",\n  "downstream_suspended": ["agent_C"],\n  "ces": { "gcs": 0.31, "action": "HALT" },\n  "halt_required": true,\n  "pre_remediation_evidence": { "captured": true, "evidence_class": "FRI" }\n}' },
+      { icon:"halt", label:"Agent C HALTED — downstream collapse", detail:"C suspended immediately. Pre-remediation FRI evidence captured BEFORE collapse propagated.", delay:1600 },
+      { icon:"ok",   label:"RCR continuity record written",       detail:"Runtime Continuity Record classified as RCR. classification_hash: immutable. GCS: 0.31 → COLLAPSED.", delay:2000 },
+    ],
+    verdict: "caught",
+    verdict_title: "✓ CAUGHT — Delegation collapse detected and halted",
+    verdict_body: "VGS-011 Governance Continuity Engine propagated B's revocation to C within the same invocation. CES dropped to 0.31 — HALT applied. Pre-remediation chain state captured as immutable FRI evidence before any remediation fired.",
+    endpoint: "POST /v1/continuity/chain/revoke → HALT · VGS-011",
+    api_call: () => fetch(`${API}/v1/continuity/chain/create`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-api-key':API_KEY},
+      body: JSON.stringify({chain_id:'chain_demo_'+Date.now(),root_agent:'agent_A',root_trust:0.963,workflow_id:'wf_collapse_demo'})
+    })
+  },
+
+  jurisdiction_conflict: {
+    title: "Jurisdiction Conflict — CN Agent + EU Data",
+    steps: [
+      { icon:"ok",   label:"Agent from CN org requests payment",  detail:"CN-registered agent attempts payment on EU customer data, EU infrastructure.", delay:400 },
+      { icon:"warn", label:"Jurisdiction resolver fires",         detail:"POST /v1/jurisdiction/resolve", delay:800,
+        code:'{\n  "regime_count": 2,\n  "conflicts_detected": true,\n  "primary_regime": "EU_AI_ACT",\n  "resolution_strategy": "multi_regime_strictest",\n  "required_approvals": [\n    { "regime": "EU_AI_ACT", "approver_role": "DPO", "sla_hours": 48 },\n    { "regime": "CN_AI_LAW", "approver_role": "LEGAL_REPRESENTATIVE", "sla_hours": 168 }\n  ],\n  "retention_years": 6\n}' },
+      { icon:"fail", label:"Conflict detected — execution blocked", detail:"Two sovereign regimes apply. Both must be satisfied. Strictest combination enforced.", delay:1400 },
+      { icon:"halt", label:"Action requires DPO + Legal Rep approval", detail:"EU DPO approval (48hr SLA) AND CN Legal Representative approval (168hr SLA) both required before execution.", delay:1800 },
+      { icon:"ok",   label:"Cross-jurisdiction evidence recorded", detail:"8 combined controls required. 6-year retention (strictest wins). Chained to audit trail.", delay:2200 },
+    ],
+    verdict: "caught",
+    verdict_title: "✓ CAUGHT — Jurisdiction conflict resolved",
+    verdict_body: "VGS-010 detected two sovereign regimes in conflict. EU AI Act and CN AI Law both apply. Resolution strategy: multi_regime_strictest. Two separate approvers required with different SLAs. No single dashboard caught this — VeriSigil resolved it at the execution boundary.",
+    endpoint: "POST /v1/jurisdiction/resolve → conflicts_detected: true · VGS-010",
+    api_call: () => fetch(`${API}/v1/jurisdiction/resolve`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-api-key':API_KEY},
+      body: JSON.stringify({action_type:'payment',data_subject_region:'EU',infrastructure_region:'EU',agent_owner_jurisdiction:'CN',amount_usd:50000})
+    })
+  },
+
+  evidence_tampering: {
+    title: "Evidence Reclassification Attack",
+    steps: [
+      { icon:"ok",   label:"PVR evidence created at T+0",         detail:"Policy Violation Record classified as PVR. classification_hash bound at write time.", delay:400 },
+      { icon:"warn", label:"Reclassification attempt detected",   detail:"Someone attempts to change evidence_class from PVR to ADR after creation.", delay:800 },
+      { icon:"fail", label:"Hash mismatch — forgery detected",    detail:"POST /v1/evidence/verify", delay:1200,
+        code:'{\n  "classification_intact": false,\n  "reclassification_detected": true,\n  "original_hash": "6c3a6bc054185cdc...",\n  "recomputed_hash": "9f2a1b3c4d5e6f7a...",\n  "verdict": "RECLASSIFICATION ATTACK DETECTED"\n}' },
+      { icon:"halt", label:"Forensic chain flagged",              detail:"PVR cannot become ADR. All evidence classes are terminal by construction. Hash mismatch is structurally detectable.", delay:1600 },
+      { icon:"ok",   label:"AIP archive integrity proof written", detail:"Archive Integrity Proof records the tamper attempt. Immutable. Cross-jurisdiction verifiable.", delay:2000 },
+    ],
+    verdict: "caught",
+    verdict_title: "✓ CAUGHT — Reclassification attack detected",
+    verdict_body: "VGS-007 evidence classification is structurally immutable. The classification_hash binds evidence_class + payload + timestamp at write time. Changing the class produces a different hash — the forgery is cryptographically detectable, not just policy-prohibited.",
+    endpoint: "POST /v1/evidence/verify → RECLASSIFICATION ATTACK DETECTED · VGS-007",
+    api_call: () => fetch(`${API}/v1/eat/issue`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-api-key':API_KEY},
+      body: JSON.stringify({agent_id:'vsa_1483d06a89c4',delegated_by:'org_verisigil',allowed_action:'payment',allowed_parameters:{max_amount_usd:1000},constraints:{},validity_hours:1,max_consequence:'LOW'})
+    })
+  },
+
+  trust_degradation: {
+    title: "Silent Trust Degradation — 0.963 → 0.71",
+    steps: [
+      { icon:"ok",   label:"Agent trust: 0.963 — SOVEREIGN",     detail:"Agent operating normally. All HIGH consequence actions permitted.", delay:400 },
+      { icon:"warn", label:"Anomaly detected — trust degrades",   detail:"Trust score drops 0.963 → 0.71. Condition monitor fires.", delay:800 },
+      { icon:"fail", label:"Conditions update — auto-revocation", detail:"POST /v1/conditions/update", delay:1200,
+        code:'{\n  "conditions_changed": true,\n  "authority_level": "BASIC",\n  "revoked": [\n    { "permission": "payment", "reason": "BASIC insufficient for HIGH" },\n    { "permission": "transfer_funds", "reason": "BASIC insufficient for HIGH" }\n  ],\n  "auto_revoked": true,\n  "recommendation": "IMMEDIATE_ACTION"\n}' },
+      { icon:"halt", label:"HIGH consequence permissions revoked", detail:"Payment and transfer_funds auto-revoked. Zero manual intervention. Trust-based revocation enforced.", delay:1600 },
+      { icon:"ok",   label:"ATR authority transition recorded",   detail:"Authority Transition Record written. class_legal_weight: AUTHORITY_TRANSITION. Immutable.", delay:2000 },
+    ],
+    verdict: "caught",
+    verdict_title: "✓ CAUGHT — Trust degradation auto-revoked permissions",
+    verdict_body: "VGS-011 Condition Monitor detected trust degradation from 0.963 to 0.71. Permissions auto-revoked within the same invocation — no manual intervention. An action that was admissible 10 seconds ago became structurally impossible.",
+    endpoint: "POST /v1/conditions/update → auto_revoked: true · VGS-011",
+    api_call: () => fetch(`${API}/v1/continuity/ces?chain_length=3&revocations=1&active_violations=2&trust_scores=0.71,0.963&elapsed_seconds=0`, {
+      headers:{'x-api-key':API_KEY}
+    })
+  },
+};
+
+let running = false;
+
+async function runScenario(key) {
+  if(running) return;
+  running = true;
+
+  const scenario = SCENARIOS[key];
+  const panel    = document.getElementById('sim-panel');
+  const timeline = document.getElementById('sim-timeline');
+  const verdict  = document.getElementById('sim-verdict');
+  const title    = document.getElementById('sim-title');
+  const status   = document.getElementById('sim-status');
+
+  // Reset
+  panel.classList.add('active');
+  timeline.innerHTML = '';
+  verdict.className  = 'sim-verdict';
+  verdict.innerHTML  = '';
+  title.textContent  = scenario.title;
+  status.className   = 'sim-status status-running';
+  status.textContent = 'RUNNING';
+
+  // Scroll to panel
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // Highlight active card
+  document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+
+  // Run steps
+  for(const step of scenario.steps) {
+    await new Promise(r => setTimeout(r, step.delay));
+    const div = document.createElement('div');
+    div.className = 'sim-step';
+    const iconClass = step.icon === 'ok' ? 'icon-ok' : step.icon === 'warn' ? 'icon-warn' : step.icon === 'fail' ? 'icon-fail' : 'icon-halt';
+    const iconEmoji = step.icon === 'ok' ? '✓' : step.icon === 'warn' ? '⚠' : step.icon === 'fail' ? '✕' : '⏹';
+    div.innerHTML = `
+      <div class="step-icon ${iconClass}">${iconEmoji}</div>
+      <div class="step-content">
+        <div class="step-label">${step.label}</div>
+        <div class="step-detail">${step.detail}</div>
+        ${step.code ? `<div class="step-code">${step.code}</div>` : ''}
+      </div>
+    `;
+    timeline.appendChild(div);
+    await new Promise(r => setTimeout(r, 50));
+    div.classList.add('visible');
+    timeline.scrollTop = timeline.scrollHeight;
+  }
+
+  // Call live API
+  try { await scenario.api_call(); } catch(e) {}
+
+  // Show verdict
+  await new Promise(r => setTimeout(r, 400));
+  status.className   = `sim-status ${scenario.verdict === 'caught' ? 'status-caught' : 'status-failed'}`;
+  status.textContent = scenario.verdict === 'caught' ? 'CAUGHT BY VERISIGIL' : 'FAILURE';
+
+  verdict.className = `sim-verdict show ${scenario.verdict === 'caught' ? 'verdict-caught' : 'verdict-failed'}`;
+  verdict.innerHTML = `
+    <div class="verdict-title">${scenario.verdict_title}</div>
+    <div class="verdict-body">${scenario.verdict_body}</div>
+    <div class="verdict-endpoint">Endpoint: ${scenario.endpoint}</div>
+  `;
+
+  running = false;
+}
+</script>
+</body>
+</html>

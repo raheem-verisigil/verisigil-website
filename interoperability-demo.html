@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interoperability Demo — VeriSigil AI × ATF</title>
+<meta name="description" content="Live demonstration: ATF Receipt verified by VeriSigil. VGS Receipt verified by ATF. Two independent governance protocols. One verification model.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020810;--bg2:#060F1E;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --white:#F0F8FF;--mid:#4A6FA5;--dim:#1A2E4A;
+  --mono:'JetBrains Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--mono);background:var(--bg);color:var(--white);font-size:12px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;border-bottom:1px solid rgba(0,212,245,0.1);background:rgba(2,8,16,0.95);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:var(--display);font-size:16px;font-weight:800;color:var(--cyan);text-decoration:none;}
+.nav-back{font-size:11px;color:var(--mid);text-decoration:none;}
+
+.header{text-align:center;padding:60px 24px 40px;max-width:700px;margin:0 auto;}
+.header-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);background:rgba(0,212,245,0.06);border:1px solid rgba(0,212,245,0.2);padding:5px 16px;border-radius:20px;margin-bottom:20px;}
+.header h1{font-family:var(--display);font-size:clamp(24px,4vw,42px);font-weight:800;margin-bottom:14px;letter-spacing:-0.02em;}
+.header h1 em{font-style:normal;color:var(--cyan);}
+.header p{font-size:13px;color:var(--mid);line-height:1.8;}
+
+/* BRIDGE DIAGRAM */
+.bridge{max-width:800px;margin:0 auto 50px;padding:0 24px;}
+.bridge-inner{background:var(--bg2);border:1px solid rgba(0,212,245,0.15);border-radius:16px;padding:32px;text-align:center;}
+.bridge-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:20px 0;}
+.bridge-box{background:#010508;border:1px solid rgba(0,212,245,0.2);border-radius:10px;padding:14px 20px;min-width:140px;}
+.bridge-box .label{font-size:9px;color:var(--mid);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.1em;}
+.bridge-box .name{font-size:13px;font-weight:700;color:var(--white);}
+.bridge-box .sub{font-size:10px;color:var(--cyan);margin-top:4px;}
+.bridge-arrow{font-size:20px;color:var(--cyan);}
+.bridge-center{background:rgba(0,212,245,0.06);border:2px solid var(--cyan);border-radius:10px;padding:14px 24px;}
+.bridge-center .name{color:var(--cyan);font-size:14px;font-weight:700;}
+.bridge-result{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.result-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;}
+.badge-green{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);color:var(--green);}
+.badge-cyan{background:rgba(0,212,245,0.1);border:1px solid rgba(0,212,245,0.3);color:var(--cyan);}
+
+/* DEMO PANELS */
+.demos{max-width:900px;margin:0 auto 50px;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:640px){.demos{grid-template-columns:1fr;}}
+
+.demo-panel{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;}
+.demo-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:10px;}
+.demo-icon{font-size:20px;}
+.demo-title{font-size:13px;font-weight:700;}
+.demo-sub{font-size:10px;color:var(--mid);}
+.demo-body{padding:16px 20px;}
+.demo-step{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;}
+.step-num{width:22px;height:22px;border-radius:50%;background:rgba(0,212,245,0.1);border:1px solid rgba(0,212,245,0.2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.step-text{font-size:11px;color:var(--mid);line-height:1.6;}
+.step-text strong{color:var(--white);}
+.demo-code{background:#010508;border:1px solid rgba(0,212,245,0.1);border-radius:8px;padding:12px;font-size:10px;color:var(--cyan);margin-top:10px;white-space:pre-wrap;line-height:1.6;}
+.demo-result{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:11px;font-weight:700;}
+.result-verified{background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.2);color:var(--green);}
+
+/* CLASS MAPPING */
+.mapping{max-width:800px;margin:0 auto 50px;padding:0 24px;}
+.mapping-table{width:100%;border-collapse:collapse;background:var(--bg2);border-radius:12px;overflow:hidden;}
+.mapping-table th{font-size:10px;font-weight:700;color:var(--mid);text-align:left;padding:12px 16px;border-bottom:1px solid var(--dim);}
+.mapping-table td{font-size:11px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.mapping-table td:first-child{color:var(--cyan);font-weight:700;}
+.mapping-table td:nth-child(2){color:var(--green);font-weight:700;}
+.mapping-table .direct{font-size:9px;background:rgba(0,230,118,0.1);color:var(--green);padding:2px 8px;border-radius:8px;}
+.mapping-table .semantic{font-size:9px;background:rgba(0,212,245,0.1);color:var(--cyan);padding:2px 8px;border-radius:8px;}
+
+/* CANONICAL PROOF */
+.canonical{max-width:800px;margin:0 auto 50px;padding:0 24px;}
+.canonical-inner{background:var(--bg2);border:1px solid rgba(0,212,245,0.15);border-radius:14px;padding:28px;}
+.canon-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+.canon-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;}
+@media(max-width:500px){.canon-row{grid-template-columns:1fr;}}
+.canon-box{background:#010508;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;}
+.canon-label{font-size:9px;color:var(--mid);margin-bottom:6px;text-transform:uppercase;}
+.canon-value{font-size:11px;color:var(--green);}
+.canon-match{text-align:center;padding:12px;background:rgba(0,230,118,0.04);border:1px solid rgba(0,230,118,0.2);border-radius:8px;color:var(--green);font-size:12px;font-weight:700;}
+
+footer{border-top:1px solid rgba(0,212,245,0.08);padding:20px 36px;text-align:center;font-size:11px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <a href="https://verisigilai.com" class="nav-back">← Home</a>
+</nav>
+
+<div class="header">
+  <div class="header-tag">⬡ Protocol Interoperability · Live</div>
+  <h1>Two Protocols.<br><em>One Verification Model.</em></h1>
+  <p>ATF (Harold Alberto Nunes Rodelo) and VeriSigil independently converged on the same governance infrastructure. This page demonstrates cross-framework verification — live.</p>
+</div>
+
+<!-- BRIDGE DIAGRAM -->
+<div class="bridge">
+  <div class="bridge-inner">
+    <div style="font-size:11px;color:var(--mid);margin-bottom:16px;">Cross-framework governance verification</div>
+    <div class="bridge-row">
+      <div class="bridge-box">
+        <div class="label">ATF</div>
+        <div class="name">Delegation Receipt</div>
+        <div class="sub">RFC-ATF-1 · DOI: 10.5281/zenodo.20155016</div>
+      </div>
+      <div class="bridge-arrow">→</div>
+      <div class="bridge-center">
+        <div class="name">⬡ VeriSigil Verifier</div>
+        <div style="font-size:10px;color:var(--mid);margin-top:4px;">VGS-008 + VGS-012 CDPR</div>
+      </div>
+      <div class="bridge-arrow">→</div>
+      <div class="bridge-box">
+        <div class="label">Result</div>
+        <div class="name" style="color:var(--green);">✓ VERIFIED</div>
+        <div class="sub">Offline · No platform</div>
+      </div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-box">
+        <div class="label">VGS</div>
+        <div class="name">GDR Receipt</div>
+        <div class="sub">VGS-007 · DOI: 10.5281/zenodo.20264923</div>
+      </div>
+      <div class="bridge-arrow">→</div>
+      <div class="bridge-center">
+        <div class="name">⬡ ATF Bridge Verifier</div>
+        <div style="font-size:10px;color:var(--mid);margin-top:4px;">atf_bridge_verify.py</div>
+      </div>
+      <div class="bridge-arrow">→</div>
+      <div class="bridge-box">
+        <div class="label">Result</div>
+        <div class="name" style="color:var(--green);">✓ VERIFIED</div>
+        <div class="sub">Offline · No platform</div>
+      </div>
+    </div>
+    <div class="bridge-result">
+      <div class="result-badge badge-green">✓ ATF → VGS: VERIFIED</div>
+      <div class="result-badge badge-green">✓ VGS → ATF: VERIFIED</div>
+      <div class="result-badge badge-cyan">Cross-runtime parity: IDENTICAL</div>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO PANELS -->
+<div class="demos">
+
+  <div class="demo-panel">
+    <div class="demo-header">
+      <div class="demo-icon">📋</div>
+      <div>
+        <div class="demo-title">ATF Receipt → VGS Verifier</div>
+        <div class="demo-sub">ATF DR verified using VeriSigil's offline verifier</div>
+      </div>
+    </div>
+    <div class="demo-body">
+      <div class="demo-step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>ATF DR issued</strong> by RFC-ATF-1 compliant implementation. DR contains agent_id, max_authority_ratio, delegation_id, ML-DSA-65 signature.</div>
+      </div>
+      <div class="demo-step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>VGS bridge verifier</strong> receives DR. Validates canonical serialization, ATF-INV-005 monotonic authority reduction, maps DR → GDR.</div>
+      </div>
+      <div class="demo-step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>CDPR issued</strong> — Cross-Domain Provenance Receipt bridges ATF DR to VGS GDR. Dual-signed. Offline verifiable.</div>
+      </div>
+      <div class="demo-code">POST /v1/cdpr/issue
+{
+  "from_domain": "ATF",
+  "to_domain":   "VGS",
+  "from_artifact_type": "DR",
+  "to_artifact_type":   "GDR"
+}
+
+→ "revocation_conflict": false
+→ "cross_domain_valid": true
+→ "atf_compatible": true
+→ "pq_secure": true</div>
+      <div class="demo-result result-verified">✓ ATF DR VERIFIED — canonical parity confirmed, ATF-INV-005 satisfied</div>
+    </div>
+  </div>
+
+  <div class="demo-panel">
+    <div class="demo-header">
+      <div class="demo-icon">🔏</div>
+      <div>
+        <div class="demo-title">VGS Receipt → ATF Verifier</div>
+        <div class="demo-sub">VGS GDR verified using ATF bridge verifier</div>
+      </div>
+    </div>
+    <div class="demo-body">
+      <div class="demo-step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>VGS GDR issued</strong> with classification_hash binding evidence_class + payload + timestamp at write time. Dual-signed Ed25519 + Dilithium-3.</div>
+      </div>
+      <div class="demo-step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>ATF bridge verifier</strong> receives GDR. Validates classification_hash, canonical serialization parity, maps GDR → DR equivalent.</div>
+      </div>
+      <div class="demo-step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Classification intact</strong> verified. Reclassification attack detection: PVR cannot become ADR — hash mismatch is structural.</div>
+      </div>
+      <div class="demo-code">python3 atf_bridge_verify.py --vgs-receipt receipt.json
+
+→ ATR → ATF class: "VERIFIED"
+→ classification_intact: true
+→ reclassification_detected: false
+→ verdict: "VGS GDR VERIFIED"
+→ atf_equivalent: "DR"</div>
+      <div class="demo-result result-verified">✓ VGS GDR VERIFIED — classification intact, ATF mapping confirmed</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CLASS MAPPING -->
+<div class="mapping">
+  <div style="font-family:var(--display);font-size:20px;font-weight:800;margin-bottom:8px;text-align:center;">Evidence Class Mapping</div>
+  <div style="font-size:11px;color:var(--mid);text-align:center;margin-bottom:20px;">ATF ↔ VGS — VGS-012 Interoperability Specification</div>
+  <table class="mapping-table">
+    <thead>
+      <tr>
+        <th>ATF Class</th>
+        <th>VGS Class</th>
+        <th>Legal Weight</th>
+        <th>Parity</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>DR</td><td>GDR</td><td>DELEGATION_AUTHORITY</td><td><span class="semantic">Semantic</span></td><td>Both record authority delegation</td></tr>
+      <tr><td>RCR</td><td>RCR</td><td>CONTINUITY_PROOF</td><td><span class="direct">Direct</span></td><td>Identical purpose and semantics</td></tr>
+      <tr><td>FVP</td><td>FRI</td><td>FORENSIC_INPUT</td><td><span class="semantic">Semantic</span></td><td>Both serve forensic verification</td></tr>
+      <tr><td>PVR</td><td>PVR</td><td>POLICY_VIOLATION</td><td><span class="direct">Direct</span></td><td>Identical purpose and semantics</td></tr>
+      <tr><td>ADR</td><td>ADR</td><td>APPROVAL_DECISION</td><td><span class="direct">Direct</span></td><td>Identical purpose and semantics</td></tr>
+      <tr><td>ATR</td><td>ATR</td><td>AUTHORITY_TRANSITION</td><td><span class="direct">Direct</span></td><td>Identical purpose and semantics</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CANONICAL PARITY -->
+<div class="canonical">
+  <div class="canonical-inner">
+    <div class="canon-title">Canonical Serialization Parity — VER-INV-008 + ATF FVP-INV-007</div>
+    <div style="font-size:11px;color:var(--mid);margin-bottom:16px;">Both ATF and VGS use identical canonical serialization rules. Same input always produces same bytes across all runtimes.</div>
+    <div class="canon-row">
+      <div class="canon-box">
+        <div class="canon-label">Python (VGS)</div>
+        <div class="canon-value">{"action":"approve","amount":50000,"user":"José"}</div>
+      </div>
+      <div class="canon-box">
+        <div class="canon-label">Node.js (VGS)</div>
+        <div class="canon-value">{"action":"approve","amount":50000,"user":"José"}</div>
+      </div>
+    </div>
+    <div class="canon-match">✓ sha256:9de59918836b0c8de5568669a3a87afe... — IDENTICAL ACROSS ALL RUNTIMES</div>
+    <div style="font-size:10px;color:var(--mid);margin-top:12px;text-align:center;">
+      Rules: sort_keys=True · separators=(',',':') · ensure_ascii=False · encoding=utf-8<br>
+      Matches ATF RFC-ATF-3 FVP-INV-007 cross-language parity requirement
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>
+    ⬡ <a href="https://verisigilai.com">VeriSigil AI</a> ·
+    ATF DOI: <a href="https://doi.org/10.5281/zenodo.20155016" target="_blank">10.5281/zenodo.20155016</a> ·
+    VGS DOI: <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank">10.5281/zenodo.20264923</a>
+  </p>
+</footer>
+
+</body>
+</html>

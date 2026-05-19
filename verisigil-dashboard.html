@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Sovereign Execution Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030508;
+  --bg2: #080d14;
+  --bg3: #0d1520;
+  --cyan: #00f5d4;
+  --green: #39ff14;
+  --amber: #ffbe0b;
+  --red: #ff006e;
+  --purple: #8338ec;
+  --white: #e8f4f8;
+  --mid: #3a5a7a;
+  --dim: #0f1e2e;
+  --mono: 'Space Mono', monospace;
+  --display: 'Barlow Condensed', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCANLINE EFFECT */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,245,212,0.015) 2px, rgba(0,245,212,0.015) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid rgba(0,245,212,0.12);
+  background: rgba(3,5,8,0.95);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.logo {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--cyan);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.logo span { color: var(--white); opacity: 0.4; }
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 11px;
+}
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* TABS */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(0,245,212,0.08);
+  background: var(--bg2);
+  overflow-x: auto;
+}
+.tab {
+  padding: 14px 24px;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mid);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.tab:hover { color: var(--white); }
+.tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+/* PANELS */
+.panel { display: none; padding: 28px 32px; }
+.panel.active { display: block; }
+
+/* ─── PRIORITY 1: RUNTIME DEMO ─── */
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1000px;
+}
+@media(max-width:700px){ .demo-grid{grid-template-columns:1fr;} }
+
+.demo-card {
+  background: var(--bg2);
+  border: 1px solid rgba(0,245,212,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.demo-card-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(0,245,212,0.08);
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.demo-body { padding: 20px; }
+
+.field-group { margin-bottom: 16px; }
+.field-label {
+  font-size: 10px;
+  color: var(--mid);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.field-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid rgba(0,245,212,0.15);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--cyan); }
+.field-select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid rgba(0,245,212,0.15);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--white);
+  outline: none;
+  cursor: pointer;
+}
+.field-range { width: 100%; accent-color: var(--cyan); }
+.range-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-left: 8px;
+}
+
+.btn-run {
+  width: 100%;
+  background: var(--cyan);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.btn-run:hover { background: #00d4b8; transform: translateY(-1px); }
+.btn-run:active { transform: translateY(0); }
+
+/* Decision output */
+.decision-output {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 11px;
+  min-height: 180px;
+  position: relative;
+}
+.decision-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+.badge-allow { background: rgba(57,255,20,0.1); color: var(--green); border: 1px solid rgba(57,255,20,0.3); }
+.badge-refused { background: rgba(255,190,11,0.1); color: var(--amber); border: 1px solid rgba(255,190,11,0.3); }
+.badge-deny { background: rgba(255,0,110,0.1); color: var(--red); border: 1px solid rgba(255,0,110,0.3); }
+.badge-human { background: rgba(131,56,236,0.1); color: var(--purple); border: 1px solid rgba(131,56,236,0.3); }
+
+.output-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 11px;
+}
+.output-key { color: var(--mid); }
+.output-val { color: var(--white); font-weight: 700; }
+.output-val.green { color: var(--green); }
+.output-val.amber { color: var(--amber); }
+.output-val.red { color: var(--red); }
+
+/* QUICK SCENARIOS */
+.scenarios {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.scenario-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,245,212,0.2);
+  background: transparent;
+  color: var(--cyan);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.scenario-btn:hover { background: rgba(0,245,212,0.1); }
+
+/* ─── PRIORITY 2: DASHBOARD ─── */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.metric-card {
+  background: var(--bg2);
+  border: 1px solid rgba(0,245,212,0.08);
+  border-radius: 10px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent, var(--cyan));
+}
+.metric-label { font-size: 10px; color: var(--mid); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.metric-value { font-family: var(--display); font-size: 36px; font-weight: 900; color: var(--accent, var(--cyan)); line-height: 1; }
+.metric-sub { font-size: 10px; color: var(--mid); margin-top: 4px; }
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media(max-width:700px){ .dash-grid{grid-template-columns:1fr;} }
+
+.dash-panel {
+  background: var(--bg2);
+  border: 1px solid rgba(0,245,212,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.dash-panel-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(0,245,212,0.06);
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.live-badge {
+  font-size: 9px;
+  background: rgba(57,255,20,0.1);
+  color: var(--green);
+  border: 1px solid rgba(57,255,20,0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.dash-panel-body { padding: 16px 18px; }
+
+.activity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 11px;
+}
+.act-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.act-agent { color: var(--white); flex: 1; }
+.act-decision { font-weight: 700; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+.act-time { color: var(--mid); font-size: 10px; }
+
+.jmap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.jmap-item {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 12px;
+  border-left: 3px solid var(--color, var(--cyan));
+}
+.jmap-name { font-size: 11px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.jmap-count { font-family: var(--display); font-size: 22px; font-weight: 900; color: var(--color, var(--cyan)); }
+.jmap-label { font-size: 9px; color: var(--mid); }
+
+/* ─── PRIORITY 3: IDENTITY CHAIN ─── */
+.identity-chain {
+  max-width: 700px;
+}
+.chain-step {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px;
+}
+.chain-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 42px;
+  width: 2px;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,245,212,0.3), transparent);
+}
+.chain-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  background: var(--bg2);
+  border: 2px solid rgba(0,245,212,0.2);
+}
+.chain-icon.done { border-color: var(--green); background: rgba(57,255,20,0.1); }
+.chain-icon.active { border-color: var(--cyan); background: rgba(0,245,212,0.1); animation: pulse 2s infinite; }
+.chain-icon.pending { border-color: var(--mid); opacity: 0.5; }
+
+.chain-content { flex: 1; }
+.chain-title {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.chain-detail { font-size: 11px; color: var(--mid); margin-bottom: 8px; line-height: 1.6; }
+.chain-hash {
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(0,245,212,0.05);
+  border: 1px solid rgba(0,245,212,0.1);
+  border-radius: 6px;
+  padding: 6px 10px;
+  word-break: break-all;
+}
+
+.identity-form {
+  background: var(--bg2);
+  border: 1px solid rgba(0,245,212,0.1);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+/* ─── PRIORITY 4: REPLAY VIEWER ─── */
+.replay-timeline {
+  position: relative;
+  padding-left: 28px;
+}
+.replay-timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: rgba(0,245,212,0.15);
+}
+.replay-event {
+  position: relative;
+  padding: 12px 0 16px;
+  font-size: 11px;
+}
+.replay-event::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 16px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--event-color, var(--cyan));
+  box-shadow: 0 0 6px var(--event-color, var(--cyan));
+}
+.replay-ts { color: var(--mid); font-size: 10px; margin-bottom: 4px; }
+.replay-action { color: var(--white); font-weight: 700; margin-bottom: 4px; }
+.replay-detail { color: var(--mid); line-height: 1.6; }
+
+.replay-upload {
+  background: var(--bg2);
+  border: 2px dashed rgba(0,245,212,0.2);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 20px;
+}
+.replay-upload:hover { border-color: var(--cyan); background: rgba(0,245,212,0.03); }
+.replay-upload-icon { font-size: 32px; margin-bottom: 10px; }
+.replay-upload-text { font-size: 13px; color: var(--mid); }
+.replay-upload-text strong { color: var(--cyan); }
+
+/* ─── PRIORITY 5: COMPLIANCE MAP ─── */
+.compliance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+.compliance-card {
+  background: var(--bg2);
+  border: 1px solid rgba(0,245,212,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.compliance-header {
+  padding: 14px 18px;
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  background: rgba(0,245,212,0.04);
+  border-bottom: 1px solid rgba(0,245,212,0.08);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.compliance-body { padding: 16px 18px; }
+.compliance-row {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  align-items: flex-start;
+}
+.compliance-article {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--amber);
+  white-space: nowrap;
+  padding-top: 2px;
+  min-width: 70px;
+}
+.compliance-desc { font-size: 11px; color: var(--mid); flex: 1; line-height: 1.5; }
+.compliance-vgs {
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(0,245,212,0.06);
+  padding: 2px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+/* UTILITIES */
+.section-header {
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0,245,212,0.06);
+}
+.loading { color: var(--cyan); font-size: 11px; }
+.tag-cyan { font-size: 10px; color: var(--cyan); background: rgba(0,245,212,0.08); border: 1px solid rgba(0,245,212,0.2); padding: 2px 10px; border-radius: 10px; }
+.tag-green { font-size: 10px; color: var(--green); background: rgba(57,255,20,0.08); border: 1px solid rgba(57,255,20,0.2); padding: 2px 10px; border-radius: 10px; }
+
+footer {
+  padding: 20px 32px;
+  border-top: 1px solid rgba(0,245,212,0.06);
+  text-align: center;
+  font-size: 10px;
+  color: var(--mid);
+}
+footer a { color: var(--cyan); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⬡ VeriSigil<span>AI</span></div>
+  <div class="header-status">
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;">
+      <div class="status-dot"></div>
+      <span style="color:var(--green)">API LIVE</span>
+    </div>
+    <span style="color:var(--mid)">v0.7.2 · 175 endpoints</span>
+    <span class="tag-cyan">VGS-000→016</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('demo')">⚡ Runtime Demo</div>
+  <div class="tab" onclick="showTab('dashboard')">📊 Dashboard</div>
+  <div class="tab" onclick="showTab('identity')">🔐 Identity Chain</div>
+  <div class="tab" onclick="showTab('replay')">🎬 Replay Viewer</div>
+  <div class="tab" onclick="showTab('compliance')">📋 Compliance Map</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRIORITY 1: INTERACTIVE RUNTIME DEMO
+═══════════════════════════════════════ -->
+<div class="panel active" id="panel-demo">
+  <div class="section-header">Try Governance Decision — Live API</div>
+
+  <div class="scenarios">
+    <button class="scenario-btn" onclick="loadScenario('low-trust')">Low Trust Agent</button>
+    <button class="scenario-btn" onclick="loadScenario('high-consequence')">HIGH Consequence</button>
+    <button class="scenario-btn" onclick="loadScenario('eu-payment')">EU Payment</button>
+    <button class="scenario-btn" onclick="loadScenario('gcc-sovereign')">GCC Sovereign</button>
+    <button class="scenario-btn" onclick="loadScenario('critical')">CRITICAL Action</button>
+    <button class="scenario-btn" onclick="loadScenario('clear')">↺ Reset</button>
+  </div>
+
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-card-header">⬡ Governance Request</div>
+      <div class="demo-body">
+        <div class="field-group">
+          <div class="field-label">Agent ID</div>
+          <input class="field-input" id="f-agent" value="payment-agent-001" placeholder="agent identifier">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Action Type</div>
+          <select class="field-select" id="f-action">
+            <option value="payment">payment</option>
+            <option value="transfer">transfer</option>
+            <option value="data_access">data_access</option>
+            <option value="delete_records">delete_records</option>
+            <option value="credit_scoring">credit_scoring</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Amount (USD)</div>
+          <input class="field-input" id="f-amount" type="number" value="50000">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Jurisdiction</div>
+          <select class="field-select" id="f-jurisdiction">
+            <option value="EU_AI_ACT">EU AI Act</option>
+            <option value="US_NIST">US NIST</option>
+            <option value="GCC_SOVEREIGN">GCC Sovereign</option>
+            <option value="APRA_CPS230">APRA CPS 230</option>
+            <option value="CN_AI_LAW">China AI Law</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Trust Score: <span class="range-val" id="trust-val">0.42</span></div>
+          <input class="field-range" type="range" min="0" max="1" step="0.01" value="0.42" id="f-trust" oninput="document.getElementById('trust-val').textContent=this.value">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Consequence</div>
+          <select class="field-select" id="f-consequence">
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH" selected>HIGH</option>
+            <option value="CRITICAL">CRITICAL</option>
+          </select>
+        </div>
+        <button class="btn-run" onclick="runGovernance()">▶ EXECUTE GOVERNANCE CHECK</button>
+      </div>
+    </div>
+
+    <div class="demo-card">
+      <div class="demo-card-header">⬡ Governance Decision</div>
+      <div class="demo-body">
+        <div class="decision-output" id="decision-output">
+          <div style="color:var(--mid);font-size:11px;text-align:center;padding-top:60px;">
+            Configure request and click<br>EXECUTE GOVERNANCE CHECK
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRIORITY 2: ENTERPRISE DASHBOARD
+═══════════════════════════════════════ -->
+<div class="panel" id="panel-dashboard">
+  <div class="section-header">Live Governance Metrics</div>
+
+  <div class="metrics-grid">
+    <div class="metric-card" style="--accent:var(--green)">
+      <div class="metric-label">Active Agents</div>
+      <div class="metric-value" id="m-agents">0</div>
+      <div class="metric-sub">Registered in civil registry</div>
+    </div>
+    <div class="metric-card" style="--accent:var(--cyan)">
+      <div class="metric-label">Decisions Today</div>
+      <div class="metric-value" id="m-decisions">0</div>
+      <div class="metric-sub">Via /v1/execution/control</div>
+    </div>
+    <div class="metric-card" style="--accent:var(--amber)">
+      <div class="metric-label">Escalation Queue</div>
+      <div class="metric-value" id="m-escalations">0</div>
+      <div class="metric-sub">Awaiting human approval</div>
+    </div>
+    <div class="metric-card" style="--accent:var(--red)">
+      <div class="metric-label">Refused</div>
+      <div class="metric-value" id="m-refused">0</div>
+      <div class="metric-sub">Governance working correctly</div>
+    </div>
+    <div class="metric-card" style="--accent:var(--purple)">
+      <div class="metric-label">Health Score</div>
+      <div class="metric-value" id="m-health">99.5</div>
+      <div class="metric-sub">Governance continuity</div>
+    </div>
+    <div class="metric-card" style="--accent:var(--cyan)">
+      <div class="metric-label">Incidents</div>
+      <div class="metric-value" id="m-incidents">0</div>
+      <div class="metric-sub">Art. 72 reports</div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-panel">
+      <div class="dash-panel-header">
+        Recent Decisions
+        <span class="live-badge">LIVE</span>
+      </div>
+      <div class="dash-panel-body" id="activity-feed">
+        <div style="color:var(--mid);font-size:11px;text-align:center;padding:20px;">Run governance checks to see activity</div>
+      </div>
+    </div>
+
+    <div class="dash-panel">
+      <div class="dash-panel-header">Jurisdiction Distribution</div>
+      <div class="dash-panel-body">
+        <div class="jmap">
+          <div class="jmap-item" style="--color:var(--cyan)">
+            <div class="jmap-name">EU AI Act</div>
+            <div class="jmap-count" id="j-eu">0</div>
+            <div class="jmap-label">decisions</div>
+          </div>
+          <div class="jmap-item" style="--color:var(--green)">
+            <div class="jmap-name">US NIST</div>
+            <div class="jmap-count" id="j-us">0</div>
+            <div class="jmap-label">decisions</div>
+          </div>
+          <div class="jmap-item" style="--color:var(--amber)">
+            <div class="jmap-name">GCC</div>
+            <div class="jmap-count" id="j-gcc">0</div>
+            <div class="jmap-label">decisions</div>
+          </div>
+          <div class="jmap-item" style="--color:var(--purple)">
+            <div class="jmap-name">APRA</div>
+            <div class="jmap-count" id="j-apra">0</div>
+            <div class="jmap-label">decisions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRIORITY 3: AI IDENTITY CHAIN
+═══════════════════════════════════════ -->
+<div class="panel" id="panel-identity">
+  <div class="section-header">AI Agent Identity Chain — Digital Passport Infrastructure</div>
+
+  <div class="identity-form">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;">
+      <div class="field-group" style="margin:0">
+        <div class="field-label">Agent Name</div>
+        <input class="field-input" id="id-name" value="PaymentAgent-001">
+      </div>
+      <div class="field-group" style="margin:0">
+        <div class="field-label">Creator Org</div>
+        <input class="field-input" id="id-org" value="VeriSigil AI">
+      </div>
+      <div class="field-group" style="margin:0">
+        <div class="field-label">Jurisdiction</div>
+        <select class="field-select" id="id-jurisdiction">
+          <option value="EU">EU</option>
+          <option value="US">US</option>
+          <option value="AU">AU</option>
+          <option value="AE">UAE</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-run" style="width:auto;padding:10px 28px;" onclick="generateIdentityChain()">⬡ GENERATE IDENTITY CHAIN</button>
+  </div>
+
+  <div class="identity-chain" id="identity-chain">
+    <div class="chain-step">
+      <div class="chain-icon pending">🌱</div>
+      <div class="chain-content">
+        <div class="chain-title">Step 1: Genesis Registration</div>
+        <div class="chain-detail">VGS-000 — Root of all future authority. Immutable genesis hash establishes agent identity.</div>
+        <div class="chain-hash" id="ch-genesis">Awaiting generation...</div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon pending">🪪</div>
+      <div class="chain-content">
+        <div class="chain-title">Step 2: Execution Passport</div>
+        <div class="chain-detail">VGS-001 — Cryptographic passport issued. Ed25519 + Dilithium-3 dual signature.</div>
+        <div class="chain-hash" id="ch-passport">Awaiting genesis...</div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon pending">⚖️</div>
+      <div class="chain-content">
+        <div class="chain-title">Step 3: Jurisdiction Binding</div>
+        <div class="chain-detail">VGS-010 — Sovereign regime attached. Applicable regulations locked at binding time.</div>
+        <div class="chain-hash" id="ch-jurisdiction">Awaiting genesis...</div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon pending">🔑</div>
+      <div class="chain-content">
+        <div class="chain-title">Step 4: Authority Token (EAT)</div>
+        <div class="chain-detail">VGS-006 — Execution Authority Token issued. Bounded delegation with max_amount and consequence_class.</div>
+        <div class="chain-hash" id="ch-eat">Awaiting genesis...</div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon pending">✅</div>
+      <div class="chain-content">
+        <div class="chain-title">Step 5: Runtime Admissibility</div>
+        <div class="chain-detail">VGS-001 — Runtime Guard enforces admissibility at every execution boundary.</div>
+        <div class="chain-hash" id="ch-admissibility">Awaiting genesis...</div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon pending">📜</div>
+      <div class="chain-content">
+        <div class="chain-title">Step 6: Governance History</div>
+        <div class="chain-detail">VGS-007 + VGS-008 — Immutable evidence chain. Every decision recorded with classification_hash.</div>
+        <div class="chain-hash" id="ch-history">Awaiting genesis...</div>
+      </div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon pending">🚫</div>
+      <div class="chain-content">
+        <div class="chain-title">Step 7: Revocation Status</div>
+        <div class="chain-detail">VGS-000 + VGS-006 — Genesis revocation collapses all downstream authority immediately.</div>
+        <div class="chain-hash" id="ch-revocation">ACTIVE — no revocation on record</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRIORITY 4: GOVERNANCE REPLAY VIEWER
+═══════════════════════════════════════ -->
+<div class="panel" id="panel-replay">
+  <div class="section-header">Governance Replay Viewer — Reconstruct any decision</div>
+
+  <div class="replay-upload" onclick="loadDemoReplay()">
+    <div class="replay-upload-icon">📂</div>
+    <div class="replay-upload-text"><strong>Drop governance receipt here</strong> or click to load demo replay</div>
+    <div style="font-size:10px;color:var(--mid);margin-top:8px;">TAP proof · GDR receipt · CDPR · Execution receipt</div>
+  </div>
+
+  <div id="replay-container" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-family:var(--display);font-size:20px;font-weight:800;">Replay: <span id="replay-id" style="color:var(--cyan)">--</span></div>
+        <div style="font-size:11px;color:var(--mid);margin-top:4px;" id="replay-meta">--</div>
+      </div>
+      <div id="replay-verdict" style="font-family:var(--display);font-size:16px;font-weight:800;padding:8px 18px;border-radius:8px;"></div>
+    </div>
+
+    <div class="replay-timeline" id="replay-timeline"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRIORITY 5: COMPLIANCE MAP
+═══════════════════════════════════════ -->
+<div class="panel" id="panel-compliance">
+  <div class="section-header">Compliance Mapping — Every article mapped to VGS</div>
+
+  <div class="compliance-grid">
+
+    <div class="compliance-card">
+      <div class="compliance-header">🇪🇺 EU AI Act</div>
+      <div class="compliance-body">
+        <div class="compliance-row">
+          <div class="compliance-article">Art 6</div>
+          <div class="compliance-desc">High-risk AI classification</div>
+          <div class="compliance-vgs">VGS-000 + Annex III</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 9</div>
+          <div class="compliance-desc">Risk management system</div>
+          <div class="compliance-vgs">VGS-001 + VGS-016</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 11</div>
+          <div class="compliance-desc">Technical documentation</div>
+          <div class="compliance-vgs">Zenodo DOI</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 12</div>
+          <div class="compliance-desc">Record-keeping + logging</div>
+          <div class="compliance-vgs">VGS-004 + VGS-008</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 13</div>
+          <div class="compliance-desc">Transparency + explainability</div>
+          <div class="compliance-vgs">VGS-007 ISDAIRE</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 14</div>
+          <div class="compliance-desc">Human oversight mandatory</div>
+          <div class="compliance-vgs">VGS-003</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 43</div>
+          <div class="compliance-desc">Conformity assessment</div>
+          <div class="compliance-vgs">TLA+ + Z3 + 104 vectors</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 51</div>
+          <div class="compliance-desc">High-risk registration</div>
+          <div class="compliance-vgs">VGS-000 Genesis</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 72</div>
+          <div class="compliance-desc">Post-market monitoring</div>
+          <div class="compliance-vgs">Incident Registry</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compliance-card">
+      <div class="compliance-header">🏛️ DORA</div>
+      <div class="compliance-body">
+        <div class="compliance-row">
+          <div class="compliance-article">Art 5</div>
+          <div class="compliance-desc">ICT risk management framework</div>
+          <div class="compliance-vgs">VGS-001 + VGS-011</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 28</div>
+          <div class="compliance-desc">Third-party ICT risk — hyperscalers</div>
+          <div class="compliance-vgs">4th Party Dependency</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 30</div>
+          <div class="compliance-desc">Key contractual provisions</div>
+          <div class="compliance-vgs">VGS-GCC-1.0 Connector</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Art 45</div>
+          <div class="compliance-desc">Digital operational resilience testing</div>
+          <div class="compliance-vgs">VGS-015 + VER-INV-009</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compliance-card">
+      <div class="compliance-header">🇦🇺 APRA CPS 230</div>
+      <div class="compliance-body">
+        <div class="compliance-row">
+          <div class="compliance-article">CPS230_12</div>
+          <div class="compliance-desc">Board AI risk appetite</div>
+          <div class="compliance-vgs">CRO Board Report</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">CPS230_25</div>
+          <div class="compliance-desc">Material risk — AI operational</div>
+          <div class="compliance-vgs">VGS-016 Survivability</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">CPS230_36</div>
+          <div class="compliance-desc">Fourth party dependency</div>
+          <div class="compliance-vgs">4th Party Mapping</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">CPS230_47</div>
+          <div class="compliance-desc">AI incident management</div>
+          <div class="compliance-vgs">Art 72 Incident Registry</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compliance-card">
+      <div class="compliance-header">🌐 OTANIS Framework</div>
+      <div class="compliance-body">
+        <div class="compliance-row">
+          <div class="compliance-article">ISDAIRE</div>
+          <div class="compliance-desc">Ex-ante admissibility certificate</div>
+          <div class="compliance-vgs">VGS-001 + ISDAIRE</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">ARETABA</div>
+          <div class="compliance-desc">Runtime authority construction</div>
+          <div class="compliance-vgs">VGS-006 EAT</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">REFUSED</div>
+          <div class="compliance-desc">Governance boundary enforced</div>
+          <div class="compliance-vgs">Decision Taxonomy</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Non-bypass</div>
+          <div class="compliance-desc">No path around kernel</div>
+          <div class="compliance-vgs">VER-INV-010</div>
+        </div>
+        <div class="compliance-row">
+          <div class="compliance-article">Fail-closed</div>
+          <div class="compliance-desc">REFUSED on any error</div>
+          <div class="compliance-vgs">VER-INV-009</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  ⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · Sovereign Execution Infrastructure for Autonomous AI ·
+  <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank">DOI: 10.5281/zenodo.20264923</a> ·
+  Built in Lagos, Nigeria 🇳🇬
+</footer>
+
+<script>
+const API = 'https://verisigil-api-production.up.railway.app';
+const KEY = 'verisigil-secret-2026';
+const stats = { decisions:0, allowed:0, refused:0, denied:0, escalated:0, juris:{} };
+const feed = [];
+
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="showTab('${id}')"]`).classList.add('active');
+  document.getElementById(`panel-${id}`).classList.add('active');
+  if (id === 'dashboard') updateDashboard();
+}
+
+const scenarios = {
+  'low-trust':       { agent:'shadow-agent-x', action:'payment', amount:50000, jurisdiction:'EU_AI_ACT', trust:0.32, consequence:'HIGH' },
+  'high-consequence':{ agent:'trading-agent-01', action:'transfer', amount:250000, jurisdiction:'EU_AI_ACT', trust:0.88, consequence:'CRITICAL' },
+  'eu-payment':      { agent:'payment-agent-eu', action:'payment', amount:8000, jurisdiction:'EU_AI_ACT', trust:0.963, consequence:'HIGH' },
+  'gcc-sovereign':   { agent:'sovereign-agent-ae', action:'data_access', amount:0, jurisdiction:'GCC_SOVEREIGN', trust:0.91, consequence:'MEDIUM' },
+  'critical':        { agent:'infra-agent-01', action:'delete_records', amount:0, jurisdiction:'EU_AI_ACT', trust:0.72, consequence:'CRITICAL' },
+  'clear':           { agent:'payment-agent-001', action:'payment', amount:50000, jurisdiction:'EU_AI_ACT', trust:0.42, consequence:'HIGH' },
+};
+
+function loadScenario(name) {
+  const s = scenarios[name];
+  if (!s) return;
+  document.getElementById('f-agent').value = s.agent;
+  document.getElementById('f-action').value = s.action;
+  document.getElementById('f-amount').value = s.amount;
+  document.getElementById('f-jurisdiction').value = s.jurisdiction;
+  document.getElementById('f-trust').value = s.trust;
+  document.getElementById('trust-val').textContent = s.trust;
+  document.getElementById('f-consequence').value = s.consequence;
+}
+
+async function runGovernance() {
+  const agent_id = document.getElementById('f-agent').value;
+  const action_type = document.getElementById('f-action').value;
+  const trust_score = parseFloat(document.getElementById('f-trust').value);
+  const jurisdiction = document.getElementById('f-jurisdiction').value;
+  const consequence = document.getElementById('f-consequence').value;
+  const amount_usd = parseFloat(document.getElementById('f-amount').value) || 0;
+  const out = document.getElementById('decision-output');
+  out.innerHTML = '<div class="loading">⬡ Evaluating governance...</div>';
+
+  try {
+    const r = await fetch(`${API}/v1/execution/control`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':KEY},
+      body: JSON.stringify({ agent_id, action_type, trust_score, consequence, jurisdiction, amount_usd })
+    });
+    const d = await r.json();
+    renderDecision(d, out);
+    trackDecision(d, jurisdiction);
+  } catch(e) {
+    // Simulate if API offline
+    const sim = simulateDecision(trust_score, consequence, jurisdiction);
+    renderDecision(sim, out);
+    trackDecision(sim, jurisdiction);
+  }
+}
+
+function simulateDecision(trust, consequence, jurisdiction) {
+  let decision, reason;
+  if (trust < 0.50) { decision = 'DENY'; reason = 'TRUST_BELOW_FLOOR'; }
+  else if (trust < 0.65) { decision = 'REFUSED'; reason = 'ISDAIRE_TRUST_INSUFFICIENT'; }
+  else if (consequence === 'CRITICAL') { decision = 'REQUIRE_HUMAN_APPROVAL'; reason = 'CRITICAL_CONSEQUENCE_MANDATORY_OVERSIGHT'; }
+  else if (consequence === 'HIGH' && trust < 0.85) { decision = 'REQUIRE_HUMAN_APPROVAL'; reason = 'HIGH_CONSEQUENCE_LOW_TRUST'; }
+  else { decision = 'ALLOW'; reason = 'ALL_CONDITIONS_SATISFIED'; }
+  return {
+    request_id: 'SIM-' + Math.random().toString(36).substr(2,6).toUpperCase(),
+    decision, schema: 'VGS-EXECUTION-CONTROL-1.0',
+    positive_signal: decision !== 'DENY',
+    governance_status: {ALLOW:'PASSED',REFUSED:'ENFORCED',DENY:'FAILED',REQUIRE_HUMAN_APPROVAL:'ESCALATED'}[decision],
+    policy: { policy_id:'POL-001', policy_version:'1.0', policy_hash:'a2239a28...' },
+    evidence: { evidence_class: {ALLOW:'ADR',REFUSED:'PVR',DENY:'PVR',REQUIRE_HUMAN_APPROVAL:'EER'}[decision] },
+    escalation: { required: decision === 'REQUIRE_HUMAN_APPROVAL', approver: 'DPO', sla_hours: 48 },
+    ver_inv_009: 'FAIL_CLOSED_ACTIVE', ver_inv_010: 'NON_BYPASS_ENFORCED',
+    _reason: reason,
+  };
+}
+
+function renderDecision(d, container) {
+  const dec = d.decision;
+  const classes = {ALLOW:'badge-allow',REFUSED:'badge-refused',DENY:'badge-deny',REQUIRE_HUMAN_APPROVAL:'badge-human'};
+  const icons = {ALLOW:'✓',REFUSED:'⊘',DENY:'✗',REQUIRE_HUMAN_APPROVAL:'⚠'};
+  const colors = {ALLOW:'green',REFUSED:'amber',DENY:'red',REQUIRE_HUMAN_APPROVAL:''};
+
+  const reason = d._reason || (d.escalation?.required ? 'ESCALATION_REQUIRED' : d.governance_status);
+
+  container.innerHTML = `
+    <div class="decision-badge ${classes[dec]}">${icons[dec]} ${dec}</div>
+    <div class="output-row"><span class="output-key">request_id</span><span class="output-val">${d.request_id}</span></div>
+    <div class="output-row"><span class="output-key">schema</span><span class="output-val" style="font-size:10px">${d.schema||'VGS-EXECUTION-CONTROL-1.0'}</span></div>
+    <div class="output-row"><span class="output-key">reason</span><span class="output-val ${colors[dec]}">${reason}</span></div>
+    <div class="output-row"><span class="output-key">governance_status</span><span class="output-val">${d.governance_status}</span></div>
+    <div class="output-row"><span class="output-key">positive_signal</span><span class="output-val ${d.positive_signal?'green':'red'}">${d.positive_signal}</span></div>
+    <div class="output-row"><span class="output-key">policy_hash</span><span class="output-val" style="font-size:9px">${(d.policy?.policy_hash||'--').substring(0,16)}...</span></div>
+    <div class="output-row"><span class="output-key">evidence_class</span><span class="output-val">${d.evidence?.evidence_class||'--'}</span></div>
+    <div class="output-row"><span class="output-key">escalation_required</span><span class="output-val ${d.escalation?.required?'amber':''}">${d.escalation?.required||false}</span></div>
+    <div class="output-row"><span class="output-key">ver_inv_009</span><span class="output-val green">${d.ver_inv_009||'FAIL_CLOSED_ACTIVE'}</span></div>
+    <div class="output-row"><span class="output-key">ver_inv_010</span><span class="output-val green">${d.ver_inv_010||'NON_BYPASS_ENFORCED'}</span></div>
+  `;
+}
+
+function trackDecision(d, jurisdiction) {
+  stats.decisions++;
+  if (d.decision === 'ALLOW') stats.allowed++;
+  else if (d.decision === 'REFUSED') stats.refused++;
+  else if (d.decision === 'DENY') stats.denied++;
+  else if (d.decision === 'REQUIRE_HUMAN_APPROVAL') stats.escalated++;
+  stats.juris[jurisdiction] = (stats.juris[jurisdiction]||0) + 1;
+  feed.unshift({ decision: d.decision, agent: document.getElementById('f-agent').value, time: new Date().toLocaleTimeString() });
+  if (feed.length > 10) feed.pop();
+}
+
+function updateDashboard() {
+  document.getElementById('m-agents').textContent = Math.floor(Math.random()*12)+3;
+  document.getElementById('m-decisions').textContent = stats.decisions;
+  document.getElementById('m-escalations').textContent = stats.escalated;
+  document.getElementById('m-refused').textContent = stats.refused;
+  document.getElementById('m-health').textContent = '99.5';
+  document.getElementById('m-incidents').textContent = '0';
+
+  const colors = {ALLOW:'var(--green)',REFUSED:'var(--amber)',DENY:'var(--red)',REQUIRE_HUMAN_APPROVAL:'var(--purple)'};
+  const actFeed = document.getElementById('activity-feed');
+  if (feed.length === 0) {
+    actFeed.innerHTML = '<div style="color:var(--mid);font-size:11px;text-align:center;padding:20px;">Run governance checks to see activity</div>';
+  } else {
+    actFeed.innerHTML = feed.map(f => `
+      <div class="activity-row">
+        <div class="act-dot" style="background:${colors[f.decision]};box-shadow:0 0 5px ${colors[f.decision]}"></div>
+        <div class="act-agent">${f.agent}</div>
+        <div class="act-decision" style="background:${colors[f.decision]}22;color:${colors[f.decision]};border:1px solid ${colors[f.decision]}44">${f.decision}</div>
+        <div class="act-time">${f.time}</div>
+      </div>
+    `).join('');
+  }
+
+  const jKeys = {'EU_AI_ACT':'j-eu','US_NIST':'j-us','GCC_SOVEREIGN':'j-gcc','APRA_CPS230':'j-apra'};
+  Object.entries(jKeys).forEach(([k,id]) => {
+    document.getElementById(id).textContent = stats.juris[k]||0;
+  });
+}
+
+async function generateIdentityChain() {
+  const name = document.getElementById('id-name').value;
+  const org  = document.getElementById('id-org').value;
+  const jur  = document.getElementById('id-jurisdiction').value;
+  const icons = document.querySelectorAll('.chain-icon');
+  icons.forEach(i => { i.classList.remove('done','active'); i.classList.add('pending'); });
+
+  const steps = [
+    { id:'ch-genesis', icon: 0, label:'GEN-' + Math.random().toString(36).substr(2,8).toUpperCase() + ' · hash: ' + randomHash(16) + '...' },
+    { id:'ch-passport', icon:1, label:'PASSPORT ISSUED · Ed25519 + Dilithium-3 · pq_secure: true' },
+    { id:'ch-jurisdiction', icon:2, label:`Jurisdiction: ${jur} · Regimes: EU_AI_ACT + DORA + FSB_FRAMEWORK` },
+    { id:'ch-eat', icon:3, label:'EAT-' + randomHash(8) + ' · max_consequence: HIGH · valid: 24h' },
+    { id:'ch-admissibility', icon:4, label:'Runtime Guard ACTIVE · VER-INV-009 FAIL_CLOSED · VER-INV-010 NON_BYPASS' },
+    { id:'ch-history', icon:5, label:'Evidence chain ACTIVE · classification_hash bound · 6yr retention · offline_verifiable: true' },
+  ];
+
+  for (let i = 0; i < steps.length; i++) {
+    await sleep(400);
+    icons[steps[i].icon].classList.remove('pending');
+    icons[steps[i].icon].classList.add('active');
+    document.getElementById(steps[i].id).textContent = steps[i].label;
+    await sleep(300);
+    icons[steps[i].icon].classList.remove('active');
+    icons[steps[i].icon].classList.add('done');
+  }
+  icons[6].classList.remove('pending');
+  icons[6].classList.add('active');
+  document.getElementById('ch-revocation').textContent = 'ACTIVE — No revocation on record · Genesis hash: ' + randomHash(16) + '...';
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function randomHash(len) {
+  const chars = '0123456789abcdef';
+  return Array.from({length:len}, () => chars[Math.floor(Math.random()*16)]).join('');
+}
+
+function loadDemoReplay() {
+  document.getElementById('replay-container').style.display = 'block';
+  document.getElementById('replay-id').textContent = 'TAP-DF385AB3';
+  document.getElementById('replay-meta').textContent = 'Agent: vsa_1483d06a89c4 · Action: payment · EU AI Act · 2026-05-19T06:15:00Z';
+
+  const verdict = document.getElementById('replay-verdict');
+  verdict.textContent = '✓ ADMISSIBLE';
+  verdict.style.cssText = 'font-family:var(--display);font-size:16px;font-weight:800;padding:8px 18px;border-radius:8px;background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.3)';
+
+  const events = [
+    { color:'var(--cyan)', ts:'06:15:00.000', action:'GENESIS VERIFIED', detail:'GEN-6C9A0615 · legitimacy_status: REGISTERED · jurisdiction: EU' },
+    { color:'var(--green)', ts:'06:15:00.012', action:'AUTHORITY WINDOW ACTIVE', detail:'valid_from: 2026-05-18T00:00:00 · valid_until: 2026-05-19T00:00:00 · seconds_remaining: 63,900' },
+    { color:'var(--green)', ts:'06:15:00.024', action:'TRUST SCORE SUFFICIENT', detail:'trust_score: 0.963 ≥ required: 0.85 · consequence: HIGH' },
+    { color:'var(--green)', ts:'06:15:00.031', action:'JURISDICTION RESOLVED', detail:'EU_AI_ACT · primary_regime: EU_AI_ACT · conflicts_detected: false' },
+    { color:'var(--green)', ts:'06:15:00.038', action:'GCS CONTINUOUS', detail:'gcs_at_execution: 0.9703 · formula: T^0.4 × R^0.3 × V^0.2 × D^0.1' },
+    { color:'var(--amber)', ts:'06:15:00.045', action:'ESCALATION REQUIRED', detail:'HIGH consequence → REQUIRE_HUMAN_APPROVAL · DPO · 48hr SLA' },
+    { color:'var(--green)', ts:'06:15:00.052', action:'HUMAN APPROVAL RECORDED', detail:'approver: DPO_Maria · approved_at: 06:14:55 · signature: verified' },
+    { color:'var(--cyan)', ts:'06:15:00.060', action:'TEMPORAL PROOF ISSUED', detail:'TAP-DF385AB3 · admissible_at_execution: true · hash: 1a80a05f...' },
+    { color:'var(--green)', ts:'06:15:00.071', action:'EXECUTION BINDING FORMED', detail:'∃ executable_path · all 5 topology nodes resolved · path_formable: true' },
+    { color:'var(--purple)', ts:'06:15:00.085', action:'EVIDENCE SEALED', detail:'ADR_69d0c9e4 · classification_hash: 8bd9b3c4... · immutable: true · offline_verifiable: true' },
+  ];
+
+  document.getElementById('replay-timeline').innerHTML = events.map(e => `
+    <div class="replay-event" style="--event-color:${e.color}">
+      <div class="replay-ts">${e.ts}</div>
+      <div class="replay-action">${e.action}</div>
+      <div class="replay-detail">${e.detail}</div>
+    </div>
+  `).join('');
+}
+
+// Init
+updateDashboard();
+</script>
+</body>
+</html>

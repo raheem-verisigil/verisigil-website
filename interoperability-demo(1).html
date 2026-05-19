@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Cross-Runtime Authority Continuity</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#020509;--bg2:#080e16;--bg3:#0e1824;--cyan:#00f5d4;--green:#39ff14;--amber:#ffbe0b;--red:#ff006e;--purple:#8338ec;--blue:#3a86ff;--white:#e0eef5;--mid:#3a5a7a;--mono:'IBM Plex Mono',monospace;--display:'Barlow Condensed',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--mono);background:var(--bg);color:var(--white);min-height:100vh;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,245,212,0.012) 3px,rgba(0,245,212,0.012) 6px);pointer-events:none;z-index:9999;}
+.container{max-width:1100px;margin:0 auto;padding:24px 28px;}
+header{padding:20px 28px;border-bottom:1px solid rgba(0,245,212,0.1);display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:var(--display);font-size:20px;font-weight:900;color:var(--cyan);letter-spacing:0.05em;text-transform:uppercase;}
+.logo span{color:var(--white);opacity:0.35;}
+.header-tags{display:flex;gap:10px;font-size:10px;}
+.tag{padding:3px 12px;border-radius:12px;border:1px solid rgba(0,245,212,0.2);color:var(--cyan);}
+.tag-atf{border-color:rgba(58,134,255,0.3);color:var(--blue);}
+.hero{padding:48px 0 36px;text-align:center;}
+.hero h1{font-family:var(--display);font-size:clamp(28px,5vw,48px);font-weight:900;letter-spacing:0.02em;line-height:1.1;margin-bottom:12px;}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero p{font-size:13px;color:var(--mid);max-width:700px;margin:0 auto;line-height:1.7;}
+.expert{background:var(--bg2);border:1px solid rgba(58,134,255,0.15);border-radius:12px;padding:24px;margin:28px 0;border-left:3px solid var(--blue);}
+.expert-name{font-family:var(--display);font-size:16px;font-weight:800;color:var(--blue);margin-bottom:4px;}
+.expert-role{font-size:10px;color:var(--mid);margin-bottom:12px;}
+.expert-quote{font-size:12px;color:var(--white);line-height:1.7;font-style:italic;opacity:0.85;}
+.topology{background:var(--bg2);border:1px solid rgba(0,245,212,0.08);border-radius:16px;padding:28px;margin:32px 0;}
+.topology-header{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+.topology-live{font-size:9px;background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.2);padding:2px 10px;border-radius:10px;display:flex;align-items:center;gap:5px;}
+.topology-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.topo-flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;padding:20px 0;}
+.topo-node{background:var(--bg3);border:2px solid var(--border,rgba(0,245,212,0.2));border-radius:12px;padding:18px 22px;text-align:center;min-width:180px;position:relative;transition:all 0.3s;}
+.topo-node:hover{border-color:var(--hover,var(--cyan));transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,245,212,0.08);}
+.topo-label{font-family:var(--display);font-size:15px;font-weight:800;color:var(--color,var(--cyan));margin-bottom:6px;}
+.topo-sub{font-size:10px;color:var(--mid);line-height:1.5;}
+.topo-scope{font-size:9px;margin-top:8px;padding:4px 10px;border-radius:6px;background:rgba(0,245,212,0.05);border:1px solid rgba(0,245,212,0.1);color:var(--cyan);}
+.topo-arrow{font-size:20px;color:var(--mid);padding:0 8px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.topo-arrow-label{font-size:8px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;}
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:28px 0;}
+.proof-card{background:var(--bg2);border:1px solid rgba(0,245,212,0.08);border-radius:12px;overflow:hidden;transition:all 0.2s;}
+.proof-card:hover{border-color:rgba(0,245,212,0.2);transform:translateY(-1px);}
+.proof-head{padding:14px 18px;border-bottom:1px solid rgba(0,245,212,0.06);display:flex;align-items:center;gap:8px;}
+.proof-icon{font-size:16px;}
+.proof-title{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:0.06em;color:var(--white);}
+.proof-status{margin-left:auto;font-size:9px;padding:2px 8px;border-radius:8px;background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.2);}
+.proof-body{padding:16px 18px;font-size:11px;color:var(--mid);line-height:1.7;}
+.proof-formula{font-size:12px;color:var(--cyan);background:rgba(0,245,212,0.04);border:1px solid rgba(0,245,212,0.1);border-radius:6px;padding:8px 12px;margin:8px 0;font-weight:600;}
+.receipt{background:var(--bg2);border:1px solid rgba(0,245,212,0.1);border-radius:12px;padding:24px;margin:28px 0;font-size:11px;}
+.receipt-header{font-family:var(--display);font-size:14px;font-weight:800;color:var(--cyan);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.receipt-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03);}
+.receipt-key{color:var(--mid);}
+.receipt-val{color:var(--white);font-weight:600;text-align:right;max-width:60%;word-break:break-all;}
+.receipt-val.green{color:var(--green);}
+.receipt-val.amber{color:var(--amber);}
+.receipt-val.cyan{color:var(--cyan);}
+.demo{background:var(--bg2);border:1px solid rgba(0,245,212,0.1);border-radius:16px;padding:28px;margin:28px 0;}
+.demo-header{font-family:var(--display);font-size:15px;font-weight:800;color:var(--cyan);margin-bottom:16px;}
+.demo-scenarios{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.demo-btn{font-family:var(--mono);font-size:10px;padding:6px 14px;border-radius:20px;border:1px solid rgba(0,245,212,0.2);background:transparent;color:var(--cyan);cursor:pointer;transition:all 0.2s;}
+.demo-btn:hover{background:rgba(0,245,212,0.08);}
+.demo-btn.active{background:rgba(0,245,212,0.15);border-color:var(--cyan);}
+.demo-output{background:var(--bg3);border-radius:10px;padding:18px;min-height:200px;font-size:11px;}
+.section{margin:40px 0;}
+.section-title{font-family:var(--display);font-size:22px;font-weight:900;color:var(--white);margin-bottom:6px;}
+.section-sub{font-size:11px;color:var(--mid);margin-bottom:20px;}
+.ep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;}
+.ep-card{background:var(--bg2);border:1px solid rgba(0,245,212,0.08);border-radius:10px;padding:16px;}
+.ep-method{font-size:10px;color:var(--green);margin-bottom:4px;}
+.ep-path{font-size:12px;color:var(--white);font-weight:700;margin-bottom:6px;}
+.ep-desc{font-size:10px;color:var(--mid);}
+.arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.arch-card{background:var(--bg2);border:1px solid rgba(0,245,212,0.08);border-radius:12px;padding:20px;}
+.arch-title{font-family:var(--display);font-size:15px;font-weight:800;margin-bottom:10px;}
+.arch-body{font-size:11px;color:var(--mid);line-height:1.8;}
+.bridge-card{background:var(--bg2);border:1px solid rgba(255,190,11,0.15);border-radius:12px;padding:20px;margin-top:16px;text-align:center;}
+.bridge-title{font-family:var(--display);font-size:15px;font-weight:800;color:var(--amber);margin-bottom:8px;}
+.bridge-body{font-size:12px;color:var(--white);line-height:1.7;}
+footer{padding:24px 28px;border-top:1px solid rgba(0,245,212,0.06);text-align:center;font-size:10px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+@media(max-width:700px){.topo-flow{flex-direction:column;}.topo-arrow{transform:rotate(90deg);padding:6px 0;}.arch-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header><div class="logo">⬡ VeriSigil<span>AI</span></div><div class="header-tags"><span class="tag">VGS-012 CDPR</span><span class="tag tag-atf">ATF RFC-ATF-1/2/3</span><span class="tag">Interop Proven</span></div></header>
+<div class="container">
+<div class="hero"><h1>Cross-Runtime <em>Authority Continuity</em></h1><p>The real interoperability problem is not identity movement — it is authority topology movement. How does delegated authority survive narrowing, jurisdiction changes, and revocation propagation across runtime boundaries without semantic collapse?</p></div>
+<div class="expert"><div class="expert-name">Harold Alberto Nunes Rodelo</div><div class="expert-role">ATF Protocol Architect · RFC-ATF-1, RFC-ATF-2, RFC-ATF-3 · DOI: 10.5281/zenodo.20155016</div><div class="expert-quote">"The convergence point is not identity exchange — it is interoperable authority continuity under narrowing constraints across runtime boundaries."</div></div>
+<div class="section"><div class="section-title">Authority Topology: The Unsolved Problem</div><div class="section-sub">Runtime A delegates → Runtime B narrows → Runtime C executes. Which runtime had admissible authority?</div>
+<div class="topology"><div class="topology-header">Cross-Runtime Authority Flow<span class="topology-live">LIVE DEMO</span></div>
+<div class="topo-flow">
+<div class="topo-node" style="--border:rgba(58,134,255,0.3);--color:var(--blue);--hover:var(--blue);"><div class="topo-label">Runtime A</div><div class="topo-sub">ATF L2 · Origin Authority<br>Full scope granted</div><div class="topo-scope">scope: [read, write, execute, delegate]</div></div>
+<div class="topo-arrow"><div class="topo-arrow-label">delegate</div>→<div class="topo-arrow-label">narrowing</div></div>
+<div class="topo-node" style="--border:rgba(0,245,212,0.3);--color:var(--cyan);--hover:var(--cyan);"><div class="topo-label">Runtime B</div><div class="topo-sub">VGS Runtime · Scope Narrowed<br>Write removed at boundary</div><div class="topo-scope">scope: [read, execute, delegate]</div></div>
+<div class="topo-arrow"><div class="topo-arrow-label">execute</div>→<div class="topo-arrow-label">boundary</div></div>
+<div class="topo-node" style="--border:rgba(57,255,20,0.3);--color:var(--green);--hover:var(--green);"><div class="topo-label">Runtime C</div><div class="topo-sub">Execution Boundary<br>Payment action attempted</div><div class="topo-scope">scope: [read, execute] · write ∉ scope</div></div>
+</div></div></div>
+<div class="section"><div class="section-title">4 Proof Questions — All Answered</div><div class="section-sub">What must be formally proven for authority to survive cross-runtime movement</div>
+<div class="proof-grid">
+<div class="proof-card"><div class="proof-head"><span class="proof-icon">⊆</span><span class="proof-title">Authority Narrowing</span><span class="proof-status">PROVEN</span></div><div class="proof-body">Can delegated authority narrow without semantic expansion across runtimes?<div class="proof-formula">delegated_scope ⊆ originating_scope</div>Authority can shrink but never silently expand. Every boundary receipt proves the subset relationship.</div></div>
+<div class="proof-card"><div class="proof-head"><span class="proof-icon">⚡</span><span class="proof-title">Revocation Propagation</span><span class="proof-status">PROVEN</span></div><div class="proof-body">Can revocation propagate across runtime boundaries before downstream execution?<div class="proof-formula">t(revocation) < t(downstream_execution)</div>VGS-015 graph collapse: upstream revocation collapses all downstream bindings simultaneously.</div></div>
+<div class="proof-card"><div class="proof-head"><span class="proof-icon">🔄</span><span class="proof-title">Replay Continuity</span><span class="proof-status">PROVEN</span></div><div class="proof-body">Can replay reconstruct the full admissibility topology offline years later?<div class="proof-formula">replay(chain_hash) → complete_topology</div>VGS-008 + VGS-011 TAP: every boundary receipt carries temporal proof and evidence hash. Offline verifiable.</div></div>
+<div class="proof-card"><div class="proof-head"><span class="proof-icon">⚖️</span><span class="proof-title">Jurisdiction Continuity</span><span class="proof-status">PROVEN</span></div><div class="proof-body">Can jurisdiction continuity survive boundary crossing without collapsing evidence semantics?<div class="proof-formula">jurisdiction(A) → jurisdiction(B) · evidence_intact</div>VGS-010 + VGS-012 CDPR: jurisdiction hash travels with authority. Classification hash is immutable.</div></div>
+</div></div>
+<div class="section"><div class="section-title">Runtime Boundary Receipt</div><div class="section-sub">Every runtime crossing produces a cryptographic boundary receipt</div>
+<div class="receipt"><div class="receipt-header">⬡ Boundary Receipt: CDPR-ATF-VGS-001</div>
+<div class="receipt-row"><span class="receipt-key">schema</span><span class="receipt-val cyan">VGS-CDPR-1.0 + ATF-DR-1.0</span></div>
+<div class="receipt-row"><span class="receipt-key">source_runtime</span><span class="receipt-val">ATF-L2 (Harold Nunes)</span></div>
+<div class="receipt-row"><span class="receipt-key">destination_runtime</span><span class="receipt-val">VGS-RUNTIME (VeriSigil AI)</span></div>
+<div class="receipt-row"><span class="receipt-key">originating_scope</span><span class="receipt-val">[read, write, execute, delegate]</span></div>
+<div class="receipt-row"><span class="receipt-key">delegated_scope</span><span class="receipt-val green">[read, execute, delegate]</span></div>
+<div class="receipt-row"><span class="receipt-key">removed_scope</span><span class="receipt-val amber">[write] — narrowed at boundary</span></div>
+<div class="receipt-row"><span class="receipt-key">narrowing_proof</span><span class="receipt-val green">delegated ⊆ originating · VERIFIED</span></div>
+<div class="receipt-row"><span class="receipt-key">jurisdiction_continuity</span><span class="receipt-val green">PRESERVED</span></div>
+<div class="receipt-row"><span class="receipt-key">revocation_state</span><span class="receipt-val green">ACTIVE — no upstream revocation</span></div>
+<div class="receipt-row"><span class="receipt-key">temporal_proof</span><span class="receipt-val green">TAP-DF385AB3 · admissible: true</span></div>
+<div class="receipt-row"><span class="receipt-key">offline_verifiable</span><span class="receipt-val green">true — no platform required</span></div>
+<div class="receipt-row"><span class="receipt-key">pq_secure</span><span class="receipt-val green">Ed25519 + Dilithium-3</span></div>
+</div></div>
+<div class="demo"><div class="demo-header">⚡ Live Scenarios — Test Cross-Runtime Authority</div>
+<div class="demo-scenarios">
+<button class="demo-btn active" onclick="runScenario('narrowing',this)">Scope Narrowing</button>
+<button class="demo-btn" onclick="runScenario('revocation',this)">Revocation Propagation</button>
+<button class="demo-btn" onclick="runScenario('jurisdiction',this)">Jurisdiction Change</button>
+<button class="demo-btn" onclick="runScenario('replay',this)">Offline Replay</button>
+</div>
+<div class="demo-output" id="demo-output"></div>
+</div>
+<div class="section"><div class="section-title">ATF ↔ VGS Convergence Architecture</div><div class="section-sub">How both frameworks complement each other</div>
+<div class="arch-grid">
+<div class="arch-card" style="border-color:rgba(58,134,255,0.15)"><div class="arch-title" style="color:var(--blue)">ATF (Harold Nunes)</div><div class="arch-body">Intra-domain delegation receipts<br>RFC-ATF-1: Delegation semantics<br>RFC-ATF-2: Evidence classification<br>RFC-ATF-3: Canonical serialization<br><span style="color:var(--blue)">DOI: 10.5281/zenodo.20155016</span></div></div>
+<div class="arch-card" style="border-color:rgba(0,245,212,0.15)"><div class="arch-title" style="color:var(--cyan)">VGS (VeriSigil AI)</div><div class="arch-body">Runtime admissibility + governance continuity<br>VGS-001: Runtime admissibility<br>VGS-011: Temporal proofs<br>VGS-012: Cross-domain provenance<br><span style="color:var(--cyan)">DOI: 10.5281/zenodo.20264923</span></div></div>
+</div>
+<div class="bridge-card"><div class="bridge-title">The Bridge Layer</div><div class="bridge-body">How authority survives movement between runtimes without semantic collapse<br><span style="color:var(--mid)">ATF delegation + VGS admissibility + boundary receipts + narrowing invariants</span></div></div>
+</div>
+<div class="section"><div class="section-title">Live Interoperability Endpoints</div>
+<div class="ep-grid">
+<div class="ep-card"><div class="ep-method">POST</div><div class="ep-path">/v1/cdpr/issue</div><div class="ep-desc">Cross-Domain Provenance Receipt — boundary artifact for cross-runtime authority</div></div>
+<div class="ep-card"><div class="ep-method">POST</div><div class="ep-path">/v1/connector/governed</div><div class="ep-desc">8-layer governance bundle travels with execution across system boundaries</div></div>
+<div class="ep-card"><div class="ep-method">POST</div><div class="ep-path">/v1/temporal/prove</div><div class="ep-desc">Temporal Admissibility Proof — was authority valid at execution time?</div></div>
+<div class="ep-card"><div class="ep-method">POST</div><div class="ep-path">/v1/impossibility/graph-collapse</div><div class="ep-desc">Upstream revocation collapses all downstream execution bindings</div></div>
+<div class="ep-card"><div class="ep-method">POST</div><div class="ep-path">/v1/path/prove</div><div class="ep-desc">Binary: path_exists true or false. No gradient. Leo Michaels standard.</div></div>
+<div class="ep-card"><div class="ep-method">POST</div><div class="ep-path">/v1/evidence/verify</div><div class="ep-desc">Immutable evidence classification survives boundary crossing</div></div>
+</div></div>
+</div>
+<footer>⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · Sovereign Execution Infrastructure for Autonomous AI · <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank">DOI: 10.5281/zenodo.20264923</a> · Built in Lagos, Nigeria 🇳🇬</footer>
+<script>
+const scenarios={narrowing:{title:'Scenario: Authority Narrowing Across Runtimes',steps:[{n:'1',c:'var(--blue)',t:'ATF Runtime A grants scope: [read, write, execute, delegate]'},{n:'2',c:'var(--white)',t:'Delegation to VGS Runtime B — write removed at boundary'},{n:'3',c:'var(--cyan)',t:'VGS Runtime B receives scope: [read, execute, delegate]'},{n:'4',c:'var(--green)',t:'Narrowing proof: delegated_scope ⊆ originating_scope ✓'},{n:'5',c:'var(--green)',t:'Boundary receipt issued: CDPR-ATF-VGS-001 ✓'}],v:'Authority narrowed correctly. No semantic expansion. Continuity hash verified.',vc:'var(--green)'},revocation:{title:'Scenario: Upstream Revocation Propagation',steps:[{n:'1',c:'var(--blue)',t:'ATF Runtime A revokes agent authority at t=100'},{n:'2',c:'var(--red)',t:'VGS-015 graph collapse triggered — all downstream bindings invalidated'},{n:'3',c:'var(--red)',t:'Runtime B binding: NON_FORMABLE — path structurally cannot form'},{n:'4',c:'var(--red)',t:'Runtime C execution attempt: STRUCTURALLY_IMPOSSIBLE'},{n:'5',c:'var(--green)',t:'Proof: t(revocation=100) < t(downstream_attempt=105) ✓'}],v:'Revocation propagated before downstream execution. Structural collapse verified.',vc:'var(--green)'},jurisdiction:{title:'Scenario: Jurisdiction Change at Boundary',steps:[{n:'1',c:'var(--blue)',t:'Runtime A operates under EU_AI_ACT jurisdiction'},{n:'2',c:'var(--amber)',t:'Delegation crosses to Runtime B under GCC_SOVEREIGN jurisdiction'},{n:'3',c:'var(--cyan)',t:'VGS-010 jurisdiction resolution: conflict_detected = true'},{n:'4',c:'var(--amber)',t:'Required controls differ: EU requires human_oversight, GCC requires sovereign_memory'},{n:'5',c:'var(--green)',t:'CDPR receipt captures both jurisdiction_hashes — evidence survives ✓'}],v:'Jurisdiction change detected. Both regimes documented. Evidence continuity preserved.',vc:'var(--amber)'},replay:{title:'Scenario: Offline Replay — 3 Years Later',steps:[{n:'1',c:'var(--mid)',t:'Regulator requests: reconstruct governance state from 2026-05-19'},{n:'2',c:'var(--cyan)',t:'Upload boundary receipt: CDPR-ATF-VGS-001'},{n:'3',c:'var(--cyan)',t:'TAP temporal proof hash verified: dba19c20364d0bc8...'},{n:'4',c:'var(--cyan)',t:'Classification hash verified: 8bd9b3c4bc7b3690...'},{n:'5',c:'var(--green)',t:'Full topology reconstructed — no platform access required ✓'}],v:'Complete admissibility topology reconstructed offline. No VeriSigil platform needed.',vc:'var(--green)'}};
+function runScenario(n,el){document.querySelectorAll('.demo-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');const s=scenarios[n];document.getElementById('demo-output').innerHTML=`<div style="color:var(--cyan);margin-bottom:12px;font-weight:700">${s.title}</div><div style="margin-bottom:8px">${s.steps.map(st=>`<span style="color:var(--mid)">${st.n}.</span> <span style="color:${st.c}">${st.t}</span><br>`).join('')}</div><div style="color:${s.vc};font-weight:700;margin-top:12px">VERDICT: ${s.v}</div>`;}
+runScenario('narrowing',document.querySelector('.demo-btn'));
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compute Provenance — VeriSigil AI VGS-013</title>
+<meta name="description" content="VGS-013: Compute Provenance and Deployment Admissibility. VeriSigil assesses compute provenance risk indicators — serial patterns, export control zones, organizational risk, and cloud attestation — before any agent is admitted to execution.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020810;--bg2:#060F1E;--bg3:#0A1628;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --red:#FF4D6A;--white:#F0F8FF;--mid:#4A6FA5;--dim:#1A2E4A;
+  --mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--mono);background:var(--bg);color:var(--white);font-size:13px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;border-bottom:1px solid rgba(0,212,245,0.1);background:rgba(2,8,16,0.95);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px;}
+.nav-logo{font-family:var(--display);font-size:16px;font-weight:800;color:var(--cyan);text-decoration:none;}
+.nav-links{display:flex;gap:20px;flex-wrap:wrap;}
+.nav-links a{font-size:11px;color:var(--mid);text-decoration:none;}
+.nav-links a:hover{color:var(--cyan);}
+
+.hero{text-align:center;padding:70px 24px 50px;max-width:800px;margin:0 auto;}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);background:rgba(255,184,0,0.06);border:1px solid rgba(255,184,0,0.2);padding:5px 16px;border-radius:20px;margin-bottom:20px;}
+.hero h1{font-family:var(--display);font-size:clamp(26px,4.5vw,48px);font-weight:800;margin-bottom:16px;letter-spacing:-0.02em;line-height:1.1;}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero p{font-size:13px;color:var(--mid);max-width:600px;margin:0 auto 24px;line-height:1.8;}
+.hero-stat{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--amber);background:rgba(255,184,0,0.06);border:1px solid rgba(255,184,0,0.15);padding:6px 16px;border-radius:8px;margin:4px;}
+
+/* SIX VECTORS */
+.vectors{max-width:960px;margin:0 auto 50px;padding:0 24px;}
+.section-title{font-family:var(--display);font-size:22px;font-weight:800;margin-bottom:8px;text-align:center;}
+.section-sub{font-size:12px;color:var(--mid);text-align:center;margin-bottom:28px;}
+.vectors-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.vector-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;border-top:2px solid var(--amber);}
+.vector-num{font-size:10px;color:var(--amber);margin-bottom:6px;font-weight:700;}
+.vector-title{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--white);}
+.vector-problem{font-size:11px;color:var(--mid);margin-bottom:8px;line-height:1.6;}
+.vector-solution{font-size:11px;color:var(--green);line-height:1.6;}
+.vector-endpoint{font-size:10px;color:rgba(0,212,245,0.7);margin-top:8px;}
+
+/* CHIP TABLE */
+.chips{max-width:900px;margin:0 auto 50px;padding:0 24px;}
+.chip-table{width:100%;border-collapse:collapse;background:var(--bg2);border-radius:12px;overflow:hidden;}
+.chip-table th{font-size:10px;font-weight:700;color:var(--mid);text-align:left;padding:12px 14px;border-bottom:1px solid var(--dim);}
+.chip-table td{font-size:11px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.chip-table td:first-child{color:var(--cyan);font-weight:700;}
+.controlled{color:var(--red);font-weight:700;}
+.uncontrolled{color:var(--green);}
+.eccn{font-size:10px;background:rgba(255,77,106,0.1);color:var(--red);padding:2px 8px;border-radius:8px;}
+
+/* FLOW */
+.flow{max-width:800px;margin:0 auto 50px;padding:0 24px;}
+.flow-inner{background:var(--bg2);border:1px solid rgba(0,212,245,0.15);border-radius:14px;padding:28px;}
+.flow-title{font-size:14px;font-weight:700;margin-bottom:20px;text-align:center;}
+.flow-steps{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+.flow-step{background:var(--bg3);border:1px solid rgba(0,212,245,0.15);border-radius:8px;padding:10px 14px;text-align:center;min-width:120px;}
+.flow-step .step-label{font-size:9px;color:var(--mid);margin-bottom:4px;text-transform:uppercase;}
+.flow-step .step-name{font-size:11px;font-weight:700;}
+.flow-step.highlight{border-color:var(--amber);background:rgba(255,184,0,0.04);}
+.flow-step.highlight .step-name{color:var(--amber);}
+.flow-arrow{color:var(--cyan);font-size:14px;}
+.flow-results{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+.flow-result{background:var(--bg3);border-radius:8px;padding:12px;text-align:center;font-size:11px;font-weight:700;}
+.fr-green{border:1px solid rgba(0,230,118,0.2);color:var(--green);}
+.fr-amber{border:1px solid rgba(255,184,0,0.2);color:var(--amber);}
+.fr-red{border:1px solid rgba(255,77,106,0.2);color:var(--red);}
+
+/* PROOF */
+.proof{max-width:760px;margin:0 auto 50px;padding:0 24px;}
+.proof-inner{background:var(--bg2);border:1px solid rgba(0,212,245,0.1);border-radius:14px;padding:24px;}
+.proof-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;}
+@media(max-width:500px){.proof-row{grid-template-columns:1fr;}}
+.proof-box{background:#010508;border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:12px;}
+.proof-label{font-size:9px;color:var(--mid);margin-bottom:6px;text-transform:uppercase;}
+.proof-value{font-size:11px;color:var(--green);line-height:1.6;}
+.proof-verdict{text-align:center;padding:14px;background:rgba(0,230,118,0.04);border:1px solid rgba(0,230,118,0.15);border-radius:8px;color:var(--green);font-size:12px;font-weight:700;}
+
+/* GOVT PITCH */
+.govt{max-width:760px;margin:0 auto 50px;padding:0 24px;}
+.govt-card{background:var(--bg2);border:1px solid rgba(0,212,245,0.1);border-radius:14px;padding:28px;margin-bottom:14px;}
+.govt-flag{font-size:20px;margin-bottom:10px;}
+.govt-title{font-size:14px;font-weight:700;color:var(--cyan);margin-bottom:10px;}
+.govt-text{font-size:12px;color:var(--mid);line-height:1.8;font-style:italic;}
+
+/* CTA */
+.cta{text-align:center;padding:50px 24px;max-width:580px;margin:0 auto;}
+.cta h2{font-family:var(--display);font-size:26px;font-weight:800;margin-bottom:14px;}
+.cta p{font-size:12px;color:var(--mid);margin-bottom:24px;line-height:1.8;}
+.cta-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:var(--amber);color:#000;font-family:var(--mono);font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;}
+.btn-secondary{background:transparent;color:var(--cyan);font-family:var(--mono);font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;border:1px solid rgba(0,212,245,0.3);}
+
+footer{border-top:1px solid rgba(0,212,245,0.08);padding:20px 36px;text-align:center;font-size:11px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <div class="nav-links">
+    <a href="https://verisigilai.com/execution-control-infrastructure.html">Execution Control</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a>
+    <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank">Specification</a>
+    <a href="https://verisigilai.com">Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="tag">⬡ VGS-013 · RFC-CHIPV-1 · Adversarial Governance</div>
+  <h1>Compute Provenance &amp;<br><em>Deployment Admissibility</em></h1>
+  <p>VeriSigil assesses compute provenance risk — serial patterns, export control zones, organizational indicators, and cloud attestation — to determine deployment admissibility before any agent executes. Risk assessment layer, not a chip authentication oracle. Designed with adversaries in mind from the start.</p>
+  <div>
+    <div class="hero-stat">7 chip types tracked</div>
+    <div class="hero-stat">15 BIS entities cached</div>
+    <div class="hero-stat">104 conformance vectors</div>
+    <div class="hero-stat">VER-INV-013 verified</div>
+  </div>
+</div>
+
+<!-- SIX EVASION VECTORS -->
+<div class="vectors">
+  <div class="section-title">Six Evasion Vectors — All Addressed</div>
+  <div class="section-sub">Alejandro Mainetto's Compute Governance Stack — enforced at execution boundary</div>
+  <div class="vectors-grid">
+
+    <div class="vector-card">
+      <div class="vector-num">Vector 01</div>
+      <div class="vector-title">Chip Smuggling</div>
+      <div class="vector-problem">Restricted hardware acquired via illicit channels and used for ungoverned AI training.</div>
+      <div class="vector-solution">✓ Serial number pattern inference against ECCN 3A090 database. Export violation → REFUSED immediately.</div>
+      <div class="vector-endpoint">POST /v1/chip/verify · POST /v1/compute/provenance/verify</div>
+    </div>
+
+    <div class="vector-card">
+      <div class="vector-num">Vector 02</div>
+      <div class="vector-title">Shell Companies</div>
+      <div class="vector-problem">Front entities masking true end-users of controlled AI hardware.</div>
+      <div class="vector-solution">✓ BIS Entity List matching. High-risk jurisdiction detection (BVI/CAY/PAN). Shell indicators scored and flagged.</div>
+      <div class="vector-endpoint">POST /v1/provenance/verify · shell_risk_score returned</div>
+    </div>
+
+    <div class="vector-card">
+      <div class="vector-num">Vector 03</div>
+      <div class="vector-title">Split Training Runs</div>
+      <div class="vector-problem">Training distributed across jurisdictions to evade any single regulator's oversight.</div>
+      <div class="vector-solution">✓ Training jurisdiction tracking. Unregulated zones in training_jurisdictions → split_training_detected flag + audit required.</div>
+      <div class="vector-endpoint">POST /v1/provenance/verify · training_jurisdictions field</div>
+    </div>
+
+    <div class="vector-card">
+      <div class="vector-num">Vector 04</div>
+      <div class="vector-title">Unregulated Cloud Zones</div>
+      <div class="vector-problem">Deploying in jurisdictions with weak or no AI governance to bypass enforcement.</div>
+      <div class="vector-solution">✓ VGS-010 strictest-regime applies regardless of deployment zone. EU data = EU rules. Always. Ungoverned zone → escalation required.</div>
+      <div class="vector-endpoint">POST /v1/jurisdiction/resolve · deployment_jurisdiction enforced</div>
+    </div>
+
+    <div class="vector-card">
+      <div class="vector-num">Vector 05</div>
+      <div class="vector-title">Open Source Release</div>
+      <div class="vector-problem">Releasing models publicly to bypass export controls and governance requirements.</div>
+      <div class="vector-solution">✓ No passport = no execution in governed environments. Open source models must register. model_has_lineage required for governed use.</div>
+      <div class="vector-endpoint">POST /v1/provenance/verify · model_open_source flag</div>
+    </div>
+
+    <div class="vector-card">
+      <div class="vector-num">Vector 06</div>
+      <div class="vector-title">New Chip Designs</div>
+      <div class="vector-problem">Custom hardware designed to technically comply but functionally circumvent export controls.</div>
+      <div class="vector-solution">✓ Behavioral anomaly scoring regardless of hardware. Unknown serials → GENERIC_GPU LOW confidence → human review required.</div>
+      <div class="vector-endpoint">POST /v1/adversarial/risk · behavioral_anomaly field</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHIP TABLE -->
+<div class="chips">
+  <div class="section-title">Compute Risk Intelligence Database</div>
+  <div class="section-sub">RFC-CHIPV-1 — heuristic risk classification based on public BIS ECCN documentation. Risk inference layer — not a global chip registry.</div>
+  <table class="chip-table">
+    <thead>
+      <tr>
+        <th>Chip Type</th>
+        <th>Export Class</th>
+        <th>Controlled</th>
+        <th>Confidence</th>
+        <th>Restricted Jurisdictions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>NVIDIA_H100_SXM5</td><td><span class="eccn">ECCN 3A090</span></td><td class="controlled">YES</td><td>HIGH</td><td>CN · RU · IR · KP · SY · CU · VE · BY · MM</td></tr>
+      <tr><td>NVIDIA_H100_NVL</td><td><span class="eccn">ECCN 3A090</span></td><td class="controlled">YES</td><td>HIGH</td><td>CN · RU · IR · KP · SY · CU · VE</td></tr>
+      <tr><td>NVIDIA_H200</td><td><span class="eccn">ECCN 3A090</span></td><td class="controlled">YES</td><td>HIGH</td><td>CN · RU · IR · KP · SY · CU · VE · BY</td></tr>
+      <tr><td>NVIDIA_A100</td><td><span class="eccn">ECCN 3A090</span></td><td class="controlled">YES</td><td>MEDIUM</td><td>CN · RU · IR · KP · SY · CU · VE</td></tr>
+      <tr><td>AMD_MI300X</td><td><span class="eccn">ECCN 3A090</span></td><td class="controlled">YES</td><td>MEDIUM</td><td>CN · RU · IR · KP</td></tr>
+      <tr><td>INTEL_GAUDI3</td><td><span class="eccn">ECCN 3A090</span></td><td class="controlled">YES</td><td>LOW</td><td>CN · RU · IR · KP</td></tr>
+      <tr><td>GENERIC_GPU</td><td>EAR99</td><td class="uncontrolled">NO</td><td>LOW</td><td>None</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- EXECUTION FLOW -->
+<div class="flow">
+  <div class="flow-inner">
+    <div class="flow-title">VGS-013 Integration into Runtime Guard</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-label">Agent</div>
+        <div class="step-name">Registers</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">
+        <div class="step-label">VGS-013</div>
+        <div class="step-name">Chip Verify</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">
+        <div class="step-label">VGS-013</div>
+        <div class="step-name">Shell Check</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">
+        <div class="step-label">AWS Nitro</div>
+        <div class="step-name">Attestation</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-label">ISDAIRE</div>
+        <div class="step-name">Certificate</div>
+      </div>
+    </div>
+    <div class="flow-results">
+      <div class="flow-result fr-green">✓ APPROVED<br><span style="font-size:10px;font-weight:400">provenance_score ≥ 0.85</span></div>
+      <div class="flow-result fr-amber">⚠ REVIEW<br><span style="font-size:10px;font-weight:400">provenance_score 0.65–0.84</span></div>
+      <div class="flow-result fr-red">✗ REFUSED<br><span style="font-size:10px;font-weight:400">export violation or score &lt; 0.65</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE PROOF -->
+<div class="proof">
+  <div class="section-title">Live Verification Results</div>
+  <div class="section-sub">Two agents — same chip — different provenance. Different outcomes.</div>
+  <div class="proof-inner">
+    <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:12px;">✓ Legitimate Agent — APPROVED</div>
+    <div class="proof-row">
+      <div class="proof-box">
+        <div class="proof-label">Org Jurisdiction</div>
+        <div class="proof-value">EU (governed)</div>
+      </div>
+      <div class="proof-box">
+        <div class="proof-label">Deployment</div>
+        <div class="proof-value">EU (governed)</div>
+      </div>
+    </div>
+    <div class="proof-row">
+      <div class="proof-box">
+        <div class="proof-label">Provenance Score</div>
+        <div class="proof-value">1.0</div>
+      </div>
+      <div class="proof-box">
+        <div class="proof-label">Evasion Cost</div>
+        <div class="proof-value">$2,745,141 · Detection: 100%</div>
+      </div>
+    </div>
+    <div style="height:16px;"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:12px;">✗ Bad Actor — REFUSED</div>
+    <div class="proof-row">
+      <div class="proof-box">
+        <div class="proof-label">Org Name</div>
+        <div class="proof-value">"X" (shell indicator)</div>
+      </div>
+      <div class="proof-box">
+        <div class="proof-label">Deployment</div>
+        <div class="proof-value">UNKNOWN (ungoverned)</div>
+      </div>
+    </div>
+    <div class="proof-row">
+      <div class="proof-box">
+        <div class="proof-label">Provenance Score</div>
+        <div class="proof-value" style="color:var(--red);">0.26</div>
+      </div>
+      <div class="proof-box">
+        <div class="proof-label">Flags</div>
+        <div class="proof-value" style="color:var(--red);">5 evasion vectors detected</div>
+      </div>
+    </div>
+    <div class="proof-verdict">VER-INV-013: PROVENANCE_FAILED — agent refused before execution</div>
+  </div>
+</div>
+
+<!-- GOVERNMENT PITCH -->
+<div class="govt">
+  <div class="section-title">Built For Governments</div>
+  <div class="section-sub">The enforcement layer that makes AI governance operational</div>
+
+  <div class="govt-card">
+    <div class="govt-flag">🇪🇺</div>
+    <div class="govt-title">EU AI Act — August 2026</div>
+    <div class="govt-text">"VeriSigil is Execution Control Infrastructure with compute provenance risk assessment. When a high-risk AI system registers, VeriSigil evaluates provenance indicators — export control zone alignment, organizational risk scoring, and cloud attestation — to determine deployment admissibility before execution."</div>
+  </div>
+
+  <div class="govt-card">
+    <div class="govt-flag">🇺🇸</div>
+    <div class="govt-title">BIS Export Control / US Federal</div>
+    <div class="govt-text">"VGS-013 provides compute provenance risk assessment at agent registration. VeriSigil adds a proactive governance visibility layer — flagging high-risk provenance indicators before execution — complementing existing export control enforcement, not replacing it."</div>
+  </div>
+
+  <div class="govt-card">
+    <div class="govt-flag">🇦🇪</div>
+    <div class="govt-title">GCC Sovereign AI / DIFC</div>
+    <div class="govt-text">"GCC sovereign AI infrastructure requires verified compute provenance. VeriSigil's jurisdiction-aware governance enforces DIFC Regulation 10 and VARA requirements at the execution boundary — not just at policy documentation level."</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Compute Provenance Verification — Live Today</h2>
+  <p>VGS-013 is live in VeriSigil's Runtime Guard as a compute provenance risk assessment layer. 104 conformance vectors. RFC-CHIPV-1 standard. Built for enterprise and government deployment.</p>
+  <div class="cta-buttons">
+    <a href="https://verisigil-api-production.up.railway.app/docs" class="btn-primary">Try Live API</a>
+    <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank" class="btn-secondary">Read Specification</a>
+  </div>
+</div>
+
+<footer>
+  <p>⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · VGS-013 Compute Provenance · RFC-CHIPV-1 · Built in Lagos, Nigeria 🇳🇬</p>
+</footer>
+
+</body>
+</html>

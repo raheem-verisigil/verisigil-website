@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRO & Board Governance — VeriSigil AI</title>
+<meta name="description" content="VeriSigil AI: Board and CRO-level AI governance proof. APRA CPS 230, DORA, ASIC RG 271, FSB Framework. Fourth party dependency mapping. Hyperscaler concentration risk. Supervisory readiness.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020810;--bg2:#060F1E;--bg3:#0A1628;
+  --cyan:#00D4F5;--green:#00E676;--amber:#FFB800;
+  --red:#FF4D6A;--purple:#7C3AED;
+  --white:#F0F8FF;--mid:#4A6FA5;--dim:#1A2E4A;
+  --mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--mono);background:var(--bg);color:var(--white);font-size:13px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;border-bottom:1px solid rgba(0,212,245,0.1);background:rgba(2,8,16,0.95);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px;}
+.nav-logo{font-family:var(--display);font-size:16px;font-weight:800;color:var(--cyan);text-decoration:none;}
+.nav-links{display:flex;gap:20px;flex-wrap:wrap;}
+.nav-links a{font-size:11px;color:var(--mid);text-decoration:none;}
+.nav-links a:hover{color:var(--cyan);}
+
+.hero{text-align:center;padding:70px 24px 50px;max-width:820px;margin:0 auto;}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);background:rgba(255,184,0,0.06);border:1px solid rgba(255,184,0,0.2);padding:5px 16px;border-radius:20px;margin-bottom:20px;}
+.hero h1{font-family:var(--display);font-size:clamp(26px,4.5vw,48px);font-weight:800;margin-bottom:16px;letter-spacing:-0.02em;line-height:1.1;}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero p{font-size:13px;color:var(--mid);max-width:620px;margin:0 auto 24px;line-height:1.8;}
+.hero-quote{font-size:12px;color:rgba(255,184,0,0.8);border-left:2px solid var(--amber);padding:10px 18px;text-align:left;max-width:580px;margin:0 auto;font-style:italic;}
+
+/* REGULATOR BADGES */
+.regulators{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:20px 24px;margin-bottom:20px;}
+.reg-badge{background:var(--bg2);border:1px solid rgba(0,212,245,0.15);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:700;color:var(--cyan);}
+
+/* 7 BOARD QUESTIONS */
+.questions{max-width:900px;margin:0 auto 50px;padding:0 24px;}
+.section-title{font-family:var(--display);font-size:22px;font-weight:800;margin-bottom:8px;text-align:center;}
+.section-sub{font-size:12px;color:var(--mid);text-align:center;margin-bottom:28px;}
+.q-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:12px;}
+@media(max-width:500px){.q-grid{grid-template-columns:1fr;}}
+.q-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:18px;display:flex;gap:14px;align-items:flex-start;}
+.q-num{width:28px;height:28px;border-radius:50%;background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--green);flex-shrink:0;}
+.q-content{}
+.q-question{font-size:12px;font-weight:700;color:var(--amber);margin-bottom:6px;}
+.q-answer{font-size:11px;color:var(--mid);line-height:1.6;margin-bottom:6px;}
+.q-evidence{font-size:10px;color:var(--cyan);}
+.q-status{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);margin-top:4px;}
+
+/* CONCENTRATION RISK */
+.concentration{max-width:900px;margin:0 auto 50px;padding:0 24px;}
+.conc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;}
+.conc-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:18px;text-align:center;}
+.conc-icon{font-size:28px;margin-bottom:8px;}
+.conc-name{font-size:13px;font-weight:700;margin-bottom:6px;}
+.conc-risk{font-size:11px;font-weight:700;padding:3px 12px;border-radius:10px;display:inline-block;margin-bottom:8px;}
+.risk-high{background:rgba(255,77,106,0.1);color:var(--red);border:1px solid rgba(255,77,106,0.2);}
+.risk-med{background:rgba(255,184,0,0.1);color:var(--amber);border:1px solid rgba(255,184,0,0.2);}
+.risk-low{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.conc-tags{font-size:10px;color:var(--mid);}
+
+/* REGIMES TABLE */
+.regimes{max-width:900px;margin:0 auto 50px;padding:0 24px;}
+.regime-table{width:100%;border-collapse:collapse;background:var(--bg2);border-radius:12px;overflow:hidden;}
+.regime-table th{font-size:10px;font-weight:700;color:var(--mid);text-align:left;padding:12px 16px;border-bottom:1px solid var(--dim);}
+.regime-table td{font-size:11px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.regime-table td:first-child{color:var(--cyan);font-weight:700;}
+.regime-table .yes{color:var(--green);}
+.regime-table .no{color:var(--mid);}
+
+/* FOURTH PARTY FLOW */
+.fourthparty{max-width:820px;margin:0 auto 50px;padding:0 24px;}
+.fp-inner{background:var(--bg2);border:1px solid rgba(255,184,0,0.15);border-radius:14px;padding:28px;}
+.fp-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+.fp-flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.fp-box{background:var(--bg3);border:1px solid rgba(0,212,245,0.15);border-radius:8px;padding:10px 14px;text-align:center;min-width:100px;}
+.fp-box .lbl{font-size:9px;color:var(--mid);text-transform:uppercase;margin-bottom:4px;}
+.fp-box .val{font-size:11px;font-weight:700;}
+.fp-box.highlight{border-color:var(--amber);}
+.fp-box.highlight .val{color:var(--amber);}
+.fp-arrow{color:var(--cyan);}
+.fp-risk{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+.fp-risk-item{background:var(--bg3);border-radius:8px;padding:10px;text-align:center;font-size:11px;}
+.fp-risk-item .risk-label{font-size:9px;color:var(--mid);margin-bottom:4px;}
+.fp-risk-item .risk-val{font-weight:700;}
+
+/* SUPERVISORY */
+.supervisory{max-width:820px;margin:0 auto 50px;padding:0 24px;}
+.sup-inner{background:var(--bg2);border:1px solid rgba(0,212,245,0.1);border-radius:14px;padding:28px;}
+.sup-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+.sup-timeline{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.sup-step{background:var(--bg3);border:1px solid rgba(0,212,245,0.1);border-radius:8px;padding:8px 14px;font-size:11px;text-align:center;}
+.sup-step .s-label{font-size:9px;color:var(--mid);margin-bottom:2px;}
+.sup-step .s-val{font-weight:700;color:var(--cyan);}
+.sup-arrow{color:var(--mid);}
+.sup-verdict{background:rgba(0,230,118,0.04);border:1px solid rgba(0,230,118,0.2);border-radius:8px;padding:14px;text-align:center;color:var(--green);font-size:13px;font-weight:700;}
+
+/* CTA */
+.cta{text-align:center;padding:50px 24px;max-width:600px;margin:0 auto;}
+.cta h2{font-family:var(--display);font-size:26px;font-weight:800;margin-bottom:14px;}
+.cta p{font-size:12px;color:var(--mid);margin-bottom:24px;line-height:1.8;}
+.cta-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:var(--amber);color:#000;font-family:var(--mono);font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;}
+.btn-secondary{background:transparent;color:var(--cyan);font-family:var(--mono);font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;border:1px solid rgba(0,212,245,0.3);}
+
+footer{border-top:1px solid rgba(0,212,245,0.08);padding:20px 36px;text-align:center;font-size:11px;color:var(--mid);}
+footer a{color:var(--cyan);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
+  <div class="nav-links">
+    <a href="https://verisigilai.com/execution-control-infrastructure.html">Execution Control</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a>
+    <a href="https://verisigilai.com">Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="tag">⬡ CRO & Board · Financial Services · Prudential Governance</div>
+  <h1>AI Governance Proof<br><em>For Boards and CROs</em></h1>
+  <p>VeriSigil answers the question regulators will ask: "Can you prove AI governance was active at execution time?" Not policies. Not dashboards. Cryptographic proof — offline verifiable — before action becomes real.</p>
+  <div class="hero-quote">"The critical question is whether the risk function is helping shape the architecture, or arriving after the decisions have already been made." — Jerome Nyssen, Senior Executive</div>
+</div>
+
+<!-- REGULATOR BADGES -->
+<div class="regulators">
+  <div class="reg-badge">APRA CPS 230</div>
+  <div class="reg-badge">DORA</div>
+  <div class="reg-badge">ASIC RG 271</div>
+  <div class="reg-badge">FSB Framework</div>
+  <div class="reg-badge">EU AI Act</div>
+  <div class="reg-badge">APRA CPS 234</div>
+</div>
+
+<!-- 7 BOARD QUESTIONS -->
+<div class="questions">
+  <div class="section-title">7 Questions Every Board Must Answer</div>
+  <div class="section-sub">VeriSigil answers all seven — with cryptographic evidence</div>
+  <div class="q-grid">
+
+    <div class="q-card">
+      <div class="q-num">1</div>
+      <div class="q-content">
+        <div class="q-question">Is AI governance enforced at execution time — not just documented?</div>
+        <div class="q-answer">Runtime enforcement at execution boundary. Decision before action becomes real. Not policy. Not audit log after the fact.</div>
+        <div class="q-evidence">POST /v1/execution/control → ALLOW/REFUSED/DENY before action</div>
+        <div class="q-status">✓ COMPLIANT</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">2</div>
+      <div class="q-content">
+        <div class="q-question">Can you prove human oversight was enforced for material decisions?</div>
+        <div class="q-answer">REQUIRE_HUMAN_APPROVAL with named approver (CRO/DPO), defined SLA, and immutable evidence record. Cryptographically signed.</div>
+        <div class="q-evidence">POST /v1/isdaire/certificate → approver + SLA + evidence_hash</div>
+        <div class="q-status">✓ COMPLIANT · APRA CPS 230 Art 12</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">3</div>
+      <div class="q-content">
+        <div class="q-question">Are fourth party AI dependencies (hyperscalers) mapped and reported to board?</div>
+        <div class="q-answer">AWS, Azure, GCP tracked with DORA TPSP classification and APRA material dependency status. Concentration risk scored automatically.</div>
+        <div class="q-evidence">POST /v1/dependency/fourth-party · GET /v1/dependency/concentration</div>
+        <div class="q-status">✓ COMPLIANT · DORA Art 28 · CPS230_36</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">4</div>
+      <div class="q-content">
+        <div class="q-question">Has hyperscaler concentration risk been formally assessed?</div>
+        <div class="q-answer">Concentration risk scoring per provider. Board action flag triggered when concentration reaches HIGH or CRITICAL. Automated continuous monitoring.</div>
+        <div class="q-evidence">GET /v1/dependency/concentration → board_action_required: true/false</div>
+        <div class="q-status">✓ COMPLIANT · FSB 2024_1</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">5</div>
+      <div class="q-content">
+        <div class="q-question">Is the audit trail defensible to regulators — offline verifiable?</div>
+        <div class="q-answer">Immutable evidence with classification_hash binding. 6-year retention enforced. Offline verifiable from exported bundle — no platform required.</div>
+        <div class="q-evidence">POST /v1/governance/replay → reconstruct governance state in &lt;1 second</div>
+        <div class="q-status">✓ COMPLIANT · DORA Art 5 · CPS230_47</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">6</div>
+      <div class="q-content">
+        <div class="q-question">Can you respond to a supervisory information request within 24 hours?</div>
+        <div class="q-answer">Supervisory readiness drill answers 6 regulator questions with full governance replay. Available offline immediately. No platform required.</div>
+        <div class="q-evidence">POST /v1/supervisory/drill → drill_verdict: READY in &lt;1 second</div>
+        <div class="q-status">✓ COMPLIANT · APRA CPS 230</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">7</div>
+      <div class="q-content">
+        <div class="q-question">Does AI governance survive operational stress — fail-closed?</div>
+        <div class="q-answer">VER-INV-009: REFUSED on any error or timeout — never ALLOW. Formally proven in TLA+ model checker: 3,497 states, 0 errors. No silent bypass.</div>
+        <div class="q-evidence">TLA+ verified · VER-INV-010: non-bypass control enforced</div>
+        <div class="q-status">✓ COMPLIANT · DORA Art 45 · CPS234</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONCENTRATION RISK -->
+<div class="concentration">
+  <div class="section-title">Hyperscaler Concentration Risk</div>
+  <div class="section-sub">APRA CPS 230 CPS230_36 + DORA Art 28 — Board must be informed</div>
+  <div class="conc-grid">
+    <div class="conc-card">
+      <div class="conc-icon">☁️</div>
+      <div class="conc-name">Amazon Web Services</div>
+      <div class="conc-risk risk-high">HIGH RISK</div>
+      <div class="conc-tags">DORA TPSP · APRA Material · SageMaker · Bedrock · Lambda-AI</div>
+    </div>
+    <div class="conc-card">
+      <div class="conc-icon">🔷</div>
+      <div class="conc-name">Microsoft Azure</div>
+      <div class="conc-risk risk-high">HIGH RISK</div>
+      <div class="conc-tags">DORA TPSP · APRA Material · OpenAI Service · Cognitive Services</div>
+    </div>
+    <div class="conc-card">
+      <div class="conc-icon">🔴</div>
+      <div class="conc-name">Google Cloud</div>
+      <div class="conc-risk risk-high">HIGH RISK</div>
+      <div class="conc-tags">DORA TPSP · APRA Material · Vertex AI · AutoML</div>
+    </div>
+    <div class="conc-card">
+      <div class="conc-icon">📊</div>
+      <div class="conc-name">Concentration Score</div>
+      <div class="conc-risk risk-med">TRACKED</div>
+      <div class="conc-tags">Automated · Board flagged when HIGH/CRITICAL · Continuous monitoring</div>
+    </div>
+  </div>
+</div>
+
+<!-- REGIME TABLE -->
+<div class="regimes">
+  <div class="section-title">Regulatory Regime Coverage</div>
+  <div class="section-sub">Financial services governance across AU, EU, and Global frameworks</div>
+  <table class="regime-table">
+    <thead>
+      <tr>
+        <th>Regime</th>
+        <th>Jurisdiction</th>
+        <th>Regulator</th>
+        <th>AI Requirement</th>
+        <th>VeriSigil Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>APRA CPS 230</td><td>AU</td><td>APRA</td><td>Fourth party mapping · Board accountability · 7yr retention</td><td class="yes">✓ MAPPED</td></tr>
+      <tr><td>DORA</td><td>EU</td><td>ESA</td><td>ICT risk · TPSP oversight · Resilience testing</td><td class="yes">✓ MAPPED</td></tr>
+      <tr><td>ASIC RG 271</td><td>AU</td><td>ASIC</td><td>AI explainability · Consumer outcomes · Dispute resolution</td><td class="yes">✓ MAPPED</td></tr>
+      <tr><td>FSB Framework</td><td>GLOBAL</td><td>FSB</td><td>Systemic risk · Concentration · Cross-border governance</td><td class="yes">✓ MAPPED</td></tr>
+      <tr><td>EU AI Act</td><td>EU</td><td>EU AI Office</td><td>High-risk classification · Human oversight · Article 14</td><td class="yes">✓ MAPPED</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- FOURTH PARTY FLOW -->
+<div class="fourthparty">
+  <div class="fp-inner">
+    <div class="fp-title">Fourth Party Dependency Chain — VGS-012 + APRA CPS230_36</div>
+    <div class="fp-flow">
+      <div class="fp-box">
+        <div class="lbl">Institution</div>
+        <div class="val">Bank / Insurer</div>
+      </div>
+      <div class="fp-arrow">→</div>
+      <div class="fp-box">
+        <div class="lbl">AI Agent</div>
+        <div class="val">Agentic AI</div>
+      </div>
+      <div class="fp-arrow">→</div>
+      <div class="fp-box highlight">
+        <div class="lbl">⬡ VeriSigil</div>
+        <div class="val">Governance Gate</div>
+      </div>
+      <div class="fp-arrow">→</div>
+      <div class="fp-box">
+        <div class="lbl">3rd Party</div>
+        <div class="val">AI Vendor</div>
+      </div>
+      <div class="fp-arrow">→</div>
+      <div class="fp-box">
+        <div class="lbl">4th Party</div>
+        <div class="val">Hyperscaler</div>
+      </div>
+    </div>
+    <div class="fp-risk">
+      <div class="fp-risk-item"><div class="risk-label">Dependency Tracked</div><div class="risk-val" style="color:var(--green);">✓ All agents</div></div>
+      <div class="fp-risk-item"><div class="risk-label">Concentration Scored</div><div class="risk-val" style="color:var(--amber);">Automated</div></div>
+      <div class="fp-risk-item"><div class="risk-label">Board Notified</div><div class="risk-val" style="color:var(--cyan);">When HIGH/CRITICAL</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUPERVISORY READINESS -->
+<div class="supervisory">
+  <div class="sup-inner">
+    <div class="sup-title">Supervisory Readiness Drill — APRA + DORA + FSB</div>
+    <div class="sup-timeline">
+      <div class="sup-step"><div class="s-label">Regulator Asks</div><div class="s-val">T+0</div></div>
+      <div class="sup-arrow">→</div>
+      <div class="sup-step"><div class="s-label">POST /supervisory/drill</div><div class="s-val">T+0.3s</div></div>
+      <div class="sup-arrow">→</div>
+      <div class="sup-step"><div class="s-label">6 Questions Answered</div><div class="s-val">T+0.8s</div></div>
+      <div class="sup-arrow">→</div>
+      <div class="sup-step"><div class="s-label">Full Replay Ready</div><div class="s-val">T+1.0s</div></div>
+      <div class="sup-arrow">→</div>
+      <div class="sup-step"><div class="s-label">Regulator Satisfied</div><div class="s-val">✓</div></div>
+    </div>
+    <div class="sup-verdict">SUPERVISORY READY — governance state reconstructed offline in &lt;1 second · platform_required: false</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Built For Boards and CROs</h2>
+  <p>VeriSigil answers 7 board accountability questions with cryptographic evidence. APRA CPS 230, DORA, ASIC RG 271, FSB Framework — all covered. Offline verifiable. No platform required.</p>
+  <div class="cta-buttons">
+    <a href="https://verisigil-api-production.up.railway.app/docs" class="btn-primary">Try Live API</a>
+    <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank" class="btn-secondary">Read Specification</a>
+  </div>
+</div>
+
+<footer>
+  <p>⬡ <a href="https://verisigilai.com">VeriSigil AI</a> · Financial Services Governance · APRA · DORA · FSB · Built in Lagos, Nigeria 🇳🇬</p>
+</footer>
+
+</body>
+</html>

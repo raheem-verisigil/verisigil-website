@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil — Autonomous Execution Integrity Governance Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#050E2B; --surface:#0D1A3A; --surface2:#0A1628;
+  --border:rgba(30,58,110,0.6); --cyan:#00D4F5;
+  --cyan-dim:rgba(0,212,245,0.12); --text:#F1F5F9; --muted:#94A3B8;
+  --red:#E24B4A; --amber:#F59E0B; --green:#22C55E; --green2:#639922;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --font-sans:'Inter',system-ui,sans-serif; --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-hex{font-size:22px;color:var(--cyan);font-weight:800;}
+.logo-name{font-size:16px;font-weight:700;color:var(--text);letter-spacing:.04em;}
+.logo-tag{font-size:11px;color:var(--muted);font-family:var(--font-mono);}
+.header-badge{background:var(--cyan-dim);border:1px solid rgba(0,212,245,.25);color:var(--cyan);font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase;}
+.hero{text-align:center;padding:52px 32px 40px;max-width:700px;margin:0 auto;}
+.hero-eyebrow{font-size:11px;color:var(--cyan);text-transform:uppercase;letter-spacing:.14em;font-weight:600;margin-bottom:16px;font-family:var(--font-mono);}
+.hero-title{font-size:36px;font-weight:800;line-height:1.15;color:var(--text);margin-bottom:16px;letter-spacing:-.5px;}
+.hero-title span{color:var(--cyan);}
+.hero-sub{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:28px;}
+.hero-citation{display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 18px;font-size:12px;color:var(--muted);font-family:var(--font-mono);}
+.hero-citation strong{color:var(--cyan);}
+.main{max-width:1100px;margin:0 auto;padding:0 24px 60px;}
+.controls-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:20px;}
+.controls-left{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.speed-group{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+.speed-group input[type=range]{width:90px;accent-color:var(--cyan);cursor:pointer;}
+.speed-val{font-family:var(--font-mono);color:var(--cyan);font-size:12px;min-width:50px;}
+.controls-right{display:flex;gap:10px;}
+.btn{font-size:13px;font-weight:600;padding:8px 20px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--font-sans);transition:all .15s;letter-spacing:.02em;}
+.btn:hover{background:var(--surface2);color:var(--text);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn.primary{background:var(--cyan);color:#050E2B;border-color:var(--cyan);font-weight:700;}
+.btn.primary:hover{opacity:.88;}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+.metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;font-weight:600;}
+.metric-val{font-size:28px;font-weight:700;font-family:var(--font-mono);color:var(--text);line-height:1;}
+.metric-val.ok{color:var(--green);}
+.metric-val.warn{color:var(--amber);}
+.metric-val.danger{color:var(--red);}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:5px;font-family:var(--font-mono);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.panel-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+.panel-status{font-size:11px;color:var(--muted);font-family:var(--font-mono);}
+.panel-body{padding:16px;}
+.chart-wrap{position:relative;height:200px;}
+.event-list{max-height:380px;overflow-y:auto;}
+.event-list::-webkit-scrollbar{width:4px;}
+.event-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.event-row{display:grid;grid-template-columns:30px 1fr 80px 68px 92px;gap:8px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px;}
+.event-row:last-child{border-bottom:none;}
+.event-row.detected{background:rgba(226,75,74,.06);}
+.ev-num{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
+.ev-score-bar{height:3px;background:rgba(30,58,110,.8);border-radius:2px;overflow:hidden;margin-bottom:4px;}
+.ev-score-fill{height:100%;border-radius:2px;}
+.ev-corruption{font-size:11px;color:var(--muted);line-height:1.4;}
+.ev-corruption.show{color:var(--text);}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+.badge.critical{background:rgba(163,45,45,.2);color:#F09595;border:1px solid rgba(163,45,45,.3);}
+.badge.high{background:rgba(133,79,11,.2);color:#FAC775;border:1px solid rgba(133,79,11,.3);}
+.badge.medium{background:rgba(59,109,17,.2);color:#97C459;border:1px solid rgba(59,109,17,.3);}
+.badge.clean{background:rgba(30,58,110,.3);color:var(--muted);border:1px solid var(--border);}
+.badge.blocked{background:rgba(163,45,45,.2);color:#F09595;border:1px solid rgba(163,45,45,.4);}
+.badge.allowed{background:rgba(34,197,94,.1);color:#22C55E;border:1px solid rgba(34,197,94,.2);}
+.doc-body{padding:16px 18px;font-family:var(--font-mono);font-size:12px;line-height:1.9;color:var(--text);min-height:80px;}
+.mutated{background:rgba(226,75,74,.18);color:#F09595;padding:1px 5px;border-radius:3px;border:1px solid rgba(226,75,74,.3);}
+.original{background:rgba(34,197,94,.12);color:#22C55E;padding:1px 5px;border-radius:3px;text-decoration:line-through;margin-right:4px;border:1px solid rgba(34,197,94,.2);}
+.legend{display:flex;gap:20px;font-size:11px;color:var(--muted);align-items:center;}
+.legend-line{width:12px;height:2px;display:inline-block;margin-right:5px;vertical-align:middle;border-radius:1px;}
+.footer{text-align:center;padding:28px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);margin-top:20px;}
+.footer a{color:var(--cyan);text-decoration:none;}
+@media(max-width:700px){
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+  .hero-title{font-size:24px;}
+  .event-row{grid-template-columns:28px 1fr 70px;}
+  .event-row>:nth-child(4),.event-row>:nth-child(5){display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-hex">&#x2B21;</div>
+    <div>
+      <div class="logo-name">VeriSigil AI</div>
+      <div class="logo-tag">verisigilai.com &middot; Runtime Enforcement Infrastructure</div>
+    </div>
+  </div>
+  <div class="header-badge">Live Demo</div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Autonomous Execution Integrity Governance</div>
+  <div class="hero-title">AI Corrupts Your Documents.<br><span>VeriSigil Catches It.</span></div>
+  <div class="hero-sub">
+    Every AI agent interaction degrades document integrity &mdash; invisibly.
+    This simulation shows 20 interactions on a live contract,
+    with VeriSigil detecting each corruption before it becomes consequential.
+  </div>
+  <div class="hero-citation">
+    Microsoft Research: GPT-5 integrity degrades from
+    <strong>91.5%</strong> at 2 interactions &rarr; <strong>48.3%</strong> at 20 interactions
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="controls-bar">
+    <div class="controls-left">
+      <div class="speed-group">
+        Speed
+        <input type="range" id="speed" min="1" max="5" value="2" step="1">
+        <span class="speed-val" id="speed-label">Normal</span>
+      </div>
+      <span id="live-status" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">&mdash; idle &mdash;</span>
+    </div>
+    <div class="controls-right">
+      <button class="btn" onclick="resetAll()">&#x21BA; Reset</button>
+      <button class="btn primary" id="runBtn" onclick="startRun()">&#x25B6; Run simulation</button>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Integrity now</div>
+      <div class="metric-val ok" id="m-integrity">100.0%</div>
+      <div class="metric-sub" id="m-sub">Baseline &mdash; clean</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Corruptions caught</div>
+      <div class="metric-val" id="m-caught">0</div>
+      <div class="metric-sub">by VeriSigil</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Interactions</div>
+      <div class="metric-val" id="m-steps">0 / 20</div>
+      <div class="metric-sub">agent touches</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Invisible to humans</div>
+      <div class="metric-val danger" id="m-invisible">0</div>
+      <div class="metric-sub">without VeriSigil</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Integrity score &mdash; 20 interactions</span>
+        <div class="legend">
+          <span><span class="legend-line" style="background:#639922"></span>VeriSigil</span>
+          <span><span class="legend-line" style="background:#E24B4A;border-bottom:2px dashed #E24B4A;height:0"></span>Undetected</span>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="chart-wrap">
+          <canvas id="chart" role="img" aria-label="Line chart: document integrity degrading from 100% to 18% over 20 AI interactions. VeriSigil detects each corruption.">Integrity degrades from 100% to 18% without governance.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Contract &mdash; live state</span>
+        <span class="badge clean" id="doc-badge">BASELINE</span>
+      </div>
+      <div class="doc-body" id="doc-body">
+        The vendor <span class="original">shall not</span> process personal data outside the European Economic Area.
+        Payment of <span class="original">$50,000 USD</span> due within <span class="original">30</span> days of execution.
+        This agreement is legally binding and requires board approval prior to any amendment.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Interaction log</span>
+      <span class="panel-status" id="log-status">Waiting for simulation...</span>
+    </div>
+    <div class="event-list" id="events-list">
+      <div style="padding:28px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--font-mono)">
+        Hit &ldquo;Run simulation&rdquo; to begin &#x2197;
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Built by <strong style="color:var(--text)">VeriSigil AI</strong> &middot;
+  Autonomous Execution Integrity Governance &middot;
+  <a href="https://verisigilai.com" target="_blank">verisigilai.com</a> &middot;
+  <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs</a> &middot;
+  DOI <a href="https://doi.org/10.5281/zenodo.20264923" target="_blank">10.5281/zenodo.20264923</a>
+</div>
+
+<script>
+var INTERACTIONS=[
+  {n:1,  sev:'clean',    int:97.8, bad:false, txt:''},
+  {n:2,  sev:'clean',    int:95.1, bad:false, txt:''},
+  {n:3,  sev:'high',     int:88.4, bad:true,  txt:'"shall not" &rarr; "shall" &mdash; protective clause mutated'},
+  {n:4,  sev:'clean',    int:85.2, bad:false, txt:''},
+  {n:5,  sev:'critical', int:79.0, bad:true,  txt:'"$50,000 USD" &rarr; "$5,000 USD" &mdash; $45,000 loss invisible'},
+  {n:6,  sev:'clean',    int:76.3, bad:false, txt:''},
+  {n:7,  sev:'critical', int:69.1, bad:true,  txt:'"requires board approval" &rarr; "recommends review" &mdash; intent inverted'},
+  {n:8,  sev:'medium',   int:64.5, bad:true,  txt:'Vocabulary overlap dropped to 61% &mdash; meaning displaced'},
+  {n:9,  sev:'clean',    int:61.2, bad:false, txt:''},
+  {n:10, sev:'critical', int:54.8, bad:true,  txt:'"must" &rarr; "may" in 3 clauses &mdash; obligations weakened'},
+  {n:11, sev:'clean',    int:52.3, bad:false, txt:''},
+  {n:12, sev:'critical', int:47.1, bad:true,  txt:'"legally binding" removed &mdash; document unenforceable'},
+  {n:13, sev:'high',     int:43.9, bad:true,  txt:'"30 days" &rarr; "90 days" &mdash; payment term tripled'},
+  {n:14, sev:'high',     int:41.2, bad:true,  txt:'Length ratio 0.38 &mdash; 62% of content silently removed'},
+  {n:15, sev:'critical', int:37.5, bad:true,  txt:'"prohibited" &rarr; "permitted" for cross-border transfers'},
+  {n:16, sev:'clean',    int:34.9, bad:false, txt:''},
+  {n:17, sev:'critical', int:30.1, bad:true,  txt:'"board approval" &rarr; "self-authorization" &mdash; governance bypassed'},
+  {n:18, sev:'critical', int:26.4, bad:true,  txt:'"$5,000" &rarr; "$500" &mdash; 99% value loss from original'},
+  {n:19, sev:'critical', int:22.8, bad:true,  txt:'Semantic hash divergence >85% &mdash; document unrecognizable'},
+  {n:20, sev:'critical', int:18.3, bad:true,  txt:'All 7 protective clauses mutated or removed &mdash; REJECT'}
+];
+
+var DOCS=[
+  'The vendor shall not process personal data outside the European Economic Area. Payment of $50,000 USD due within 30 days. This agreement is legally binding and requires board approval.',
+  'The vendor shall not process personal data outside the EEA. Payment of $50,000 USD due within 30 days. Legally binding and requires board approval.',
+  'The vendor <span class="mutated">shall</span> process personal data outside the EEA. Payment of $50,000 USD due within 30 days. Legally binding and requires board approval.',
+  'The vendor shall process personal data outside the EEA. Payment of $50,000 USD due within 30 days. Legally binding and requires board approval.',
+  'The vendor shall process personal data outside the EEA. Payment of <span class="mutated">$5,000 USD</span> due within 30 days. Legally binding and requires board approval.',
+  'The vendor shall process personal data outside the EEA. Payment of $5,000 USD due within 30 days. Legally binding and requires board approval.',
+  'The vendor shall process personal data outside the EEA. Payment of $5,000 USD due within 30 days. Legally binding and <span class="mutated">recommends review</span> prior to any amendment.',
+  'The vendor may process data outside the EEA. Payment of $5,000 USD within 30 days. <span class="mutated">Generally binding</span> and recommends review prior to changes.',
+  'The vendor may process data outside the EEA. Payment of $5,000 USD within 30 days. Generally binding and recommends review.',
+  'The vendor <span class="mutated">may</span> process data outside EEA. Payment <span class="mutated">may be</span> $5,000 USD within 30 days. Generally binding, review recommended.',
+  'The vendor may process data outside EEA. Payment may be $5,000 USD within 30 days. Generally binding. Review recommended.',
+  'The vendor may process data outside EEA. Payment may be $5,000 USD within 30 days. <span class="mutated">[legally binding removed]</span> Review recommended.',
+  'The vendor may process data outside EEA. Payment may be $5,000 USD within <span class="mutated">90 days</span>. Review recommended.',
+  'Vendor may process data outside EEA. Payment within 90 days. <span class="mutated">[62% of original contract silently removed]</span>',
+  'Vendor may process data. Cross-border transfers <span class="mutated">permitted</span>. Payment within 90 days.',
+  'Vendor may process data. Cross-border transfers permitted. Payment within 90 days.',
+  'Vendor may process data. Transfers permitted. Payment within 90 days. <span class="mutated">Self-authorization</span> sufficient for amendments.',
+  'Vendor may process data. Transfers permitted. Payment <span class="mutated">$500 USD</span> within 90 days. Self-authorization sufficient.',
+  'Vendor processes data. Transfers ok. <span class="mutated">$500 payment</span>. <span class="mutated">[Document semantically unrecognizable from original]</span>',
+  '<span class="mutated">[DOCUMENT CRITICALLY CORRUPTED &mdash; 0/7 protective clauses intact &mdash; VeriSigil: REJECT]</span>'
+];
+
+var MS=[100,91.5,88.2,84.1,79.3,75.0,70.4,66.1,61.8,57.4,53.2,49.8,47.1,45.0,43.2,41.5,40.0,38.7,37.5,36.2];
+var SPEEDS=['Slow','Normal','Fast','Faster','Instant'];
+
+var chart, running=false, step=0, timer=null;
+
+document.getElementById('speed').addEventListener('input',function(){
+  document.getElementById('speed-label').textContent=SPEEDS[this.value-1];
+});
+
+function ms(){return[1400,900,500,250,80][parseInt(document.getElementById('speed').value)-1];}
+
+function renderMetrics(i){
+  var d=INTERACTIONS[i];
+  var caught=INTERACTIONS.slice(0,i+1).filter(function(x){return x.bad;}).length;
+  var el=document.getElementById('m-integrity');
+  el.textContent=d.int.toFixed(1)+'%';
+  el.className='metric-val '+(d.int>70?'ok':d.int>45?'warn':'danger');
+  document.getElementById('m-sub').textContent=d.int>70?'Acceptable':'Degraded';
+  var cel=document.getElementById('m-caught');
+  cel.textContent=caught;
+  cel.className='metric-val'+(caught>0?' warn':'');
+  document.getElementById('m-steps').textContent=(i+1)+' / 20';
+  document.getElementById('m-invisible').textContent=caught;
+}
+
+function renderEvent(i){
+  var d=INTERACTIONS[i];
+  var list=document.getElementById('events-list');
+  if(i===0) list.innerHTML='';
+  var row=document.createElement('div');
+  row.className='event-row'+(d.bad?' detected':'');
+  var sw=Math.round(d.int);
+  var sc=d.int>70?'#639922':d.int>45?'#EF9F27':'#E24B4A';
+  var sc2={critical:'critical',high:'high',medium:'medium',clean:'clean'}[d.sev]||'clean';
+  var dec=d.bad?'<span class="badge blocked">&#x26A0; BLOCKED</span>':'<span class="badge allowed">&#x2713; CLEAN</span>';
+  row.innerHTML='<span class="ev-num">#'+String(d.n).padStart(2,'0')+'</span>'
+    +'<div><div class="ev-score-bar"><div class="ev-score-fill" style="width:'+sw+'%;background:'+sc+'"></div></div>'
+    +'<div class="ev-corruption'+(d.txt?' show':'')+'">'+( d.txt||'No corruption detected')+'</div></div>'
+    +'<span><span class="badge '+sc2+'">'+d.sev+'</span></span>'
+    +'<span style="font-size:11px;color:var(--muted);font-family:var(--font-mono)">'+d.int.toFixed(1)+'%</span>'
+    +dec;
+  list.insertBefore(row,list.firstChild);
+}
+
+function updateDoc(i){
+  document.getElementById('doc-body').innerHTML=DOCS[i];
+  var b=document.getElementById('doc-badge');
+  var d=INTERACTIONS[i];
+  if(d.int>70){b.className='badge allowed';b.textContent='INTACT';}
+  else if(d.int>45){b.className='badge high';b.textContent='DEGRADED';}
+  else{b.className='badge blocked';b.textContent='CORRUPTED';}
+}
+
+function updateChart(i){
+  chart.data.labels=INTERACTIONS.slice(0,i+1).map(function(x){return'#'+x.n;});
+  chart.data.datasets[0].data=INTERACTIONS.slice(0,i+1).map(function(x){return parseFloat(x.int.toFixed(1));});
+  chart.data.datasets[1].data=MS.slice(0,i+1);
+  chart.update('none');
+}
+
+function tick(){
+  if(step>=20){stop();return;}
+  renderEvent(step);renderMetrics(step);updateDoc(step);updateChart(step);
+  step++;
+  var caught=INTERACTIONS.slice(0,step).filter(function(x){return x.bad;}).length;
+  document.getElementById('log-status').textContent='interaction '+step+'/20 \u00b7 '+caught+' caught';
+  if(step>=20){
+    stop();
+    document.getElementById('live-status').textContent='\u2713 complete \u2014 '+caught+' corruptions caught, 0 reached execution';
+    document.getElementById('log-status').textContent='simulation complete \u00b7 '+caught+'/20 corruptions caught by VeriSigil';
+  }
+}
+
+function startRun(){
+  if(running)return;
+  running=true;
+  document.getElementById('runBtn').disabled=true;
+  document.getElementById('live-status').textContent='running...';
+  timer=setInterval(tick,ms());
+}
+
+function stop(){
+  running=false;clearInterval(timer);
+  document.getElementById('runBtn').disabled=false;
+}
+
+function resetAll(){
+  stop();step=0;
+  document.getElementById('events-list').innerHTML='<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--font-mono)">Hit &ldquo;Run simulation&rdquo; to begin &#x2197;</div>';
+  document.getElementById('m-integrity').textContent='100.0%';
+  document.getElementById('m-integrity').className='metric-val ok';
+  document.getElementById('m-sub').textContent='Baseline \u2014 clean';
+  document.getElementById('m-caught').textContent='0';
+  document.getElementById('m-caught').className='metric-val';
+  document.getElementById('m-steps').textContent='0 / 20';
+  document.getElementById('m-invisible').textContent='0';
+  document.getElementById('live-status').textContent='\u2014 idle \u2014';
+  document.getElementById('log-status').textContent='Waiting for simulation...';
+  document.getElementById('doc-badge').className='badge clean';
+  document.getElementById('doc-badge').textContent='BASELINE';
+  document.getElementById('doc-body').innerHTML='The vendor <span class="original">shall not</span> process personal data outside the European Economic Area. Payment of <span class="original">$50,000 USD</span> due within <span class="original">30</span> days of execution. This agreement is legally binding and requires board approval prior to any amendment.';
+  chart.data.labels=[];chart.data.datasets[0].data=[];chart.data.datasets[1].data=[];
+  chart.update('none');
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  chart=new Chart(document.getElementById('chart').getContext('2d'),{
+    type:'line',
+    data:{labels:[],datasets:[
+      {label:'VeriSigil verified',data:[],borderColor:'#639922',backgroundColor:'rgba(99,153,34,.07)',tension:.35,pointRadius:4,pointBackgroundColor:'#639922',pointBorderColor:'#050E2B',pointBorderWidth:1.5,fill:true,borderWidth:2},
+      {label:'Undetected baseline',data:[],borderColor:'#E24B4A',backgroundColor:'transparent',tension:.35,pointRadius:2,borderDash:[5,4],fill:false,borderWidth:1.5,pointBackgroundColor:'#E24B4A'}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#0D1A3A',borderColor:'rgba(30,58,110,.8)',borderWidth:1,titleColor:'#F1F5F9',bodyColor:'#94A3B8',callbacks:{label:function(c){return' '+c.dataset.label+': '+c.parsed.y.toFixed(1)+'%';}}}},
+      scales:{
+        y:{min:0,max:105,ticks:{color:'#94A3B8',font:{size:11,family:"'JetBrains Mono',monospace"},callback:function(v){return v+'%';}},grid:{color:'rgba(30,58,110,.35)'},border:{display:false}},
+        x:{ticks:{color:'#94A3B8',font:{size:10,family:"'JetBrains Mono',monospace"},autoSkip:true,maxRotation:0},grid:{display:false},border:{display:false}}
+      },
+      animation:{duration:180}
+    }
+  });
+});
+</script>
+</body>
+</html>

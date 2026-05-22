@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil — AI Payment Governance Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#050E2B; --surface:#0D1A3A; --surface2:#0A1628;
+  --border:rgba(30,58,110,0.6); --border2:rgba(0,212,245,0.2);
+  --cyan:#00D4F5; --cyan-dim:rgba(0,212,245,0.10);
+  --text:#F1F5F9; --muted:#94A3B8; --muted2:#64748B;
+  --green:#22C55E; --green-bg:rgba(34,197,94,0.10);
+  --red:#E24B4A; --red-bg:rgba(226,75,74,0.10);
+  --amber:#F59E0B; --amber-bg:rgba(245,158,11,0.10);
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --font-sans:'Inter',system-ui,sans-serif;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-hex{font-size:22px;color:var(--cyan);font-weight:900;}
+.logo-name{font-size:16px;font-weight:700;color:var(--text);letter-spacing:.03em;}
+.logo-sub{font-size:11px;color:var(--muted);font-family:var(--font-mono);}
+.header-badge{background:var(--cyan-dim);border:1px solid var(--border2);color:var(--cyan);font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase;}
+.hero{text-align:center;padding:48px 24px 36px;max-width:680px;margin:0 auto;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:var(--cyan-dim);border:1px solid var(--border2);color:var(--cyan);font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;font-family:var(--font-mono);}
+.pulse{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero-title{font-size:38px;font-weight:800;line-height:1.12;color:var(--text);margin-bottom:14px;letter-spacing:-.5px;}
+.hero-title span{color:var(--cyan);}
+.hero-sub{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:8px;}
+.main{max-width:1160px;margin:0 auto;padding:0 20px 80px;}
+/* WORKFLOW BUILDER */
+.workflow-section{margin-bottom:20px;}
+.section-label{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.12em;font-family:var(--font-mono);margin-bottom:10px;}
+.payment-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+.form-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--font-mono);font-size:13px;outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:rgba(0,212,245,.4);}
+select.form-input option{background:var(--surface);}
+/* CONTROLS */
+.controls{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.btn{font-size:13px;font-weight:600;padding:10px 22px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--font-sans);transition:all .15s;}
+.btn:hover{background:var(--surface);color:var(--text);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn.primary{background:var(--cyan);color:#050E2B;border-color:var(--cyan);font-weight:700;}
+.btn.primary:hover{opacity:.88;}
+.btn.danger{background:var(--red);color:#fff;border-color:var(--red);}
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;font-weight:600;}
+.metric-val{font-size:26px;font-weight:700;font-family:var(--font-mono);line-height:1;}
+.metric-val.green{color:var(--green);}
+.metric-val.red{color:var(--red);}
+.metric-val.amber{color:var(--amber);}
+.metric-val.cyan{color:var(--cyan);}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:5px;font-family:var(--font-mono);}
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+/* PANEL */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.panel-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+.panel-body{padding:16px;}
+/* TRANSACTION LOG */
+.tx-list{max-height:420px;overflow-y:auto;}
+.tx-list::-webkit-scrollbar{width:4px;}
+.tx-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.tx-row{display:grid;grid-template-columns:28px 1fr 100px 80px 90px 96px;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;transition:background .15s;cursor:pointer;}
+.tx-row:hover{background:rgba(0,212,245,.04);}
+.tx-row:last-child{border-bottom:none;}
+.tx-row.allowed{border-left:3px solid var(--green);}
+.tx-row.denied{border-left:3px solid var(--red);background:var(--red-bg);}
+.tx-row.escalated{border-left:3px solid var(--amber);background:var(--amber-bg);}
+.tx-num{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
+.tx-main{}
+.tx-agent{font-size:12px;color:var(--text);font-family:var(--font-mono);}
+.tx-action{font-size:11px;color:var(--muted);}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+.badge.allow{background:var(--green-bg);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+.badge.deny{background:var(--red-bg);color:#F09595;border:1px solid rgba(163,45,45,.3);}
+.badge.escalate{background:var(--amber-bg);color:#FAC775;border:1px solid rgba(133,79,11,.3);}
+.badge.monitor{background:rgba(30,58,110,.3);color:var(--muted);border:1px solid var(--border);}
+.badge.critical{background:rgba(163,45,45,.2);color:#F09595;border:1px solid rgba(163,45,45,.3);}
+.badge.high{background:rgba(133,79,11,.2);color:#FAC775;border:1px solid rgba(133,79,11,.3);}
+.badge.medium{background:rgba(59,109,17,.2);color:#97C459;border:1px solid rgba(59,109,17,.3);}
+/* DETAIL PANEL */
+.detail-panel{min-height:200px;}
+.detail-empty{padding:40px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--font-mono);}
+.detail-content{padding:16px;font-family:var(--font-mono);font-size:12px;line-height:1.9;}
+.detail-row{display:flex;gap:12px;margin-bottom:6px;}
+.detail-key{color:var(--muted);min-width:180px;flex-shrink:0;}
+.detail-val{color:var(--text);}
+.detail-val.green{color:var(--green);}
+.detail-val.red{color:#F09595;}
+.detail-val.amber{color:#FAC775;}
+.detail-val.cyan{color:var(--cyan);}
+/* CHART */
+.chart-wrap{height:180px;position:relative;}
+/* ACCOUNTABILITY */
+.accountability-card{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:14px;margin-top:12px;}
+.accountability-title{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.acc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(30,58,110,.3);}
+.acc-row:last-child{border-bottom:none;}
+.acc-key{font-size:11px;color:var(--muted);font-family:var(--font-mono);}
+.acc-val{font-size:11px;color:var(--text);font-family:var(--font-mono);}
+/* REPLAY */
+.replay-section{margin-top:16px;}
+/* INTEGRATION */
+.code-block{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:var(--font-mono);font-size:12px;line-height:1.7;color:var(--text);overflow-x:auto;white-space:pre;}
+.code-comment{color:var(--muted2);}
+.code-keyword{color:var(--cyan);}
+.code-string{color:#97C459;}
+.code-func{color:#FAC775;}
+@media(max-width:700px){
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+  .tx-row{grid-template-columns:24px 1fr 80px;}
+  .tx-row>:nth-child(4),.tx-row>:nth-child(5),.tx-row>:nth-child(6){display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-hex">&#x2B21;</div>
+    <div>
+      <div class="logo-name">VeriSigil AI</div>
+      <div class="logo-sub">AI Payment Governance &middot; Runtime Enforcement Demo</div>
+    </div>
+  </div>
+  <div class="header-badge">Live Demo</div>
+</div>
+
+<div class="hero">
+  <div class="hero-pill"><span class="pulse"></span>Runtime Enforcement Layer</div>
+  <h1 class="hero-title">AI Payment Agent<br><span>Under Governance</span></h1>
+  <p class="hero-sub">Watch VeriSigil intercept AI payment decisions in real time &mdash; enforcing authority, trust, jurisdiction, and consequence rules before a single dollar moves.</p>
+</div>
+
+<div class="main">
+
+  <!-- PAYMENT BUILDER -->
+  <div class="workflow-section">
+    <div class="section-label">Configure Payment Request</div>
+    <div class="payment-form">
+      <div class="form-group">
+        <label class="form-label">Agent ID</label>
+        <input class="form-input" id="agentId" value="payment-agent-001" placeholder="agent-id">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount (USD)</label>
+        <input class="form-input" id="amount" type="number" value="50000" min="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Recipient</label>
+        <input class="form-input" id="recipient" value="vendor-corp-x" placeholder="recipient">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Trust Score</label>
+        <input class="form-input" id="trustScore" type="number" value="0.963" min="0" max="1" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Consequence</label>
+        <select class="form-input" id="consequence">
+          <option value="CRITICAL">CRITICAL</option>
+          <option value="HIGH">HIGH</option>
+          <option value="MEDIUM" selected>MEDIUM</option>
+          <option value="LOW">LOW</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jurisdiction</label>
+        <select class="form-input" id="jurisdiction">
+          <option value="EU">EU</option>
+          <option value="US">US</option>
+          <option value="AU">AU</option>
+          <option value="GLOBAL" selected>GLOBAL</option>
+          <option value="FINANCE">FINANCE</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="btn primary" id="runSingle" onclick="runSinglePayment()">&#x25B6; Submit Payment Request</button>
+    <button class="btn" id="runBatch" onclick="runBatchSimulation()">&#x21BA; Run 10-Payment Simulation</button>
+    <button class="btn" onclick="resetAll()">Reset</button>
+    <span id="status-text" style="font-size:12px;color:var(--muted);font-family:var(--font-mono);align-self:center;">&mdash; ready &mdash;</span>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Total Requests</div>
+      <div class="metric-val cyan" id="m-total">0</div>
+      <div class="metric-sub">intercepted</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Allowed</div>
+      <div class="metric-val green" id="m-allow">0</div>
+      <div class="metric-sub">by VeriSigil</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Denied</div>
+      <div class="metric-val red" id="m-deny">0</div>
+      <div class="metric-sub">blocked</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Escalated</div>
+      <div class="metric-val amber" id="m-escalate">0</div>
+      <div class="metric-sub">human required</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Value Protected</div>
+      <div class="metric-val green" id="m-protected">$0</div>
+      <div class="metric-sub">USD blocked</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="two-col">
+
+    <!-- LEFT: TRANSACTION LOG -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Payment Interception Log</span>
+        <span id="log-count" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);">0 requests</span>
+      </div>
+      <div class="tx-list" id="tx-list">
+        <div style="padding:32px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--font-mono);">
+          Submit a payment request to begin &uarr;
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: DETAIL + ACCOUNTABILITY -->
+    <div>
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="panel-header">
+          <span class="panel-title">Governance Decision Detail</span>
+          <span id="detail-id" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);"></span>
+        </div>
+        <div id="detail-panel" class="detail-panel">
+          <div class="detail-empty">Click any transaction to inspect &rarr;</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Decision Distribution</span>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap">
+            <canvas id="decisionChart" role="img" aria-label="Pie chart showing distribution of governance decisions"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ACCOUNTABILITY REPLAY -->
+  <div class="panel" style="margin-bottom:16px;">
+    <div class="panel-header">
+      <span class="panel-title">VGS-024 Accountability Records &mdash; Cryptographically Sealed</span>
+      <span id="record-count" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);">0 records</span>
+    </div>
+    <div id="accountability-list" style="max-height:280px;overflow-y:auto;">
+      <div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--font-mono);">
+        Accountability records appear here for blocked/escalated payments
+      </div>
+    </div>
+  </div>
+
+  <!-- SDK INTEGRATION CODE -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">SDK Integration &mdash; Drop In 15 Minutes</span>
+      <span style="font-size:11px;color:var(--cyan);font-family:var(--font-mono);">verisigil.py</span>
+    </div>
+    <div class="panel-body">
+      <div class="code-block"><span class="code-comment"># Install</span>
+<span class="code-comment"># pip install httpx  (or pip install verisigil)</span>
+
+<span class="code-keyword">from</span> verisigil <span class="code-keyword">import</span> VeriSigil, GovernanceDeniedError
+
+<span class="code-comment"># Initialize once</span>
+vs = <span class="code-func">VeriSigil</span>(
+    api_key     = <span class="code-string">"verisigil-secret-2026"</span>,
+    agent_id    = <span class="code-string">"payment-agent-001"</span>,
+    consequence = <span class="code-string">"CRITICAL"</span>,
+    jurisdiction= <span class="code-string">"EU"</span>,
+)
+
+<span class="code-comment"># Option 1: Decorator — wraps any function automatically</span>
+<span class="code-keyword">@vs.enforce</span>(consequence=<span class="code-string">"CRITICAL"</span>)
+<span class="code-keyword">def</span> <span class="code-func">execute_payment</span>(amount, recipient, currency=<span class="code-string">"USD"</span>):
+    stripe.charge(amount, recipient)  <span class="code-comment"># only runs if VeriSigil allows</span>
+
+<span class="code-comment"># Option 2: Manual gate — explicit check before action</span>
+result = vs.<span class="code-func">gate</span>(
+    action_type = <span class="code-string">"PAYMENT_EXECUTION"</span>,
+    payload     = {<span class="code-string">"amount"</span>: 50000, <span class="code-string">"recipient"</span>: <span class="code-string">"vendor-x"</span>},
+    trust_score = <span class="code-string">0.963</span>,
+)
+
+<span class="code-keyword">if</span> result.allowed:
+    execute_stripe_payment()
+<span class="code-keyword">elif</span> result.needs_human:
+    <span class="code-func">notify_supervisor</span>(result)  <span class="code-comment"># escalate</span>
+<span class="code-keyword">else</span>:
+    <span class="code-func">log_blocked_payment</span>(result)  <span class="code-comment"># denied — nothing moves</span>
+
+<span class="code-comment"># Option 3: FastAPI middleware — governs all routes automatically</span>
+app.<span class="code-func">add_middleware</span>(
+    VeriSigilMiddleware,
+    api_key       = <span class="code-string">"verisigil-secret-2026"</span>,
+    protect_paths = [<span class="code-string">"/payments"</span>, <span class="code-string">"/transfers"</span>],
+    consequence   = <span class="code-string">"HIGH"</span>,
+)</div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────
+var transactions = [];
+var accountabilityRecords = [];
+var chart = null;
+var decisionCounts = {ALLOW:0, DENY:0, REQUIRE_HUMAN_APPROVAL:0, MONITOR:0};
+var totalProtected = 0;
+var txCounter = 0;
+
+// ── SIMULATED GOVERNANCE ENGINE ───────────────────────────────
+// Simulates VeriSigil API responses for demo purposes
+// In production this calls verisigil-api-production.up.railway.app
+function simulateGovernanceCheck(payload) {
+  var trust = parseFloat(payload.trust_score);
+  var amount = parseFloat(payload.amount);
+  var consequence = payload.consequence;
+  var jurisdiction = payload.jurisdiction;
+
+  // Governance rules
+  if (trust < 0.30) {
+    return { decision:"DENY", reason:"Trust score critically low — agent identity unverified", color:"red" };
+  }
+  if (trust < 0.50 && consequence === "CRITICAL") {
+    return { decision:"DENY", reason:"Trust score insufficient for CRITICAL consequence action", color:"red" };
+  }
+  if (amount > 100000 && consequence === "CRITICAL") {
+    return { decision:"REQUIRE_HUMAN_APPROVAL", reason:"Payment exceeds automated authority limit — board approval required", color:"amber" };
+  }
+  if (amount > 50000 && trust < 0.75) {
+    return { decision:"REQUIRE_HUMAN_APPROVAL", reason:"High-value payment with degraded trust trajectory requires supervisor", color:"amber" };
+  }
+  if (jurisdiction === "EU" && amount > 30000 && consequence === "HIGH") {
+    return { decision:"REQUIRE_HUMAN_APPROVAL", reason:"EU jurisdiction: DORA compliance requires human oversight for high-value transfers", color:"amber" };
+  }
+  if (trust < 0.60) {
+    return { decision:"MONITOR", reason:"Proceeding with monitoring — trust trajectory flagged for audit", color:"cyan" };
+  }
+  return { decision:"ALLOW", reason:"Authority verified, trust score acceptable, policy satisfied", color:"green" };
+}
+
+function runSinglePayment() {
+  var payload = getFormPayload();
+  processPayment(payload);
+}
+
+function getFormPayload() {
+  return {
+    agent_id:    document.getElementById('agentId').value || 'payment-agent-001',
+    amount:      parseFloat(document.getElementById('amount').value) || 50000,
+    recipient:   document.getElementById('recipient').value || 'vendor-x',
+    trust_score: parseFloat(document.getElementById('trustScore').value) || 0.963,
+    consequence: document.getElementById('consequence').value,
+    jurisdiction:document.getElementById('jurisdiction').value,
+  };
+}
+
+var BATCH_SCENARIOS = [
+  {agent_id:'payment-agent-001', amount:5000,   recipient:'vendor-a',    trust_score:0.963, consequence:'MEDIUM',   jurisdiction:'GLOBAL'},
+  {agent_id:'payment-agent-002', amount:75000,  recipient:'vendor-b',    trust_score:0.891, consequence:'CRITICAL', jurisdiction:'EU'},
+  {agent_id:'payment-agent-003', amount:1500,   recipient:'vendor-c',    trust_score:0.250, consequence:'HIGH',     jurisdiction:'US'},
+  {agent_id:'payment-agent-001', amount:120000, recipient:'vendor-d',    trust_score:0.950, consequence:'CRITICAL', jurisdiction:'FINANCE'},
+  {agent_id:'payment-agent-004', amount:8000,   recipient:'vendor-e',    trust_score:0.720, consequence:'MEDIUM',   jurisdiction:'GLOBAL'},
+  {agent_id:'payment-agent-002', amount:45000,  recipient:'vendor-f',    trust_score:0.650, consequence:'HIGH',     jurisdiction:'AU'},
+  {agent_id:'payment-agent-005', amount:200,    recipient:'vendor-g',    trust_score:0.990, consequence:'LOW',      jurisdiction:'GLOBAL'},
+  {agent_id:'payment-agent-003', amount:95000,  recipient:'vendor-h',    trust_score:0.410, consequence:'CRITICAL', jurisdiction:'EU'},
+  {agent_id:'payment-agent-001', amount:15000,  recipient:'vendor-i',    trust_score:0.855, consequence:'HIGH',     jurisdiction:'FINANCE'},
+  {agent_id:'payment-agent-006', amount:3000,   recipient:'vendor-j',    trust_score:0.100, consequence:'MEDIUM',   jurisdiction:'GLOBAL'},
+];
+
+var batchTimer = null;
+var batchIndex = 0;
+
+function runBatchSimulation() {
+  if (batchTimer) return;
+  batchIndex = 0;
+  document.getElementById('runBatch').disabled = true;
+  document.getElementById('status-text').textContent = 'running simulation...';
+  batchTimer = setInterval(function() {
+    if (batchIndex >= BATCH_SCENARIOS.length) {
+      clearInterval(batchTimer);
+      batchTimer = null;
+      document.getElementById('runBatch').disabled = false;
+      document.getElementById('status-text').textContent = '✓ simulation complete';
+      return;
+    }
+    processPayment(BATCH_SCENARIOS[batchIndex]);
+    batchIndex++;
+  }, 600);
+}
+
+function processPayment(payload) {
+  txCounter++;
+  var gov = simulateGovernanceCheck(payload);
+  var govId = 'GOV-' + Math.random().toString(36).substr(2,8).toUpperCase();
+  var ts = new Date().toISOString();
+
+  var tx = {
+    num:         txCounter,
+    govId:       govId,
+    agentId:     payload.agent_id,
+    amount:      payload.amount,
+    recipient:   payload.recipient,
+    trust:       payload.trust_score,
+    consequence: payload.consequence,
+    jurisdiction:payload.jurisdiction,
+    decision:    gov.decision,
+    reason:      gov.reason,
+    color:       gov.color,
+    timestamp:   ts,
+    accountabilityId: null,
+  };
+
+  // Generate accountability record for non-allowed
+  if (gov.decision !== 'ALLOW' && gov.decision !== 'MONITOR') {
+    var accId = 'SAC-' + Math.random().toString(36).substr(2,10).toUpperCase();
+    var seal  = sha256mini(JSON.stringify(tx) + ts);
+    tx.accountabilityId = accId;
+    accountabilityRecords.unshift({
+      record_id: accId,
+      agent_id:  payload.agent_id,
+      action_type: 'PAYMENT_EXECUTION',
+      amount:    payload.amount,
+      decision:  gov.decision,
+      reason:    gov.reason,
+      record_seal: seal,
+      grade:     gov.decision === 'DENY' ? 'A' : 'B',
+      timestamp: ts,
+    });
+  }
+
+  // Update counts
+  decisionCounts[gov.decision] = (decisionCounts[gov.decision] || 0) + 1;
+  if (gov.decision === 'DENY') totalProtected += payload.amount;
+
+  transactions.unshift(tx);
+  renderMetrics();
+  renderTxList();
+  renderAccountability();
+  updateChart();
+  showDetail(tx);
+}
+
+function renderMetrics() {
+  var total    = transactions.length;
+  var allowed  = transactions.filter(t=>t.decision==='ALLOW'||t.decision==='MONITOR').length;
+  var denied   = transactions.filter(t=>t.decision==='DENY').length;
+  var escalated= transactions.filter(t=>t.decision==='REQUIRE_HUMAN_APPROVAL').length;
+
+  document.getElementById('m-total').textContent = total;
+  document.getElementById('m-allow').textContent = allowed;
+  document.getElementById('m-deny').textContent  = denied;
+  document.getElementById('m-escalate').textContent = escalated;
+  document.getElementById('m-protected').textContent = '$' + totalProtected.toLocaleString();
+}
+
+function renderTxList() {
+  var list = document.getElementById('tx-list');
+  if (transactions.length === 0) {
+    list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--font-mono);">Submit a payment request to begin &uarr;</div>';
+    return;
+  }
+
+  document.getElementById('log-count').textContent = transactions.length + ' requests';
+
+  var html = '';
+  transactions.forEach(function(tx) {
+    var cls = tx.decision === 'ALLOW' || tx.decision === 'MONITOR' ? 'allowed' :
+              tx.decision === 'DENY' ? 'denied' : 'escalated';
+    var badgeCls = tx.decision === 'ALLOW' ? 'allow' :
+                   tx.decision === 'DENY'  ? 'deny'  :
+                   tx.decision === 'REQUIRE_HUMAN_APPROVAL' ? 'escalate' : 'monitor';
+    var badgeText = tx.decision === 'REQUIRE_HUMAN_APPROVAL' ? '👤 HUMAN' :
+                    tx.decision === 'ALLOW' ? '✓ ALLOW' :
+                    tx.decision === 'DENY'  ? '✗ DENY'  : '● MONITOR';
+    var consCls = tx.consequence === 'CRITICAL' ? 'critical' :
+                  tx.consequence === 'HIGH' ? 'high' : 'medium';
+
+    html += '<div class="tx-row ' + cls + '" onclick="showDetailById(' + tx.num + ')">' +
+      '<span class="tx-num">#' + String(tx.num).padStart(2,'0') + '</span>' +
+      '<div class="tx-main">' +
+        '<div class="tx-agent">' + tx.agentId + '</div>' +
+        '<div class="tx-action">$' + tx.amount.toLocaleString() + ' → ' + tx.recipient + '</div>' +
+      '</div>' +
+      '<span><span class="badge ' + consCls + '">' + tx.consequence + '</span></span>' +
+      '<span style="font-size:11px;color:var(--muted);font-family:var(--font-mono)">' + tx.trust.toFixed(3) + '</span>' +
+      '<span>' + tx.jurisdiction + '</span>' +
+      '<span><span class="badge ' + badgeCls + '">' + badgeText + '</span></span>' +
+    '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function showDetailById(num) {
+  var tx = transactions.find(function(t){return t.num === num;});
+  if (tx) showDetail(tx);
+}
+
+function showDetail(tx) {
+  document.getElementById('detail-id').textContent = tx.govId;
+  var decColor = tx.decision==='ALLOW'?'green':tx.decision==='DENY'?'red':'amber';
+  var html = '<div class="detail-content">' +
+    row('Governance ID',     tx.govId, 'cyan') +
+    row('Decision',          tx.decision, decColor) +
+    row('Reason',            tx.reason) +
+    row('Agent ID',          tx.agentId) +
+    row('Action',            'PAYMENT_EXECUTION') +
+    row('Amount',            '$' + tx.amount.toLocaleString() + ' USD') +
+    row('Recipient',         tx.recipient) +
+    row('Trust Score',       tx.trust.toFixed(4)) +
+    row('Consequence',       tx.consequence) +
+    row('Jurisdiction',      tx.jurisdiction) +
+    row('Timestamp',         tx.timestamp.replace('T',' ').split('.')[0] + ' UTC') +
+    (tx.accountabilityId ? row('Accountability ID', tx.accountabilityId, 'cyan') : '') +
+    row('Offline Verifiable','TRUE', 'green') +
+  '</div>';
+
+  // Accountability card for blocked
+  if (tx.accountabilityId) {
+    var rec = accountabilityRecords.find(function(r){return r.record_id===tx.accountabilityId;});
+    if (rec) {
+      html += '<div class="accountability-card">' +
+        '<div class="accountability-title">&#x1F512; VGS-024 Sovereign Accountability Record</div>' +
+        acc('Record ID',    rec.record_id) +
+        acc('Record Seal',  rec.record_seal.substr(0,32) + '...') +
+        acc('Grade',        rec.grade) +
+        acc('Defensibility','FULL') +
+        acc('Tamper-Evident','TRUE') +
+        acc('Verifiable',   'Without VeriSigil trust') +
+      '</div>';
+    }
+  }
+
+  document.getElementById('detail-panel').innerHTML = html;
+}
+
+function row(k, v, cls) {
+  return '<div class="detail-row"><span class="detail-key">' + k + '</span><span class="detail-val' + (cls?' '+cls:'') + '">' + v + '</span></div>';
+}
+function acc(k, v) {
+  return '<div class="acc-row"><span class="acc-key">' + k + '</span><span class="acc-val">' + v + '</span></div>';
+}
+
+function renderAccountability() {
+  var list = document.getElementById('accountability-list');
+  document.getElementById('record-count').textContent = accountabilityRecords.length + ' records';
+  if (accountabilityRecords.length === 0) {
+    list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--font-mono);">Accountability records appear here for blocked/escalated payments</div>';
+    return;
+  }
+
+  var html = '';
+  accountabilityRecords.forEach(function(rec) {
+    var badgeCls = rec.decision === 'DENY' ? 'deny' : 'escalate';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);font-size:11px;font-family:var(--font-mono);">' +
+      '<div><div style="color:var(--muted);margin-bottom:3px">Record ID</div><div style="color:var(--cyan)">' + rec.record_id + '</div></div>' +
+      '<div><div style="color:var(--muted);margin-bottom:3px">Agent</div><div style="color:var(--text)">' + rec.agent_id + '</div></div>' +
+      '<div><div style="color:var(--muted);margin-bottom:3px">Amount</div><div style="color:var(--text)">$' + rec.amount.toLocaleString() + '</div></div>' +
+      '<div><div style="color:var(--muted);margin-bottom:3px">Decision</div><div><span class="badge ' + badgeCls + '">' + rec.decision + '</span></div></div>' +
+    '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function updateChart() {
+  var d = decisionCounts;
+  var data = [d.ALLOW||0, d.DENY||0, d['REQUIRE_HUMAN_APPROVAL']||0, d.MONITOR||0];
+  if (chart) {
+    chart.data.datasets[0].data = data;
+    chart.update('none');
+  }
+}
+
+function resetAll() {
+  transactions = [];
+  accountabilityRecords = [];
+  decisionCounts = {ALLOW:0, DENY:0, REQUIRE_HUMAN_APPROVAL:0, MONITOR:0};
+  totalProtected = 0;
+  txCounter = 0;
+  if (batchTimer) { clearInterval(batchTimer); batchTimer = null; }
+  document.getElementById('runBatch').disabled = false;
+  document.getElementById('status-text').textContent = '— ready —';
+  document.getElementById('detail-panel').innerHTML = '<div class="detail-empty">Click any transaction to inspect &rarr;</div>';
+  document.getElementById('detail-id').textContent = '';
+  renderMetrics();
+  renderTxList();
+  renderAccountability();
+  updateChart();
+}
+
+// Minimal sha256 approximation for demo seals
+function sha256mini(str) {
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var chr = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + chr;
+    hash |= 0;
+  }
+  var h = Math.abs(hash).toString(16).padStart(8,'0');
+  return h + h + h + h + h + h + h + h;
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  var ctx = document.getElementById('decisionChart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Allowed', 'Denied', 'Human Required', 'Monitor'],
+      datasets: [{
+        data: [0,0,0,0],
+        backgroundColor: ['rgba(34,197,94,.7)','rgba(226,75,74,.7)','rgba(245,158,11,.7)','rgba(0,212,245,.3)'],
+        borderColor:     ['#22C55E','#E24B4A','#F59E0B','#00D4F5'],
+        borderWidth: 1.5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'right', labels:{ color:'#94A3B8', font:{size:11,family:"'JetBrains Mono',monospace"}, boxWidth:12, padding:12 }},
+        tooltip: { backgroundColor:'#0D1A3A', borderColor:'rgba(30,58,110,.8)', borderWidth:1, titleColor:'#F1F5F9', bodyColor:'#94A3B8' }
+      },
+      cutout: '65%',
+      animation: { duration: 200 }
+    }
+  });
+});
+</script>
+</body>
+</html>

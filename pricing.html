@@ -3,281 +3,415 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pricing — VeriSigil AI | Runtime Guard for AI Agents</title>
-<meta name="description" content="Simple, transparent pricing for VeriSigil AI Runtime Guard. Start free, scale as you grow. EU AI Act compliant AI agent verification.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>VeriSigil AI — Pricing</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-:root {
-  --navy: #050E2B;
-  --navy2: #0D1A3A;
-  --navy3: #0A1628;
-  --cyan: #00D4F5;
-  --green: #22C55E;
-  --amber: #F59E0B;
-  --white: #FFFFFF;
-  --mid: #94A3B8;
-  --border: rgba(30,58,110,0.6);
+:root{
+  --bg:#030A1A;--s1:#07122A;--s2:#0A1828;--s3:#0E2040;
+  --border:rgba(0,180,220,0.10);--b2:rgba(0,212,245,0.22);
+  --cyan:#00D4F5;--cdim:rgba(0,212,245,0.08);
+  --text:#E8F4F8;--muted:#6B8FAA;--muted2:#3D5A70;
+  --green:#1FD47A;--amber:#F0A030;
+  --mono:'JetBrains Mono',monospace;--sans:'Syne',system-ui,sans-serif;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Space Grotesk',sans-serif; background:var(--navy); color:var(--white); line-height:1.7; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
 
-nav {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 40px; border-bottom:1px solid var(--border);
-  background:var(--navy2);
+nav{position:sticky;top:0;z-index:100;background:rgba(3,10,26,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--b2);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{font-size:15px;font-weight:700;color:var(--text);}
+.nav-sub{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.nav-links{display:flex;gap:20px;}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s;}
+.nav-links a:hover{color:var(--text);}
+
+.hero{text-align:center;padding:60px 24px 40px;position:relative;z-index:2;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--cdim);border:1px solid var(--b2);color:var(--cyan);font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;font-family:var(--mono);}
+.hero h1{font-size:44px;font-weight:800;line-height:1.1;margin-bottom:16px;}
+.hero h1 span{color:var(--cyan);}
+.hero p{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto;line-height:1.7;}
+
+.main{max-width:1100px;margin:0 auto;padding:0 20px 80px;position:relative;z-index:2;}
+
+/* EMAIL INPUT */
+.email-section{text-align:center;margin-bottom:40px;}
+.email-section p{font-size:13px;color:var(--muted);margin-bottom:12px;font-family:var(--mono);}
+.email-row{display:flex;gap:10px;max-width:420px;margin:0 auto;}
+.email-input{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;transition:border-color .15s;}
+.email-input:focus{border-color:rgba(0,212,245,.4);}
+.email-input::placeholder{color:var(--muted2);}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:40px;}
+.toggle-label{font-size:13px;color:var(--muted);}
+.toggle-label.active{color:var(--text);font-weight:600;}
+.toggle{width:44px;height:24px;background:var(--s3);border-radius:12px;cursor:pointer;position:relative;transition:background .2s;border:1px solid var(--border);}
+.toggle.on{background:rgba(0,212,245,.3);border-color:var(--b2);}
+.toggle-thumb{width:18px;height:18px;background:var(--muted);border-radius:50%;position:absolute;top:2px;left:3px;transition:all .2s;}
+.toggle.on .toggle-thumb{left:22px;background:var(--cyan);}
+.save-badge{background:rgba(31,212,122,.15);color:var(--green);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;font-family:var(--mono);}
+
+/* PLANS GRID */
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px;}
+.plan{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;flex-direction:column;position:relative;transition:border-color .2s;}
+.plan:hover{border-color:rgba(0,212,245,.3);}
+.plan.popular{border-color:var(--b2);background:linear-gradient(180deg,rgba(0,212,245,.05) 0%,var(--s1) 100%);}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--cyan);color:#030A1A;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;}
+.plan-name{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;font-family:var(--mono);}
+.plan-price{font-size:38px;font-weight:800;color:var(--text);line-height:1;margin-bottom:4px;font-family:var(--mono);}
+.plan-price span{font-size:16px;color:var(--muted);font-weight:400;}
+.plan-period{font-size:12px;color:var(--muted);margin-bottom:20px;font-family:var(--mono);}
+.plan-requests{font-size:12px;color:var(--cyan);font-family:var(--mono);margin-bottom:16px;padding:8px 12px;background:var(--cdim);border-radius:6px;text-align:center;}
+.plan-features{flex:1;list-style:none;margin-bottom:24px;}
+.plan-features li{font-size:12px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;line-height:1.4;}
+.plan-features li::before{content:'✓';color:var(--green);flex-shrink:0;font-weight:700;}
+.plan-features li.dim::before{content:'—';color:var(--muted2);}
+.plan-features li.dim{color:var(--muted2);}
+.btn-plan{width:100%;padding:12px;border-radius:8px;border:none;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-free{background:var(--s3);color:var(--muted);border:1px solid var(--border);}
+.btn-free:hover{border-color:rgba(0,212,245,.3);color:var(--text);}
+.btn-paid{background:var(--cyan);color:#030A1A;}
+.btn-paid:hover{opacity:.88;}
+.btn-enterprise{background:transparent;color:var(--cyan);border:1px solid var(--b2);}
+.btn-enterprise:hover{background:var(--cdim);}
+
+/* COMPARISON TABLE */
+.sec-label{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.16em;font-family:var(--mono);margin-bottom:16px;margin-top:48px;}
+.compare{width:100%;border-collapse:collapse;margin-bottom:48px;}
+.compare th{background:var(--s3);padding:12px 16px;font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);text-align:center;}
+.compare th:first-child{text-align:left;}
+.compare td{padding:12px 16px;font-size:12px;border-bottom:1px solid var(--border);color:var(--muted);text-align:center;}
+.compare td:first-child{color:var(--text);text-align:left;font-size:13px;}
+.compare tr:hover td{background:rgba(0,212,245,.02);}
+.check{color:var(--green);font-size:14px;}
+.cross{color:var(--muted2);}
+
+/* FAQ */
+.faq{margin-bottom:48px;}
+.faq-item{border-bottom:1px solid var(--border);padding:16px 0;}
+.faq-q{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.faq-a{font-size:13px;color:var(--muted);line-height:1.7;}
+.faq-a a{color:var(--cyan);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--s3);border:1px solid var(--b2);color:var(--text);padding:14px 20px;border-radius:8px;font-size:13px;font-family:var(--mono);z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+footer{text-align:center;padding:40px 20px;font-size:12px;color:var(--muted2);font-family:var(--mono);border-top:1px solid var(--border);position:relative;z-index:2;}
+footer a{color:var(--muted);text-decoration:none;}
+
+@media(max-width:900px){
+  .plans{grid-template-columns:repeat(2,1fr);}
 }
-.nav-logo { font-size:18px; font-weight:700; color:var(--cyan); text-decoration:none; }
-.nav-links { display:flex; gap:24px; }
-.nav-links a { color:var(--mid); text-decoration:none; font-size:13px; transition:color 0.15s; }
-.nav-links a:hover { color:var(--white); }
-.nav-cta { background:var(--cyan); color:var(--navy); padding:8px 16px; border-radius:7px; font-size:13px; font-weight:700; text-decoration:none; }
-
-.hero { text-align:center; padding:64px 24px 48px; }
-.hero-tag { display:inline-block; background:rgba(0,212,245,0.1); border:1px solid rgba(0,212,245,0.3); color:var(--cyan); font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:4px 14px; border-radius:20px; margin-bottom:20px; }
-.hero h1 { font-size:40px; font-weight:700; margin-bottom:16px; line-height:1.2; }
-.hero h1 span { color:var(--cyan); }
-.hero p { font-size:16px; color:var(--mid); max-width:540px; margin:0 auto 32px; }
-
-.deadline-bar { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:12px 24px; display:inline-flex; align-items:center; gap:10px; margin-bottom:48px; font-size:13px; }
-.deadline-bar strong { color:#EF4444; }
-
-.plans { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; max-width:1100px; margin:0 auto; padding:0 24px 80px; }
-
-.plan { background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:32px; position:relative; display:flex; flex-direction:column; }
-.plan.featured { border-color:var(--cyan); border-width:2px; }
-.plan.featured::before { content:'MOST POPULAR'; position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--cyan); color:var(--navy); font-size:10px; font-weight:700; letter-spacing:0.1em; padding:3px 14px; border-radius:20px; }
-
-.plan-name { font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
-.plan-price { font-size:42px; font-weight:700; font-family:'Space Mono',monospace; color:var(--white); line-height:1; margin-bottom:4px; }
-.plan-price span { font-size:16px; font-weight:400; color:var(--mid); }
-.plan-naira { font-size:12px; color:var(--mid); font-family:'Space Mono',monospace; margin-bottom:8px; }
-.plan-desc { font-size:13px; color:var(--mid); margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--border); }
-
-.plan-features { list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:32px; flex:1; }
-.plan-features li { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--mid); }
-.plan-features li .check { color:var(--green); flex-shrink:0; margin-top:2px; }
-.plan-features li .cross { color:#475569; flex-shrink:0; margin-top:2px; }
-.plan-features li strong { color:var(--white); }
-
-.plan-btn { display:block; text-align:center; padding:13px; border-radius:9px; font-weight:700; font-size:14px; text-decoration:none; transition:all 0.15s; }
-.plan-btn.primary { background:var(--cyan); color:var(--navy); }
-.plan-btn.primary:hover { opacity:0.88; }
-.plan-btn.outline { background:transparent; color:var(--cyan); border:1px solid var(--cyan); }
-.plan-btn.outline:hover { background:rgba(0,212,245,0.08); }
-.plan-btn.dark { background:var(--navy3); color:var(--white); border:1px solid var(--border); }
-.plan-btn.dark:hover { border-color:var(--cyan); color:var(--cyan); }
-
-.calls-out { font-size:11px; color:var(--mid); text-align:center; margin-top:10px; }
-
-.faq { max-width:740px; margin:0 auto; padding:0 24px 80px; }
-.faq h2 { font-size:26px; font-weight:700; text-align:center; margin-bottom:40px; }
-.faq-item { border-bottom:1px solid var(--border); padding:20px 0; }
-.faq-q { font-size:15px; font-weight:600; color:var(--white); margin-bottom:8px; }
-.faq-a { font-size:13px; color:var(--mid); line-height:1.7; }
-
-.enterprise-banner { max-width:900px; margin:0 auto 80px; padding:0 24px; }
-.enterprise-box { background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:40px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; }
-.enterprise-box h3 { font-size:22px; font-weight:700; margin-bottom:8px; }
-.enterprise-box p { font-size:14px; color:var(--mid); max-width:480px; }
-.enterprise-btns { display:flex; gap:12px; flex-shrink:0; flex-wrap:wrap; }
-.btn-primary { background:var(--cyan); color:var(--navy); padding:12px 24px; border-radius:8px; font-weight:700; font-size:14px; text-decoration:none; }
-.btn-outline { background:transparent; color:var(--cyan); border:1px solid var(--cyan); padding:12px 24px; border-radius:8px; font-weight:700; font-size:14px; text-decoration:none; }
-
-.compare { max-width:900px; margin:0 auto 80px; padding:0 24px; }
-.compare h2 { font-size:26px; font-weight:700; text-align:center; margin-bottom:40px; }
-table { width:100%; border-collapse:collapse; font-size:13px; }
-thead th { background:var(--navy2); color:var(--mid); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
-thead th:not(:first-child) { text-align:center; }
-tbody td { padding:12px 16px; border-bottom:1px solid rgba(30,58,110,0.4); color:var(--mid); }
-tbody td:first-child { color:var(--white); font-weight:500; }
-tbody td:not(:first-child) { text-align:center; }
-tbody tr:last-child td { border-bottom:none; }
-.yes { color:var(--green); font-size:16px; }
-.no { color:#475569; font-size:16px; }
-.val { color:var(--white); font-weight:600; font-family:'Space Mono',monospace; font-size:12px; }
-
-footer { border-top:1px solid var(--border); padding:32px 40px; text-align:center; }
-footer p { color:var(--mid); font-size:13px; }
-footer a { color:var(--cyan); text-decoration:none; }
-
-@media(max-width:900px) { .plans { grid-template-columns:1fr; } .enterprise-box { flex-direction:column; } }
+@media(max-width:500px){
+  .plans{grid-template-columns:1fr;}
+  .hero h1{font-size:32px;}
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="https://verisigilai.com" class="nav-logo">⬡ VeriSigil AI</a>
-  <div class="nav-links">
-    <a href="https://verisigilai.com/scanner.html">Scanner</a>
-    <a href="https://verisigilai.com/quickstart.html">Quickstart</a>
-    <a href="https://verisigilai.com/blog/">Blog</a>
-    <a href="https://verisigilai.com/sigil_studio.html">Studio</a>
+  <div>
+    <div class="nav-brand">VeriSigil AI</div>
+    <div class="nav-sub">Pricing</div>
   </div>
-  <a href="https://verisigilai.com/scanner.html" class="nav-cta">Free Scanner →</a>
+  <div class="nav-links">
+    <a href="https://verisigilai.com">Home</a>
+    <a href="https://verisigilai.com/demos.html">Demos</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a>
+  </div>
 </nav>
 
 <div class="hero">
-  <div class="hero-tag">Pricing</div>
-  <h1>Simple Pricing for<br><span>AI Agent Governance</span></h1>
-  <p>Start free. Scale as your agents grow. Cancel anytime. Every plan includes EU AI Act compliance built in.</p>
-  <div class="deadline-bar">
-    ⏰ <strong>EU AI Act enforcement: August 2, 2026</strong> — Get compliant before the deadline
-  </div>
+  <div class="hero-tag">Simple Pricing</div>
+  <h1>Governance Infrastructure<br><span>Priced for Builders</span></h1>
+  <p>Start free. Scale as your AI agents do. Every plan includes the runtime enforcement gate and fail-safe DENY by default.</p>
 </div>
 
-<div class="plans">
+<div class="main">
 
-  <!-- STARTER -->
-  <div class="plan">
-    <div class="plan-name">Starter</div>
-    <div class="plan-price">$49<span>/mo</span></div>
-    <div class="plan-naira">≈ NGN 78,400/month</div>
-    <div class="plan-desc">For developers and small teams building their first verified AI agents.</div>
-    <ul class="plan-features">
-      <li><span class="check">✓</span><div><strong>1,000</strong> Runtime Guard verifications/month</div></li>
-      <li><span class="check">✓</span><div><strong>5</strong> AI agent passports</div></li>
-      <li><span class="check">✓</span><div>Cryptographic identity (Ed25519)</div></li>
-      <li><span class="check">✓</span><div>Immutable audit trail</div></li>
-      <li><span class="check">✓</span><div>EU AI Act compliance reporting</div></li>
-      <li><span class="check">✓</span><div>Shadow Detection™</div></li>
-      <li><span class="check">✓</span><div>Email support</div></li>
-      <li><span class="cross">✗</span><div>Custom policies</div></li>
-      <li><span class="cross">✗</span><div>Slack alerts</div></li>
-      <li><span class="cross">✗</span><div>SLA guarantee</div></li>
-    </ul>
-    <a href="https://paystack.shop/pay/w2m0bx1-17" class="plan-btn outline" target="_blank">Get Started →</a>
-    <div class="calls-out">Billed monthly in NGN</div>
+  <!-- EMAIL -->
+  <div class="email-section">
+    <p>Enter your email to activate your API key after payment</p>
+    <div class="email-row">
+      <input class="email-input" id="userEmail" type="email" placeholder="you@company.com">
+    </div>
   </div>
 
-  <!-- PROFESSIONAL -->
-  <div class="plan featured">
-    <div class="plan-name">Professional</div>
-    <div class="plan-price">$499<span>/mo</span></div>
-    <div class="plan-naira">≈ NGN 798,400/month</div>
-    <div class="plan-desc">For growing teams deploying AI agents in production environments.</div>
-    <ul class="plan-features">
-      <li><span class="check">✓</span><div><strong>50,000</strong> Runtime Guard verifications/month</div></li>
-      <li><span class="check">✓</span><div><strong>Unlimited</strong> AI agent passports</div></li>
-      <li><span class="check">✓</span><div>Cryptographic identity (Ed25519)</div></li>
-      <li><span class="check">✓</span><div>Immutable audit trail</div></li>
-      <li><span class="check">✓</span><div>EU AI Act compliance reporting</div></li>
-      <li><span class="check">✓</span><div>Shadow Detection™</div></li>
-      <li><span class="check">✓</span><div><strong>Custom policy rules</strong></div></li>
-      <li><span class="check">✓</span><div><strong>Slack alerts</strong></div></li>
-      <li><span class="check">✓</span><div><strong>SDK access</strong></div></li>
-      <li><span class="check">✓</span><div>Priority email support</div></li>
-    </ul>
-    <a href="https://paystack.shop/pay/y5t592t4q7" class="plan-btn primary" target="_blank">Get Started →</a>
-    <div class="calls-out">Billed monthly in NGN</div>
+  <!-- BILLING TOGGLE -->
+  <div class="toggle-row">
+    <span class="toggle-label active" id="label-monthly">Monthly</span>
+    <div class="toggle" id="billing-toggle" onclick="toggleBilling()">
+      <div class="toggle-thumb"></div>
+    </div>
+    <span class="toggle-label" id="label-annual">Annual</span>
+    <span class="save-badge">Save 20%</span>
   </div>
 
-  <!-- ENTERPRISE -->
-  <div class="plan">
-    <div class="plan-name">Enterprise</div>
-    <div class="plan-price">$2,499<span>/mo</span></div>
-    <div class="plan-naira">≈ NGN 3,998,400/month</div>
-    <div class="plan-desc">For enterprises requiring unlimited scale, dedicated support and SLA guarantees.</div>
-    <ul class="plan-features">
-      <li><span class="check">✓</span><div><strong>Unlimited</strong> Runtime Guard verifications</div></li>
-      <li><span class="check">✓</span><div><strong>Unlimited</strong> AI agent passports</div></li>
-      <li><span class="check">✓</span><div>Cryptographic identity (Ed25519)</div></li>
-      <li><span class="check">✓</span><div>Immutable audit trail</div></li>
-      <li><span class="check">✓</span><div>EU AI Act compliance reporting</div></li>
-      <li><span class="check">✓</span><div>Shadow Detection™</div></li>
-      <li><span class="check">✓</span><div>Custom policy rules</div></li>
-      <li><span class="check">✓</span><div>Slack + webhook alerts</div></li>
-      <li><span class="check">✓</span><div><strong>Dedicated support engineer</strong></div></li>
-      <li><span class="check">✓</span><div><strong>99.9% SLA guarantee</strong></div></li>
-    </ul>
-    <a href="https://paystack.shop/pay/1cgmezjnmg" class="plan-btn dark" target="_blank">Get Started →</a>
-    <div class="calls-out">Billed monthly in NGN</div>
+  <!-- PLANS -->
+  <div class="plans">
+
+    <!-- FREE -->
+    <div class="plan">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">$0</div>
+      <div class="plan-period">forever free</div>
+      <div class="plan-requests">100 requests / month</div>
+      <ul class="plan-features">
+        <li>Runtime governance gate</li>
+        <li>Document semantic verify</li>
+        <li>Governance OS status</li>
+        <li>Fail-safe DENY endpoint</li>
+        <li class="dim">Inference corruption detection</li>
+        <li class="dim">Cognition poisoning shield</li>
+        <li class="dim">Accountability chain (VGS-024)</li>
+        <li class="dim">Priority support</li>
+      </ul>
+      <button class="btn-plan btn-free" onclick="activateFree()">Get Free Key</button>
+    </div>
+
+    <!-- DEVELOPER -->
+    <div class="plan">
+      <div class="plan-name">Developer</div>
+      <div class="plan-price" id="price-dev">$49<span>/mo</span></div>
+      <div class="plan-period" id="period-dev">billed monthly</div>
+      <div class="plan-requests">5,000 requests / month</div>
+      <ul class="plan-features">
+        <li>Everything in Starter</li>
+        <li>Inference corruption detection</li>
+        <li>Semantic integrity guard</li>
+        <li>Cognition poisoning shield</li>
+        <li>Adversarial simulator</li>
+        <li>Governance collapse risk</li>
+        <li>Calibration engine</li>
+        <li class="dim">Accountability chain (VGS-024)</li>
+        <li class="dim">ATF bridge</li>
+      </ul>
+      <button class="btn-plan btn-paid" onclick="pay('developer')">Get Developer Key</button>
+    </div>
+
+    <!-- GROWTH — POPULAR -->
+    <div class="plan popular">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-name">Growth</div>
+      <div class="plan-price" id="price-growth">$199<span>/mo</span></div>
+      <div class="plan-period" id="period-growth">billed monthly</div>
+      <div class="plan-requests">50,000 requests / month</div>
+      <ul class="plan-features">
+        <li>Everything in Developer</li>
+        <li>All 332 endpoints</li>
+        <li>VGS-024 Accountability Chain</li>
+        <li>ATF bridge (5 endpoints)</li>
+        <li>Governance OS kernel</li>
+        <li>Sovereign isolation mode</li>
+        <li>Consequence simulation</li>
+        <li>Domain policy templates</li>
+        <li>Benchmarking engine</li>
+      </ul>
+      <button class="btn-plan btn-paid" onclick="pay('growth')">Get Growth Key</button>
+    </div>
+
+    <!-- ENTERPRISE -->
+    <div class="plan">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price">Custom</div>
+      <div class="plan-period">annual contract</div>
+      <div class="plan-requests">Unlimited requests</div>
+      <ul class="plan-features">
+        <li>Everything in Growth</li>
+        <li>Dedicated API key management</li>
+        <li>Custom policy templates</li>
+        <li>SLA guarantee</li>
+        <li>Integration support</li>
+        <li>Priority escalation handling</li>
+        <li>Regulatory evidence packages</li>
+        <li>Custom jurisdictions</li>
+      </ul>
+      <button class="btn-plan btn-enterprise" onclick="contactEnterprise()">Contact Us</button>
+    </div>
+
   </div>
 
-</div>
-
-<!-- COMPARISON TABLE -->
-<div class="compare">
-  <h2>Compare Plans</h2>
-  <table>
+  <!-- COMPARISON -->
+  <div class="sec-label">Feature Comparison</div>
+  <table class="compare">
     <thead>
       <tr>
         <th>Feature</th>
         <th>Starter</th>
-        <th>Professional</th>
+        <th>Developer</th>
+        <th>Growth</th>
         <th>Enterprise</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>Monthly price (USD)</td><td class="val">$49</td><td class="val">$499</td><td class="val">$2,499</td></tr>
-      <tr><td>Runtime Guard verifications</td><td class="val">1,000</td><td class="val">50,000</td><td class="val">Unlimited</td></tr>
-      <tr><td>AI agent passports</td><td class="val">5</td><td class="val">Unlimited</td><td class="val">Unlimited</td></tr>
-      <tr><td>Cryptographic identity (Ed25519)</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>Immutable audit trail</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>Shadow Detection™</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>EU AI Act compliance reports</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>Custom policy rules</td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>Slack alerts</td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>SDK access</td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>Dedicated support engineer</td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td></tr>
-      <tr><td>SLA guarantee</td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="yes">✓</span></td></tr>
+      <tr><td>Runtime governance gate</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Document integrity (semantic-verify)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Fail-safe DENY by default</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Inference corruption detection</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Cognition poisoning shield</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Semantic chain verification</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Adversarial simulator</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>VGS-024 Accountability Chain</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>ATF bridge (cross-protocol)</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Sovereign isolation mode</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Governance OS kernel</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>SLA guarantee</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Monthly requests</td><td>100</td><td>5,000</td><td>50,000</td><td>Unlimited</td></tr>
+      <tr><td>Rate limit</td><td>10/min</td><td>60/min</td><td>300/min</td><td>Custom</td></tr>
     </tbody>
   </table>
-</div>
 
-<!-- ENTERPRISE CONTACT -->
-<div class="enterprise-banner">
-  <div class="enterprise-box">
-    <div>
-      <h3>Need a custom plan?</h3>
-      <p>For BobSentry partnerships, white-label integrations, or volume pricing — let's talk directly. First 30 days free for integration partners.</p>
+  <!-- FAQ -->
+  <div class="sec-label">Frequently Asked Questions</div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">How do I get my API key after payment?</div>
+      <div class="faq-a">Your API key is sent to your email immediately after payment is confirmed. You can start making API calls within minutes. Key format: <code style="color:var(--cyan);font-family:var(--mono);">vs-live-{tier}-{unique-key}</code></div>
     </div>
-    <div class="enterprise-btns">
-      <a href="mailto:raheem@verisigilai.com" class="btn-primary">Contact Raheem →</a>
-      <a href="https://verisigilai.com/quickstart.html" class="btn-outline">Free Trial →</a>
+    <div class="faq-item">
+      <div class="faq-q">What happens when I exceed my monthly requests?</div>
+      <div class="faq-a">You will receive an email notification at 80% usage. When the limit is reached, requests return a 429 response. You can upgrade your plan anytime or purchase additional requests.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I use VeriSigil with LangChain, CrewAI, or AutoGen?</div>
+      <div class="faq-a">Yes. Download the VeriSigil connectors file from <a href="https://verisigilai.com">verisigilai.com</a>. One import, 15 minutes to integrate with LangChain, CrewAI, AutoGen, or LangGraph.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does VeriSigil satisfy EU AI Act requirements?</div>
+      <div class="faq-a">VeriSigil's Sovereign Accountability Chain (VGS-024) is designed to satisfy Articles 9, 11, 12, and 14 of the EU AI Act. Growth and Enterprise plans include the full accountability chain with independently verifiable records.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the fail-safe DENY behavior?</div>
+      <div class="faq-a">If VeriSigil cannot be reached, all SDK connectors automatically return <code style="color:var(--cyan);font-family:var(--mono);">allowed=False</code>. The system never fails open. Governance gaps are never silently ignored.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I cancel anytime?</div>
+      <div class="faq-a">Yes. Monthly plans can be cancelled anytime with no penalty. Annual plans are non-refundable after 30 days.</div>
     </div>
   </div>
-</div>
-
-<!-- FAQ -->
-<div class="faq">
-  <h2>Frequently Asked Questions</h2>
-
-  <div class="faq-item">
-    <div class="faq-q">What is a Runtime Guard verification?</div>
-    <div class="faq-a">Every time your AI agent calls POST /v1/guard/verify before executing an action — that counts as one verification. The endpoint checks identity, trust score, shadow detection and policy in under 50ms and returns ALLOW, DENY or REQUIRE_HUMAN_APPROVAL.</div>
-  </div>
-
-  <div class="faq-item">
-    <div class="faq-q">Can I try VeriSigil for free?</div>
-    <div class="faq-a">Yes. Use our free scanner at verisigilai.com/scanner.html and issue your first agent passport at verisigilai.com/quickstart.html — no credit card required. Integration partners get 30 days free on any plan.</div>
-  </div>
-
-  <div class="faq-item">
-    <div class="faq-q">Does VeriSigil help with EU AI Act compliance?</div>
-    <div class="faq-a">Yes. Every plan includes cryptographic audit trails, human oversight enforcement via Article 14, and compliance reports. VeriSigil was built specifically for EU AI Act alignment — the August 2026 deadline is 84 days away.</div>
-  </div>
-
-  <div class="faq-item">
-    <div class="faq-q">What payment methods are accepted?</div>
-    <div class="faq-a">All major cards, bank transfers, and mobile money via Paystack. For enterprise customers we also accept wire transfer and can issue invoices in USD, EUR or GBP. Contact raheem@verisigilai.com for invoice-based billing.</div>
-  </div>
-
-  <div class="faq-item">
-    <div class="faq-q">Can I cancel anytime?</div>
-    <div class="faq-a">Yes. No contracts, no lock-in. Cancel anytime from your Paystack account. Your agents and audit trails remain accessible for 90 days after cancellation.</div>
-  </div>
-
-  <div class="faq-item">
-    <div class="faq-q">What is Shadow Detection™?</div>
-    <div class="faq-a">Shadow Detection monitors your registered AI agents in real time for clone and impersonation attempts. If another agent tries to use your agent's identity, VeriSigil detects and blocks it instantly — and logs the event to your immutable audit trail.</div>
-  </div>
 
 </div>
+
+<div class="toast" id="toast"></div>
 
 <footer>
-  <p>© 2026 VeriSigil AI · <a href="https://verisigilai.com">verisigilai.com</a> · Built in Lagos, Nigeria 🇳🇬 · <a href="mailto:raheem@verisigilai.com">raheem@verisigilai.com</a></p>
+  VeriSigil AI &nbsp;&middot;&nbsp; <a href="https://verisigilai.com">verisigilai.com</a> &nbsp;&middot;&nbsp;
+  <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a> &nbsp;&middot;&nbsp;
+  Sovereign Execution Infrastructure for Autonomous AI
 </footer>
 
+<script>
+// ── CONFIG — Replace with your Paystack public key ────────────
+var PAYSTACK_PUBLIC_KEY = 'YOUR_PAYSTACK_PUBLIC_KEY_HERE';
+var EMAIL_ENDPOINT = 'mailto:raheem@verisigilai.com'; // fallback
+
+// ── PRICING ───────────────────────────────────────────────────
+var PRICES = {
+  monthly: {
+    developer: { amount: 4900,  label: '$49/mo',  period: 'billed monthly' },
+    growth:    { amount: 19900, label: '$199/mo', period: 'billed monthly' },
+  },
+  annual: {
+    developer: { amount: 47040,  label: '$39/mo', period: 'billed annually ($468/yr)' },
+    growth:    { amount: 191040, label: '$159/mo', period: 'billed annually ($1,908/yr)' },
+  }
+};
+
+var billing = 'monthly';
+
+function toggleBilling() {
+  billing = billing === 'monthly' ? 'annual' : 'monthly';
+  var toggle = document.getElementById('billing-toggle');
+  var lm = document.getElementById('label-monthly');
+  var la = document.getElementById('label-annual');
+
+  toggle.classList.toggle('on', billing === 'annual');
+  lm.classList.toggle('active', billing === 'monthly');
+  la.classList.toggle('active', billing === 'annual');
+
+  var p = PRICES[billing];
+  document.getElementById('price-dev').innerHTML    = p.developer.label + '<span>/mo</span>';
+  document.getElementById('period-dev').textContent = p.developer.period;
+  document.getElementById('price-growth').innerHTML = p.growth.label + '<span>/mo</span>';
+  document.getElementById('period-growth').textContent = p.growth.period;
+}
+
+function getEmail() {
+  var email = document.getElementById('userEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    showToast('Please enter your email address first');
+    document.getElementById('userEmail').focus();
+    return null;
+  }
+  return email;
+}
+
+function pay(plan) {
+  var email = getEmail();
+  if (!email) return;
+
+  var price = PRICES[billing][plan];
+  var planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
+
+  // Check if Paystack key is configured
+  if (PAYSTACK_PUBLIC_KEY === 'pk_test_835e5b8dfb76199fbc4b5986eaf6fba8b0c83ec2') {
+    // Fallback — direct email
+    showToast('Redirecting to payment...');
+    setTimeout(function() {
+      window.location.href = 'mailto:raheem@verisigilai.com?subject=VeriSigil ' + planLabel + ' Plan&body=I would like to subscribe to the ' + planLabel + ' plan (' + price.label + '). My email is: ' + email;
+    }, 800);
+    return;
+  }
+
+  var handler = PaystackPop.setup({
+    key:       PAYSTACK_PUBLIC_KEY,
+    email:     email,
+    amount:    price.amount * 100,  // Paystack uses kobo/cents
+    currency:  'USD',
+    ref:       'VSG-' + Date.now() + '-' + plan.toUpperCase(),
+    metadata: {
+      custom_fields: [
+        { display_name: "Plan",    variable_name: "plan",    value: planLabel },
+        { display_name: "Billing", variable_name: "billing", value: billing },
+      ]
+    },
+    callback: function(response) {
+      showToast('Payment successful! Your API key will be emailed to ' + email);
+      // In production: call your backend to provision API key
+      console.log('Payment ref:', response.reference);
+    },
+    onClose: function() {
+      showToast('Payment cancelled');
+    }
+  });
+  handler.openIframe();
+}
+
+function activateFree() {
+  var email = getEmail();
+  if (!email) return;
+  showToast('Free key requested — check ' + email + ' within 24 hours');
+  // In production: POST to your backend to issue free key
+}
+
+function contactEnterprise() {
+  var email = getEmail();
+  var subject = 'VeriSigil Enterprise Plan Inquiry';
+  var body = email
+    ? 'I am interested in the Enterprise plan. My email: ' + email
+    : 'I am interested in the Enterprise plan.';
+  window.location.href = 'mailto:raheem@verisigilai.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+</script>
 </body>
 </html>

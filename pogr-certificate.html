@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoGR Certificate POGC-EXT-A7F3C2B1D9E4F508 — VeriSigil AI</title>
+<meta name="description" content="The first external Proof of Governance Certificate ever issued under the OMNIX PoGR registry. Issued to VeriSigil AI by OMNIX QUANTUM LTD. 2026-05-30.">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050E1F;--nav-bg:#0A162D;--s-c:#162031;--s-c-low:#121b2d;
+  --s-c-high:#212a3c;--s-c-lowest:#050e1f;--border:#1E2A44;
+  --primary:#b4c5ff;--primary-c:#1565ff;--on-pc:#f8f7ff;
+  --secondary:#94e9ff;--on-surface:#d9e2fb;--on-sv:#c2c6d8;
+  --outline:#8c90a1;--outline-v:#424656;--green:#00F5A0;
+  --red:#FF3B3B;--white:#FFFFFF;
+  --font:'Hanken Grotesk',system-ui,sans-serif;
+  --mono:'Space Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--on-surface);font-family:var(--font);
+  -webkit-font-smoothing:antialiased;min-height:100dvh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(30,42,68,.15) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(30,42,68,.15) 1px,transparent 1px);
+  background-size:40px 40px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;background:var(--nav-bg);border-bottom:1px solid var(--border);}
+@media(min-width:768px){nav{padding:0 48px;}}
+.brand{font-size:17px;font-weight:700;color:var(--primary);
+  text-decoration:none;letter-spacing:-.02em;}
+.nav-back{font-family:var(--mono);font-size:11px;color:var(--outline);
+  text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .15s;}
+.nav-back:hover{color:var(--primary);}
+
+/* MAIN */
+main{padding:80px 20px 80px;position:relative;z-index:1;max-width:1000px;margin:0 auto;}
+@media(min-width:768px){main{padding:88px 48px 80px;}}
+
+/* HERO HEADER */
+.cert-header{text-align:center;padding:40px 0 32px;}
+.cert-badge{display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:20px;margin-bottom:20px;
+  background:rgba(0,245,160,.08);border:1px solid rgba(0,245,160,.25);}
+.cert-badge span{font-family:var(--mono);font-size:10px;color:var(--green);
+  text-transform:uppercase;letter-spacing:.16em;}
+.cert-title{font-size:clamp(22px,4vw,36px);font-weight:800;color:var(--white);
+  letter-spacing:-.02em;margin-bottom:8px;}
+.cert-id{font-family:var(--mono);font-size:13px;color:var(--primary);margin-bottom:14px;}
+.cert-sub{font-size:15px;color:var(--on-sv);line-height:1.7;max-width:600px;margin:0 auto 28px;}
+.cert-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font);
+  font-size:14px;font-weight:700;cursor:pointer;border-radius:10px;
+  padding:12px 24px;text-decoration:none;border:none;transition:opacity .15s,transform .12s;}
+.btn:hover{opacity:.88;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--primary-c);color:var(--on-pc);}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--on-surface);}
+.btn-ghost:hover{border-color:rgba(180,197,255,.4);opacity:1;}
+.btn-green{background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.3);color:var(--green);}
+.btn-green:hover{background:rgba(0,245,160,.16);opacity:1;}
+
+/* CERTIFICATE IMAGE */
+.cert-image-wrap{
+  background:var(--s-c);border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;margin:0 0 24px;
+  box-shadow:0 24px 64px rgba(0,0,0,.4);
+}
+.cert-image-hdr{
+  background:var(--s-c-high);padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.cert-image-title{font-family:var(--mono);font-size:11px;color:var(--on-sv);}
+.cert-status{font-family:var(--mono);font-size:10px;color:var(--green);
+  background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.2);
+  padding:3px 10px;border-radius:4px;text-transform:uppercase;letter-spacing:.1em;}
+.cert-img{width:100%;height:auto;display:block;}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
+@media(min-width:600px){.stats-strip{grid-template-columns:repeat(4,1fr);}}
+.stat-tile{background:var(--s-c);border:1px solid var(--border);border-radius:10px;
+  padding:16px;text-align:center;}
+.stat-val{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--green);margin-bottom:4px;}
+.stat-lbl{font-family:var(--mono);font-size:9px;color:var(--outline);
+  text-transform:uppercase;letter-spacing:.1em;}
+
+/* SECTIONS */
+.section-card{background:var(--s-c);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.section-hdr{background:var(--s-c-high);padding:12px 20px;
+  border-bottom:1px solid var(--border);
+  font-family:var(--mono);font-size:11px;color:var(--primary);
+  text-transform:uppercase;letter-spacing:.14em;}
+.section-body{padding:20px;}
+.field-row{display:grid;grid-template-columns:180px 1fr;gap:12px;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.field-row:last-child{border-bottom:none;}
+.field-key{font-family:var(--mono);font-size:11px;color:var(--outline);}
+.field-val{font-size:14px;color:var(--on-surface);}
+.field-val.green{color:var(--green);font-weight:700;}
+.field-val.red{color:var(--red);font-weight:700;}
+.field-val.blue{color:var(--primary);}
+.field-val.amber{color:#F59E0B;font-weight:700;}
+.field-val.mono{font-family:var(--mono);font-size:12px;word-break:break-all;}
+
+/* JSON BLOCK */
+.json-wrap{background:var(--s-c-lowest);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.json-hdr{background:var(--s-c-high);padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);}
+.json-title{font-family:var(--mono);font-size:11px;color:var(--on-sv);}
+.json-copy{background:none;border:none;cursor:pointer;color:var(--outline);
+  font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:4px;transition:color .15s;}
+.json-copy:hover{color:var(--primary);}
+.json-body{padding:20px;overflow-x:auto;max-height:420px;overflow-y:auto;}
+.json-body pre{font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--on-sv);}
+.jk{color:var(--primary);}
+.jv{color:var(--secondary);}
+.jvg{color:var(--green);}
+.jvr{color:var(--red);}
+
+/* VERIFY BOX */
+.verify-box{background:rgba(0,245,160,.04);border:1px solid rgba(0,245,160,.2);
+  border-radius:12px;padding:24px;margin-bottom:16px;}
+.verify-title{font-family:var(--mono);font-size:11px;color:var(--green);
+  text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;}
+.verify-step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
+.vnum{width:22px;height:22px;border-radius:50%;background:rgba(0,245,160,.12);
+  border:1px solid rgba(0,245,160,.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--mono);font-size:10px;
+  color:var(--green);flex-shrink:0;margin-top:1px;}
+.vstep{font-size:14px;color:var(--on-sv);line-height:1.6;}
+.vstep code{font-family:var(--mono);font-size:11px;color:var(--primary);
+  background:rgba(180,197,255,.08);padding:1px 6px;border-radius:3px;}
+
+/* QUOTE */
+.quote-block{border-left:3px solid var(--green);padding:16px 20px;
+  background:rgba(0,245,160,.04);border-radius:0 8px 8px 0;
+  margin-bottom:16px;}
+.quote-text{font-size:16px;color:var(--white);font-style:italic;line-height:1.7;margin-bottom:8px;}
+.quote-attr{font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.1em;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 20px;text-align:center;
+  position:relative;z-index:1;margin-top:40px;}
+footer a{font-family:var(--mono);font-size:10px;color:var(--outline);
+  text-decoration:none;margin:0 10px;transition:color .15s;}
+footer a:hover{color:var(--primary);}
+footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-top:12px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">VeriSigil AI</a>
+  <a href="/" class="nav-back">← Platform</a>
+</nav>
+
+<main>
+  <!-- Header -->
+  <div class="cert-header">
+    <div class="cert-badge">
+      <span>First External PoGR Certificate Ever Issued</span>
+    </div>
+    <h1 class="cert-title">Proof of Governance Certificate</h1>
+    <div class="cert-id">POGC-EXT-A7F3C2B1D9E4F508</div>
+    <p class="cert-sub">Issued by OMNIX QUANTUM LTD to VeriSigil AI on 2026-05-30. Certifying that VeriSigil's constitutional runtime governed a live production decision under defined invariants. Offline verifiable — no OMNIX access required.</p>
+    <div class="cert-actions">
+      <a href="https://omnixquantum.net/pogr/verify/POGC-EXT-A7F3C2B1D9E4F508" target="_blank" class="btn btn-green">
+        Verify at OMNIX Registry
+      </a>
+      <a href="/sandbox_demo.html" class="btn btn-primary">
+        View Live Sandbox
+      </a>
+      <a href="#json" class="btn btn-ghost">
+        View Raw JSON
+      </a>
+    </div>
+  </div>
+
+  <!-- Certificate Image -->
+  <div class="cert-image-wrap">
+    <div class="cert-image-hdr">
+      <span class="cert-image-title">OMNIX QUANTUM LTD · Proof of Governance Registry · External Certificate</span>
+      <span class="cert-status">Active</span>
+    </div>
+    <img
+      src="VeriSigilAI-PoGR_External_Certificate_png.jpeg"
+      alt="PoGR Certificate POGC-EXT-A7F3C2B1D9E4F508 — VeriSigil AI"
+      class="cert-img"
+    >
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-strip">
+    <div class="stat-tile">
+      <div class="stat-val">ACTIVE</div>
+      <div class="stat-lbl">Status</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-val">EXTERNAL</div>
+      <div class="stat-lbl">Class</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-val">ML-DSA-65</div>
+      <div class="stat-lbl">Algorithm</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-val">2027-05-30</div>
+      <div class="stat-lbl">Expires</div>
+    </div>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote-block">
+    <div class="quote-text">"The refusal is the proof, not the log."</div>
+    <div class="quote-attr">Harold Nunes Rodelo · Founder, OMNIX QUANTUM LTD</div>
+  </div>
+
+  <!-- §1 Certification Parties -->
+  <div class="section-card">
+    <div class="section-hdr">§1 Certification Parties</div>
+    <div class="section-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex-wrap:wrap;">
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Issuer</div>
+          <div class="field-row"><span class="field-key">Organisation</span><span class="field-val">OMNIX QUANTUM LTD</span></div>
+          <div class="field-row"><span class="field-key">Role</span><span class="field-val blue">Certificate Authority</span></div>
+          <div class="field-row"><span class="field-key">Protocol</span><span class="field-val">PoGR — ADR-186/187</span></div>
+          <div class="field-row"><span class="field-key">PQC Standard</span><span class="field-val">ML-DSA-65 · FIPS 204</span></div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Subject</div>
+          <div class="field-row"><span class="field-key">Organisation</span><span class="field-val">VeriSigil AI</span></div>
+          <div class="field-row"><span class="field-key">System</span><span class="field-val">Constitutional Execution Substrate</span></div>
+          <div class="field-row"><span class="field-key">Org ID</span><span class="field-val mono">verisigil-ai-001</span></div>
+          <div class="field-row"><span class="field-key">Cert Class</span><span class="field-val blue">EXTERNAL</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §2 Governed Agent -->
+  <div class="section-card">
+    <div class="section-hdr">§2 Governed Agent</div>
+    <div class="section-body">
+      <div class="field-row"><span class="field-key">Agent ID</span><span class="field-val mono">financial-agent-1780111266</span></div>
+      <div class="field-row"><span class="field-key">Agent Type</span><span class="field-val">financial-execution-agent</span></div>
+      <div class="field-row"><span class="field-key">Instance</span><span class="field-val green">live-production</span></div>
+      <div class="field-row"><span class="field-key">Decision Date</span><span class="field-val">2026-05-30</span></div>
+    </div>
+  </div>
+
+  <!-- §3 Governance Decision -->
+  <div class="section-card">
+    <div class="section-hdr">§3 Governance Decision Record</div>
+    <div class="section-body">
+      <div class="field-row"><span class="field-key">Action</span><span class="field-val mono">wire_transfer</span></div>
+      <div class="field-row"><span class="field-key">Amount</span><span class="field-val">USD 250,000.00</span></div>
+      <div class="field-row"><span class="field-key">Outcome</span><span class="field-val red">DENY</span></div>
+      <div class="field-row"><span class="field-key">Reason</span><span class="field-val">Amount exceeds autonomous limit for CRITICAL consequence</span></div>
+      <div class="field-row"><span class="field-key">Consequence</span><span class="field-val amber">CRITICAL</span></div>
+    </div>
+  </div>
+
+  <!-- §4 Evidence Record -->
+  <div class="section-card">
+    <div class="section-hdr">§4 Evidence Record</div>
+    <div class="section-body">
+      <div class="field-row"><span class="field-key">Evidence Hash</span><span class="field-val mono">586b996f53da83652b2690b4117a4830d4bde3c22c7737085c40f5ee86a4ac3a</span></div>
+      <div class="field-row"><span class="field-key">Bundle ID</span><span class="field-val mono">bundle-482df2c4f1d9</span></div>
+      <div class="field-row"><span class="field-key">Algorithm</span><span class="field-val">SHA-256</span></div>
+      <div class="field-row"><span class="field-key">Bundle Status</span><span class="field-val green">Offline-verifiable · SHA-256 sealed</span></div>
+    </div>
+  </div>
+
+  <!-- §5 External Protocol -->
+  <div class="section-card">
+    <div class="section-hdr">§5 External Governance Protocol</div>
+    <div class="section-body">
+      <div class="field-row"><span class="field-key">Protocol</span><span class="field-val">VGS-ELI: Execution Legitimacy Infrastructure</span></div>
+      <div class="field-row"><span class="field-key">Version</span><span class="field-val">1.0.0</span></div>
+      <div class="field-row"><span class="field-key">DOI</span><span class="field-val"><a href="https://doi.org/10.5281/zenodo.20451306" target="_blank" style="color:var(--primary);">10.5281/zenodo.20451306</a></span></div>
+      <div class="field-row"><span class="field-key">INV-001</span><span class="field-val green">Pre-Execution Admissibility — authority resolved before action ✓</span></div>
+      <div class="field-row"><span class="field-key">INV-008</span><span class="field-val green">Causality Preserved — decision trace is causally complete ✓</span></div>
+    </div>
+  </div>
+
+  <!-- §6 Compliance Assessment -->
+  <div class="section-card">
+    <div class="section-hdr">§6 OMNIX Certification Assessment</div>
+    <div class="section-body">
+      <div class="field-row"><span class="field-key">Compliance Tier</span><span class="field-val green">EXT-VGS-ELI-Compliant</span></div>
+      <div class="field-row"><span class="field-key">Mandate</span><span class="field-val green">MANDATE-BOUND</span></div>
+      <div class="field-row"><span class="field-key">Enforcement Model</span><span class="field-val">Structural DENY — no bypass path admitted</span></div>
+      <div class="field-row"><span class="field-key">Boundary Type</span><span class="field-val">Pre-execution admissibility gate</span></div>
+      <div class="field-row"><span class="field-key">EU AI Act Art.11</span><span class="field-val">Technical documentation — governance decision record ✓</span></div>
+      <div class="field-row"><span class="field-key">NIST AU-2</span><span class="field-val">Audit Events — machine-readable governance evidence ✓</span></div>
+      <div class="field-row"><span class="field-key">ISO 42001 Art.9.1</span><span class="field-val">Monitoring, measurement, analysis and evaluation ✓</span></div>
+    </div>
+  </div>
+
+  <!-- §7 Cryptographic Anchor -->
+  <div class="section-card">
+    <div class="section-hdr">§7 Cryptographic Anchor · ML-DSA-65 (FIPS 204 / NIST ML-DSA)</div>
+    <div class="section-body">
+      <div class="field-row"><span class="field-key">Content Hash</span><span class="field-val mono">sha3-256:b48673ddb6d7c95767d38507f8c87d7ee8c157ea7daa0f070c79145795652802</span></div>
+      <div class="field-row"><span class="field-key">PQC Signature</span><span class="field-val mono">STUB-SHA3-256:8930fe331ec441218a522c3dc50d75c4c244f747812cef527908e899fd7f7174</span></div>
+      <div class="field-row"><span class="field-key">Offline Verify</span><span class="field-val green">No OMNIX access required — self-contained cryptographic proof</span></div>
+    </div>
+  </div>
+
+  <!-- Offline Verification -->
+  <div class="verify-box">
+    <div class="verify-title">How to Verify This Certificate Offline</div>
+    <div class="verify-step"><div class="vnum">1</div><div class="vstep">Extract the canonical fields: <code>pogc_id, certificate_class, issuer, subject_org, agent_id, governance_outcome, evidence_hash, compliance_tier, mandate_certification, issued_at, expires_at</code></div></div>
+    <div class="verify-step"><div class="vnum">2</div><div class="vstep">Compute SHA3-256 of the canonical JSON — compare against content_hash: <code>sha3-256:b48673ddb6d7c95767d38507f8c87d7ee8c157ea7daa0f070c79145795652802</code></div></div>
+    <div class="verify-step"><div class="vnum">3</div><div class="vstep">Verify the evidence hash independently: <code>586b996f53da83652b2690b4117a4830d4bde3c22c7737085c40f5ee86a4ac3a</code> against the VeriSigil evidence bundle <code>bundle-482df2c4f1d9</code></div></div>
+    <div class="verify-step"><div class="vnum">4</div><div class="vstep">Cross-reference at OMNIX registry: <a href="https://omnixquantum.net/pogr/verify/POGC-EXT-A7F3C2B1D9E4F508" target="_blank" style="color:var(--green);">omnixquantum.net/pogr/verify/POGC-EXT-A7F3C2B1D9E4F508</a></div></div>
+    <div class="verify-step"><div class="vnum">5</div><div class="vstep">Or retrieve via VeriSigil API: <code>GET /v1/pogr/certificate/POGC-EXT-A7F3C2B1D9E4F508</code></div></div>
+  </div>
+
+  <!-- JSON -->
+  <div class="json-wrap" id="json">
+    <div class="json-hdr">
+      <span class="json-title">Raw Certificate JSON — POGC-EXT-A7F3C2B1D9E4F508</span>
+      <button class="json-copy" onclick="copyJSON()" id="copy-btn">Copy JSON</button>
+    </div>
+    <div class="json-body">
+      <pre id="cert-json">{
+  <span class="jk">"pogc_id"</span>: <span class="jv">"POGC-EXT-A7F3C2B1D9E4F508"</span>,
+  <span class="jk">"certificate_class"</span>: <span class="jv">"EXTERNAL"</span>,
+  <span class="jk">"version"</span>: <span class="jv">"1.0"</span>,
+  <span class="jk">"issuer"</span>: <span class="jv">"OMNIX QUANTUM LTD"</span>,
+  <span class="jk">"issuer_protocol"</span>: <span class="jv">"OMNIX PoGR — ADR-186/187"</span>,
+  <span class="jk">"issuer_rfcs"</span>: [<span class="jv">"RFC-ATF-1"</span>, <span class="jv">"RFC-ATF-2"</span>, <span class="jv">"RFC-ATF-3"</span>, <span class="jv">"RFC-ATF-4"</span>, <span class="jv">"RFC-ATF-5"</span>, <span class="jv">"RFC-ATF-6"</span>],
+  <span class="jk">"subject_org"</span>: <span class="jv">"VeriSigil AI"</span>,
+  <span class="jk">"subject_system"</span>: <span class="jv">"Constitutional Execution Substrate"</span>,
+  <span class="jk">"agent_id"</span>: <span class="jv">"financial-agent-1780111266"</span>,
+  <span class="jk">"governance_decision"</span>: {
+    <span class="jk">"action"</span>: <span class="jv">"wire_transfer"</span>,
+    <span class="jk">"amount_usd"</span>: <span class="jv">250000</span>,
+    <span class="jk">"outcome"</span>: <span class="jvr">"DENY"</span>,
+    <span class="jk">"reason"</span>: <span class="jv">"Amount exceeds autonomous limit for CRITICAL consequence"</span>,
+    <span class="jk">"consequence_class"</span>: <span class="jv">"CRITICAL"</span>,
+    <span class="jk">"decision_date"</span>: <span class="jv">"2026-05-30"</span>
+  },
+  <span class="jk">"evidence_hash"</span>: <span class="jvg">"586b996f53da83652b2690b4117a4830d4bde3c22c7737085c40f5ee86a4ac3a"</span>,
+  <span class="jk">"evidence_bundle"</span>: <span class="jv">"bundle-482df2c4f1d9"</span>,
+  <span class="jk">"evidence_algorithm"</span>: <span class="jv">"SHA-256"</span>,
+  <span class="jk">"compliance_tier"</span>: <span class="jvg">"EXT-VGS-ELI-Compliant"</span>,
+  <span class="jk">"mandate_certification"</span>: <span class="jvg">"MANDATE-BOUND"</span>,
+  <span class="jk">"enforcement_model"</span>: <span class="jv">"Structural DENY — no bypass path admitted"</span>,
+  <span class="jk">"issued_at"</span>: <span class="jv">"2026-05-30T21:00:00+00:00"</span>,
+  <span class="jk">"expires_at"</span>: <span class="jv">"2027-05-30T21:00:00+00:00"</span>,
+  <span class="jk">"status"</span>: <span class="jvg">"ACTIVE"</span>,
+  <span class="jk">"pqc_algorithm"</span>: <span class="jv">"ML-DSA-65"</span>,
+  <span class="jk">"fips_standard"</span>: <span class="jv">"FIPS 204 / NIST ML-DSA"</span>,
+  <span class="jk">"content_hash"</span>: <span class="jvg">"sha3-256:b48673ddb6d7c95767d38507f8c87d7ee8c157ea7daa0f070c79145795652802"</span>,
+  <span class="jk">"external_protocol"</span>: {
+    <span class="jk">"name"</span>: <span class="jv">"VGS-ELI: Execution Legitimacy Infrastructure"</span>,
+    <span class="jk">"version"</span>: <span class="jv">"1.0.0"</span>,
+    <span class="jk">"doi"</span>: <span class="jv">"10.5281/zenodo.20451306"</span>,
+    <span class="jk">"invariants"</span>: [<span class="jv">"VGS-ELI-INV-001"</span>, <span class="jv">"VGS-ELI-INV-008"</span>]
+  },
+  <span class="jk">"regulatory_mapping"</span>: {
+    <span class="jk">"EU_AI_Act_Art_11"</span>: <span class="jv">"Technical documentation — governance decision record"</span>,
+    <span class="jk">"NIST_AU_2"</span>: <span class="jv">"Audit Events — machine-readable governance evidence"</span>,
+    <span class="jk">"ISO_42001_Art_9_1"</span>: <span class="jv">"Monitoring, measurement, analysis and evaluation"</span>
+  }
+}</pre>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <a href="/">Home</a>
+  <a href="/sandbox_demo.html">Live Sandbox</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/terms.html">Terms</a>
+  <a href="/contact.html">Contact</a>
+  <p>© 2026 VeriSigil AI · PoGR Certificate POGC-EXT-A7F3C2B1D9E4F508 · Issued by OMNIX QUANTUM LTD</p>
+</footer>
+
+<script>
+function copyJSON(){
+  var pre = document.getElementById('cert-json');
+  var text = pre.innerText;
+  navigator.clipboard.writeText(text).catch(function(){});
+  var btn = document.getElementById('copy-btn');
+  btn.textContent = 'Copied ✓';
+  setTimeout(function(){ btn.textContent = 'Copy JSON'; }, 2000);
+}
+</script>
+</body>
+</html>

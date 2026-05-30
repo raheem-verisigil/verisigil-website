@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>VeriSigil AI | Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; display:inline-block; line-height:1; vertical-align:middle; }
+  body { background:#0a1324; color:#d9e2fb; font-family:'Geist',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100dvh; }
+  .glass { background:rgba(22,32,49,0.85); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(16px); }
+  .grid-bg { background-image:linear-gradient(rgba(180,197,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(180,197,255,0.03) 1px,transparent 1px); background-size:48px 48px; }
+  input:-webkit-autofill { -webkit-box-shadow:0 0 0 100px #121b2d inset !important; -webkit-text-fill-color:#d9e2fb !important; }
+  .btn-primary { background:#1565ff; color:#f8f7ff; font-weight:600; padding:12px 24px; border-radius:8px; width:100%; cursor:pointer; transition:opacity .15s,transform .12s; font-size:14px; border:none; }
+  .btn-primary:hover { opacity:.9; }
+  .btn-primary:active { transform:scale(0.98); }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .input-field { background:#121b2d; border:1px solid rgba(66,70,86,0.8); border-radius:8px; padding:12px 16px; width:100%; color:#d9e2fb; font-size:14px; font-family:'Geist',sans-serif; transition:border-color .15s,box-shadow .15s; outline:none; }
+  .input-field:focus { border-color:rgba(180,197,255,0.4); box-shadow:0 0 0 3px rgba(21,101,255,0.12); }
+  .input-field::placeholder { color:#8c90a1; }
+  .tab { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; padding:8px 20px; border-radius:6px; cursor:pointer; transition:all .15s; }
+  .tab.active { background:rgba(21,101,255,.15); color:#b4c5ff; border:1px solid rgba(21,101,255,.25); }
+  .tab.inactive { color:#8c90a1; border:1px solid transparent; }
+  .tab.inactive:hover { color:#c2c6d8; }
+  @keyframes fade-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation:fade-in .3s ease; }
+  .pulse { animation:pulse-dot 2s infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1}50%{opacity:.3} }
+  .error-msg { background:rgba(147,0,10,.15); border:1px solid rgba(255,180,171,.2); color:#ffb4ab; padding:10px 14px; border-radius:8px; font-size:13px; }
+  .success-msg { background:rgba(0,255,194,.08); border:1px solid rgba(0,255,194,.2); color:#00FFC2; padding:10px 14px; border-radius:8px; font-size:13px; }
+</style>
+</head>
+<body class="grid-bg flex flex-col min-h-screen">
+
+<!-- NAV -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-5 h-14 bg-[#0a1324]/90 backdrop-blur-md border-b border-white/[0.07]">
+  <a href="/" class="flex items-center gap-2.5">
+    <img src="VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" class="w-7 h-7 rounded-md object-cover">
+    <span class="font-bold text-[16px] text-[#b4c5ff] tracking-tight">VeriSigil AI</span>
+  </a>
+  <a href="/" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors uppercase tracking-wider flex items-center gap-1">
+    <span class="material-symbols-outlined text-sm">arrow_back</span>
+    Back
+  </a>
+</header>
+
+<main class="flex-1 flex items-center justify-center px-5 pt-20 pb-10">
+  <div class="w-full max-w-[400px]">
+
+    <!-- Logo mark -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#1565ff]/15 border border-[#1565ff]/25 mb-4">
+        <span class="material-symbols-outlined text-[#b4c5ff] text-3xl">shield_lock</span>
+      </div>
+      <h1 class="font-bold text-[22px] text-white mb-1">VeriSigil AI</h1>
+      <p class="text-[13px] text-[#8c90a1]">Constitutional Runtime Infrastructure</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-6 p-1 bg-[#050e1f] rounded-lg border border-white/[0.06]">
+      <button class="tab active flex-1 text-center" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+      <button class="tab inactive flex-1 text-center" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- SIGN IN FORM -->
+    <div id="form-signin" class="fade-in">
+      <div class="glass rounded-2xl p-6 flex flex-col gap-4">
+        <div id="signin-msg"></div>
+
+        <div>
+          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Email</label>
+          <input type="email" id="signin-email" class="input-field" placeholder="you@company.com" autocomplete="email">
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest">Password</label>
+            <button onclick="switchTab('forgot')" class="font-mono text-[10px] text-[#b4c5ff] hover:text-[#94e9ff] transition-colors uppercase tracking-wider">Forgot?</button>
+          </div>
+          <input type="password" id="signin-password" class="input-field" placeholder="••••••••" autocomplete="current-password">
+        </div>
+
+        <button class="btn-primary mt-2 flex items-center justify-center gap-2" id="signin-btn" onclick="signIn()">
+          <span id="signin-btn-text">Sign In</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+
+        <div class="relative flex items-center gap-3 my-1">
+          <div class="flex-1 h-px bg-white/[0.07]"></div>
+          <span class="font-mono text-[10px] text-[#424656] uppercase tracking-wider">or</span>
+          <div class="flex-1 h-px bg-white/[0.07]"></div>
+        </div>
+
+        <button onclick="signInWithGoogle()" class="w-full py-3 px-4 bg-[#121b2d] border border-[#424656]/60 rounded-lg text-[13px] text-[#c2c6d8] hover:border-[#b4c5ff]/30 transition-colors flex items-center justify-center gap-3 font-medium">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+      </div>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div id="form-signup" class="fade-in hidden">
+      <div class="glass rounded-2xl p-6 flex flex-col gap-4">
+        <div id="signup-msg"></div>
+
+        <div>
+          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Full Name</label>
+          <input type="text" id="signup-name" class="input-field" placeholder="Your name" autocomplete="name">
+        </div>
+        <div>
+          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Work Email</label>
+          <input type="email" id="signup-email" class="input-field" placeholder="you@company.com" autocomplete="email">
+        </div>
+        <div>
+          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Password</label>
+          <input type="password" id="signup-password" class="input-field" placeholder="Min 8 characters" autocomplete="new-password">
+        </div>
+        <div>
+          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Organization (optional)</label>
+          <input type="text" id="signup-org" class="input-field" placeholder="Company name">
+        </div>
+
+        <p class="text-[11px] text-[#8c90a1]">
+          By signing up you agree to our <a href="#" class="text-[#b4c5ff] hover:underline">Terms</a> and <a href="#" class="text-[#b4c5ff] hover:underline">Privacy Policy</a>.
+        </p>
+
+        <button class="btn-primary flex items-center justify-center gap-2" id="signup-btn" onclick="signUp()">
+          <span id="signup-btn-text">Create Account</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+
+        <div class="relative flex items-center gap-3 my-1">
+          <div class="flex-1 h-px bg-white/[0.07]"></div>
+          <span class="font-mono text-[10px] text-[#424656] uppercase tracking-wider">or</span>
+          <div class="flex-1 h-px bg-white/[0.07]"></div>
+        </div>
+
+        <button onclick="signInWithGoogle()" class="w-full py-3 px-4 bg-[#121b2d] border border-[#424656]/60 rounded-lg text-[13px] text-[#c2c6d8] hover:border-[#b4c5ff]/30 transition-colors flex items-center justify-center gap-3 font-medium">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="form-forgot" class="fade-in hidden">
+      <div class="glass rounded-2xl p-6 flex flex-col gap-4">
+        <div>
+          <button onclick="switchTab('signin')" class="flex items-center gap-1 font-mono text-[10px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors uppercase tracking-wider mb-4">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>Back to Sign In
+          </button>
+          <h2 class="font-bold text-[18px] text-white mb-1">Reset Password</h2>
+          <p class="text-[13px] text-[#8c90a1]">We'll send you a reset link.</p>
+        </div>
+
+        <div id="forgot-msg"></div>
+
+        <div>
+          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Email</label>
+          <input type="email" id="forgot-email" class="input-field" placeholder="you@company.com">
+        </div>
+
+        <button class="btn-primary flex items-center justify-center gap-2" onclick="resetPassword()">
+          <span>Send Reset Link</span>
+          <span class="material-symbols-outlined text-sm">mail</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trust line -->
+    <div class="flex items-center justify-center gap-2 mt-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#00FFC2] pulse"></span>
+      <span class="font-mono text-[10px] text-[#424656] uppercase tracking-widest">VGS-ELI-Certified · Production Ready</span>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ── SUPABASE CONFIG ──────────────────────────────────────────
+// Replace with your actual Supabase project URL and anon key
+// Supabase config — update with real keys for production
+const SUPABASE_URL = window.SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
+const SUPABASE_CONFIGURED = SUPABASE_URL && SUPABASE_URL !== '';
+const { createClient } = supabase;
+const sb = SUPABASE_CONFIGURED ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+// ── READ URL PARAMS ──────────────────────────────────────────
+const urlParams = new URLSearchParams(window.location.search);
+const mode = urlParams.get('mode');
+if (mode === 'signup') switchTab('signup');
+
+// ── TAB SWITCHING ────────────────────────────────────────────
+function switchTab(tab) {
+  ['signin','signup','forgot'].forEach(t => {
+    document.getElementById(`form-${t}`)?.classList.add('hidden');
+    document.getElementById(`tab-${t}`)?.classList.replace('active','inactive');
+  });
+  document.getElementById(`form-${tab}`).classList.remove('hidden');
+  document.getElementById(`form-${tab}`).classList.add('fade-in');
+  if (['signin','signup'].includes(tab)) {
+    document.getElementById(`tab-${tab}`).classList.replace('inactive','active');
+  }
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function showMsg(id, msg, type='error') {
+  const el = document.getElementById(id);
+  el.innerHTML = `<div class="${type}-msg">${msg}</div>`;
+}
+function clearMsg(id) { document.getElementById(id).innerHTML = ''; }
+function setLoading(btnId, textId, loading, text) {
+  document.getElementById(btnId).disabled = loading;
+  document.getElementById(textId).textContent = loading ? 'Please wait...' : text;
+}
+
+// ── SIGN IN ──────────────────────────────────────────────────
+async function signIn() {
+  clearMsg('signin-msg');
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value;
+  if (!email || !password) return showMsg('signin-msg', 'Please fill in all fields.');
+  setLoading('signin-btn','signin-btn-text', true, 'Sign In');
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  setLoading('signin-btn','signin-btn-text', false, 'Sign In');
+  if (error) return showMsg('signin-msg', error.message);
+  showMsg('signin-msg', '✓ Signed in successfully. Redirecting...', 'success');
+  setTimeout(() => window.location.href = '/dashboard.html', 1200);
+}
+
+// ── SIGN UP ──────────────────────────────────────────────────
+async function signUp() {
+  clearMsg('signup-msg');
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const org = document.getElementById('signup-org').value.trim();
+  if (!name || !email || !password) return showMsg('signup-msg', 'Please fill in all required fields.');
+  if (password.length < 8) return showMsg('signup-msg', 'Password must be at least 8 characters.');
+  setLoading('signup-btn','signup-btn-text', true, 'Create Account');
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { full_name: name, organization: org } }
+  });
+  setLoading('signup-btn','signup-btn-text', false, 'Create Account');
+  if (error) return showMsg('signup-msg', error.message);
+  showMsg('signup-msg', '✓ Account created! Check your email to confirm then sign in.', 'success');
+}
+
+// ── GOOGLE ───────────────────────────────────────────────────
+async function signInWithGoogle() {
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin + '/dashboard.html' }
+  });
+  if (error) alert(error.message);
+}
+
+// ── RESET PASSWORD ───────────────────────────────────────────
+async function resetPassword() {
+  clearMsg('forgot-msg');
+  const email = document.getElementById('forgot-email').value.trim();
+  if (!email) return showMsg('forgot-msg', 'Please enter your email address.');
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/auth.html?mode=reset'
+  });
+  if (error) return showMsg('forgot-msg', error.message);
+  showMsg('forgot-msg', '✓ Reset link sent. Check your inbox.', 'success');
+}
+
+// ── CHECK SESSION ────────────────────────────────────────────
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) window.location.href = '/dashboard.html';
+})();
+
+// ── ENTER KEY ────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  const activeForm = ['signin','signup','forgot'].find(t =>
+    !document.getElementById(`form-${t}`).classList.contains('hidden')
+  );
+  if (activeForm === 'signin') signIn();
+  else if (activeForm === 'signup') signUp();
+  else if (activeForm === 'forgot') resetPassword();
+});
+</script>
+</body>
+</html>

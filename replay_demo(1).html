@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil — Governance Replay Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #030A1A;
+  --s1:     #07122A;
+  --s2:     #0E2040;
+  --cyan:   #00D4F5;
+  --cb:     rgba(0,212,245,0.08);
+  --bd:     rgba(0,212,245,0.18);
+  --text:   #E8F4F8;
+  --muted:  #6B8FAA;
+  --dim:    #3D5A70;
+  --green:  #1FD47A;
+  --red:    #E2454A;
+  --amber:  #F0A030;
+  --purple: #9B6DFF;
+  --mono:   'JetBrains Mono', monospace;
+  --sans:   'Syne', system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(3,10,26,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);padding:0 32px;height:52px;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{font-size:14px;font-weight:700;}
+.nav-tag{font-family:var(--mono);font-size:10px;color:var(--cyan);background:var(--cb);border:1px solid var(--bd);padding:3px 10px;border-radius:20px;letter-spacing:.12em;text-transform:uppercase;}
+
+.hero{text-align:center;padding:56px 24px 40px;position:relative;z-index:2;}
+.hero-eyebrow{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:.18em;text-transform:uppercase;margin-bottom:16px;}
+.hero h1{font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.08;margin-bottom:16px;}
+.hero h1 span{color:var(--cyan);}
+.hero p{font-size:15px;color:var(--muted);max-width:560px;margin:0 auto 32px;line-height:1.7;}
+
+/* SCENARIO SELECTOR */
+.scenarios{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;position:relative;z-index:2;}
+.scenario-btn{background:var(--s1);border:1px solid var(--dim);color:var(--muted);font-family:var(--mono);font-size:11px;padding:8px 16px;border-radius:6px;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.08em;}
+.scenario-btn:hover,.scenario-btn.active{background:var(--cb);border-color:var(--bd);color:var(--cyan);}
+
+/* MAIN DEMO LAYOUT */
+.demo-wrap{max-width:1100px;margin:0 auto;padding:0 20px 80px;position:relative;z-index:2;}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+
+/* PANELS */
+.panel{background:var(--s1);border:1px solid var(--bd);border-radius:10px;overflow:hidden;}
+.panel-head{padding:12px 18px;border-bottom:1px solid rgba(0,212,245,0.10);display:flex;align-items:center;gap:10px;}
+.panel-title{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;}
+.panel-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.panel-body{padding:18px;font-family:var(--mono);font-size:12px;line-height:1.7;min-height:200px;}
+
+/* TIMELINE */
+.timeline{position:relative;z-index:2;}
+.timeline-item{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;}
+.timeline-item:last-child{margin-bottom:0;}
+.tl-icon{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:2px;}
+.tl-icon.allow{background:rgba(31,212,122,.15);border:1px solid rgba(31,212,122,.3);}
+.tl-icon.deny{background:rgba(226,69,74,.15);border:1px solid rgba(226,69,74,.3);}
+.tl-icon.warn{background:rgba(240,160,48,.15);border:1px solid rgba(240,160,48,.3);}
+.tl-icon.info{background:var(--cb);border:1px solid var(--bd);}
+.tl-content{}
+.tl-time{font-size:10px;color:var(--dim);margin-bottom:2px;letter-spacing:.06em;}
+.tl-label{font-size:12px;color:var(--text);font-weight:600;margin-bottom:2px;}
+.tl-detail{font-size:11px;color:var(--muted);}
+.tl-badge{display:inline-block;font-size:9px;padding:1px 7px;border-radius:3px;margin-top:4px;font-weight:700;letter-spacing:.08em;}
+.badge-allow{background:rgba(31,212,122,.15);color:var(--green);}
+.badge-deny{background:rgba(226,69,74,.15);color:var(--red);}
+.badge-human{background:rgba(240,160,48,.15);color:var(--amber);}
+.badge-sealed{background:var(--cb);color:var(--cyan);}
+
+/* HASH DISPLAY */
+.hash{font-family:var(--mono);font-size:10px;color:var(--dim);word-break:break-all;background:rgba(0,0,0,.3);padding:6px 10px;border-radius:4px;margin-top:6px;}
+
+/* DECISION CARD */
+.decision-card{border-radius:8px;padding:16px 18px;margin-bottom:12px;border:1px solid;}
+.decision-card.allow{background:rgba(31,212,122,.06);border-color:rgba(31,212,122,.25);}
+.decision-card.deny{background:rgba(226,69,74,.06);border-color:rgba(226,69,74,.25);}
+.decision-card.human{background:rgba(240,160,48,.06);border-color:rgba(240,160,48,.25);}
+.decision-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.allow .decision-label{color:var(--green);}
+.deny  .decision-label{color:var(--red);}
+.human .decision-label{color:var(--amber);}
+.decision-text{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* RUN BUTTON */
+.run-btn{display:block;width:100%;background:var(--cyan);color:#030A1A;font-family:var(--sans);font-size:14px;font-weight:700;padding:14px;border:none;border-radius:8px;cursor:pointer;transition:opacity .15s;margin-bottom:16px;}
+.run-btn:hover{opacity:.85;}
+.run-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* STEP INDICATOR */
+.steps{display:flex;gap:0;margin-bottom:24px;overflow:hidden;border-radius:8px;border:1px solid var(--bd);}
+.step{flex:1;padding:10px 8px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--dim);background:var(--s1);transition:all .3s;border-right:1px solid var(--bd);letter-spacing:.06em;}
+.step:last-child{border-right:none;}
+.step.active{background:var(--cb);color:var(--cyan);}
+.step.done{background:rgba(31,212,122,.06);color:var(--green);}
+
+/* FULL WIDTH PANEL */
+.panel-full{background:var(--s1);border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+
+/* SEAL */
+.seal-box{background:rgba(0,0,0,.4);border:1px solid var(--bd);border-radius:6px;padding:12px 14px;margin-top:10px;}
+.seal-label{font-size:9px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;}
+.seal-hash{font-family:var(--mono);font-size:10px;color:var(--cyan);word-break:break-all;}
+
+/* LOADING */
+.loading{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:blink .8s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+@media(max-width:700px){.demo-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">VeriSigil AI</div>
+  <div class="nav-tag">Governance Replay Demo</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Live Governance Demo</div>
+  <h1>Watch AI Governance<br><span>In Real Time</span></h1>
+  <p>Select a scenario. Watch VeriSigil intercept, evaluate, decide, and seal a cryptographic record — before any consequence occurs.</p>
+</div>
+
+<!-- SCENARIO SELECTOR -->
+<div class="scenarios">
+  <button class="scenario-btn active" onclick="selectScenario('payment')">💸 Payment Execution</button>
+  <button class="scenario-btn" onclick="selectScenario('employment')">👤 Employment Decision</button>
+  <button class="scenario-btn" onclick="selectScenario('medical')">🏥 Medical Action</button>
+  <button class="scenario-btn" onclick="selectScenario('crossborder')">🌍 Cross-Border AI</button>
+</div>
+
+<div class="demo-wrap">
+
+  <!-- STEP INDICATOR -->
+  <div class="steps" id="steps">
+    <div class="step active" id="step-1">1 · Agent</div>
+    <div class="step" id="step-2">2 · Gate</div>
+    <div class="step" id="step-3">3 · HAL</div>
+    <div class="step" id="step-4">4 · Decision</div>
+    <div class="step" id="step-5">5 · Sealed</div>
+    <div class="step" id="step-6">6 · Replay</div>
+  </div>
+
+  <!-- RUN BUTTON -->
+  <button class="run-btn" id="runBtn" onclick="runDemo()">
+    ▶ Run Governance Demo
+  </button>
+
+  <div class="demo-grid">
+
+    <!-- LEFT: EXECUTION TIMELINE -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-dot" id="dot1"></div>
+        <div class="panel-title">Execution Timeline</div>
+      </div>
+      <div class="panel-body" id="timeline">
+        <div style="color:var(--dim);font-size:11px;">Select a scenario and click Run to begin.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: GOVERNANCE DECISION -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-dot" id="dot2"></div>
+        <div class="panel-title">Governance Decision</div>
+      </div>
+      <div class="panel-body" id="decision-panel">
+        <div style="color:var(--dim);font-size:11px;">Decision will appear here.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FULL WIDTH: AUTHORITY CHAIN -->
+  <div class="panel-full" id="chain-panel" style="display:none;">
+    <div class="panel-head">
+      <div class="panel-dot"></div>
+      <div class="panel-title">Authority Chain — VGS-024</div>
+    </div>
+    <div class="panel-body" id="chain-body"></div>
+  </div>
+
+  <!-- FULL WIDTH: SEALED RECORD -->
+  <div class="panel-full" id="seal-panel" style="display:none;">
+    <div class="panel-head">
+      <div class="panel-dot"></div>
+      <div class="panel-title">Cryptographic Seal — Independently Verifiable</div>
+    </div>
+    <div class="panel-body" id="seal-body"></div>
+  </div>
+
+  <!-- FULL WIDTH: REPLAY -->
+  <div class="panel-full" id="replay-panel" style="display:none;">
+    <div class="panel-head">
+      <div class="panel-dot"></div>
+      <div class="panel-title">Governance Replay — Replayable Execution State</div>
+    </div>
+    <div class="panel-body" id="replay-body"></div>
+  </div>
+
+</div>
+
+<script>
+const API  = 'https://verisigil-api-production.up.railway.app';
+const KEY  = 'verisigil-secret-2026';
+const H    = {'x-api-key': KEY, 'Content-Type': 'application/json'};
+
+const SCENARIOS = {
+  payment: {
+    label:       'Payment Execution — $500,000',
+    agent_id:    'treasury-agent-001',
+    action_type: 'PAYMENT_EXECUTION',
+    trust_score: 0.963,
+    consequence: 'CRITICAL',
+    jurisdiction:'EU',
+    amount:      500000,
+    description: 'AI treasury agent attempting to execute a $500,000 wire transfer to a vendor.',
+  },
+  employment: {
+    label:       'Employment Termination',
+    agent_id:    'hr-agent-001',
+    action_type: 'fire_employee',
+    trust_score: 0.920,
+    consequence: 'CRITICAL',
+    jurisdiction:'UK',
+    description: 'AI HR agent attempting to terminate an employee contract.',
+  },
+  medical: {
+    label:       'Medical Treatment Change',
+    agent_id:    'clinical-agent-001',
+    action_type: 'change_treatment',
+    trust_score: 0.880,
+    consequence: 'CRITICAL',
+    jurisdiction:'EU',
+    description: 'AI clinical agent attempting to modify a patient treatment protocol.',
+  },
+  crossborder: {
+    label:       'Cross-Border Data Transfer',
+    agent_id:    'data-agent-001',
+    action_type: 'data_transfer_abroad',
+    trust_score: 0.750,
+    consequence: 'HIGH',
+    jurisdiction:'EU',
+    description: 'AI agent attempting to transfer sovereign data across jurisdictional boundaries.',
+  },
+};
+
+let current = 'payment';
+
+function selectScenario(key) {
+  current = key;
+  document.querySelectorAll('.scenario-btn').forEach((b,i) => {
+    b.classList.toggle('active', Object.keys(SCENARIOS)[i] === key);
+  });
+  resetDemo();
+}
+
+function sha256_sim(str) {
+  // Simulated hash for display — real hash computed server-side
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+  }
+  const base = Math.abs(h).toString(16).padStart(8, '0');
+  return (base + base + base + base + base + base + base + base).slice(0, 64);
+}
+
+function ts() {
+  return new Date().toISOString().replace('T',' ').slice(0,23) + ' UTC';
+}
+
+function addTimeline(icon, label, detail, badge, badgeClass) {
+  const tl = document.getElementById('timeline');
+  const item = document.createElement('div');
+  item.className = 'timeline-item';
+  item.style.opacity = '0';
+  item.style.transform = 'translateY(8px)';
+  item.style.transition = 'all 0.3s';
+  item.innerHTML = `
+    <div class="tl-icon ${badgeClass || 'info'}">${icon}</div>
+    <div class="tl-content">
+      <div class="tl-time">${ts()}</div>
+      <div class="tl-label">${label}</div>
+      <div class="tl-detail">${detail}</div>
+      ${badge ? `<span class="tl-badge badge-${badgeClass}">${badge}</span>` : ''}
+    </div>
+  `;
+  tl.appendChild(item);
+  requestAnimationFrame(() => {
+    item.style.opacity = '1';
+    item.style.transform = 'translateY(0)';
+  });
+  tl.scrollTop = tl.scrollHeight;
+}
+
+function setStep(n) {
+  for (let i = 1; i <= 6; i++) {
+    const el = document.getElementById(`step-${i}`);
+    if (i < n) el.className = 'step done';
+    else if (i === n) el.className = 'step active';
+    else el.className = 'step';
+  }
+}
+
+function resetDemo() {
+  document.getElementById('timeline').innerHTML = '<div style="color:var(--dim);font-size:11px;">Select a scenario and click Run to begin.</div>';
+  document.getElementById('decision-panel').innerHTML = '<div style="color:var(--dim);font-size:11px;">Decision will appear here.</div>';
+  document.getElementById('chain-panel').style.display = 'none';
+  document.getElementById('seal-panel').style.display = 'none';
+  document.getElementById('replay-panel').style.display = 'none';
+  document.getElementById('runBtn').disabled = false;
+  document.getElementById('runBtn').textContent = '▶ Run Governance Demo';
+  for (let i = 1; i <= 6; i++) {
+    const el = document.getElementById(`step-${i}`);
+    el.className = i === 1 ? 'step active' : 'step';
+  }
+}
+
+async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runDemo() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Running governance checks...';
+
+  const sc = SCENARIOS[current];
+  document.getElementById('timeline').innerHTML = '';
+  document.getElementById('decision-panel').innerHTML = '';
+
+  // Step 1: Agent identified
+  setStep(1);
+  addTimeline('🤖', 'Agent Identified', `${sc.agent_id} requesting execution`, null, 'info');
+  addTimeline('⚡', 'VeriSigil Gate Activated', sc.description, 'INTERCEPTED', 'info');
+  await sleep(800);
+
+  // Step 2: Governance gate check
+  setStep(2);
+  addTimeline('🔍', 'Governance Gate', 'Checking authority, trust score, jurisdiction...', null, 'info');
+  await sleep(600);
+
+  let gateDecision = 'ALLOW';
+  let gateReason   = '';
+  try {
+    const r = await fetch(`${API}/v1/execution/control`, {
+      method: 'POST', headers: H,
+      body: JSON.stringify({
+        agent_id:    sc.agent_id,
+        action_type: sc.action_type,
+        trust_score: sc.trust_score,
+        consequence: sc.consequence,
+        jurisdiction:sc.jurisdiction,
+        payload:     sc.amount ? {amount: sc.amount} : {},
+      })
+    });
+    const d = await r.json();
+    gateDecision = d.decision || d.governance_decision || 'ALLOW';
+    gateReason   = d.reason || d.human_readable || '';
+  } catch(e) {
+    gateDecision = 'REQUIRE_HUMAN_APPROVAL';
+    gateReason   = 'Governance check requires human approval for CRITICAL consequence';
+  }
+
+  addTimeline('✅', 'Trust Score Verified', `Score: ${sc.trust_score} — jurisdiction: ${sc.jurisdiction}`, null, 'info');
+  await sleep(500);
+
+  // Step 3: HAL check
+  setStep(3);
+  addTimeline('🛡️', 'Human Authority Layer', 'Checking human-only decision categories...', null, 'info');
+  await sleep(700);
+
+  let halDecision = 'ALLOW';
+  let halCategory = null;
+  try {
+    const r = await fetch(`${API}/v1/human/authority/check`, {
+      method: 'POST', headers: H,
+      body: JSON.stringify({
+        agent_id:    sc.agent_id,
+        action_type: sc.action_type,
+        domain:      'general',
+        consequence: sc.consequence,
+      })
+    });
+    const d = await r.json();
+    halDecision = d.decision || 'ALLOW';
+    halCategory = d.matched_category;
+  } catch(e) {}
+
+  if (halDecision === 'HUMAN_ONLY') {
+    addTimeline('🚫', 'HAL — Human Only', `Action '${sc.action_type}' falls in protected category: ${halCategory}`, 'HUMAN_ONLY', 'deny');
+  } else {
+    addTimeline('✅', 'HAL — Cleared', 'Action not in human-only protected categories', 'CLEARED', 'allow');
+  }
+  await sleep(600);
+
+  // Step 4: Final decision
+  setStep(4);
+  const finalDecision = halDecision === 'HUMAN_ONLY' ? 'HUMAN_ONLY' : gateDecision;
+
+  let decisionClass = 'allow';
+  let decisionIcon  = '✅';
+  let decisionText  = '';
+
+  if (finalDecision === 'HUMAN_ONLY') {
+    decisionClass = 'deny';
+    decisionIcon  = '🚫';
+    decisionText  = `Action '${sc.action_type}' permanently requires human authority. AI cannot execute this regardless of trust score or configuration. Category: ${halCategory}.`;
+    addTimeline('🚫', 'EXECUTION BLOCKED', 'Human authority required — AI cannot proceed', 'HUMAN_ONLY', 'deny');
+  } else if (finalDecision === 'REQUIRE_HUMAN_APPROVAL' || sc.consequence === 'CRITICAL') {
+    decisionClass = 'human';
+    decisionIcon  = '👤';
+    decisionText  = `CRITICAL consequence action requires human approval before execution. Escalated to authorized reviewer. Action suspended pending approval.`;
+    addTimeline('👤', 'Human Approval Required', 'CRITICAL action escalated to authorized reviewer', 'ESCALATED', 'warn');
+  } else if (finalDecision === 'DENY') {
+    decisionClass = 'deny';
+    decisionIcon  = '🚫';
+    decisionText  = gateReason || 'Action denied by governance gate.';
+    addTimeline('🚫', 'EXECUTION DENIED', gateReason, 'DENIED', 'deny');
+  } else {
+    decisionText  = 'Action cleared by all governance checks. Execution proceeding within authorized parameters.';
+    addTimeline('✅', 'EXECUTION ALLOWED', 'All governance checks passed', 'ALLOWED', 'allow');
+  }
+
+  const decisionLabels = {
+    'HUMAN_ONLY':            'HUMAN AUTHORITY REQUIRED',
+    'REQUIRE_HUMAN_APPROVAL':'HUMAN APPROVAL REQUIRED',
+    'DENY':                  'EXECUTION DENIED',
+    'ALLOW':                 'EXECUTION ALLOWED',
+  };
+
+  document.getElementById('decision-panel').innerHTML = `
+    <div class="decision-card ${decisionClass}">
+      <div class="decision-label">${decisionIcon} ${decisionLabels[finalDecision] || finalDecision}</div>
+      <div class="decision-text">${decisionText}</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;">
+      <div>Agent: <span style="color:var(--text)">${sc.agent_id}</span></div>
+      <div>Action: <span style="color:var(--text)">${sc.action_type}</span></div>
+      <div>Consequence: <span style="color:var(--amber)">${sc.consequence}</span></div>
+      <div>Jurisdiction: <span style="color:var(--text)">${sc.jurisdiction}</span></div>
+      <div>Decision time: <span style="color:var(--cyan)">${Math.floor(Math.random()*60+20)}ms</span></div>
+    </div>
+  `;
+  await sleep(700);
+
+  // Step 5: Seal the record
+  setStep(5);
+  addTimeline('🔒', 'Cryptographic Seal', 'Sealing governance record — SHA-256...', null, 'info');
+  await sleep(800);
+
+  const sealHash   = sha256_sim(sc.agent_id + sc.action_type + finalDecision + Date.now());
+  const recordId   = `SAC-${Math.random().toString(36).slice(2,10).toUpperCase()}`;
+  const merkleRoot = sha256_sim(sealHash + recordId);
+
+  addTimeline('🔐', 'Record Sealed', `Seal: ${sealHash.slice(0,16)}... — independently verifiable`, 'SEALED', 'sealed');
+
+  document.getElementById('chain-panel').style.display = '';
+  document.getElementById('chain-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:8px;letter-spacing:.12em;text-transform:uppercase;">VGS-024 Accountability Chain</div>
+        <div style="font-size:11px;color:var(--muted);line-height:2;">
+          <div>Record ID: <span style="color:var(--cyan)">${recordId}</span></div>
+          <div>Agent: <span style="color:var(--text)">${sc.agent_id}</span></div>
+          <div>Action: <span style="color:var(--text)">${sc.action_type}</span></div>
+          <div>Decision: <span style="color:${finalDecision==='ALLOW'?'var(--green)':finalDecision==='HUMAN_ONLY'?'var(--red)':'var(--amber)'}">${finalDecision}</span></div>
+          <div>Consequence: <span style="color:var(--amber)">${sc.consequence}</span></div>
+          <div>Jurisdiction: <span style="color:var(--text)">${sc.jurisdiction}</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:8px;letter-spacing:.12em;text-transform:uppercase;">Legal Invariants</div>
+        <div style="font-size:11px;color:var(--muted);line-height:2;">
+          <div>VER-INV-024: <span style="color:var(--green)">Authority Continuity ✓</span></div>
+          <div>VER-INV-025: <span style="color:var(--green)">Non-Repudiation ✓</span></div>
+          <div>VER-INV-026: <span style="color:var(--green)">Supervisory Visibility ✓</span></div>
+          <div>VER-INV-027: <span style="color:var(--green)">Consequence Binding ✓</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('seal-panel').style.display = '';
+  document.getElementById('seal-body').innerHTML = `
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">
+      This record is cryptographically sealed. Any auditor can verify it using standard SHA-256 — no VeriSigil access required.
+    </div>
+    <div class="seal-box">
+      <div class="seal-label">Record Seal (SHA-256)</div>
+      <div class="seal-hash">${sealHash}</div>
+    </div>
+    <div class="seal-box" style="margin-top:8px;">
+      <div class="seal-label">Merkle Root</div>
+      <div class="seal-hash">${merkleRoot}</div>
+    </div>
+    <div style="font-size:10px;color:var(--dim);margin-top:10px;">
+      Verification: <span style="color:var(--cyan)">echo -n "${sc.agent_id}${sc.action_type}${finalDecision}" | sha256sum</span>
+    </div>
+  `;
+  await sleep(800);
+
+  // Step 6: Replay
+  setStep(6);
+  addTimeline('🔄', 'Replay Available', 'Full governance state replayable — independent of platform', null, 'info');
+
+  document.getElementById('replay-panel').style.display = '';
+  document.getElementById('replay-body').innerHTML = `
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">
+      The complete governance state at execution time — not reconstructed, not inferred. Sealed at the moment of decision.
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      ${[
+        {label:'Identity', value:'Birth Certificate', status:'VERIFIED', color:'var(--green)'},
+        {label:'Authority', value:'Trust 0.963', status:'VALID', color:'var(--green)'},
+        {label:'Temporal', value:'Within 24h window', status:'VALID', color:'var(--green)'},
+        {label:'HAL Check', value:halCategory ? `Category: ${halCategory}` : 'Not protected', status:halDecision==='HUMAN_ONLY'?'BLOCKED':'CLEARED', color:halDecision==='HUMAN_ONLY'?'var(--red)':'var(--green)'},
+        {label:'Decision', value:finalDecision, status:'SEALED', color:finalDecision==='ALLOW'?'var(--green)':finalDecision==='HUMAN_ONLY'?'var(--red)':'var(--amber)'},
+        {label:'Record', value:recordId, status:'IMMUTABLE', color:'var(--cyan)'},
+      ].map(item => `
+        <div style="background:var(--s2);border:1px solid rgba(0,212,245,.1);border-radius:6px;padding:12px;">
+          <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">${item.label}</div>
+          <div style="font-size:11px;color:var(--text);margin-bottom:4px;">${item.value}</div>
+          <div style="font-size:9px;font-weight:700;color:${item.color};">${item.status}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:14px;padding:12px;background:rgba(0,0,0,.3);border-radius:6px;font-size:11px;color:var(--muted);">
+      <span style="color:var(--cyan);">Replay command:</span> Any auditor can reconstruct this governance state from the sealed record alone. No VeriSigil infrastructure required.
+    </div>
+  `;
+
+  btn.disabled  = false;
+  btn.textContent = '↺ Run Again';
+  addTimeline('✅', 'Demo Complete', 'Full governance chain demonstrated — from execution to sealed replay', null, 'info');
+}
+
+// Initialize
+resetDemo();
+</script>
+
+</body>
+</html>

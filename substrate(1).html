@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Constitutional Execution Substrate</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #020810;
+  --s1:       #060f1e;
+  --s2:       #0b1a2e;
+  --cyan:     #00D4F5;
+  --green:    #1FD47A;
+  --amber:    #F0A030;
+  --red:      #E2454A;
+  --text:     #E4EEF8;
+  --muted:    #5A7A94;
+  --dim:      #2D4A60;
+  --border:   rgba(0,212,245,0.12);
+  --serif:    'Instrument Serif', Georgia, serif;
+  --mono:     'DM Mono', monospace;
+  --sans:     'Syne', system-ui, sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* Grid background */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,245,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,245,.03) 1px, transparent 1px);
+  background-size:64px 64px;
+  pointer-events:none;z-index:0;
+}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;
+  background:rgba(2,8,16,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.02em;}
+.nav-logo span{color:var(--cyan);}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;transition:color .15s;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-cta{font-family:var(--mono);font-size:11px;color:var(--bg);background:var(--cyan);padding:8px 20px;border-radius:4px;text-decoration:none;font-weight:500;transition:opacity .15s;}
+.nav-cta:hover{opacity:.85;}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 60px;
+  position:relative;z-index:2;
+}
+.hero-tag{
+  font-family:var(--mono);font-size:10px;color:var(--cyan);
+  letter-spacing:.2em;text-transform:uppercase;
+  border:1px solid var(--border);padding:6px 16px;border-radius:20px;
+  background:rgba(0,212,245,.05);margin-bottom:32px;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.hero h1{
+  font-family:var(--serif);font-size:clamp(42px,6vw,76px);
+  font-weight:400;line-height:1.05;
+  color:var(--text);margin-bottom:8px;
+  letter-spacing:-.02em;
+}
+.hero h1 em{font-style:italic;color:var(--cyan);}
+.hero-sub{
+  font-family:var(--serif);font-size:clamp(24px,3vw,36px);
+  font-style:italic;color:var(--muted);margin-bottom:40px;
+}
+
+.hero-statement{
+  max-width:680px;margin:0 auto 48px;
+  font-size:17px;color:var(--muted);line-height:1.75;
+  font-family:var(--sans);font-weight:400;
+}
+.hero-statement strong{color:var(--text);font-weight:600;}
+
+.hero-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{
+  background:var(--cyan);color:var(--bg);
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  padding:14px 28px;border-radius:4px;text-decoration:none;
+  letter-spacing:.06em;text-transform:uppercase;transition:opacity .15s;
+}
+.btn-primary:hover{opacity:.85;}
+.btn-ghost{
+  border:1px solid var(--border);color:var(--text);
+  font-family:var(--mono);font-size:12px;
+  padding:13px 28px;border-radius:4px;text-decoration:none;
+  letter-spacing:.06em;text-transform:uppercase;transition:all .15s;
+}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* ── THE THESIS ── */
+.thesis{
+  position:relative;z-index:2;
+  padding:100px 48px;max-width:960px;margin:0 auto;
+  text-align:center;
+}
+.thesis-quote{
+  font-family:var(--serif);font-size:clamp(22px,3vw,38px);
+  font-style:italic;line-height:1.45;color:var(--text);
+  margin-bottom:24px;
+}
+.thesis-quote span{color:var(--cyan);}
+.thesis-note{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.08em;}
+
+/* ── THE GAP ── */
+.gap-section{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;
+}
+.section-label{
+  font-family:var(--mono);font-size:10px;color:var(--cyan);
+  letter-spacing:.2em;text-transform:uppercase;margin-bottom:24px;
+}
+.gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.gap-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:8px;padding:32px;
+}
+.gap-card.bad{border-color:rgba(226,69,74,.2);background:rgba(226,69,74,.03);}
+.gap-card.good{border-color:rgba(31,212,122,.2);background:rgba(31,212,122,.03);}
+.gap-title{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;
+}
+.gap-card.bad .gap-title{color:var(--red);}
+.gap-card.good .gap-title{color:var(--green);}
+.gap-flow{
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  line-height:2;
+}
+.gap-flow .arrow{color:var(--dim);}
+.gap-flow .highlight{color:var(--text);}
+.gap-flow .cyan{color:var(--cyan);}
+
+/* ── STACK ── */
+.stack-section{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;
+}
+.stack-title{
+  font-family:var(--serif);font-size:clamp(28px,3vw,42px);
+  font-weight:400;margin-bottom:8px;
+}
+.stack-subtitle{font-size:15px;color:var(--muted);margin-bottom:48px;}
+.stack-layers{display:flex;flex-direction:column;gap:16px;}
+.layer{
+  border:1px solid var(--border);border-radius:8px;
+  padding:28px 32px;
+  display:grid;grid-template-columns:80px 1fr auto;
+  gap:24px;align-items:start;
+  background:var(--s1);
+  transition:border-color .2s,transform .2s;
+}
+.layer:hover{border-color:rgba(0,212,245,.3);transform:translateX(4px);}
+.layer-badge{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:.12em;color:var(--cyan);
+  border:1px solid var(--border);padding:4px 8px;border-radius:4px;
+  text-transform:uppercase;text-align:center;white-space:nowrap;
+}
+.layer-name{
+  font-size:18px;font-weight:600;margin-bottom:6px;
+}
+.layer-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+.layer-points{display:flex;flex-wrap:wrap;gap:8px;}
+.layer-point{
+  font-family:var(--mono);font-size:10px;color:var(--muted);
+  background:var(--s2);border:1px solid var(--dim);
+  padding:3px 10px;border-radius:3px;letter-spacing:.06em;
+}
+.layer-endpoint{
+  font-family:var(--mono);font-size:11px;color:var(--cyan);
+  white-space:nowrap;opacity:.7;
+}
+
+/* ── VCEM CHAIN ── */
+.vcem-section{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;
+}
+.vcem-chain{
+  display:flex;gap:0;overflow-x:auto;padding-bottom:8px;
+}
+.vcem-stage{
+  flex:1;min-width:90px;
+  border-top:2px solid var(--border);
+  padding:20px 12px 0;position:relative;
+  transition:border-color .2s;
+}
+.vcem-stage:hover{border-top-color:var(--cyan);}
+.vcem-num{
+  font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:6px;
+}
+.vcem-name{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--text);margin-bottom:4px;
+}
+.vcem-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--cyan);
+  position:absolute;top:-5px;left:12px;
+}
+
+/* ── INVARIANTS ── */
+.inv-section{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;
+}
+.inv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.inv-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:6px;padding:20px 24px;
+  display:flex;gap:16px;align-items:start;
+  transition:border-color .2s;
+}
+.inv-card:hover{border-color:rgba(0,212,245,.25);}
+.inv-id{
+  font-family:var(--mono);font-size:9px;color:var(--cyan);
+  letter-spacing:.1em;white-space:nowrap;padding-top:3px;
+  opacity:.7;
+}
+.inv-statement{font-size:13px;color:var(--muted);line-height:1.6;}
+.inv-statement strong{color:var(--text);font-weight:600;}
+
+/* ── POSITIONING ── */
+.pos-section{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;
+}
+.pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px;}
+.pos-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:8px;padding:32px;
+}
+.pos-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;
+}
+.pos-icon{font-size:20px;}
+.pos-name{font-size:16px;font-weight:600;}
+.pos-sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;}
+.pos-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
+.pos-verdict{
+  font-family:var(--mono);font-size:11px;padding:8px 14px;
+  border-radius:4px;display:inline-block;
+}
+.pos-verdict.external{background:rgba(226,69,74,.1);color:var(--red);}
+.pos-verdict.native{background:rgba(31,212,122,.1);color:var(--green);}
+
+/* ── EVIDENCE ECONOMY ── */
+.econ-section{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;
+}
+.econ-chain{
+  display:flex;flex-direction:column;gap:0;
+  max-width:600px;margin:40px auto;
+}
+.econ-step{
+  display:flex;gap:20px;align-items:start;
+  padding:16px 0;border-left:2px solid var(--border);
+  padding-left:24px;position:relative;
+}
+.econ-step::before{
+  content:'';width:10px;height:10px;border-radius:50%;
+  background:var(--cyan);position:absolute;left:-6px;top:20px;
+}
+.econ-step:last-child{border-left-color:transparent;}
+.econ-num{font-family:var(--mono);font-size:10px;color:var(--dim);}
+.econ-text{font-size:14px;color:var(--muted);line-height:1.6;}
+.econ-text strong{color:var(--text);}
+
+/* ── STATS ── */
+.stats{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;
+}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:40px;}
+.stat{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:8px;padding:28px 24px;text-align:center;
+}
+.stat-num{
+  font-family:var(--mono);font-size:clamp(28px,3vw,40px);
+  color:var(--cyan);font-weight:500;margin-bottom:8px;
+}
+.stat-label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+
+/* ── CTA ── */
+.cta-section{
+  position:relative;z-index:2;
+  padding:100px 48px;text-align:center;
+  border-top:1px solid var(--border);
+}
+.cta-section h2{
+  font-family:var(--serif);font-size:clamp(28px,4vw,52px);
+  font-weight:400;font-style:italic;margin-bottom:16px;
+}
+.cta-section p{font-size:16px;color:var(--muted);max-width:560px;margin:0 auto 40px;line-height:1.7;}
+
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 48px;display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:2;
+}
+.footer-brand{font-family:var(--mono);font-size:12px;color:var(--muted);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-family:var(--mono);font-size:11px;color:var(--dim);text-decoration:none;letter-spacing:.06em;transition:color .15s;}
+.footer-links a:hover{color:var(--cyan);}
+
+/* Divider */
+.divider{height:1px;background:var(--border);margin:0 48px;position:relative;z-index:2;}
+
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .hero{padding:80px 20px 60px;}
+  .gap-grid,.inv-grid,.pos-grid,.stats-grid{grid-template-columns:1fr;}
+  .stack-section,.gap-section,.vcem-section,.inv-section,.pos-section,.econ-section,.stats,.cta-section{padding:60px 20px;}
+  .layer{grid-template-columns:1fr;gap:12px;}
+  .layer-endpoint{display:none;}
+  .vcem-chain{gap:4px;}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:24px 20px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Veri<span>Sigil</span> AI</div>
+  <div class="nav-links">
+    <a href="https://verisigilai.com">Home</a>
+    <a href="https://verisigilai.com/category.html">Category</a>
+    <a href="https://verisigilai.com/architecture.html">Architecture</a>
+    <a href="https://verisigilai.com/replay_demo.html">Demo</a>
+    <a href="https://verisigilai.com/pricing.html">Pricing</a>
+  </div>
+  <a href="https://verisigilai.com/replay_demo.html" class="nav-cta">Live Demo →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">
+    <div class="hero-dot"></div>
+    Constitutional Execution Substrate · Live in Production
+  </div>
+  <h1>The Substrate That<br><em>Autonomous Authority</em></h1>
+  <div class="hero-sub">Must Pass Through.</div>
+  <p class="hero-statement">
+    <strong>AI capability is abundant. Legitimate execution is scarce.</strong><br>
+    VeriSigil AI is the constitutional execution substrate for autonomous systems —
+    the mandatory governance layer between AI cognition and real-world consequence.
+    Not a dashboard. Not a policy tool. The substrate itself.
+  </p>
+  <div class="hero-buttons">
+    <a href="https://verisigilai.com/replay_demo.html" class="btn-primary">Watch Governance Live →</a>
+    <a href="https://verisigil-api-production.up.railway.app/v1/substrate/status" class="btn-ghost">Substrate Status</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- THE THESIS -->
+<section class="thesis">
+  <p class="thesis-quote">
+    "No autonomous AI system can become operationally authoritative<br>
+    without passing through <span>VeriSigil's constitutional execution substrate.</span>"
+  </p>
+  <p class="thesis-note">460 live endpoints · 2 DOI publications · Independent ATF validation · EU AI Act compliant</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- THE GOVERNANCE GAP -->
+<section class="gap-section">
+  <div class="section-label">The Governance Gap</div>
+  <div class="gap-grid">
+    <div class="gap-card bad">
+      <div class="gap-title">❌ Governance After Cognition</div>
+      <div class="gap-flow">
+        <div class="highlight">AI forms cognition</div>
+        <div class="arrow">↓</div>
+        <div class="highlight">AI executes action</div>
+        <div class="arrow">↓</div>
+        <div>Humans inspect aftermath</div>
+        <br>
+        <div style="color:var(--red);font-size:11px;margin-top:8px;">
+          Policy documents. Dashboards. Audit logs.<br>
+          None govern admissibility before consequence.
+        </div>
+      </div>
+    </div>
+    <div class="gap-card good">
+      <div class="gap-title">✅ Governance Before Authority Emerges</div>
+      <div class="gap-flow">
+        <div class="cyan">Governed data formation</div>
+        <div class="arrow">↓</div>
+        <div class="cyan">Governed context formation</div>
+        <div class="arrow">↓</div>
+        <div class="cyan">Governed authority inheritance</div>
+        <div class="arrow">↓</div>
+        <div class="cyan">Governed execution admissibility</div>
+        <div class="arrow">↓</div>
+        <div class="cyan">Governed runtime + sealed evidence</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- THE CONSTITUTIONAL STACK -->
+<section class="stack-section">
+  <div class="section-label">The Constitutional Stack</div>
+  <h2 class="stack-title">Four Layers. One Substrate.</h2>
+  <p class="stack-subtitle">RAW DATA → Layer A → Layer B → Layer C → Layer D → REAL-WORLD EXECUTION</p>
+
+  <div class="stack-layers">
+    <div class="layer">
+      <div class="layer-badge">Layer A</div>
+      <div>
+        <div class="layer-name">Cognitive Formation Layer (CFL)</div>
+        <div class="layer-desc">Govern how AI forms understanding before authority is acquired. Who controls context formation controls cognition itself.</div>
+        <div class="layer-points">
+          <span class="layer-point">Algorithm Legitimacy</span>
+          <span class="layer-point">Data Sovereignty</span>
+          <span class="layer-point">Context Formation</span>
+          <span class="layer-point">Attention Governance</span>
+          <span class="layer-point">Memory Legitimacy</span>
+          <span class="layer-point">Cross-Domain Prevention</span>
+        </div>
+      </div>
+      <div class="layer-endpoint">POST /v1/cfl/*</div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-badge">Layer B</div>
+      <div>
+        <div class="layer-name">Constitutional Runtime Layer (CRL)</div>
+        <div class="layer-desc">Govern whether cognition is allowed to become execution. Enterprises trust governed execution — not AI outputs.</div>
+        <div class="layer-points">
+          <span class="layer-point">Authority Continuity</span>
+          <span class="layer-point">Execution Admissibility</span>
+          <span class="layer-point">Human Sovereignty</span>
+          <span class="layer-point">Constitutional Boundaries</span>
+          <span class="layer-point">HAL — 8 Human-Only Categories</span>
+        </div>
+      </div>
+      <div class="layer-endpoint">POST /v1/execution/control</div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-badge">Layer C</div>
+      <div>
+        <div class="layer-name">Cryptographic Sovereignty Layer (CSL)</div>
+        <div class="layer-desc">Make governance tamper-proof, portable, offline-verifiable, and sovereign. SSL/TLS for AI execution legitimacy.</div>
+        <div class="layer-points">
+          <span class="layer-point">AI Identity Passports</span>
+          <span class="layer-point">PQC Signatures</span>
+          <span class="layer-point">Replayable Evidence</span>
+          <span class="layer-point">Execution Trust Score</span>
+          <span class="layer-point">Offline Verifiable</span>
+        </div>
+      </div>
+      <div class="layer-endpoint">GET /v1/identity/passport/{id}</div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-badge">Layer D</div>
+      <div>
+        <div class="layer-name">Sovereign Governance Mesh (SGM)</div>
+        <div class="layer-desc">Universal constitutional coordination for autonomous systems globally. The governance nervous system for autonomous civilization.</div>
+        <div class="layer-points">
+          <span class="layer-point">Multi-Agent Coordination</span>
+          <span class="layer-point">Jurisdictional Governance</span>
+          <span class="layer-point">VSIP Bridges</span>
+          <span class="layer-point">Trust Federation</span>
+          <span class="layer-point">Global Trust Fabric</span>
+        </div>
+      </div>
+      <div class="layer-endpoint">GET /v1/mesh/global-trust</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- VCEM CHAIN -->
+<section class="vcem-section">
+  <div class="section-label">The VCEM — VeriSigil Constitutional Execution Model</div>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:32px;">Ten constitutional stages. No stage may be skipped. No stage may be reordered. Fail-Safe DENY at every stage.</p>
+  <div class="vcem-chain">
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">01</div><div class="vcem-name">Genesis</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">02</div><div class="vcem-name">Identity</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">03</div><div class="vcem-name">Authority</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">04</div><div class="vcem-name">Admissibility</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">05</div><div class="vcem-name">Execution</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">06</div><div class="vcem-name">Containment</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">07</div><div class="vcem-name">Evidence</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">08</div><div class="vcem-name">Replay</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">09</div><div class="vcem-name">Sovereignty</div></div>
+    <div class="vcem-stage"><div class="vcem-dot"></div><div class="vcem-num">10</div><div class="vcem-name">Continuity</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 8 INVARIANTS -->
+<section class="inv-section">
+  <div class="section-label">Eight Constitutional Invariants</div>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:32px;">Cannot be suspended, amended, or overridden by any AI agent.</p>
+  <div class="inv-grid">
+    <div class="inv-card"><div class="inv-id">INV-001</div><div class="inv-statement"><strong>Pre-Execution Admissibility</strong> — No consequential AI action executes without prior admissibility verification.</div></div>
+    <div class="inv-card"><div class="inv-id">INV-002</div><div class="inv-statement"><strong>Identity Sovereignty</strong> — Every executing agent must have a valid birth certificate and current passport.</div></div>
+    <div class="inv-card"><div class="inv-id">INV-003</div><div class="inv-statement"><strong>Temporal Legitimacy</strong> — Authority valid at T₁ may be illegitimate at T₂. Temporal validation required at execution time.</div></div>
+    <div class="inv-card"><div class="inv-id">INV-004</div><div class="inv-statement"><strong>Consequence Radius Bounded</strong> — Every execution carries a CRI. Must be within authorized containment zone.</div></div>
+    <div class="inv-card"><div class="inv-id">INV-005</div><div class="inv-statement"><strong>Human Authority Preserved</strong> — Eight decision categories permanently reserved for human authority. No exceptions.</div></div>
+    <div class="inv-card"><div class="inv-id">INV-006</div><div class="inv-statement"><strong>Sovereignty Respected</strong> — Cross-border execution requires valid execution visa and active sovereignty bridge.</div></div>
+    <div class="inv-card"><div class="inv-id">INV-007</div><div class="inv-statement"><strong>Fail-Safe Deny</strong> — Governance unreachable = DENY. The system never fails open. No exceptions.</div></div>
+    <div class="inv-card"><div class="inv-id">INV-008</div><div class="inv-statement"><strong>Causality Preserved</strong> — Every consequential decision traceable from authority source to sealed outcome.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- POSITIONING VS COMPETITORS -->
+<section class="pos-section">
+  <div class="section-label">Governance-Native vs Governance-External</div>
+  <h2 style="font-family:var(--serif);font-size:clamp(24px,3vw,38px);font-weight:400;margin-bottom:8px;">Every Competitor is External.<br>VeriSigil is the Substrate.</h2>
+  <div class="pos-grid">
+    <div class="pos-card">
+      <div class="pos-header"><div class="pos-icon">📋</div><div><div class="pos-name">Vanta / Drata</div><div class="pos-sub">Compliance SaaS</div></div></div>
+      <div class="pos-desc">Checklists, screenshots, documentation. Manual and reactive. No runtime enforcement. No cryptographic evidence.</div>
+      <div class="pos-verdict external">Governance External — after the fact</div>
+    </div>
+    <div class="pos-card">
+      <div class="pos-header"><div class="pos-icon">🧠</div><div><div class="pos-name">Anthropic Constitutional AI</div><div class="pos-sub">Training-time principles</div></div></div>
+      <div class="pos-desc">Natural language principles in training. No formal verification. No evidence generation. No runtime enforcement.</div>
+      <div class="pos-verdict external">Governance External — training only</div>
+    </div>
+    <div class="pos-card">
+      <div class="pos-header"><div class="pos-icon">👁️</div><div><div class="pos-name">OpenAI Safety / Superalignment</div><div class="pos-sub">Observational oversight</div></div></div>
+      <div class="pos-desc">Red teaming and monitoring. Watching AI and hoping. External observation, no architectural guarantees.</div>
+      <div class="pos-verdict external">Governance External — observation only</div>
+    </div>
+    <div class="pos-card" style="border-color:rgba(31,212,122,.25);">
+      <div class="pos-header"><div class="pos-icon">⚖️</div><div><div class="pos-name">VeriSigil AI</div><div class="pos-sub">Constitutional Substrate</div></div></div>
+      <div class="pos-desc">Governance compiled into execution. Compliance proven, not documented. Evidence generated, not collected. Oversight architectural, not procedural.</div>
+      <div class="pos-verdict native">Governance Native — substrate level</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EVIDENCE ECONOMY -->
+<section class="econ-section">
+  <div class="section-label">The Evidence Economy</div>
+  <h2 style="font-family:var(--serif);font-size:clamp(24px,3vw,38px);font-weight:400;">Not compliance software.<br><em>Trust infrastructure.</em></h2>
+  <div class="econ-chain">
+    <div class="econ-step"><div><div class="econ-text"><strong>AI system executes action</strong></div></div></div>
+    <div class="econ-step"><div><div class="econ-text"><strong>VGS-ELI generates cryptographic governance evidence</strong> — sealed, SHA-256, independently verifiable</div></div></div>
+    <div class="econ-step"><div><div class="econ-text"><strong>Execution Trust Score (ETS)</strong> computed — insurable, auditable, procurement-ready</div></div></div>
+    <div class="econ-step"><div><div class="econ-text"><strong>Insurance companies price AI execution risk</strong> using ETS</div></div></div>
+    <div class="econ-step"><div><div class="econ-text"><strong>Regulators accept evidence</strong> without requiring platform access</div></div></div>
+    <div class="econ-step"><div><div class="econ-text"><strong>Enterprises prove compliance</strong> without interpretation</div></div></div>
+    <div class="econ-step"><div><div class="econ-text"><strong>Governments mandate governance evidence</strong> as infrastructure</div></div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="section-label">Production Infrastructure</div>
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num">463</div><div class="stat-label">Live Endpoints</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Constitutional Invariants</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">DOI Publications</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">VCEM Stages</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready to govern your<br>autonomous systems?</h2>
+  <p>VeriSigil is production-ready. Live API. Independent validation. EU AI Act compliant. Start in 5 minutes.</p>
+  <div class="hero-buttons">
+    <a href="https://verisigilai.com/replay_demo.html" class="btn-primary">Watch Live Demo →</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" class="btn-ghost">API Documentation</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">© 2026 VeriSigil AI · Constitutional Execution Substrate · Lagos, Nigeria</div>
+  <div class="footer-links">
+    <a href="https://verisigilai.com/category.html">Category</a>
+    <a href="https://verisigilai.com/pricing.html">Pricing</a>
+    <a href="https://verisigilai.com/demos.html">Demos</a>
+    <a href="https://doi.org/10.5281/zenodo.20264923">DOI #1</a>
+    <a href="https://doi.org/10.5281/zenodo.20349768">DOI #2</a>
+    <a href="https://doi.org/10.5281/zenodo.20451306" class="footer-links">DOI #3</a>
+  </div>
+</footer>
+
+</body>
+</html>

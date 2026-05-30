@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Disclosure — VeriSigil AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050E1F;--nav-bg:#0A162D;--border:#1E2A44;--primary:#b4c5ff;--primary-c:#1565ff;--on-surface:#d9e2fb;--on-sv:#c2c6d8;--outline:#8c90a1;--outline-v:#424656;--green:#00F5A0;--white:#FFFFFF;--font:'Hanken Grotesk',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--on-surface);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100dvh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(30,42,68,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,42,68,.15) 1px,transparent 1px);background-size:40px 40px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--nav-bg);border-bottom:1px solid var(--border);}
+@media(min-width:768px){nav{padding:0 48px;}}
+.brand{font-size:17px;font-weight:700;color:var(--primary);text-decoration:none;letter-spacing:-.02em;}
+.nav-back{font-family:var(--mono);font-size:11px;color:var(--outline);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .15s;}
+.nav-back:hover{color:var(--primary);}
+main{padding:100px 20px 80px;position:relative;z-index:1;max-width:760px;margin:0 auto;}
+h1{font-size:clamp(26px,4vw,38px);font-weight:700;color:var(--white);letter-spacing:-.02em;margin-bottom:8px;}
+.meta{font-family:var(--mono);font-size:11px;color:var(--outline);margin-bottom:40px;text-transform:uppercase;letter-spacing:.1em;}
+h2{font-size:17px;font-weight:700;color:var(--white);margin:36px 0 12px;padding-top:24px;border-top:1px solid var(--border);}
+p{font-size:15px;color:var(--on-sv);line-height:1.8;margin-bottom:14px;}
+a{color:var(--primary);}
+.box{background:rgba(0,245,160,.04);border:1px solid rgba(0,245,160,.2);border-radius:10px;padding:20px 24px;margin:28px 0;font-size:14px;color:var(--on-sv);line-height:1.7;}
+footer{border-top:1px solid var(--border);padding:28px 20px;text-align:center;position:relative;z-index:1;margin-top:60px;}
+footer a{font-family:var(--mono);font-size:10px;color:var(--outline);text-decoration:none;margin:0 10px;}
+footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-top:12px;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">VeriSigil AI</a>
+  <a href="/" class="nav-back">← Platform</a>
+</nav>
+<main>
+  <h1>Security Disclosure</h1>
+  <p class="meta">VeriSigil AI · Lagos, Nigeria</p>
+
+  <div class="box">We take security seriously. If you have found a vulnerability, please report it responsibly. We commit to responding within 72 hours.</div>
+
+  <h2>Responsible Disclosure</h2>
+  <p>If you discover a security vulnerability in VeriSigil AI's platform, API, or infrastructure, please report it to <a href="mailto:security@verisigilai.com">security@verisigilai.com</a> before public disclosure.</p>
+  <p>Include: description of the vulnerability, steps to reproduce, potential impact, and your contact details. We will acknowledge receipt within 72 hours and aim to resolve critical issues within 30 days.</p>
+
+  <h2>Scope</h2>
+  <p>In scope: VeriSigil API (verisigil-api-production.up.railway.app), verisigilai.com, authentication systems, API key handling, evidence chain integrity.</p>
+  <p>Out of scope: Third-party infrastructure (Railway, Supabase), social engineering, physical attacks.</p>
+
+  <h2>What We Ask</h2>
+  <p>Do not access, modify, or delete data that does not belong to you. Do not disrupt live services. Give us reasonable time to fix before public disclosure. We will not pursue legal action against researchers who follow these guidelines.</p>
+
+  <h2>Contact</h2>
+  <p><a href="mailto:security@verisigilai.com">security@verisigilai.com</a><br>VeriSigil AI · Lagos, Nigeria</p>
+</main>
+<footer>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/terms.html">Terms</a>
+  <a href="/responsible-ai.html">Responsible AI</a>
+  <a href="/contact.html">Contact</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria</p>
+</footer>
+</body>
+</html>

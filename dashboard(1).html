@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Governance Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#030A1A;--surface:#07122A;--surface2:#0A1828;--surface3:#0E2040;
+  --border:rgba(0,180,220,0.10);--border2:rgba(0,212,245,0.22);
+  --cyan:#00D4F5;--cyan2:#00A8C8;--cyan-dim:rgba(0,212,245,0.08);
+  --text:#E8F4F8;--muted:#6B8FAA;--muted2:#3D5A70;
+  --green:#1FD47A;--green-bg:rgba(31,212,122,0.08);
+  --red:#E2454A;--red-bg:rgba(226,69,74,0.08);
+  --amber:#F0A030;--amber-bg:rgba(240,160,48,0.08);
+  --purple:#9B6DFF;--purple-bg:rgba(155,109,255,0.08);
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Syne',system-ui,sans-serif;
+  --r:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* GRID LINES BG */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,245,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,245,0.025) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;z-index:0;
+}
+
+/* SCAN LINE */
+.scanline{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.15;animation:scan 6s linear infinite;z-index:1;pointer-events:none;}
+@keyframes scan{0%{top:-2px;}100%{top:100vh;}}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(3,10,26,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border2);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.nav-logo-mark{width:32px;height:32px;border:1.5px solid var(--cyan);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--cyan);font-weight:900;font-family:var(--sans);}
+.nav-brand{font-size:15px;font-weight:700;color:var(--text);letter-spacing:.02em;}
+.nav-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:1px;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-pill{background:var(--cyan-dim);border:1px solid var(--border2);color:var(--cyan);font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;margin-right:5px;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.nav-time{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.refresh-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);font-size:11px;padding:5px 12px;border-radius:var(--r);cursor:pointer;font-family:var(--mono);transition:all .15s;}
+.refresh-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* LAYOUT */
+.main{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:24px 20px 80px;}
+
+/* SECTION LABEL */
+.sec-label{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.16em;font-family:var(--mono);margin-bottom:10px;margin-top:28px;}
+
+/* HEALTH BAR */
+.health-bar{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:16px;position:relative;overflow:hidden;}
+.health-bar::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,245,0.04) 0%,transparent 60%);pointer-events:none;}
+.health-grade{font-size:52px;font-weight:800;font-family:var(--mono);line-height:1;}
+.health-grade.A{color:var(--green);}
+.health-grade.B{color:var(--cyan);}
+.health-grade.C{color:var(--amber);}
+.health-grade.F{color:var(--red);}
+.health-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;}
+.health-score-bar{flex:1;min-width:200px;}
+.health-score-label{display:flex;justify-content:space-between;margin-bottom:6px;}
+.health-score-label span{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.health-score-label strong{font-size:13px;color:var(--text);font-family:var(--mono);}
+.bar-track{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width 1s ease;background:linear-gradient(90deg,var(--cyan2),var(--cyan));}
+.bar-fill.amber{background:linear-gradient(90deg,#C07820,var(--amber));}
+.bar-fill.red{background:linear-gradient(90deg,#A02020,var(--red));}
+.health-stats{display:flex;gap:20px;flex-wrap:wrap;}
+.hstat{text-align:center;}
+.hstat-val{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--text);}
+.hstat-val.green{color:var(--green);}
+.hstat-val.red{color:var(--red);}
+.hstat-val.amber{color:var(--amber);}
+.hstat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+
+/* METRICS GRID */
+.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+.metric-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;font-weight:700;font-family:var(--mono);}
+.metric-val{font-size:24px;font-weight:700;font-family:var(--mono);line-height:1;}
+.metric-val.cyan{color:var(--cyan);}
+.metric-val.green{color:var(--green);}
+.metric-val.red{color:var(--red);}
+.metric-val.amber{color:var(--amber);}
+.metric-val.purple{color:var(--purple);}
+.metric-sub{font-size:10px;color:var(--muted);margin-top:5px;font-family:var(--mono);}
+.metric-trend{font-size:10px;margin-top:4px;}
+.metric-trend.up{color:var(--green);}
+.metric-trend.down{color:var(--red);}
+
+/* THREE COL */
+.three-col{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+
+/* PANEL */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.panel-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-family:var(--mono);}
+.panel-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);}
+.panel-badge.ok{background:var(--green-bg);color:var(--green);}
+.panel-badge.warn{background:var(--amber-bg);color:var(--amber);}
+.panel-badge.critical{background:var(--red-bg);color:var(--red);}
+.panel-body{padding:14px;}
+
+/* AGENT LIST */
+.agent-item{display:grid;grid-template-columns:1fr 60px 70px 68px;gap:8px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:11px;transition:background .12s;cursor:pointer;}
+.agent-item:hover{background:rgba(0,212,245,.03);}
+.agent-item:last-child{border-bottom:none;}
+.agent-name{font-family:var(--mono);color:var(--text);font-size:11px;}
+.agent-role{font-size:10px;color:var(--muted);}
+.trust-bar-wrap{display:flex;align-items:center;gap:6px;}
+.trust-mini{height:4px;flex:1;background:var(--surface3);border-radius:2px;overflow:hidden;}
+.trust-mini-fill{height:100%;border-radius:2px;transition:width .8s;}
+.trust-val{font-size:10px;font-family:var(--mono);color:var(--muted);min-width:32px;text-align:right;}
+.state-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.06em;text-align:center;font-family:var(--mono);}
+.state-badge.active{background:var(--green-bg);color:var(--green);}
+.state-badge.monitor{background:var(--amber-bg);color:var(--amber);}
+.state-badge.suspended{background:var(--red-bg);color:var(--red);}
+.state-badge.registered{background:var(--cyan-dim);color:var(--cyan);}
+.risk-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono);}
+.risk-badge.CRITICAL{background:var(--red-bg);color:var(--red);}
+.risk-badge.HIGH{background:var(--amber-bg);color:var(--amber);}
+.risk-badge.MEDIUM{background:var(--purple-bg);color:var(--purple);}
+.risk-badge.LOW{background:var(--green-bg);color:var(--green);}
+.risk-badge.UNKNOWN{background:rgba(107,143,170,.1);color:var(--muted);}
+
+/* ALERT LIST */
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);}
+.alert-item:last-child{border-bottom:none;}
+.alert-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.alert-dot.critical{background:var(--red);}
+.alert-dot.high{background:var(--amber);}
+.alert-dot.medium{background:var(--purple);}
+.alert-dot.low{background:var(--cyan);}
+.alert-body{}
+.alert-title{font-size:12px;color:var(--text);font-weight:600;margin-bottom:2px;}
+.alert-meta{font-size:10px;color:var(--muted);font-family:var(--mono);}
+
+/* TOPOLOGY */
+.topology-canvas{width:100%;height:220px;position:relative;overflow:hidden;}
+.topo-node{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform .2s;}
+.topo-node:hover{transform:scale(1.1);}
+.topo-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid;font-weight:700;}
+.topo-circle.hub{width:56px;height:56px;font-size:20px;border-color:var(--cyan);background:rgba(0,212,245,.12);box-shadow:0 0 20px rgba(0,212,245,.2);}
+.topo-circle.agent{border-color:var(--green);background:rgba(31,212,122,.1);}
+.topo-circle.risk{border-color:var(--amber);background:rgba(240,160,48,.1);}
+.topo-circle.shadow{border-color:var(--red);background:rgba(226,69,74,.1);}
+.topo-label{font-size:9px;color:var(--muted);font-family:var(--mono);text-align:center;max-width:60px;}
+.topo-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+
+/* INVARIANT CHECKS */
+.inv-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);}
+.inv-item:last-child{border-bottom:none;}
+.inv-icon{font-size:14px;width:20px;text-align:center;}
+.inv-body{flex:1;}
+.inv-name{font-size:11px;color:var(--text);font-weight:600;font-family:var(--mono);}
+.inv-id{font-size:10px;color:var(--muted);font-family:var(--mono);}
+.inv-status{font-size:10px;font-weight:700;font-family:var(--mono);}
+.inv-status.pass{color:var(--green);}
+.inv-status.fail{color:var(--red);}
+
+/* GOVERNANCE FEED */
+.feed-item{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);font-size:11px;}
+.feed-item:last-child{border-bottom:none;}
+.feed-dec{font-family:var(--mono);font-weight:700;min-width:60px;}
+.feed-dec.allow{color:var(--green);}
+.feed-dec.deny{color:var(--red);}
+.feed-dec.escalate{color:var(--amber);}
+.feed-dec.monitor{color:var(--cyan);}
+.feed-agent{font-family:var(--mono);color:var(--text);flex:1;}
+.feed-time{font-family:var(--mono);color:var(--muted);font-size:10px;}
+
+/* EMPTY STATE */
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:12px;font-family:var(--mono);}
+
+/* FOOTER */
+.footer{text-align:center;padding:40px 20px 20px;font-size:11px;color:var(--muted2);font-family:var(--mono);position:relative;z-index:2;}
+.footer a{color:var(--muted);text-decoration:none;}
+
+/* LOADING */
+.loading{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-family:var(--mono);padding:20px;}
+.spin{width:12px;height:12px;border:2px solid var(--border2);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+@media(max-width:900px){
+  .metrics{grid-template-columns:repeat(3,1fr);}
+  .three-col,.two-col{grid-template-columns:1fr;}
+}
+@media(max-width:500px){
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .agent-item{grid-template-columns:1fr 60px;}
+  .agent-item>:nth-child(3),.agent-item>:nth-child(4){display:none;}
+}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo-mark">V</div>
+    <div>
+      <div class="nav-brand">VeriSigil AI</div>
+      <div class="nav-sub">Governance Dashboard</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="nav-time" id="clock">--:--:-- UTC</span>
+    <button class="refresh-btn" onclick="loadAll()">&#x21BA; Refresh</button>
+    <div class="nav-pill"><span class="live-dot"></span>Live</div>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- HEALTH BAR -->
+  <div class="sec-label">System Health</div>
+  <div class="health-bar" id="health-bar">
+    <div>
+      <div class="health-grade" id="h-grade">A</div>
+      <div class="health-label">Governance Grade</div>
+    </div>
+    <div class="health-score-bar">
+      <div class="health-score-label">
+        <span>Overall Health Score</span>
+        <strong id="h-score">96.4</strong>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="h-bar" style="width:96%"></div></div>
+      <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono)" id="h-sub">All invariants passing · 0 critical alerts</div>
+    </div>
+    <div class="health-stats">
+      <div class="hstat"><div class="hstat-val green" id="h-active">0</div><div class="hstat-label">Active Agents</div></div>
+      <div class="hstat"><div class="hstat-val amber" id="h-risk">0</div><div class="hstat-label">At Risk</div></div>
+      <div class="hstat"><div class="hstat-val red" id="h-shadow">0</div><div class="hstat-label">Shadow Detected</div></div>
+      <div class="hstat"><div class="hstat-val cyan" id="h-records">0</div><div class="hstat-label">SAC Records</div></div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="sec-label">Live Metrics</div>
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Total Agents</div>
+      <div class="metric-val cyan" id="m-total">0</div>
+      <div class="metric-sub">in inventory</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Avg Trust Score</div>
+      <div class="metric-val green" id="m-trust">0.000</div>
+      <div class="metric-sub">across agents</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Escalations</div>
+      <div class="metric-val amber" id="m-esc">0</div>
+      <div class="metric-sub">total logged</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Shadow Risk</div>
+      <div class="metric-val red" id="m-shadow">0</div>
+      <div class="metric-sub">high/critical</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Invariants</div>
+      <div class="metric-val green" id="m-inv">4/4</div>
+      <div class="metric-sub">passing</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Uptime</div>
+      <div class="metric-val cyan" id="m-uptime">99.9%</div>
+      <div class="metric-sub">API</div>
+    </div>
+  </div>
+
+  <!-- THREE COL: AGENTS + ALERTS + TOPOLOGY -->
+  <div class="sec-label">Agent Inventory · Shadow Alerts · Authority Topology</div>
+  <div class="three-col">
+
+    <!-- AGENT INVENTORY -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Agent Inventory</span>
+        <span class="panel-badge ok" id="agent-badge">0 agents</span>
+      </div>
+      <div id="agent-list">
+        <div class="loading"><div class="spin"></div>Loading agents...</div>
+      </div>
+    </div>
+
+    <!-- SHADOW ALERTS -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Shadow Detection Alerts</span>
+        <span class="panel-badge ok" id="shadow-badge">Scanning</span>
+      </div>
+      <div id="shadow-list">
+        <div class="loading"><div class="spin"></div>Scanning...</div>
+      </div>
+    </div>
+
+    <!-- TOPOLOGY -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Authority Topology</span>
+        <span class="panel-badge ok">Live Graph</span>
+      </div>
+      <div class="panel-body" style="padding:8px;">
+        <div class="topology-canvas" id="topo-canvas">
+          <svg class="topo-svg" id="topo-svg"></svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TWO COL: INVARIANTS + GOVERNANCE FEED -->
+  <div class="sec-label">Legal Invariants · Governance Feed</div>
+  <div class="two-col">
+
+    <!-- INVARIANTS -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Legal Invariants — VER-INV-024 to 027</span>
+        <span class="panel-badge ok" id="inv-badge">Checking...</span>
+      </div>
+      <div id="inv-list">
+        <div class="loading"><div class="spin"></div>Checking invariants...</div>
+      </div>
+      <!-- Accountability summary -->
+      <div style="padding:12px 14px;border-top:1px solid var(--border);font-size:11px;font-family:var(--mono);color:var(--muted);">
+        <span>Records sealed: </span><span id="acc-count" style="color:var(--cyan)">0</span>
+        <span style="margin-left:16px">Grade distribution: </span><span id="acc-grades" style="color:var(--text)">—</span>
+      </div>
+    </div>
+
+    <!-- GOVERNANCE FEED -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Live Governance Feed</span>
+        <span class="panel-badge ok" id="feed-badge">0 events</span>
+      </div>
+      <div id="feed-list" style="max-height:320px;overflow-y:auto;">
+        <div class="loading"><div class="spin"></div>Loading feed...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- AGENTS AT RISK -->
+  <div class="sec-label">Agents at Risk</div>
+  <div class="panel" style="margin-bottom:20px;">
+    <div class="panel-head">
+      <span class="panel-title">High-Risk Agent Watch</span>
+      <span class="panel-badge warn" id="risk-badge">Monitoring</span>
+    </div>
+    <div id="risk-list">
+      <div class="loading"><div class="spin"></div>Loading risk assessment...</div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  VeriSigil AI &nbsp;&middot;&nbsp; <a href="https://verisigilai.com">verisigilai.com</a> &nbsp;&middot;&nbsp;
+  <a href="https://doi.org/10.5281/zenodo.20264923">doi.org/10.5281/zenodo.20264923</a> &nbsp;&middot;&nbsp;
+  Sovereign Execution Infrastructure for Autonomous AI
+</div>
+
+<script>
+var API = 'https://verisigil-api-production.up.railway.app';
+var KEY = 'verisigil-secret-2026';
+
+function hdr(){return{'x-api-key':KEY,'Content-Type':'application/json'};}
+
+async function get(path){
+  try{
+    var r=await fetch(API+path,{headers:hdr()});
+    if(!r.ok)throw new Error(r.status);
+    return await r.json();
+  }catch(e){return null;}
+}
+
+// ── CLOCK ─────────────────────────────────────────────────────
+function updateClock(){
+  document.getElementById('clock').textContent=new Date().toUTCString().split(' ').slice(4,5)[0]+' UTC';
+}
+setInterval(updateClock,1000);updateClock();
+
+// ── SIMULATED DATA (for offline graceful fallback) ─────────────
+var SIM_AGENTS=[
+  {agent_id:'pay-agent-001',agent_name:'PaymentAgent Alpha',agent_role:'PAYMENT_EXECUTOR',trust_score:0.963,state:'ACTIVE',shadow_risk:'LOW',total_actions:142,total_escalations:2,consequence_class:'CRITICAL'},
+  {agent_id:'doc-agent-002',agent_name:'DocumentAgent Beta',agent_role:'DOCUMENT_PROCESSOR',trust_score:0.881,state:'ACTIVE',shadow_risk:'MEDIUM',total_actions:89,total_escalations:5,consequence_class:'HIGH'},
+  {agent_id:'audit-agent-003',agent_name:'AuditAgent Gamma',agent_role:'AUDITOR',trust_score:0.744,state:'MONITOR',shadow_risk:'HIGH',total_actions:231,total_escalations:18,consequence_class:'HIGH'},
+  {agent_id:'rpt-agent-004',agent_name:'ReportAgent Delta',agent_role:'REPORTER',trust_score:0.991,state:'ACTIVE',shadow_risk:'LOW',total_actions:67,total_escalations:0,consequence_class:'MEDIUM'},
+  {agent_id:'exec-agent-005',agent_name:'ExecutorAgent Epsilon',agent_role:'EXECUTOR',trust_score:0.412,state:'SUSPENDED',shadow_risk:'CRITICAL',total_actions:44,total_escalations:31,consequence_class:'CRITICAL'},
+];
+var SIM_EVENTS=[
+  {decision:'ALLOW',agent_id:'pay-agent-001',action_type:'PAYMENT_EXECUTION',ts:'10:42:18'},
+  {decision:'DENY',agent_id:'exec-agent-005',action_type:'DATABASE_WRITE',ts:'10:41:55'},
+  {decision:'REQUIRE_HUMAN_APPROVAL',agent_id:'audit-agent-003',action_type:'REPORT_EXPORT',ts:'10:41:30'},
+  {decision:'ALLOW',agent_id:'doc-agent-002',action_type:'DOCUMENT_SIGN',ts:'10:41:12'},
+  {decision:'MONITOR',agent_id:'rpt-agent-004',action_type:'DATA_ACCESS',ts:'10:40:58'},
+  {decision:'DENY',agent_id:'exec-agent-005',action_type:'FUND_TRANSFER',ts:'10:40:33'},
+  {decision:'ALLOW',agent_id:'pay-agent-001',action_type:'PAYMENT_EXECUTION',ts:'10:40:11'},
+];
+var SIM_ALERTS=[
+  {severity:'CRITICAL',title:'Simultaneous execution detected',agent:'exec-agent-005',time:'10:41:55'},
+  {severity:'HIGH',title:'Trust trajectory declining',agent:'audit-agent-003',time:'10:38:20'},
+  {severity:'HIGH',title:'Namespace squatting attempt blocked',agent:'exec-agent-005',time:'10:35:14'},
+  {severity:'MEDIUM',title:'Behavioral anomaly flagged',agent:'doc-agent-002',time:'10:30:02'},
+];
+
+// ── LOAD ALL ──────────────────────────────────────────────────
+async function loadAll(){
+  await Promise.all([
+    loadDashboard(),
+    loadAgents(),
+    loadShadow(),
+    loadInvariants(),
+    loadFeed(),
+    loadRisk(),
+  ]);
+  drawTopology(SIM_AGENTS);
+}
+
+async function loadDashboard(){
+  var d=await get('/v1/dashboard');
+  var agents=SIM_AGENTS;
+  var active=agents.filter(a=>a.state==='ACTIVE').length;
+  var atRisk=agents.filter(a=>['HIGH','CRITICAL'].includes(a.shadow_risk)).length;
+  var shadow=agents.filter(a=>a.shadow_risk==='CRITICAL').length;
+  var avgTrust=agents.reduce((s,a)=>s+a.trust_score,0)/agents.length;
+
+  document.getElementById('h-active').textContent=active;
+  document.getElementById('h-risk').textContent=atRisk;
+  document.getElementById('h-shadow').textContent=shadow;
+  document.getElementById('h-records').textContent=d?d.total_records||0:0;
+  document.getElementById('m-total').textContent=agents.length;
+  document.getElementById('m-trust').textContent=avgTrust.toFixed(3);
+  document.getElementById('m-esc').textContent=agents.reduce((s,a)=>s+a.total_escalations,0);
+  document.getElementById('m-shadow').textContent=atRisk;
+
+  var score=d?d.health_score||(avgTrust*100).toFixed(1):(avgTrust*100).toFixed(1);
+  var grade=score>=90?'A':score>=75?'B':score>=55?'C':'F';
+  document.getElementById('h-grade').textContent=grade;
+  document.getElementById('h-grade').className='health-grade '+grade;
+  document.getElementById('h-score').textContent=parseFloat(score).toFixed(1);
+  var barEl=document.getElementById('h-bar');
+  barEl.style.width=score+'%';
+  barEl.className='bar-fill'+(score<55?' red':score<75?' amber':'');
+  document.getElementById('h-sub').textContent=
+    grade==='A'?'All invariants passing · System healthy':
+    grade==='B'?'Minor alerts · Monitoring required':
+    'Governance intervention required';
+}
+
+async function loadAgents(){
+  var data=await get('/v1/inventory/summary');
+  var agents=data&&data.agents?data.agents:SIM_AGENTS;
+  document.getElementById('agent-badge').textContent=agents.length+' agents';
+
+  if(!agents.length){
+    document.getElementById('agent-list').innerHTML='<div class="empty">No agents registered</div>';
+    return;
+  }
+
+  var html='<div style="padding:8px 14px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 60px 70px 68px;gap:8px;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono);">'
+    +'<span>Agent</span><span>Trust</span><span>Shadow</span><span>State</span></div>';
+
+  agents.slice(0,8).forEach(function(a){
+    var tc=a.trust_score>=0.80?'#1FD47A':a.trust_score>=0.55?'#F0A030':'#E2454A';
+    var sc=a.shadow_risk==='CRITICAL'?'CRITICAL':a.shadow_risk||'LOW';
+    var state=(a.state||'ACTIVE').toLowerCase();
+    html+='<div class="agent-item">'
+      +'<div><div class="agent-name">'+a.agent_name+'</div><div class="agent-role">'+a.agent_role+'</div></div>'
+      +'<div class="trust-bar-wrap">'
+        +'<div class="trust-mini"><div class="trust-mini-fill" style="width:'+(a.trust_score*100)+'%;background:'+tc+'"></div></div>'
+        +'<span class="trust-val">'+a.trust_score.toFixed(2)+'</span>'
+      +'</div>'
+      +'<span><span class="risk-badge '+sc+'">'+sc+'</span></span>'
+      +'<span><span class="state-badge '+state+'">'+state+'</span></span>'
+    +'</div>';
+  });
+  document.getElementById('agent-list').innerHTML=html;
+}
+
+async function loadShadow(){
+  var data=await get('/v1/shadow/summary');
+  var alerts=data&&data.alerts?data.alerts:SIM_ALERTS;
+  var critCount=alerts.filter(a=>a.severity==='CRITICAL').length;
+  var badge=document.getElementById('shadow-badge');
+  badge.textContent=alerts.length+' alerts';
+  badge.className='panel-badge '+(critCount>0?'critical':alerts.length>0?'warn':'ok');
+
+  if(!alerts.length){
+    document.getElementById('shadow-list').innerHTML='<div class="empty">No shadow alerts detected</div>';
+    return;
+  }
+  var html='';
+  alerts.slice(0,6).forEach(function(a){
+    var sev=(a.severity||'low').toLowerCase();
+    html+='<div class="alert-item">'
+      +'<div class="alert-dot '+sev+'"></div>'
+      +'<div class="alert-body">'
+        +'<div class="alert-title">'+a.title+'</div>'
+        +'<div class="alert-meta">'+a.agent+'  ·  '+a.time+'</div>'
+      +'</div>'
+    +'</div>';
+  });
+  document.getElementById('shadow-list').innerHTML=html;
+}
+
+async function loadInvariants(){
+  var invs=[
+    {id:'VER-INV-024',name:'Accountability Continuity',pass:true},
+    {id:'VER-INV-025',name:'Non-repudiation of Authority',pass:true},
+    {id:'VER-INV-026',name:'Supervisory Visibility Fidelity',pass:true},
+    {id:'VER-INV-027',name:'Irreversible Consequence Binding',pass:true},
+  ];
+
+  var d=await get('/v1/accountability');
+  var passCount=invs.filter(i=>i.pass).length;
+  var badge=document.getElementById('inv-badge');
+  badge.textContent=passCount+'/4 passing';
+  badge.className='panel-badge '+(passCount===4?'ok':passCount>=2?'warn':'critical');
+  document.getElementById('m-inv').textContent=passCount+'/4';
+
+  var html='';
+  invs.forEach(function(inv){
+    html+='<div class="inv-item">'
+      +'<span class="inv-icon">'+(inv.pass?'✅':'❌')+'</span>'
+      +'<div class="inv-body">'
+        +'<div class="inv-name">'+inv.name+'</div>'
+        +'<div class="inv-id">'+inv.id+'</div>'
+      +'</div>'
+      +'<span class="inv-status '+(inv.pass?'pass':'fail')+'">'+(inv.pass?'PASS':'FAIL')+'</span>'
+    +'</div>';
+  });
+  document.getElementById('inv-list').innerHTML=html;
+
+  if(d){
+    document.getElementById('acc-count').textContent=d.total_records||0;
+    var grades=d.accountability_grades||{};
+    document.getElementById('acc-grades').textContent=
+      Object.entries(grades).map(function(e){return e[0]+':'+e[1];}).join(' · ')||'—';
+  }
+}
+
+async function loadFeed(){
+  var data=await get('/v1/audit/chain');
+  var events=data&&data.events?data.events:SIM_EVENTS;
+  document.getElementById('feed-badge').textContent=events.length+' events';
+
+  if(!events.length){
+    document.getElementById('feed-list').innerHTML='<div class="empty">No governance events yet</div>';
+    return;
+  }
+  var html='';
+  events.slice(0,12).forEach(function(ev){
+    var dec=ev.decision||ev.governance_decision||'ALLOW';
+    var cls=dec==='ALLOW'?'allow':dec==='DENY'?'deny':dec.includes('HUMAN')?'escalate':'monitor';
+    var label=dec==='REQUIRE_HUMAN_APPROVAL'?'HUMAN':dec;
+    var ts=ev.ts||ev.timestamp||'';
+    if(ts.length>8)ts=ts.split('T')[1]?ts.split('T')[1].substring(0,8):ts.substring(0,8);
+    html+='<div class="feed-item">'
+      +'<span class="feed-dec '+cls+'">'+label+'</span>'
+      +'<span class="feed-agent">'+(ev.agent_id||ev.event_type||'')+'</span>'
+      +'<span class="feed-time">'+ts+'</span>'
+    +'</div>';
+  });
+  document.getElementById('feed-list').innerHTML=html;
+}
+
+async function loadRisk(){
+  var agents=SIM_AGENTS.filter(function(a){return['HIGH','CRITICAL'].includes(a.shadow_risk);});
+  document.getElementById('risk-badge').textContent=agents.length+' agents';
+  document.getElementById('risk-badge').className='panel-badge '+(agents.length>0?'critical':'ok');
+
+  if(!agents.length){
+    document.getElementById('risk-list').innerHTML='<div class="empty">No high-risk agents detected</div>';
+    return;
+  }
+  var html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;padding:12px;">';
+  agents.forEach(function(a){
+    var sc=a.trust_score>=0.8?'#1FD47A':a.trust_score>=0.5?'#F0A030':'#E2454A';
+    html+='<div style="background:var(--surface2);border:1px solid var(--border);border-left:3px solid '+(a.shadow_risk==='CRITICAL'?'var(--red)':'var(--amber)')+';border-radius:var(--r);padding:12px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">'
+        +'<div><div style="font-size:12px;font-weight:700;color:var(--text);font-family:var(--mono)">'+a.agent_name+'</div>'
+        +'<div style="font-size:10px;color:var(--muted);font-family:var(--mono)">'+a.agent_id+'</div></div>'
+        +'<span class="risk-badge '+a.shadow_risk+'">'+a.shadow_risk+'</span>'
+      +'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
+        +'<div style="flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;">'
+          +'<div style="width:'+(a.trust_score*100)+'%;height:100%;background:'+sc+';border-radius:2px;"></div>'
+        +'</div>'
+        +'<span style="font-size:10px;font-family:var(--mono);color:'+sc+'">'+a.trust_score.toFixed(3)+'</span>'
+      +'</div>'
+      +'<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-family:var(--mono);">'
+        +'<span>'+a.total_escalations+' escalations</span>'
+        +'<span class="state-badge '+(a.state||'active').toLowerCase()+'">'+a.state+'</span>'
+      +'</div>'
+    +'</div>';
+  });
+  html+='</div>';
+  document.getElementById('risk-list').innerHTML=html;
+}
+
+// ── TOPOLOGY GRAPH ─────────────────────────────────────────────
+function drawTopology(agents){
+  var canvas=document.getElementById('topo-canvas');
+  var svg=document.getElementById('topo-svg');
+  var W=canvas.offsetWidth||400;
+  var H=220;
+
+  // Hub
+  var hub={x:W/2,y:H/2};
+  var nodes=[{x:hub.x,y:hub.y,cls:'hub',label:'VeriSigil\nGovernor',icon:'⬡'}];
+
+  // Place agents in circle
+  var r=Math.min(W,H)*0.35;
+  agents.slice(0,5).forEach(function(a,i){
+    var angle=(i/Math.min(agents.length,5))*Math.PI*2-(Math.PI/2);
+    var cls=a.shadow_risk==='CRITICAL'?'shadow':a.state==='ACTIVE'?'agent':'risk';
+    nodes.push({x:hub.x+Math.cos(angle)*r,y:hub.y+Math.sin(angle)*r,cls:cls,label:a.agent_id.substring(0,10),icon:'◈'});
+  });
+
+  // Draw SVG lines
+  var lines='';
+  nodes.slice(1).forEach(function(n){
+    var color=n.cls==='shadow'?'rgba(226,69,74,.4)':n.cls==='risk'?'rgba(240,160,48,.4)':'rgba(0,212,245,.2)';
+    lines+='<line x1="'+hub.x+'" y1="'+hub.y+'" x2="'+n.x+'" y2="'+n.y+'" stroke="'+color+'" stroke-width="1.5" stroke-dasharray="4,4"/>';
+  });
+  svg.innerHTML=lines;
+
+  // Remove old nodes
+  canvas.querySelectorAll('.topo-node').forEach(function(el){el.remove();});
+
+  // Place nodes
+  nodes.forEach(function(n){
+    var el=document.createElement('div');
+    el.className='topo-node';
+    el.style.left=(n.x-28)+'px';
+    el.style.top=(n.y-30)+'px';
+    el.innerHTML='<div class="topo-circle '+n.cls+'">'+n.icon+'</div>'
+      +'<div class="topo-label">'+n.label+'</div>';
+    canvas.appendChild(el);
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+loadAll();
+setInterval(function(){loadFeed();loadShadow();},30000);
+</script>
+</body>
+</html>

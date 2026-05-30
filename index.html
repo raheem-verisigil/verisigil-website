@@ -159,7 +159,7 @@ nav.topnav{
 
 /* ── LAYOUT ───────────────────────────────────── */
 .section{padding:80px 16px;position:relative;z-index:1;}
-@media(min-width:768px){.section{padding:96px 48px;}}
+@media(min-width:768px){.section{padding:80px 48px;}}
 .container{max-width:1200px;margin:0 auto;}
 .s-dark{background:var(--s-c-low);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .s-darkest{background:var(--nav-bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
@@ -488,6 +488,22 @@ footer{
 .wf-hash{font-family:var(--mono);font-size:10px;color:var(--primary);word-break:break-all;}
 code{font-family:var(--mono);font-size:11px;color:var(--secondary);
   background:rgba(148,233,255,.08);padding:1px 6px;border-radius:3px;}
+
+/* Business Outcomes grid */
+.bo-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:640px){.bo-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:900px){.bo-grid{grid-template-columns:1fr 1fr 1fr;}}
+
+/* Glass grid responsive */
+@media(min-width:768px){.glass-grid{grid-template-columns:1fr 1fr 1fr!important;}}
+
+/* PoGR composability grid */
+@media(min-width:640px){.pogr-compose{grid-template-columns:1fr 1fr!important;}}
+
+/* Available Today grid */
+.avail-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:600px){.avail-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:600px){.pogr-two-col{grid-template-columns:1fr 1fr!important;}}
 </style>
 </head>
 <body>
@@ -629,7 +645,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
     <div class="s-label reveal">Business Outcomes</div>
     <h2 class="s-title reveal" style="transition-delay:.06s;">What Enterprises Actually Buy</h2>
     <p class="s-sub reveal" style="transition-delay:.1s;margin-bottom:36px;">Not architecture. Not endpoints. Risk reduction, audit confidence, and regulatory acceleration.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;" class="reveal" style="transition-delay:.12s;">
+    <div class="reveal avail-grid" style="transition-delay:.12s;">
       <div style="background:var(--s-c);border:1px solid var(--border);border-radius:12px;padding:26px;transition:border-color .2s,transform .2s;" class="glow-border">
         <div style="font-size:26px;margin-bottom:12px;">⏱️</div>
         <h4 style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px;">Reduce AI Governance Audit Time</h4>
@@ -804,7 +820,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
 
     <!-- The Emerging Stack Table -->
     <div class="reveal" style="transition-delay:.12s;text-align:left;margin-bottom:40px;">
-      <div style="background:var(--s-c);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="background:var(--s-c);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;">
         <div style="background:var(--s-c-high);padding:12px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1.5fr 2fr;gap:16px;">
           <span style="font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.14em;">Layer</span>
           <span style="font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.14em;">Provider</span>
@@ -846,7 +862,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
     </div>
 
     <!-- Stripe/Cloudflare/Okta/VeriSigil -->
-    <div class="reveal" style="transition-delay:.16s;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:36px;">
+    <div class="reveal" style="transition-delay:.16s;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;">
       <div style="background:var(--s-c);border:1px solid var(--border);border-radius:10px;padding:18px;text-align:left;">
         <div style="font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Payment Infrastructure</div>
         <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:4px;">Stripe</div>
@@ -898,7 +914,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
       <div class="s-label reveal" style="color:var(--green);">Defensive Posture</div>
       <h2 class="s-title reveal" style="transition-delay:.06s;">Security-First Governance Engine</h2>
     </div>
-    <div class="glass-grid">
+    <div class="glass-grid" style="display:grid;grid-template-columns:1fr;gap:14px;">
       <div class="reveal glass-card" style="transition-delay:.06s;">
         <div class="glass-card-label">Evidence Chains</div>
         <p>Proprietary hash architecture linking model input, runtime state, and output into a single verifiable signature. SHA-256. PQC Dilithium-3. Offline verifiable without trusting VeriSigil.</p>
@@ -981,7 +997,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
       <!-- Composability note -->
       <div style="background:var(--s-c);border:1px solid var(--border);border-radius:12px;padding:24px;">
         <div style="font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;">Why This Matters — The Two-Layer Stack</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex-wrap:wrap;">
+        <div style="display:grid;grid-template-columns:1fr;gap:12px;">
           <div style="padding:16px;background:rgba(21,101,255,.06);border:1px solid rgba(21,101,255,.2);border-radius:8px;">
             <div style="font-family:var(--mono);font-size:10px;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">VeriSigil Layer</div>
             <div style="font-size:14px;color:var(--white);font-weight:600;margin-bottom:4px;">Runtime Enforcement</div>
@@ -1006,7 +1022,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
     <div class="s-label reveal">Enterprise Readiness</div>
     <h2 class="s-title reveal" style="transition-delay:.06s;">Built for Enterprise Procurement</h2>
     <p class="s-sub reveal" style="transition-delay:.1s;margin-bottom:36px;">Every question your procurement team will ask — answered before they ask it.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="reveal" style="transition-delay:.12s;">
+    <div style="class="reveal bo-grid" style="transition-delay:.12s;">
       <div style="background:var(--s-c);border:1px solid var(--border);border-radius:12px;padding:28px;">
         <h4 style="font-family:var(--mono);font-size:10px;color:var(--primary);text-transform:uppercase;letter-spacing:.16em;margin-bottom:16px;">Deployment Models</h4>
         <div style="display:flex;flex-direction:column;gap:10px;">
@@ -1058,7 +1074,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
     <h2 class="s-title reveal" style="transition-delay:.06s;">Where You Would Use This Tomorrow</h2>
     <p class="s-sub reveal" style="transition-delay:.1s;margin-bottom:40px;">Four common enterprise scenarios. Each deployable within 30 days.</p>
 
-    <div style="display:grid;grid-template-columns:1fr;gap:14px;" class="reveal" style="transition-delay:.12s;">
+    <div style="class="reveal bo-grid" style="transition-delay:.12s;">
 
       <!-- Banking -->
       <div style="background:var(--s-c);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
@@ -1179,7 +1195,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
     <div class="s-label reveal">No Vaporware</div>
     <h2 class="s-title reveal" style="transition-delay:.06s;">Available in Production Today</h2>
     <p class="s-sub reveal" style="transition-delay:.1s;margin-bottom:36px;">Not a roadmap. Not a beta. These capabilities are live and deployable within 30 days.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;" class="reveal" style="transition-delay:.12s;">
+    <div class="reveal avail-grid" style="transition-delay:.12s;">
 
       <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" style="background:var(--s-c);border:1px solid rgba(0,245,160,.2);border-radius:12px;padding:24px;text-decoration:none;display:block;transition:border-color .2s,transform .2s;" onmouseover="this.style.borderColor='rgba(0,245,160,.5)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(0,245,160,.2)';this.style.transform='translateY(0)'">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">

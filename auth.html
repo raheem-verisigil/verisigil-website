@@ -1,289 +1,568 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
-<title>VeriSigil AI | Sign In</title>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; display:inline-block; line-height:1; vertical-align:middle; }
-  body { background:#0a1324; color:#d9e2fb; font-family:'Geist',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100dvh; }
-  .glass { background:rgba(22,32,49,0.85); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(16px); }
-  .grid-bg { background-image:linear-gradient(rgba(180,197,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(180,197,255,0.03) 1px,transparent 1px); background-size:48px 48px; }
-  input:-webkit-autofill { -webkit-box-shadow:0 0 0 100px #121b2d inset !important; -webkit-text-fill-color:#d9e2fb !important; }
-  .btn-primary { background:#1565ff; color:#f8f7ff; font-weight:600; padding:12px 24px; border-radius:8px; width:100%; cursor:pointer; transition:opacity .15s,transform .12s; font-size:14px; border:none; }
-  .btn-primary:hover { opacity:.9; }
-  .btn-primary:active { transform:scale(0.98); }
-  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
-  .input-field { background:#121b2d; border:1px solid rgba(66,70,86,0.8); border-radius:8px; padding:12px 16px; width:100%; color:#d9e2fb; font-size:14px; font-family:'Geist',sans-serif; transition:border-color .15s,box-shadow .15s; outline:none; }
-  .input-field:focus { border-color:rgba(180,197,255,0.4); box-shadow:0 0 0 3px rgba(21,101,255,0.12); }
-  .input-field::placeholder { color:#8c90a1; }
-  .tab { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; padding:8px 20px; border-radius:6px; cursor:pointer; transition:all .15s; }
-  .tab.active { background:rgba(21,101,255,.15); color:#b4c5ff; border:1px solid rgba(21,101,255,.25); }
-  .tab.inactive { color:#8c90a1; border:1px solid transparent; }
-  .tab.inactive:hover { color:#c2c6d8; }
-  @keyframes fade-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-  .fade-in { animation:fade-in .3s ease; }
-  .pulse { animation:pulse-dot 2s infinite; }
-  @keyframes pulse-dot { 0%,100%{opacity:1}50%{opacity:.3} }
-  .error-msg { background:rgba(147,0,10,.15); border:1px solid rgba(255,180,171,.2); color:#ffb4ab; padding:10px 14px; border-radius:8px; font-size:13px; }
-  .success-msg { background:rgba(0,255,194,.08); border:1px solid rgba(0,255,194,.2); color:#00FFC2; padding:10px 14px; border-radius:8px; font-size:13px; }
+:root {
+  --bg:       #050E1F;
+  --nav-bg:   #0A162D;
+  --s-c:      #162031;
+  --s-c-low:  #121b2d;
+  --s-c-high: #212a3c;
+  --border:   #1E2A44;
+  --primary:  #b4c5ff;
+  --pc:       #1565ff;
+  --on-pc:    #f8f7ff;
+  --secondary:#94e9ff;
+  --on-s:     #d9e2fb;
+  --on-sv:    #c2c6d8;
+  --outline:  #8c90a1;
+  --ov:       #424656;
+  --green:    #00F5A0;
+  --red:      #ff6b6b;
+  --white:    #ffffff;
+  --font:     'Hanken Grotesk', system-ui, sans-serif;
+  --mono:     'Space Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--on-s);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 1024px) {
+  body { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── LEFT PANEL ─────────────────────────────────── */
+.left-panel {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px;
+  background: var(--nav-bg);
+  border-right: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+@media (min-width: 1024px) { .left-panel { display: flex; } }
+
+.left-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 30% 20%, rgba(21,101,255,.18) 0%, transparent 60%),
+    linear-gradient(rgba(30,42,68,.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,42,68,.15) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+  pointer-events: none;
+}
+
+.left-top { position: relative; z-index: 1; }
+.left-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 64px; text-decoration: none; }
+.left-logo-mark {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(21,101,255,.2); border: 1px solid rgba(21,101,255,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--primary);
+}
+.left-logo-name { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: -.02em; }
+
+.left-headline {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -.025em;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.left-headline em { font-style: normal; color: var(--primary); }
+.left-sub { font-size: 16px; color: var(--on-sv); line-height: 1.7; max-width: 380px; margin-bottom: 40px; }
+
+/* Evidence card */
+.evidence-card {
+  background: rgba(0,245,160,.04);
+  border: 1px solid rgba(0,245,160,.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ev-label { font-family: var(--mono); font-size: 9px; color: var(--green); text-transform: uppercase; letter-spacing: .16em; margin-bottom: 10px; }
+.ev-row { font-family: var(--mono); font-size: 11px; line-height: 2; }
+.ev-key { color: var(--outline); }
+.ev-val { color: var(--on-s); }
+.ev-val.deny { color: var(--red); font-weight: 700; }
+.ev-val.hash { color: var(--primary); word-break: break-all; font-size: 10px; }
+.ev-val.green { color: var(--green); }
+
+/* Trust items */
+.trust-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.trust-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.trust-text { font-family: var(--mono); font-size: 10px; color: var(--outline); text-transform: uppercase; letter-spacing: .1em; }
+
+.left-bottom { position: relative; z-index: 1; }
+.left-tagline { font-family: var(--mono); font-size: 11px; color: var(--ov); font-style: italic; }
+
+/* ── RIGHT PANEL ─────────────────────────────────── */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 24px;
+  min-height: 100vh;
+  position: relative;
+}
+.right-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 70% 30%, rgba(21,101,255,.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Mobile logo */
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  text-decoration: none;
+}
+@media (min-width: 1024px) { .mobile-logo { display: none; } }
+.mobile-logo-name { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: -.02em; }
+
+/* Auth card */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  z-index: 1;
+}
+.auth-title { font-size: 28px; font-weight: 800; color: var(--white); letter-spacing: -.02em; margin-bottom: 6px; }
+.auth-sub { font-size: 15px; color: var(--on-sv); margin-bottom: 32px; }
+
+/* Tabs */
+.tab-row {
+  display: flex;
+  background: var(--s-c-low);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+.tab {
+  flex: 1; text-align: center;
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  padding: 9px; border-radius: 7px;
+  cursor: pointer; transition: all .2s; border: none;
+  color: var(--outline); background: transparent;
+}
+.tab.active {
+  background: var(--pc);
+  color: var(--on-pc);
+  box-shadow: 0 2px 12px rgba(21,101,255,.3);
+}
+
+/* Form */
+.form-section { display: none; }
+.form-section.active { display: block; }
+
+.field { margin-bottom: 16px; }
+.field-label {
+  display: block;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--outline); text-transform: uppercase;
+  letter-spacing: .12em; margin-bottom: 7px;
+}
+.field-input {
+  width: 100%;
+  background: var(--s-c-low);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 13px 16px;
+  color: var(--on-s);
+  font-family: var(--font); font-size: 15px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.field-input:focus {
+  border-color: rgba(180,197,255,.45);
+  box-shadow: 0 0 0 3px rgba(21,101,255,.1);
+}
+.field-input::placeholder { color: var(--ov); }
+
+/* Forgot link */
+.forgot {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--outline); text-decoration: none;
+  float: right; margin-top: -12px; margin-bottom: 16px;
+  display: block; transition: color .15s;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.forgot:hover { color: var(--primary); }
+
+/* Submit button */
+.submit-btn {
+  width: 100%;
+  background: var(--pc);
+  color: var(--on-pc);
+  font-family: var(--font); font-size: 15px; font-weight: 700;
+  padding: 14px;
+  border-radius: 10px; border: none;
+  cursor: pointer;
+  transition: opacity .15s, transform .12s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 20px;
+  box-shadow: 0 4px 20px rgba(21,101,255,.25);
+}
+.submit-btn:hover { opacity: .88; }
+.submit-btn:active { transform: scale(.98); }
+.submit-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* Divider */
+.or-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 20px 0;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ov); text-transform: uppercase; letter-spacing: .1em;
+}
+.or-divider::before, .or-divider::after {
+  content: ''; flex: 1;
+  height: 1px; background: var(--border);
+}
+
+/* Google button */
+.google-btn {
+  width: 100%;
+  background: var(--s-c);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px;
+  color: var(--on-s);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: border-color .15s, background .15s;
+}
+.google-btn:hover { border-color: rgba(180,197,255,.35); background: var(--s-c-high); }
+
+.google-icon {
+  width: 18px; height: 18px;
+  background: linear-gradient(135deg, #4285f4 0%, #ea4335 40%, #fbbc04 70%, #34a853 100%);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Terms */
+.terms-note {
+  font-size: 12px; color: var(--ov);
+  text-align: center; margin-top: 16px; line-height: 1.6;
+}
+.terms-note a { color: var(--outline); text-decoration: none; }
+.terms-note a:hover { color: var(--primary); }
+
+/* Error / success */
+.msg {
+  padding: 12px 16px; border-radius: 8px;
+  font-size: 13px; line-height: 1.5;
+  margin-bottom: 16px; display: none;
+}
+.msg.error { background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.25); color: #ffaaaa; }
+.msg.success { background: rgba(0,245,160,.08); border: 1px solid rgba(0,245,160,.2); color: var(--green); }
+
+/* Reset section */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11px; color: var(--outline);
+  text-decoration: none; text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 24px; transition: color .15s; cursor: pointer; border: none; background: none;
+}
+.back-link:hover { color: var(--primary); }
+
+/* Bottom badge */
+.auth-badge {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 28px;
+  padding: 10px 14px;
+  background: rgba(0,245,160,.05);
+  border: 1px solid rgba(0,245,160,.15);
+  border-radius: 8px;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.badge-text { font-family: var(--mono); font-size: 10px; color: var(--outline); text-transform: uppercase; letter-spacing: .1em; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.2); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; }
 </style>
 </head>
-<body class="grid-bg flex flex-col min-h-screen">
+<body>
 
-<!-- NAV -->
-<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-5 h-14 bg-[#0a1324]/90 backdrop-blur-md border-b border-white/[0.07]">
-  <a href="/" class="flex items-center gap-2.5">
-    <img src="VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" class="w-7 h-7 rounded-md object-cover">
-    <span class="font-bold text-[16px] text-[#b4c5ff] tracking-tight">VeriSigil AI</span>
+<!-- ── LEFT PANEL ──────────────────────────────── -->
+<div class="left-panel">
+  <div class="left-top">
+    <a href="/" class="left-logo">
+      <div class="left-logo-mark">VS</div>
+      <span class="left-logo-name">VeriSigil AI</span>
+    </a>
+
+    <h1 class="left-headline">
+      Constitutional<br>Runtime for<br><em>Autonomous AI.</em>
+    </h1>
+    <p class="left-sub">
+      The governance layer between AI cognition and real-world consequence. Issue. Verify. Prove.
+    </p>
+
+    <!-- Live evidence card -->
+    <div class="evidence-card">
+      <div class="ev-label">Live Production — Last Governed Decision</div>
+      <div class="ev-row"><span class="ev-key">agent:   </span><span class="ev-val">financial-agent-1780111266</span></div>
+      <div class="ev-row"><span class="ev-key">action:  </span><span class="ev-val">wire_transfer $250,000</span></div>
+      <div class="ev-row"><span class="ev-key">verdict: </span><span class="ev-val deny">DENY</span></div>
+      <div class="ev-row"><span class="ev-key">hash:    </span><span class="ev-val hash">586b996f53da8365...</span></div>
+      <div class="ev-row"><span class="ev-key">cert:    </span><span class="ev-val green">POGC-EXT-A7F3C2B1D9E4F508</span></div>
+    </div>
+
+    <div>
+      <div class="trust-row"><div class="trust-dot"></div><span class="trust-text">478 API Endpoints · Live</span></div>
+      <div class="trust-row"><div class="trust-dot"></div><span class="trust-text">3 DOI Publications</span></div>
+      <div class="trust-row"><div class="trust-dot"></div><span class="trust-text">EU AI Act · NIST · ISO 42001</span></div>
+      <div class="trust-row"><div class="trust-dot"></div><span class="trust-text">PoGR Certificate #001 Issued</span></div>
+    </div>
+  </div>
+
+  <div class="left-bottom">
+    <p class="left-tagline">"Intelligence scales. Legitimacy is verified."</p>
+  </div>
+</div>
+
+<!-- ── RIGHT PANEL ─────────────────────────────── -->
+<div class="right-panel">
+
+  <!-- Mobile logo -->
+  <a href="/" class="mobile-logo">
+    <span class="mobile-logo-name">VeriSigil AI</span>
   </a>
-  <a href="/" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors uppercase tracking-wider flex items-center gap-1">
-    <span class="material-symbols-outlined text-sm">arrow_back</span>
-    Back
-  </a>
-</header>
 
-<main class="flex-1 flex items-center justify-center px-5 pt-20 pb-10">
-  <div class="w-full max-w-[400px]">
+  <div class="auth-card">
 
-    <!-- Logo mark -->
-    <div class="text-center mb-8">
-      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#1565ff]/15 border border-[#1565ff]/25 mb-4">
-        <span class="material-symbols-outlined text-[#b4c5ff] text-3xl">shield_lock</span>
+    <!-- SIGN IN / SIGN UP TABS -->
+    <div id="auth-main">
+      <h1 class="auth-title" id="auth-title">Welcome back</h1>
+      <p class="auth-sub" id="auth-sub">Sign in to your VeriSigil account</p>
+
+      <div class="tab-row">
+        <button class="tab active" onclick="switchTab('signin')" id="tab-signin">Sign In</button>
+        <button class="tab" onclick="switchTab('signup')" id="tab-signup">Sign Up</button>
       </div>
-      <h1 class="font-bold text-[22px] text-white mb-1">VeriSigil AI</h1>
-      <p class="text-[13px] text-[#8c90a1]">Constitutional Runtime Infrastructure</p>
-    </div>
 
-    <!-- Tabs -->
-    <div class="flex gap-2 mb-6 p-1 bg-[#050e1f] rounded-lg border border-white/[0.06]">
-      <button class="tab active flex-1 text-center" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
-      <button class="tab inactive flex-1 text-center" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
-    </div>
-
-    <!-- SIGN IN FORM -->
-    <div id="form-signin" class="fade-in">
-      <div class="glass rounded-2xl p-6 flex flex-col gap-4">
-        <div id="signin-msg"></div>
-
-        <div>
-          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Email</label>
-          <input type="email" id="signin-email" class="input-field" placeholder="you@company.com" autocomplete="email">
+      <!-- SIGN IN -->
+      <div class="form-section active" id="form-signin">
+        <div class="msg error" id="signin-error"></div>
+        <div class="msg success" id="signin-success"></div>
+        <div class="field">
+          <label class="field-label">Email</label>
+          <input class="field-input" type="email" id="si-email" placeholder="you@company.com" autocomplete="email">
         </div>
-        <div>
-          <div class="flex justify-between items-center mb-2">
-            <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest">Password</label>
-            <button onclick="switchTab('forgot')" class="font-mono text-[10px] text-[#b4c5ff] hover:text-[#94e9ff] transition-colors uppercase tracking-wider">Forgot?</button>
-          </div>
-          <input type="password" id="signin-password" class="input-field" placeholder="••••••••" autocomplete="current-password">
+        <div class="field">
+          <label class="field-label">Password</label>
+          <input class="field-input" type="password" id="si-pass" placeholder="••••••••" autocomplete="current-password">
         </div>
-
-        <button class="btn-primary mt-2 flex items-center justify-center gap-2" id="signin-btn" onclick="signIn()">
+        <button class="forgot" onclick="showReset()">Forgot password?</button>
+        <div style="clear:both;"></div>
+        <button class="submit-btn" onclick="handleSignIn()" id="signin-btn">
           <span id="signin-btn-text">Sign In</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </button>
-
-        <div class="relative flex items-center gap-3 my-1">
-          <div class="flex-1 h-px bg-white/[0.07]"></div>
-          <span class="font-mono text-[10px] text-[#424656] uppercase tracking-wider">or</span>
-          <div class="flex-1 h-px bg-white/[0.07]"></div>
-        </div>
-
-        <button onclick="signInWithGoogle()" class="w-full py-3 px-4 bg-[#121b2d] border border-[#424656]/60 rounded-lg text-[13px] text-[#c2c6d8] hover:border-[#b4c5ff]/30 transition-colors flex items-center justify-center gap-3 font-medium">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <div class="or-divider">or</div>
+        <button class="google-btn" onclick="handleGoogle()">
+          <div class="google-icon"></div>
           Continue with Google
         </button>
       </div>
-    </div>
 
-    <!-- SIGN UP FORM -->
-    <div id="form-signup" class="fade-in hidden">
-      <div class="glass rounded-2xl p-6 flex flex-col gap-4">
-        <div id="signup-msg"></div>
-
-        <div>
-          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Full Name</label>
-          <input type="text" id="signup-name" class="input-field" placeholder="Your name" autocomplete="name">
+      <!-- SIGN UP -->
+      <div class="form-section" id="form-signup">
+        <div class="msg error" id="signup-error"></div>
+        <div class="msg success" id="signup-success"></div>
+        <div class="field">
+          <label class="field-label">Full Name</label>
+          <input class="field-input" type="text" id="su-name" placeholder="Jane Smith" autocomplete="name">
         </div>
-        <div>
-          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Work Email</label>
-          <input type="email" id="signup-email" class="input-field" placeholder="you@company.com" autocomplete="email">
+        <div class="field">
+          <label class="field-label">Work Email</label>
+          <input class="field-input" type="email" id="su-email" placeholder="jane@company.com" autocomplete="email">
         </div>
-        <div>
-          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Password</label>
-          <input type="password" id="signup-password" class="input-field" placeholder="Min 8 characters" autocomplete="new-password">
+        <div class="field">
+          <label class="field-label">Password</label>
+          <input class="field-input" type="password" id="su-pass" placeholder="Min. 8 characters" autocomplete="new-password">
         </div>
-        <div>
-          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Organization (optional)</label>
-          <input type="text" id="signup-org" class="input-field" placeholder="Company name">
+        <div class="field">
+          <label class="field-label">Organisation <span style="color:var(--ov);">(optional)</span></label>
+          <input class="field-input" type="text" id="su-org" placeholder="Your company" autocomplete="organization">
         </div>
-
-        <p class="text-[11px] text-[#8c90a1]">
-          By signing up you agree to our <a href="#" class="text-[#b4c5ff] hover:underline">Terms</a> and <a href="#" class="text-[#b4c5ff] hover:underline">Privacy Policy</a>.
-        </p>
-
-        <button class="btn-primary flex items-center justify-center gap-2" id="signup-btn" onclick="signUp()">
+        <button class="submit-btn" onclick="handleSignUp()" id="signup-btn">
           <span id="signup-btn-text">Create Account</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </button>
-
-        <div class="relative flex items-center gap-3 my-1">
-          <div class="flex-1 h-px bg-white/[0.07]"></div>
-          <span class="font-mono text-[10px] text-[#424656] uppercase tracking-wider">or</span>
-          <div class="flex-1 h-px bg-white/[0.07]"></div>
-        </div>
-
-        <button onclick="signInWithGoogle()" class="w-full py-3 px-4 bg-[#121b2d] border border-[#424656]/60 rounded-lg text-[13px] text-[#c2c6d8] hover:border-[#b4c5ff]/30 transition-colors flex items-center justify-center gap-3 font-medium">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <div class="or-divider">or</div>
+        <button class="google-btn" onclick="handleGoogle()">
+          <div class="google-icon"></div>
           Continue with Google
         </button>
+        <p class="terms-note">By signing up you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a></p>
       </div>
     </div>
 
-    <!-- FORGOT PASSWORD -->
-    <div id="form-forgot" class="fade-in hidden">
-      <div class="glass rounded-2xl p-6 flex flex-col gap-4">
-        <div>
-          <button onclick="switchTab('signin')" class="flex items-center gap-1 font-mono text-[10px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors uppercase tracking-wider mb-4">
-            <span class="material-symbols-outlined text-sm">arrow_back</span>Back to Sign In
-          </button>
-          <h2 class="font-bold text-[18px] text-white mb-1">Reset Password</h2>
-          <p class="text-[13px] text-[#8c90a1]">We'll send you a reset link.</p>
-        </div>
-
-        <div id="forgot-msg"></div>
-
-        <div>
-          <label class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest block mb-2">Email</label>
-          <input type="email" id="forgot-email" class="input-field" placeholder="you@company.com">
-        </div>
-
-        <button class="btn-primary flex items-center justify-center gap-2" onclick="resetPassword()">
-          <span>Send Reset Link</span>
-          <span class="material-symbols-outlined text-sm">mail</span>
-        </button>
+    <!-- RESET PASSWORD -->
+    <div id="auth-reset" style="display:none;">
+      <button class="back-link" onclick="showMain()">← Back to Sign In</button>
+      <h1 class="auth-title">Reset Password</h1>
+      <p class="auth-sub" style="margin-bottom:24px;">Enter your email and we'll send a reset link.</p>
+      <div class="msg error" id="reset-error"></div>
+      <div class="msg success" id="reset-success"></div>
+      <div class="field">
+        <label class="field-label">Email</label>
+        <input class="field-input" type="email" id="reset-email" placeholder="you@company.com">
       </div>
+      <button class="submit-btn" onclick="handleReset()" id="reset-btn">
+        <span id="reset-btn-text">Send Reset Link</span>
+      </button>
     </div>
 
-    <!-- Trust line -->
-    <div class="flex items-center justify-center gap-2 mt-6">
-      <span class="w-1.5 h-1.5 rounded-full bg-[#00FFC2] pulse"></span>
-      <span class="font-mono text-[10px] text-[#424656] uppercase tracking-widest">VGS-ELI-Certified · Production Ready</span>
+    <!-- Bottom badge -->
+    <div class="auth-badge">
+      <div class="badge-dot"></div>
+      <span class="badge-text">VGS-ELI-Certified · Production Ready · EU AI Act Aligned</span>
     </div>
 
   </div>
-</main>
+</div>
 
 <script>
-// ── SUPABASE CONFIG ──────────────────────────────────────────
-// Replace with your actual Supabase project URL and anon key
-// Supabase config — update with real keys for production
-const SUPABASE_URL = window.SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
-const SUPABASE_CONFIGURED = SUPABASE_URL && SUPABASE_URL !== '';
+// ── CONFIG ───────────────────────────────────────
+const SUPABASE_URL  = window.SUPABASE_URL  || '';
+const SUPABASE_KEY  = window.SUPABASE_KEY  || '';
+const CONFIGURED    = SUPABASE_URL !== '';
 const { createClient } = supabase;
-const sb = SUPABASE_CONFIGURED ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const sb = CONFIGURED ? createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-// ── READ URL PARAMS ──────────────────────────────────────────
-const urlParams = new URLSearchParams(window.location.search);
-const mode = urlParams.get('mode');
-if (mode === 'signup') switchTab('signup');
+// ── URL PARAMS ───────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+if (params.get('mode') === 'signup') switchTab('signup');
 
-// ── TAB SWITCHING ────────────────────────────────────────────
+// ── TAB SWITCH ───────────────────────────────────
 function switchTab(tab) {
-  ['signin','signup','forgot'].forEach(t => {
-    document.getElementById(`form-${t}`)?.classList.add('hidden');
-    document.getElementById(`tab-${t}`)?.classList.replace('active','inactive');
-  });
-  document.getElementById(`form-${tab}`).classList.remove('hidden');
-  document.getElementById(`form-${tab}`).classList.add('fade-in');
-  if (['signin','signup'].includes(tab)) {
-    document.getElementById(`tab-${tab}`).classList.replace('inactive','active');
-  }
+  const isSignIn = tab === 'signin';
+  document.getElementById('tab-signin').className  = 'tab' + (isSignIn ? ' active' : '');
+  document.getElementById('tab-signup').className  = 'tab' + (!isSignIn ? ' active' : '');
+  document.getElementById('form-signin').className = 'form-section' + (isSignIn ? ' active' : '');
+  document.getElementById('form-signup').className = 'form-section' + (!isSignIn ? ' active' : '');
+  document.getElementById('auth-title').textContent = isSignIn ? 'Welcome back' : 'Create account';
+  document.getElementById('auth-sub').textContent   = isSignIn ? 'Sign in to your VeriSigil account' : 'Start governing your AI systems today';
 }
 
-// ── HELPERS ──────────────────────────────────────────────────
-function showMsg(id, msg, type='error') {
-  const el = document.getElementById(id);
-  el.innerHTML = `<div class="${type}-msg">${msg}</div>`;
+function showReset() {
+  document.getElementById('auth-main').style.display  = 'none';
+  document.getElementById('auth-reset').style.display = 'block';
 }
-function clearMsg(id) { document.getElementById(id).innerHTML = ''; }
+function showMain() {
+  document.getElementById('auth-main').style.display  = 'block';
+  document.getElementById('auth-reset').style.display = 'none';
+}
+
+// ── HELPERS ──────────────────────────────────────
 function setLoading(btnId, textId, loading, text) {
-  document.getElementById(btnId).disabled = loading;
-  document.getElementById(textId).textContent = loading ? 'Please wait...' : text;
+  const btn  = document.getElementById(btnId);
+  const span = document.getElementById(textId);
+  btn.disabled = loading;
+  span.innerHTML = loading ? '<div class="spinner"></div>' : text;
+}
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className   = 'msg ' + type;
+  el.style.display = 'block';
+}
+function clearMsg(id) {
+  const el = document.getElementById(id);
+  el.style.display = 'none';
 }
 
-// ── SIGN IN ──────────────────────────────────────────────────
-async function signIn() {
-  clearMsg('signin-msg');
-  const email = document.getElementById('signin-email').value.trim();
-  const password = document.getElementById('signin-password').value;
-  if (!email || !password) return showMsg('signin-msg', 'Please fill in all fields.');
-  setLoading('signin-btn','signin-btn-text', true, 'Sign In');
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  setLoading('signin-btn','signin-btn-text', false, 'Sign In');
-  if (error) return showMsg('signin-msg', error.message);
-  showMsg('signin-msg', '✓ Signed in successfully. Redirecting...', 'success');
-  setTimeout(() => window.location.href = '/dashboard.html', 1200);
-}
-
-// ── SIGN UP ──────────────────────────────────────────────────
-async function signUp() {
-  clearMsg('signup-msg');
-  const name = document.getElementById('signup-name').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const password = document.getElementById('signup-password').value;
-  const org = document.getElementById('signup-org').value.trim();
-  if (!name || !email || !password) return showMsg('signup-msg', 'Please fill in all required fields.');
-  if (password.length < 8) return showMsg('signup-msg', 'Password must be at least 8 characters.');
-  setLoading('signup-btn','signup-btn-text', true, 'Create Account');
-  const { data, error } = await sb.auth.signUp({
-    email, password,
-    options: { data: { full_name: name, organization: org } }
-  });
-  setLoading('signup-btn','signup-btn-text', false, 'Create Account');
-  if (error) return showMsg('signup-msg', error.message);
-  showMsg('signup-msg', '✓ Account created! Check your email to confirm then sign in.', 'success');
-}
-
-// ── GOOGLE ───────────────────────────────────────────────────
-async function signInWithGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin + '/dashboard.html' }
-  });
-  if (error) alert(error.message);
-}
-
-// ── RESET PASSWORD ───────────────────────────────────────────
-async function resetPassword() {
-  clearMsg('forgot-msg');
-  const email = document.getElementById('forgot-email').value.trim();
-  if (!email) return showMsg('forgot-msg', 'Please enter your email address.');
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/auth.html?mode=reset'
-  });
-  if (error) return showMsg('forgot-msg', error.message);
-  showMsg('forgot-msg', '✓ Reset link sent. Check your inbox.', 'success');
-}
-
-// ── CHECK SESSION ────────────────────────────────────────────
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) window.location.href = '/dashboard.html';
-})();
-
-// ── ENTER KEY ────────────────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-  if (e.key !== 'Enter') return;
-  const activeForm = ['signin','signup','forgot'].find(t =>
-    !document.getElementById(`form-${t}`).classList.contains('hidden')
+// ── NOT CONFIGURED FALLBACK ───────────────────────
+function notConfigured(errorId) {
+  showMsg(errorId,
+    'Authentication is being configured. For enterprise access contact enterprise@verisigilai.com',
+    'error'
   );
-  if (activeForm === 'signin') signIn();
-  else if (activeForm === 'signup') signUp();
-  else if (activeForm === 'forgot') resetPassword();
+}
+
+// ── SIGN IN ──────────────────────────────────────
+async function handleSignIn() {
+  clearMsg('signin-error'); clearMsg('signin-success');
+  if (!CONFIGURED || !sb) { notConfigured('signin-error'); return; }
+  const email = document.getElementById('si-email').value.trim();
+  const pass  = document.getElementById('si-pass').value;
+  if (!email || !pass) { showMsg('signin-error', 'Please enter your email and password.', 'error'); return; }
+  setLoading('signin-btn', 'signin-btn-text', true, 'Sign In');
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  setLoading('signin-btn', 'signin-btn-text', false, 'Sign In');
+  if (error) { showMsg('signin-error', error.message, 'error'); }
+  else { showMsg('signin-success', 'Signed in. Redirecting...', 'success'); setTimeout(() => window.location.href = '/dashboard.html', 1200); }
+}
+
+// ── SIGN UP ──────────────────────────────────────
+async function handleSignUp() {
+  clearMsg('signup-error'); clearMsg('signup-success');
+  if (!CONFIGURED || !sb) { notConfigured('signup-error'); return; }
+  const name  = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pass  = document.getElementById('su-pass').value;
+  const org   = document.getElementById('su-org').value.trim();
+  if (!name || !email || !pass) { showMsg('signup-error', 'Please fill in all required fields.', 'error'); return; }
+  if (pass.length < 8) { showMsg('signup-error', 'Password must be at least 8 characters.', 'error'); return; }
+  setLoading('signup-btn', 'signup-btn-text', true, 'Create Account');
+  const { error } = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name, organization: org } } });
+  setLoading('signup-btn', 'signup-btn-text', false, 'Create Account');
+  if (error) { showMsg('signup-error', error.message, 'error'); }
+  else { showMsg('signup-success', 'Account created! Check your email to verify.', 'success'); }
+}
+
+// ── GOOGLE ───────────────────────────────────────
+async function handleGoogle() {
+  if (!CONFIGURED || !sb) { notConfigured('signin-error'); return; }
+  await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/dashboard.html' } });
+}
+
+// ── RESET ────────────────────────────────────────
+async function handleReset() {
+  clearMsg('reset-error'); clearMsg('reset-success');
+  if (!CONFIGURED || !sb) { notConfigured('reset-error'); return; }
+  const email = document.getElementById('reset-email').value.trim();
+  if (!email) { showMsg('reset-error', 'Please enter your email address.', 'error'); return; }
+  setLoading('reset-btn', 'reset-btn-text', true, 'Send Reset Link');
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/auth.html' });
+  setLoading('reset-btn', 'reset-btn-text', false, 'Send Reset Link');
+  if (error) { showMsg('reset-error', error.message, 'error'); }
+  else { showMsg('reset-success', 'Reset link sent. Check your inbox.', 'success'); }
+}
+
+// Enter key support
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.form-section.active');
+  if (!active) return;
+  if (active.id === 'form-signin') handleSignIn();
+  if (active.id === 'form-signup') handleSignUp();
 });
 </script>
 </body>

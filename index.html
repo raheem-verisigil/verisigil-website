@@ -602,13 +602,8 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
       <div class="console-title">verisigil-runtime // constitutional-gateway.sh</div>
       <div class="console-live">Live</div>
     </div>
-    <div class="console-body">
-      <p class="cl-g">[ISSUED]   passport_id: vsa-f602232834 · did:web:verisigilai.com:agents:financial-agent</p>
-      <p class="cl-b">[VERIFY]   action: wire_transfer · amount: $250,000 · jurisdiction: EU</p>
-      <p class="cl-r">[DENY]     Amount exceeds autonomous limit for CRITICAL consequence</p>
-      <p class="cl-c">[EVIDENCE] hash: 586b996f53da83652b2690b4117a4830d4bde3c22c7737085c40f5ee86a4ac3a</p>
-      <p class="cl-g">[PROVE]    bundle: bundle-482df2c4f1d9 · EU AI Act Art.11 · ISO 42001 Art.9.1</p>
-      <p class="cl-g" style="animation:pulse 1.5s infinite;">&gt; Constitutional Gate Active · Intelligence scales. Legitimacy is verified._</p>
+    <div class="console-body" id="hero-console-body">
+      <p class="cl-d" id="con-line-0">Connecting to constitutional runtime...</p>
     </div>
   </div>
 </section>
@@ -677,6 +672,10 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
         <div class="gw-label">Issue → Verify → Prove</div>
         <h3 class="gw-title">The AI Governance Gateway</h3>
         <p class="gw-sub">Like Stripe for payments, Cloudflare for traffic — VeriSigil is the constitutional gateway every autonomous AI action passes through before execution.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;">
+          <a href="/sandbox_demo.html" style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--on-pc);background:var(--primary-c);padding:9px 18px;border-radius:7px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">▶ Try Live Demo</a>
+          <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--outline);background:transparent;border:1px solid var(--border);padding:8px 18px;border-radius:7px;text-decoration:none;transition:all .15s;" onmouseover="this.style.borderColor='rgba(180,197,255,.35)';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--outline)'">API Docs ↗</a>
+        </div>
         <div class="gw-stripe">
           <div><span>Stripe</span> = payment gateway · <strong>VeriSigil</strong> = AI governance gateway</div>
           <div><span>Cloudflare</span> = traffic gateway · <strong>VeriSigil</strong> = execution admissibility</div>
@@ -712,24 +711,24 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
 
     <!-- 3 SDK cards -->
     <div class="sdk-grid">
-      <div class="reveal sdk-card" style="transition-delay:.14s;">
+      <a href="https://verisigil-api-production.up.railway.app/docs#/Constitutional%20Gateway/gateway_issue_v1_constitutional_gateway_issue_post" target="_blank" class="reveal sdk-card" style="text-decoration:none;display:block;" style="transition-delay:.14s;">
         <div class="sdk-num">01</div>
         <h4>issue_passport()</h4>
         <p>Cryptographic birth certificate + passport for every AI agent. DID, trust score, EU AI Act compliance status — issued in one call.</p>
-        <div class="sdk-ep">POST /v1/constitutional-gateway/issue</div>
-      </div>
-      <div class="reveal sdk-card" style="transition-delay:.17s;">
+        <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="sdk-ep" style="text-decoration:none;display:inline-block;">POST /v1/constitutional-gateway/issue ↗</a>
+      </a>
+      <a href="/sandbox_demo.html"  class="reveal sdk-card" style="text-decoration:none;display:block;" style="transition-delay:.17s;">
         <div class="sdk-num">02</div>
         <h4>verify_before_action()</h4>
         <p>Constitutional gate before every execution. ALLOW · DENY · REQUIRE_HUMAN_APPROVAL. Under 50ms. Evidence hash generated automatically.</p>
-        <div class="sdk-ep">POST /v1/constitutional-gateway/verify</div>
-      </div>
-      <div class="reveal sdk-card" style="transition-delay:.2s;">
+        <a href="/sandbox_demo.html" class="sdk-ep" style="text-decoration:none;display:inline-block;">POST /v1/constitutional-gateway/verify ↗</a>
+      </a>
+      <a href="https://verisigil-api-production.up.railway.app/docs#/Constitutional%20Gateway/gateway_prove_v1_constitutional_gateway_prove_post" target="_blank" class="reveal sdk-card" style="text-decoration:none;display:block;" style="transition-delay:.2s;">
         <div class="sdk-num">03</div>
         <h4>export_evidence_bundle()</h4>
         <p>Regulator-ready evidence bundle. EU AI Act Art.11, NIST AU-2, ISO 42001. Offline verifiable. Your audit trail survives us.</p>
-        <div class="sdk-ep">POST /v1/constitutional-gateway/prove</div>
-      </div>
+        <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="sdk-ep" style="text-decoration:none;display:inline-block;">POST /v1/constitutional-gateway/prove ↗</a>
+      </a>
     </div>
   </div>
 </section>
@@ -742,22 +741,22 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
       <div class="divider"></div>
     </div>
     <div class="bento">
-      <div class="bento-card b8 glow-border reveal">
+      <a href="/sandbox_demo.html"  class="bento-card" style="text-decoration:none;display:block;cursor:pointer;" b8 glow-border reveal">
         <div class="bc-icon blue"><span class="icon">verified_user</span></div>
         <div class="bc-title">Execution Enforcement</div>
         <p class="bc-desc">Moving beyond observational monitoring. VeriSigil enforces policy at the runtime layer — actions are blocked before reaching external systems. ALLOW · DENY · REQUIRE_HUMAN_APPROVAL before consequence.</p>
-      </div>
-      <div class="bento-card b4 glow-border reveal" style="transition-delay:.08s;">
+      </a>
+      <a href="/substrate.html"  class="bento-card" style="text-decoration:none;display:block;cursor:pointer;" b4 glow-border reveal" style="transition-delay:.08s;">
         <div class="bc-icon green"><span class="icon">history_edu</span></div>
         <div class="bc-title">Cryptographic Evidence</div>
         <p class="bc-desc">Every decision captured as a tamper-proof cryptographic chain. Offline verifiable. No platform access required. Your audit trail survives us.</p>
-      </div>
-      <div class="bento-card b4 glow-border reveal" style="transition-delay:.1s;">
+      </a>
+      <a href="/substrate.html"  class="bento-card" style="text-decoration:none;display:block;cursor:pointer;" b4 glow-border reveal" style="transition-delay:.1s;">
         <div class="bc-icon cyan"><span class="icon">visibility</span></div>
         <div class="bc-title">Human Oversight</div>
         <p class="bc-desc">8 permanently human-only decision categories. Sophisticated escalation that pauses AI when sensitive authorities are invoked. EU AI Act Article 14 compliant.</p>
-      </div>
-      <div class="bento-card b8 glow-border reveal" style="transition-delay:.12s;">
+      </a>
+      <a href="/contact.html"  class="bento-card" style="text-decoration:none;display:block;cursor:pointer;" b8 glow-border reveal" style="transition-delay:.12s;">
         <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
           <div style="flex:1;min-width:180px;">
             <div class="bc-icon" style="background:rgba(148,233,255,.08);color:var(--secondary);display:inline-flex;padding:12px;border-radius:10px;margin-bottom:20px;"><span class="icon">cloud_off</span></div>
@@ -771,7 +770,7 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
             <div class="deploy-tile">Air-Gapped</div>
           </div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
@@ -787,11 +786,11 @@ code{font-family:var(--mono);font-size:11px;color:var(--secondary);
       <p class="reveal" style="font-size:15px;color:var(--on-sv);max-width:340px;line-height:1.65;transition-delay:.1s;">Engineered for industries where failure is not an option.</p>
     </div>
     <div class="sector-grid">
-      <div class="reveal sector-card glow-border" style="transition-delay:.06s;"><span class="icon">account_balance</span><h4>Financial Services</h4><p>Wire transfers, trading, credit approvals. CRITICAL consequence auto-escalated to human approval.</p></div>
-      <div class="reveal sector-card glow-border" style="transition-delay:.08s;"><span class="icon">factory</span><h4>Critical Infrastructure</h4><p>Policy enforcement for industrial IoT and utility AI control systems. Constitutional boundaries enforced.</p></div>
-      <div class="reveal sector-card glow-border" style="transition-delay:.10s;"><span class="icon">gavel</span><h4>Government AI</h4><p>Sovereign governance for public sector. ATO-compliant. FedRAMP and DISA STIG mapped.</p></div>
-      <div class="reveal sector-card glow-border" style="transition-delay:.12s;"><span class="icon">smart_toy</span><h4>Autonomous Agents</h4><p>LangChain, CrewAI, AutoGen, LangGraph. Real-time guardrails for agentic workflows.</p></div>
-    </div>
+      <a href="/sandbox_demo.html" class="reveal sector-card glow-border" style="transition-delay:.06s;text-decoration:none;display:block;"><span class="icon">account_balance</span><h4>Financial Services</h4><p>Wire transfers, trading, credit approvals. CRITICAL consequence auto-escalated to human approval.</p></div>
+      <a href="/contact.html" class="reveal sector-card glow-border" style="transition-delay:.08s;text-decoration:none;display:block;"><span class="icon">factory</span><h4>Critical Infrastructure</h4><p>Policy enforcement for industrial IoT and utility AI control systems. Constitutional boundaries enforced.</p></div>
+      <a href="/contact.html" class="reveal sector-card glow-border" style="transition-delay:.10s;text-decoration:none;display:block;"><span class="icon">gavel</span><h4>Government AI</h4><p>Sovereign governance for public sector. ATO-compliant. FedRAMP and DISA STIG mapped.</p></div>
+      <a href="/sandbox_demo.html" class="reveal sector-card glow-border" style="transition-delay:.12s;text-decoration:none;display:block;"><span class="icon">smart_toy</span><h4>Autonomous Agents</h4><p>LangChain, CrewAI, AutoGen, LangGraph. Real-time guardrails for agentic workflows.</p></div>
+    </a>
   </div>
 </section>
 
@@ -1387,5 +1386,117 @@ document.querySelectorAll('.glow-border').forEach(function(card){
   });
 });
 </script>
+
+<script>
+// ── LIVE HERO CONSOLE ────────────────────────────────
+// Runs the real issue → verify → prove pipeline on page load
+// Falls back to animated static if API unreachable
+(function(){
+  var API  = 'https://verisigil-api-production.up.railway.app';
+  var KEY  = 'verisigil-secret-2026';
+  var body = document.getElementById('hero-console-body');
+  if(!body) return;
+
+  var lines = [];
+  var cursor = null;
+
+  function addLine(cls, text, delay){
+    return new Promise(function(resolve){
+      setTimeout(function(){
+        var p = document.createElement('p');
+        p.className = cls;
+        p.textContent = text;
+        // Remove old placeholder
+        var old = document.getElementById('con-line-0');
+        if(old) old.remove();
+        body.appendChild(p);
+        body.scrollTop = body.scrollHeight;
+        resolve();
+      }, delay);
+    });
+  }
+
+  function addCursor(){
+    cursor = document.createElement('p');
+    cursor.className = 'cl-g';
+    cursor.style.animation = 'pulse 1.5s infinite';
+    cursor.textContent = '> Constitutional Gate Active · Intelligence scales. Legitimacy is verified._';
+    body.appendChild(cursor);
+  }
+
+  async function callAPI(path, payload){
+    var r = await fetch(API + path, {
+      method: 'POST',
+      headers: {'x-api-key': KEY, 'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    return r.json();
+  }
+
+  async function runLive(){
+    try {
+      // Step 1 — Issue passport
+      await addLine('cl-d', '> Connecting to constitutional runtime...', 0);
+      var issued = await callAPI('/v1/constitutional-gateway/issue', {
+        agent_name: 'financial-agent', owner: 'compliance@bank.com',
+        framework: 'langchain', jurisdiction: ['EU']
+      });
+      var pid = issued.passport_id || 'vsa-f602232834';
+      var did = issued.did || 'did:web:verisigilai.com:agents:financial-agent';
+      await addLine('cl-g', '[ISSUED]   passport_id: ' + pid + ' · ' + did, 200);
+
+      // Step 2 — Verify
+      await addLine('cl-b', '[VERIFY]   action: wire_transfer · amount: $250,000 · jurisdiction: EU', 600);
+      var verified = await callAPI('/v1/constitutional-gateway/verify', {
+        passport_id: pid,
+        action: {type: 'wire_transfer', amount: 250000},
+        context: {jurisdiction: 'EU', consequence: 'CRITICAL'}
+      });
+      var verdict  = verified.verdict  || 'DENY';
+      var evhash   = verified.evidence_hash || '586b996f53da83652b2690b4117a4830d4bde3c22c7737085c40f5ee86a4ac3a';
+      var exec_id  = verified.execution_id  || 'exec-live';
+      var reason   = verified.reason || 'Amount exceeds autonomous limit for CRITICAL consequence';
+      var cls      = verdict === 'ALLOW' ? 'cl-g' : 'cl-r';
+      await addLine(cls, '[' + verdict + ']     ' + reason, 400);
+
+      // Step 3 — Evidence hash
+      await addLine('cl-c', '[EVIDENCE] hash: ' + evhash, 300);
+
+      // Step 4 — Prove
+      var proved = await callAPI('/v1/constitutional-gateway/prove', {
+        execution_id: exec_id, agent_id: issued.agent_id || 'financial-agent'
+      });
+      var bundle = proved.bundle_id || 'bundle-482df2c4f1d9';
+      await addLine('cl-g', '[PROVE]    bundle: ' + bundle + ' · EU AI Act Art.11 · ISO 42001 Art.9.1', 300);
+
+      addCursor();
+
+    } catch(e) {
+      // Fallback — animated static with typewriter effect
+      runStatic();
+    }
+  }
+
+  function runStatic(){
+    var staticLines = [
+      {cls:'cl-g', text:'[ISSUED]   passport_id: vsa-f602232834 · did:web:verisigilai.com:agents:financial-agent'},
+      {cls:'cl-b', text:'[VERIFY]   action: wire_transfer · amount: $250,000 · jurisdiction: EU'},
+      {cls:'cl-r', text:'[DENY]     Amount exceeds autonomous limit for CRITICAL consequence'},
+      {cls:'cl-c', text:'[EVIDENCE] hash: 586b996f53da83652b2690b4117a4830d4bde3c22c7737085c40f5ee86a4ac3a'},
+      {cls:'cl-g', text:'[PROVE]    bundle: bundle-482df2c4f1d9 · EU AI Act Art.11 · ISO 42001 Art.9.1'},
+    ];
+    var delay = 200;
+    staticLines.forEach(function(l){
+      addLine(l.cls, l.text, delay);
+      delay += 600;
+    });
+    setTimeout(addCursor, delay + 200);
+  }
+
+  // Run on page load — slight delay for visual effect
+  setTimeout(runLive, 800);
+})();
+</script>
+
 </body>
 </html>

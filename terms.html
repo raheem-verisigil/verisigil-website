@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — VeriSigil AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050E1F;--nav-bg:#0A162D;--border:#1E2A44;--primary:#b4c5ff;--primary-c:#1565ff;--on-surface:#d9e2fb;--on-sv:#c2c6d8;--outline:#8c90a1;--outline-v:#424656;--white:#FFFFFF;--font:'Hanken Grotesk',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--on-surface);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100dvh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(30,42,68,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,42,68,.15) 1px,transparent 1px);background-size:40px 40px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--nav-bg);border-bottom:1px solid var(--border);}
+@media(min-width:768px){nav{padding:0 48px;}}
+.brand{font-size:17px;font-weight:700;color:var(--primary);text-decoration:none;letter-spacing:-.02em;}
+.nav-back{font-family:var(--mono);font-size:11px;color:var(--outline);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .15s;}
+.nav-back:hover{color:var(--primary);}
+main{padding:100px 20px 80px;position:relative;z-index:1;max-width:760px;margin:0 auto;}
+h1{font-size:clamp(26px,4vw,38px);font-weight:700;color:var(--white);letter-spacing:-.02em;margin-bottom:8px;}
+.meta{font-family:var(--mono);font-size:11px;color:var(--outline);margin-bottom:40px;text-transform:uppercase;letter-spacing:.1em;}
+h2{font-size:17px;font-weight:700;color:var(--white);margin:36px 0 12px;padding-top:24px;border-top:1px solid var(--border);}
+p{font-size:15px;color:var(--on-sv);line-height:1.8;margin-bottom:14px;}
+ul{padding-left:20px;margin-bottom:14px;}
+li{font-size:15px;color:var(--on-sv);line-height:1.8;margin-bottom:6px;}
+a{color:var(--primary);}
+.box{background:rgba(21,101,255,.06);border:1px solid rgba(21,101,255,.2);border-radius:10px;padding:20px 24px;margin:28px 0;font-size:14px;color:var(--on-sv);line-height:1.7;}
+.warn{background:rgba(255,59,59,.05);border:1px solid rgba(255,59,59,.2);border-radius:10px;padding:20px 24px;margin:28px 0;font-size:14px;color:var(--on-sv);line-height:1.7;}
+footer{border-top:1px solid var(--border);padding:28px 20px;text-align:center;position:relative;z-index:1;margin-top:60px;}
+footer a{font-family:var(--mono);font-size:10px;color:var(--outline);text-decoration:none;margin:0 10px;transition:color .15s;}
+footer a:hover{color:var(--primary);}
+footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-top:12px;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">VeriSigil AI</a>
+  <a href="/" class="nav-back">← Platform</a>
+</nav>
+<main>
+  <h1>Terms of Service</h1>
+  <p class="meta">Last updated: May 2026 · VeriSigil AI · Lagos, Nigeria</p>
+
+  <div class="box">
+    By using VeriSigil AI services, you agree to these terms. Please read them carefully. If you are accessing the API on behalf of an organisation, these terms apply to that organisation.
+  </div>
+
+  <h2>1. The Service</h2>
+  <p>VeriSigil AI provides runtime governance infrastructure for autonomous AI systems via API, SDK, and web platform. This includes the Constitutional Gateway (issue, verify, prove), governance evidence generation, compliance alignment tools, and related developer services.</p>
+
+  <h2>2. Acceptable Use</h2>
+  <p>You may use VeriSigil AI services to:</p>
+  <ul>
+    <li>Govern autonomous AI agent execution in your systems</li>
+    <li>Generate governance evidence for compliance and audit purposes</li>
+    <li>Integrate the SDK into your AI agent frameworks</li>
+    <li>Run sandbox demonstrations and evaluations</li>
+  </ul>
+  <p>You may not use VeriSigil AI services to:</p>
+  <ul>
+    <li>Circumvent or reverse-engineer the governance enforcement mechanisms</li>
+    <li>Fabricate or tamper with governance evidence records</li>
+    <li>Use the platform for illegal purposes or to facilitate harm</li>
+    <li>Resell API access without a written reseller agreement</li>
+    <li>Claim regulatory certification based solely on VeriSigil protocol attestation</li>
+  </ul>
+
+  <h2>3. Compliance Disclaimer</h2>
+  <div class="warn">
+    VeriSigil AI provides governance infrastructure designed to support compliance readiness. Our services are designed to align with EU AI Act requirements, NIST AI RMF, and ISO 42001 governance principles. However, use of VeriSigil AI does not constitute official regulatory certification, government accreditation, or legal compliance verification. You remain responsible for your own regulatory obligations. Consult qualified legal and compliance professionals for definitive regulatory advice.
+  </div>
+
+  <h2>4. API and Service Availability</h2>
+  <p>We aim for high availability but do not guarantee 100% uptime. The service is provided as-is at this stage. We will notify users of planned maintenance where possible. For enterprise SLA requirements, contact <a href="mailto:enterprise@verisigilai.com">enterprise@verisigilai.com</a>.</p>
+
+  <h2>5. Intellectual Property</h2>
+  <p>The VeriSigil platform, Constitutional Charter specification, VSL grammar, and VeriVM architecture are the intellectual property of VeriSigil AI. The VSL grammar specification (govlang.ebnf) is published under CC-BY-4.0. The SDK is published under MIT licence. The hosted runtime verifier remains proprietary.</p>
+
+  <h2>6. Limitation of Liability</h2>
+  <p>VeriSigil AI is not liable for decisions made by AI systems that your organisation operates, regardless of whether those systems use VeriSigil governance infrastructure. Governance tooling is an aid to responsible operation, not a substitute for organisational accountability.</p>
+
+  <h2>7. Changes to Terms</h2>
+  <p>We may update these terms as the platform evolves. We will notify registered users of material changes by email. Continued use of the service after changes constitutes acceptance.</p>
+
+  <h2>8. Contact</h2>
+  <p><a href="mailto:info@verisigilai.com">info@verisigilai.com</a> · VeriSigil AI · Lagos, Nigeria</p>
+</main>
+<footer>
+  <a href="/privacy.html">Privacy Policy</a>
+  <a href="/terms.html">Terms of Service</a>
+  <a href="/responsible-ai.html">Responsible AI</a>
+  <a href="/contact.html">Contact</a>
+  <a href="/">Home</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — VeriSigil AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050E1F;--nav-bg:#0A162D;--s-c:#162031;--border:#1E2A44;--primary:#b4c5ff;--primary-c:#1565ff;--on-pc:#f8f7ff;--on-surface:#d9e2fb;--on-sv:#c2c6d8;--outline:#8c90a1;--outline-v:#424656;--green:#00F5A0;--white:#FFFFFF;--font:'Hanken Grotesk',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--on-surface);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100dvh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(30,42,68,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,42,68,.15) 1px,transparent 1px);background-size:40px 40px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--nav-bg);border-bottom:1px solid var(--border);}
+@media(min-width:768px){nav{padding:0 48px;}}
+.brand{font-size:17px;font-weight:700;color:var(--primary);text-decoration:none;letter-spacing:-.02em;}
+.nav-back{font-family:var(--mono);font-size:11px;color:var(--outline);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .15s;}
+.nav-back:hover{color:var(--primary);}
+main{padding:100px 20px 80px;position:relative;z-index:1;max-width:900px;margin:0 auto;}
+h1{font-size:clamp(26px,4vw,38px);font-weight:700;color:var(--white);letter-spacing:-.02em;margin-bottom:8px;}
+.meta{font-family:var(--mono);font-size:11px;color:var(--outline);margin-bottom:48px;text-transform:uppercase;letter-spacing:.1em;}
+.contact-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:48px;}
+@media(min-width:600px){.contact-grid{grid-template-columns:1fr 1fr;}}
+.contact-card{background:var(--s-c);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color .2s;}
+.contact-card:hover{border-color:rgba(180,197,255,.35);}
+.cc-label{font-family:var(--mono);font-size:10px;color:var(--outline);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;}
+.cc-title{font-size:15px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.cc-desc{font-size:13px;color:var(--on-sv);line-height:1.6;margin-bottom:14px;}
+.cc-link{font-family:var(--mono);font-size:12px;color:var(--primary);text-decoration:none;transition:color .15s;}
+.cc-link:hover{text-decoration:underline;}
+.founder-card{background:var(--nav-bg);border:1px solid var(--border);border-radius:12px;padding:28px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:40px;}
+.founder-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary-c),rgba(21,101,255,.6));border:2px solid rgba(180,197,255,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.founder-av span{font-family:var(--mono);font-size:16px;font-weight:700;color:#fff;}
+.founder-name{font-size:16px;font-weight:700;color:var(--white);margin-bottom:3px;}
+.founder-role{font-family:var(--mono);font-size:11px;color:var(--outline);margin-bottom:8px;}
+.founder-bio{font-size:14px;color:var(--on-sv);line-height:1.7;}
+.api-note{background:rgba(0,245,160,.04);border:1px solid rgba(0,245,160,.2);border-radius:10px;padding:20px 24px;margin-top:40px;}
+.api-note-label{font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;}
+.api-note p{font-size:14px;color:var(--on-sv);line-height:1.7;}
+.api-note a{color:var(--green);}
+footer{border-top:1px solid var(--border);padding:28px 20px;text-align:center;position:relative;z-index:1;margin-top:60px;}
+footer a{font-family:var(--mono);font-size:10px;color:var(--outline);text-decoration:none;margin:0 10px;transition:color .15s;}
+footer a:hover{color:var(--primary);}
+footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-top:12px;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">VeriSigil AI</a>
+  <a href="/" class="nav-back">← Platform</a>
+</nav>
+<main>
+  <h1>Contact VeriSigil AI</h1>
+  <p class="meta">Lagos, Nigeria · verisigilai.com</p>
+
+  <!-- Founder -->
+  <div class="founder-card">
+    <div class="founder-av"><span>RL</span></div>
+    <div>
+      <div class="founder-name">Raheem Larry Babatunde</div>
+      <div class="founder-role">Founder &amp; CEO · VeriSigil AI</div>
+      <p class="founder-bio">Building constitutional runtime infrastructure for autonomous AI systems. Every consequential AI action should satisfy runtime admissibility before execution.</p>
+    </div>
+  </div>
+
+  <!-- Contact cards -->
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="cc-label">Enterprise Enquiries</div>
+      <div class="cc-title">Pilots &amp; Partnerships</div>
+      <p class="cc-desc">For enterprise pilot discussions, architecture reviews, and commercial partnerships.</p>
+      <a href="mailto:enterprise@verisigilai.com" class="cc-link">enterprise@verisigilai.com</a>
+    </div>
+    <div class="contact-card">
+      <div class="cc-label">General</div>
+      <div class="cc-title">Questions &amp; Feedback</div>
+      <p class="cc-desc">General questions about the platform, press enquiries, and researcher access.</p>
+      <a href="mailto:info@verisigilai.com" class="cc-link">info@verisigilai.com</a>
+    </div>
+    <div class="contact-card">
+      <div class="cc-label">Security</div>
+      <div class="cc-title">Responsible Disclosure</div>
+      <p class="cc-desc">Security vulnerabilities, responsible disclosure, and security architecture enquiries.</p>
+      <a href="mailto:security@verisigilai.com" class="cc-link">security@verisigilai.com</a>
+    </div>
+    <div class="contact-card">
+      <div class="cc-label">Regulatory &amp; Standards</div>
+      <div class="cc-title">Governance Researchers</div>
+      <p class="cc-desc">Standards bodies, regulators, and AI governance researchers discussing the constitutional model.</p>
+      <a href="mailto:info@verisigilai.com" class="cc-link">info@verisigilai.com</a>
+    </div>
+  </div>
+
+  <div class="api-note">
+    <div class="api-note-label">Developer Access</div>
+    <p>API documentation is live at <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">verisigil-api-production.up.railway.app/docs</a>. Start with the sandbox at <a href="/sandbox_demo.html">verisigilai.com/sandbox_demo.html</a> — no account needed. For API keys and enterprise access, contact <a href="mailto:enterprise@verisigilai.com">enterprise@verisigilai.com</a>.</p>
+  </div>
+</main>
+<footer>
+  <a href="/privacy.html">Privacy Policy</a>
+  <a href="/terms.html">Terms of Service</a>
+  <a href="/responsible-ai.html">Responsible AI</a>
+  <a href="/contact.html">Contact</a>
+  <a href="/">Home</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsible AI Statement — VeriSigil AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050E1F;--nav-bg:#0A162D;--border:#1E2A44;--primary:#b4c5ff;--primary-c:#1565ff;--on-surface:#d9e2fb;--on-sv:#c2c6d8;--outline:#8c90a1;--outline-v:#424656;--green:#00F5A0;--white:#FFFFFF;--font:'Hanken Grotesk',system-ui,sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--on-surface);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100dvh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(30,42,68,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,42,68,.15) 1px,transparent 1px);background-size:40px 40px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--nav-bg);border-bottom:1px solid var(--border);}
+@media(min-width:768px){nav{padding:0 48px;}}
+.brand{font-size:17px;font-weight:700;color:var(--primary);text-decoration:none;letter-spacing:-.02em;}
+.nav-back{font-family:var(--mono);font-size:11px;color:var(--outline);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .15s;}
+.nav-back:hover{color:var(--primary);}
+main{padding:100px 20px 80px;position:relative;z-index:1;max-width:760px;margin:0 auto;}
+h1{font-size:clamp(26px,4vw,38px);font-weight:700;color:var(--white);letter-spacing:-.02em;margin-bottom:8px;}
+.meta{font-family:var(--mono);font-size:11px;color:var(--outline);margin-bottom:40px;text-transform:uppercase;letter-spacing:.1em;}
+h2{font-size:17px;font-weight:700;color:var(--white);margin:36px 0 12px;padding-top:24px;border-top:1px solid var(--border);}
+p{font-size:15px;color:var(--on-sv);line-height:1.8;margin-bottom:14px;}
+ul{padding-left:20px;margin-bottom:14px;}
+li{font-size:15px;color:var(--on-sv);line-height:1.8;margin-bottom:6px;}
+a{color:var(--primary);}
+.principle{background:var(--nav-bg);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:12px;display:flex;gap:16px;align-items:flex-start;}
+.principle-num{font-family:var(--mono);font-size:11px;color:var(--green);background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.2);padding:4px 10px;border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.principle h3{font-size:15px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.principle p{font-size:14px;color:var(--on-sv);line-height:1.7;margin-bottom:0;}
+footer{border-top:1px solid var(--border);padding:28px 20px;text-align:center;position:relative;z-index:1;margin-top:60px;}
+footer a{font-family:var(--mono);font-size:10px;color:var(--outline);text-decoration:none;margin:0 10px;transition:color .15s;}
+footer a:hover{color:var(--primary);}
+footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-top:12px;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">VeriSigil AI</a>
+  <a href="/" class="nav-back">← Platform</a>
+</nav>
+<main>
+  <h1>Responsible AI Statement</h1>
+  <p class="meta">VeriSigil AI · May 2026 · Lagos, Nigeria</p>
+
+  <p>VeriSigil AI was founded on the principle that governance should be infrastructure — not afterthought. This statement describes how we apply that principle to our own operations and to the tools we build.</p>
+
+  <h2>Our Core Principles</h2>
+
+  <div class="principle">
+    <span class="principle-num">01</span>
+    <div><h3>Human Sovereignty is Non-Negotiable</h3><p>We build systems where humans remain the final authority on consequential decisions. Eight categories of decisions are constitutionally reserved for human authority in our platform — employment, medical treatment, legal prosecution, military action, and others. This is architectural, not configurable.</p></div>
+  </div>
+
+  <div class="principle">
+    <span class="principle-num">02</span>
+    <div><h3>Governance Before Execution</h3><p>Our constitutional model requires that AI systems satisfy admissibility checks before taking consequential actions — not after. We do not build monitoring tools that observe harm after it occurs. We build execution gates that prevent unauthorised action before it happens.</p></div>
+  </div>
+
+  <div class="principle">
+    <span class="principle-num">03</span>
+    <div><h3>Transparency Through Evidence</h3><p>Every governance decision made through VeriSigil infrastructure generates a cryptographically sealed evidence record. These records are independently verifiable offline — they do not require trusting VeriSigil. We believe governance evidence should outlive the platform that generated it.</p></div>
+  </div>
+
+  <div class="principle">
+    <span class="principle-num">04</span>
+    <div><h3>Honest Claims</h3><p>We align with EU AI Act, NIST AI RMF, and ISO 42001 governance principles. We do not claim official regulatory certification. Our protocol attestation is independent validation of governance behaviour — not government accreditation. We say this clearly and consistently.</p></div>
+  </div>
+
+  <div class="principle">
+    <span class="principle-num">05</span>
+    <div><h3>No Weapons, No Harm Amplification</h3><p>VeriSigil AI does not provide services designed to amplify lethal autonomous systems, surveillance without consent, or systems designed to cause harm. We reserve the right to refuse access to any use case that conflicts with this principle.</p></div>
+  </div>
+
+  <div class="principle">
+    <span class="principle-num">06</span>
+    <div><h3>Accountability Continuity</h3><p>We build governance infrastructure designed to function even if VeriSigil ceases to operate. Evidence bundles are offline-verifiable. The VSL grammar is open. The Constitutional Charter is published under DOI. Your governance record does not depend on our survival.</p></div>
+  </div>
+
+  <h2>About This Statement</h2>
+  <p>This statement reflects our current principles and practices. We will update it as the platform and company evolve. We welcome feedback from researchers, regulators, and enterprise partners.</p>
+  <p>Contact: <a href="mailto:info@verisigilai.com">info@verisigilai.com</a></p>
+
+  <h2>Published Standards</h2>
+  <ul>
+    <li>VGS-ELI Specification: <a href="https://doi.org/10.5281/zenodo.20451306" target="_blank">doi.org/10.5281/zenodo.20451306</a></li>
+    <li>VSL Grammar (govlang.ebnf): CC-BY-4.0 — open standard</li>
+    <li>SDK: MIT licence — <a href="https://github.com/raheem-verisigil/verisigil-api" target="_blank">github.com/raheem-verisigil/verisigil-api</a></li>
+  </ul>
+</main>
+<footer>
+  <a href="/privacy.html">Privacy Policy</a>
+  <a href="/terms.html">Terms of Service</a>
+  <a href="/responsible-ai.html">Responsible AI</a>
+  <a href="/contact.html">Contact</a>
+  <a href="/">Home</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
+</footer>
+</body>
+</html>

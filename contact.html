@@ -45,9 +45,36 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
 </head>
 <body>
 <nav>
-  <a href="/" class="brand">VeriSigil AI</a>
-  <a href="/" class="nav-back">← Platform</a>
+  <a href="/" class="nav-logo">
+    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'" style="height:38px;width:auto;object-fit:contain;">
+    <span class="nav-logo-name">VeriSigil AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/scanner.html" class="live-badge">⚡ Scanner</a>
+    <a href="/sandbox_demo.html">Sandbox</a>
+    <a href="/demos.html">Demos</a>
+    <a href="/studio.html">Studio</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs</a>
+  </div>
+  <div class="nav-right">
+    <a href="/auth.html" class="nav-signin">Sign In</a>
+    <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+
+<div id="mob-menu">
+  <a href="/scanner.html" style="color:var(--cyan);" onclick="toggleMenu()">⚡ Scanner</a>
+  <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
+  <a href="/demos.html" onclick="toggleMenu()">Demos</a>
+  <a href="/studio.html" onclick="toggleMenu()">Studio</a>
+  <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
+  <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
+  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);border:1px solid var(--cyan);padding:10px 28px;border-radius:5px;">Get Started →</a>
+</div>
 <main>
   <h1>Contact VeriSigil AI</h1>
   <p class="meta">Lagos, Nigeria · verisigilai.com</p>
@@ -68,7 +95,7 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
       <div class="cc-label">Enterprise Enquiries</div>
       <div class="cc-title">Pilots &amp; Partnerships</div>
       <p class="cc-desc">For enterprise pilot discussions, architecture reviews, and commercial partnerships.</p>
-      <a href="mailto:enterprise@verisigilai.com" class="cc-link">enterprise@verisigilai.com</a>
+      <a href="mailto:info@verisigilai.com" class="cc-link">info@verisigilai.com</a>
     </div>
     <div class="contact-card">
       <div class="cc-label">General</div>
@@ -80,7 +107,7 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
       <div class="cc-label">Security</div>
       <div class="cc-title">Responsible Disclosure</div>
       <p class="cc-desc">Security vulnerabilities, responsible disclosure, and security architecture enquiries.</p>
-      <a href="mailto:security@verisigilai.com" class="cc-link">security@verisigilai.com</a>
+      <a href="mailto:info@verisigilai.com" class="cc-link">info@verisigilai.com</a>
     </div>
     <div class="contact-card">
       <div class="cc-label">Regulatory &amp; Standards</div>
@@ -92,7 +119,7 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
 
   <div class="api-note">
     <div class="api-note-label">Developer Access</div>
-    <p>API documentation is live at <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">verisigil-api-production.up.railway.app/docs</a>. Start with the sandbox at <a href="/sandbox_demo.html">verisigilai.com/sandbox_demo.html</a> — no account needed. For API keys and enterprise access, contact <a href="mailto:enterprise@verisigilai.com">enterprise@verisigilai.com</a>.</p>
+    <p>API documentation is live at <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">verisigil-api-production.up.railway.app/docs</a>. Start with the sandbox at <a href="/sandbox_demo.html">verisigilai.com/sandbox_demo.html</a> — no account needed. For API keys and enterprise access, contact <a href="mailto:info@verisigilai.com">info@verisigilai.com</a>.</p>
   </div>
 </main>
 <footer>
@@ -103,5 +130,8 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
   <a href="/">Home</a>
   <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
 </footer>
+<script>
+function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+</script>
 </body>
 </html>

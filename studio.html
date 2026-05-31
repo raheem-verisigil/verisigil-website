@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil Studio — Governance Policy Builder</title>
+<meta name="description" content="VeriSigil Studio: Build, test, and deploy governance policies visually. Map authority flows, define consequence tiers, and simulate governance decisions — no code required.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05071a;--bg2:#080c26;--card:#0d1235;--card2:#111840;--border:rgba(0,240,255,.1);--border2:rgba(0,240,255,.05);--cyan:#00f0ff;--purple:#7b5cff;--white:#fff;--text:#d8e6ff;--muted:#6a7fa8;--green:#00f5a0;--red:#ff9090;--amber:#f59e0b;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,240,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);background-size:64px 64px;}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(5,7,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo img{height:38px;width:auto;object-fit:contain;}
+.nav-logo-name{font-family:var(--orb);font-size:1rem;font-weight:700;color:var(--cyan);letter-spacing:.04em;}
+.nav-links{display:none;align-items:center;gap:4px;}
+@media(min-width:768px){.nav-links{display:flex;}}
+.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:all .2s;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-links a.active{color:var(--cyan);background:rgba(0,240,255,.06);}
+.nav-links a.live-badge{color:var(--cyan);border:1px solid rgba(0,240,255,.2);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-signin{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .2s;}
+.nav-signin:hover{color:var(--cyan);}
+.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;transition:opacity .15s;text-transform:uppercase;letter-spacing:.06em;}
+.nav-cta:hover{opacity:.88;}
+.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--muted);}
+@media(min-width:768px){.hamburger{display:none;}}
+#mob-menu{display:none;position:fixed;inset:0;z-index:90;padding-top:68px;background:rgba(5,7,26,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+#mob-menu.open{display:flex;}
+#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;transition:color .15s;}
+#mob-menu a:hover{color:var(--cyan);}
+/* MAIN */
+main{padding:88px 5vw 80px;position:relative;z-index:1;max-width:1100px;margin:0 auto;}
+.page-label{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:12px;}
+h1{font-family:var(--orb);font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--white);letter-spacing:-.01em;margin-bottom:10px;line-height:1.1;}
+.page-sub{font-size:1rem;color:var(--muted);line-height:1.75;max-width:600px;margin-bottom:40px;}
+/* STUDIO TOOL GRID */
+.studio-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:700px){.studio-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:1000px){.studio-grid{grid-template-columns:1fr 1fr 1fr;}}
+.tool-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:24px;text-decoration:none;display:flex;flex-direction:column;gap:12px;transition:all .22s;position:relative;overflow:hidden;}
+.tool-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));opacity:0;transition:opacity .22s;}
+.tool-card:hover{border-color:rgba(0,240,255,.3);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.4);}
+.tool-card:hover::after{opacity:1;}
+.tool-icon{font-size:1.6rem;}
+.tool-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(0,240,255,.45);}
+.tool-name{font-size:.95rem;font-weight:700;color:var(--white);}
+.tool-desc{font-size:.8rem;color:var(--muted);line-height:1.65;flex:1;}
+.tool-status{font-family:var(--mono);font-size:.6rem;padding:3px 8px;border-radius:3px;align-self:flex-start;text-transform:uppercase;letter-spacing:.08em;}
+.tool-status.live{color:var(--green);background:rgba(0,245,160,.07);border:1px solid rgba(0,245,160,.18);}
+.tool-status.beta{color:var(--amber);background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);}
+.tool-status.soon{color:var(--muted);background:rgba(106,127,168,.07);border:1px solid rgba(106,127,168,.18);}
+.tool-ep{font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.35);background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.1);padding:3px 8px;border-radius:3px;align-self:flex-start;}
+/* POLICY BUILDER */
+.builder-section{margin-top:48px;}
+h2{font-size:1.3rem;font-weight:700;color:var(--white);letter-spacing:-.01em;margin-bottom:6px;}
+.builder-desc{font-size:.88rem;color:var(--muted);margin-bottom:24px;line-height:1.65;}
+.builder-box{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.builder-bar{background:rgba(8,12,40,.9);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.builder-bar-title{font-family:var(--mono);font-size:.65rem;color:var(--muted);}
+.builder-badge{font-family:var(--mono);font-size:.58rem;color:var(--green);background:rgba(0,245,160,.08);border:1px solid rgba(0,245,160,.2);padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.08em;}
+.builder-body{padding:20px;display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:700px){.builder-body{grid-template-columns:1fr 1fr;}}
+.field-group{display:flex;flex-direction:column;gap:6px;}
+.field-label{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);}
+.field-select,.field-input{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:6px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:.75rem;outline:none;width:100%;transition:border-color .15s;}
+.field-select:focus,.field-input:focus{border-color:rgba(0,240,255,.35);}
+.field-select option{background:#0d1235;}
+.run-btn{grid-column:1/-1;background:var(--cyan);color:#05071a;font-family:var(--font);font-weight:700;font-size:.85rem;padding:12px;border-radius:7px;border:none;cursor:pointer;transition:opacity .15s;text-transform:uppercase;letter-spacing:.06em;}
+.run-btn:hover{opacity:.88;}
+.result-box{grid-column:1/-1;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:7px;padding:16px;font-family:var(--mono);font-size:.72rem;line-height:2;min-height:80px;display:none;}
+.result-box.show{display:block;}
+.r-key{color:var(--muted);}
+.r-val{color:var(--text);}
+.r-val.green{color:var(--green);font-weight:700;}
+.r-val.red{color:var(--red);font-weight:700;}
+.r-val.amber{color:var(--amber);font-weight:700;}
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 5vw;text-align:center;position:relative;z-index:1;margin-top:60px;}
+footer a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;margin:0 10px;transition:color .15s;}
+footer a:hover{color:var(--cyan);}
+footer p{font-family:var(--mono);font-size:.6rem;color:rgba(106,127,168,.3);margin-top:10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid rgba(0,240,255,.15);border-top-color:var(--cyan);border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'">
+    <span class="nav-logo-name">VeriSigil AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/scanner.html" class="live-badge">⚡ Scanner</a>
+    <a href="/sandbox_demo.html">Sandbox</a>
+    <a href="/demos.html">Demos</a>
+    <a href="/studio.html" class="active">Studio</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs</a>
+  </div>
+  <div class="nav-right">
+    <a href="/auth.html" class="nav-signin">Sign In</a>
+    <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div id="mob-menu">
+  <a href="/scanner.html" style="color:var(--cyan);" onclick="toggleMenu()">⚡ Scanner</a>
+  <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
+  <a href="/demos.html" onclick="toggleMenu()">Demos</a>
+  <a href="/studio.html" onclick="toggleMenu()">Studio</a>
+  <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
+  <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
+  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);border:1px solid var(--cyan);padding:10px 28px;border-radius:5px;">Get Started →</a>
+</div>
+
+<main>
+  <!-- Header -->
+  <div class="page-label">VeriSigil Studio · Governance Policy Builder</div>
+  <h1>Build. Test. Deploy<br>Governance Policies.</h1>
+  <p class="page-sub">Visual tools for defining authority flows, consequence tiers, and governance policies — then test them live against the production API. No code required for the basics.</p>
+
+  <!-- Tool Grid -->
+  <div class="studio-grid">
+
+    <a href="/scanner.html" class="tool-card">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-label">Phase 0 Tool</div>
+      <div class="tool-name">Shadow AI Scanner</div>
+      <div class="tool-desc">Scan your environment for autonomous decision flows operating without governance. See your Governance Coverage Score instantly.</div>
+      <div class="tool-status live">Live</div>
+      <div class="tool-ep">POST /v1/scanner/shadow-ai</div>
+    </a>
+
+    <a href="/scanner.html" class="tool-card">
+      <div class="tool-icon">📋</div>
+      <div class="tool-label">Phase 0 Tool</div>
+      <div class="tool-name">Workflow Readiness Scanner</div>
+      <div class="tool-desc">Pre-deployment evaluation. Scan any AI workflow for Governance Debt — undefined authority, missing escalation paths, unclear consequence ownership.</div>
+      <div class="tool-status live">Live</div>
+      <div class="tool-ep">POST /v1/scanner/workflow-readiness</div>
+    </a>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-icon">🗺️</div>
+      <div class="tool-label">Layer 1 Tool · Coming Q4 2026</div>
+      <div class="tool-name">Authority Topology Builder</div>
+      <div class="tool-desc">Visual drag-and-drop builder for human authority graphs. Map who can decide what, under which conditions, at which consequence tier. Export as signed authority manifest.</div>
+      <div class="tool-status beta">Q4 2026</div>
+      <div class="tool-ep">POST /v1/authority/topology</div>
+    </div>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-icon">⚡</div>
+      <div class="tool-label">Layer 2 Tool · Coming Q4 2026</div>
+      <div class="tool-name">Consequence Tier Classifier</div>
+      <div class="tool-desc">Visual tool to classify AI actions into governance tiers: Advisory · Operational · Critical · Emergency. Configure enforcement rules per tier. Test classification live.</div>
+      <div class="tool-status beta">Q4 2026</div>
+      <div class="tool-ep">POST /v1/consequence/classify</div>
+    </div>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-icon">📜</div>
+      <div class="tool-label">Layer 1 Tool · Coming Q1 2027</div>
+      <div class="tool-name">Policy Compiler</div>
+      <div class="tool-desc">Write governance rules in plain language. The compiler translates them into machine-enforceable governance logic. "HR managers can approve hires under $100K."</div>
+      <div class="tool-status soon">Q1 2027</div>
+      <div class="tool-ep">POST /v1/policy/compile</div>
+    </div>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-icon">🔗</div>
+      <div class="tool-label">Layer 1 Tool · Coming Q1 2027</div>
+      <div class="tool-name">Decision Chain Validator (DCG)</div>
+      <div class="tool-desc">Visual validator for multi-step decision chains. Ensure authority integrity across: Detect → Escalate → Dispatch → Execute. Cryptographic seal on coordination chain.</div>
+      <div class="tool-status soon">Q1 2027</div>
+      <div class="tool-ep">POST /v1/dcg/validate</div>
+    </div>
+
+    <a href="/replay_demo.html" class="tool-card">
+      <div class="tool-icon">▶️</div>
+      <div class="tool-label">Layer 4 Tool</div>
+      <div class="tool-name">Governance Replay Engine</div>
+      <div class="tool-desc">Replay any past governance decision with full audit context. See exactly what authority was invoked, what the gate decided, and what evidence was sealed.</div>
+      <div class="tool-status live">Live</div>
+      <div class="tool-ep">GET /v1/chain/replay/{execution_id}</div>
+    </a>
+
+    <a href="/dashboard.html" class="tool-card">
+      <div class="tool-icon">📊</div>
+      <div class="tool-label">Analytics Tool</div>
+      <div class="tool-name">Governance Quality Dashboard</div>
+      <div class="tool-desc">Escalation quality, refusal accuracy, authority drift, policy alignment. Continuous governance evaluation — not just point-in-time compliance monitoring.</div>
+      <div class="tool-status live">Live</div>
+      <div class="tool-ep">GET /v1/analytics/governance-quality</div>
+    </a>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-icon">🚨</div>
+      <div class="tool-label">Layer 3 Tool · Coming Q1 2027</div>
+      <div class="tool-name">Emergency Governance Console</div>
+      <div class="tool-desc">Activate Emergency Governance Mode, issue Break-Glass overrides, and track mandatory post-hoc reconciliation. Designed for industrial, healthcare, and defense operations.</div>
+      <div class="tool-status soon">Q1 2027</div>
+      <div class="tool-ep">POST /v1/emergency/break-glass</div>
+    </div>
+
+  </div>
+
+  <!-- Live Policy Builder -->
+  <div class="builder-section">
+    <h2>Consequence Tier Classifier · Live</h2>
+    <p class="builder-desc">Classify any AI action into its consequence tier instantly. The API tells you exactly what governance applies — Advisory, Operational, Critical, or Emergency.</p>
+
+    <div class="builder-box">
+      <div class="builder-bar">
+        <span class="builder-bar-title">consequence_classifier.sh · Live API</span>
+        <span class="builder-badge">Live</span>
+      </div>
+      <div class="builder-body">
+        <div class="field-group">
+          <label class="field-label">Action Type</label>
+          <select class="field-select" id="action-type">
+            <option value="wire_transfer">Wire Transfer (Financial)</option>
+            <option value="medical_treatment_change">Medical Treatment Change</option>
+            <option value="terminate_employment">Terminate Employment</option>
+            <option value="generate_compliance_report">Generate Compliance Report</option>
+            <option value="contract_execution">Contract Execution</option>
+            <option value="infrastructure_shutdown">Infrastructure Shutdown</option>
+            <option value="approval_routing">Approval Routing</option>
+            <option value="data_retrieval">Data Retrieval</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Amount (USD, if financial)</label>
+          <input class="field-input" type="number" id="amount" placeholder="e.g. 250000">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Affects Humans Directly?</label>
+          <select class="field-select" id="affects-humans">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Action Reversible?</label>
+          <select class="field-select" id="reversible">
+            <option value="true">Yes</option>
+            <option value="false">No (irreversible)</option>
+          </select>
+        </div>
+        <button class="run-btn" onclick="classifyConsequence()" id="classify-btn">
+          Classify Action →
+        </button>
+        <div class="result-box" id="classify-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="margin-top:48px;background:linear-gradient(135deg,rgba(0,240,255,.06),rgba(123,92,255,.06));border:1px solid rgba(0,240,255,.18);border-radius:12px;padding:36px;text-align:center;">
+    <div style="font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:12px;">Enterprise Pilot · 30 Days</div>
+    <h2 style="font-size:1.4rem;margin-bottom:10px;">Ready to build your governance layer?</h2>
+    <p style="font-size:.88rem;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.7;">Start with the free scanners. Map your authority topology. Deploy the runtime gateway. The Studio tools grow with your governance maturity.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+      <a href="/scanner.html" style="font-family:var(--font);font-weight:700;font-size:.82rem;background:var(--cyan);color:#05071a;padding:12px 28px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Scan Your Org Free</a>
+      <a href="/sandbox_demo.html" style="font-family:var(--font);font-weight:600;font-size:.82rem;border:1px solid rgba(0,240,255,.3);color:var(--cyan);padding:11px 24px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.background='rgba(0,240,255,.08)'" onmouseout="this.style.background='transparent'">Watch Live Demo</a>
+      <a href="mailto:enterprise@verisigilai.com" style="font-family:var(--mono);font-size:.72rem;border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:11px 20px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Book Enterprise Demo</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <a href="/">Home</a>
+  <a href="/scanner.html">Scanner</a>
+  <a href="/sandbox_demo.html">Sandbox</a>
+  <a href="/demos.html">Demos</a>
+  <a href="/pricing.html">Pricing</a>
+  <a href="/contact.html">Contact</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/terms.html">Terms</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
+</footer>
+
+<script>
+function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+
+const API='https://verisigil-api-production.up.railway.app';
+const KEY='verisigil-secret-2026';
+
+async function classifyConsequence(){
+  var btn=document.getElementById('classify-btn');
+  var res=document.getElementById('classify-result');
+  btn.innerHTML='<span class="spinner"></span>Classifying...';
+  btn.disabled=true;
+
+  var action   = document.getElementById('action-type').value;
+  var amount   = parseFloat(document.getElementById('amount').value)||0;
+  var affects  = document.getElementById('affects-humans').value==='true';
+  var reversible=document.getElementById('reversible').value==='true';
+
+  var data=null,live=false;
+  try{
+    var r=await fetch(API+'/v1/consequence/classify',{
+      method:'POST',
+      headers:{'x-api-key':KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({action_type:action,amount:amount||null,affects_humans:affects,reversible:reversible,jurisdiction:'EU'})
+    });
+    data=await r.json();
+    live=true;
+  }catch(e){
+    // Simulate
+    var tier='ADVISORY';
+    if(affects||amount>100000)tier='CRITICAL';
+    else if(['terminate_employment','medical_treatment_change','infrastructure_shutdown'].includes(action))tier='EMERGENCY';
+    else if(amount>10000||action==='contract_execution')tier='OPERATIONAL';
+    if(!reversible&&tier!=='EMERGENCY')tier='CRITICAL';
+    data={consequence_tier:tier,enforcement:tier==='ADVISORY'?'ALLOW':tier==='OPERATIONAL'?'ALLOW':'DENY',governance_required:{gate:tier!=='ADVISORY',evidence:tier!=='ADVISORY',human:tier==='CRITICAL'||tier==='EMERGENCY'}};
+  }
+
+  var t=data.consequence_tier||'UNKNOWN';
+  var tColor=t==='ADVISORY'?'green':t==='OPERATIONAL'?'':t==='CRITICAL'?'amber':'red';
+  var enf=data.enforcement||'REQUIRE_HUMAN';
+  var enfColor=enf==='ALLOW'?'green':enf==='DENY'?'red':'amber';
+  var gr=data.governance_required||{};
+
+  res.innerHTML=
+    '<div><span class="r-key">consequence_tier:   </span><span class="r-val '+tColor+'">'+t+'</span></div>'+
+    '<div><span class="r-key">enforcement:        </span><span class="r-val '+enfColor+'">'+enf+'</span></div>'+
+    '<div><span class="r-key">gate_required:      </span><span class="r-val '+(gr.gate?'amber':'green')+'">'+(gr.gate?'YES':'NO')+'</span></div>'+
+    '<div><span class="r-key">evidence_required:  </span><span class="r-val '+(gr.evidence?'amber':'green')+'">'+(gr.evidence?'YES':'NO')+'</span></div>'+
+    '<div><span class="r-key">human_required:     </span><span class="r-val '+(gr.human?'red':'green')+'">'+(gr.human?'YES — EU AI Act Art.14':'NO')+'</span></div>'+
+    '<div><span class="r-key">api_source:         </span><span class="r-val">'+(live?'LIVE PRODUCTION':'SIMULATION')+'</span></div>';
+  res.classList.add('show');
+  btn.innerHTML='Classify Another →';
+  btn.disabled=false;
+}
+</script>
+</body>
+</html>

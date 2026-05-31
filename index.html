@@ -458,12 +458,16 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);
     Operational Governance<br>Infrastructure for<br><span class="grad">Autonomous Enterprise AI.</span>
   </h1>
   <p class="hero-sub reveal" style="transition-delay:.12s">
-    Bridge the gap from AI demo to production operation. Govern authority, enforce workflows, seal evidence, resolve reliance.
+    Prevent unauthorized AI actions before they reach production.
   </p>
   <p class="hero-tension reveal" style="transition-delay:.16s">
     
   </p>
-  <p style="font-size:.86rem;color:rgba(106,127,168,.6);max-width:500px;margin:0 auto 22px;line-height:1.65;font-style:italic;" class="reveal" style="transition-delay:.15s">
+  <div style="display:flex;flex-direction:column;gap:4px;margin:0 auto 20px;max-width:420px;text-align:left;" class="reveal" style="transition-delay:.13s">
+    <p style="font-size:.95rem;color:var(--text);line-height:1.5;font-weight:500;">Define authority. Enforce execution.</p>
+    <p style="font-size:.95rem;color:var(--text);line-height:1.5;font-weight:500;">Resolve reliance. Prove legitimacy across domains.</p>
+  </div>
+  <p style="font-size:.82rem;color:rgba(106,127,168,.55);max-width:500px;margin:0 auto 18px;line-height:1.6;font-style:italic;" class="reveal" style="transition-delay:.15s">
     Verification proves the receipt is real. Reliance determines what your domain can do with it.
   </p>
   <div style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:26px;" class="reveal" style="transition-delay:.17s">
@@ -600,7 +604,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);
             <div style="font-size:.9rem;font-weight:600;color:var(--white);">Shadow AI Governance Scanner</div>
             <span style="font-family:var(--mono);font-size:.55rem;color:var(--cyan);background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.2);padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.08em;">Free</span>
           </div>
-          <div style="font-size:.8rem;color:var(--muted);line-height:1.65;margin-bottom:10px;">Scan your environment for autonomous decision flows without governance. Receive a Governance Coverage Score — what percentage of your AI decisions are governed, observable, or shadow. The question regulators will ask: <em style="color:var(--text);">"Did you know?"</em></div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.65;margin-bottom:10px;">Scan your environment for autonomous decision flows without governance. Free · No installation · Results in 60 seconds. Receive a Governance Coverage Score — governed, observable, shadow. The question regulators will ask: <em style="color:var(--text);">"Did you know?"</em></div>
           <div style="display:flex;flex-wrap:wrap;gap:7px;">
             <span style="font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.45);background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.1);padding:2px 8px;border-radius:3px;">POST /v1/scanner/shadow-ai</span>
             <span style="font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.45);background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.1);padding:2px 8px;border-radius:3px;">GET /v1/score/governance-posture</span>
@@ -641,6 +645,39 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);
       </div>
     </div>
 
+
+    <!-- OBSERVE / INTERVENE / HALT -->
+    <div style="background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.12);border-radius:10px;padding:24px;margin-bottom:40px;" class="reveal" style="transition-delay:.16s">
+      <div style="font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.15em;color:var(--cyan);margin-bottom:12px;">Human Sovereignty · Not Symbolic Oversight</div>
+      <h3 style="font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:6px;">Can humans actually stop the system?</h3>
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:18px;line-height:1.65;">VeriSigil enforces three levels of executable human authority. No rubber-stamping. No theatre. Only enforced human control.</p>
+      <div style="display:grid;grid-template-columns:1fr;gap:10px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:8px;">
+          <span style="font-size:1.2rem;flex-shrink:0;margin-top:2px;">👁️</span>
+          <div>
+            <div style="font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--cyan);margin-bottom:3px;">OBSERVE</div>
+            <div style="font-size:.8rem;color:var(--muted);line-height:1.55;">View full decision context and audit trail. Human sees every parameter before execution. Advisory consequence tier.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:8px;">
+          <span style="font-size:1.2rem;flex-shrink:0;margin-top:2px;">✋</span>
+          <div>
+            <div style="font-family:var(--mono);font-size:.72rem;font-weight:700;color:#f59e0b;margin-bottom:3px;">INTERVENE</div>
+            <div style="font-size:.8rem;color:var(--muted);line-height:1.55;">Modify the execution path before it proceeds. Human changes parameters, sealed with cryptographic receipt. Operational and High consequence tiers.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(255,144,144,.04);border:1px solid rgba(255,144,144,.18);border-radius:8px;">
+          <span style="font-size:1.2rem;flex-shrink:0;margin-top:2px;">🛑</span>
+          <div>
+            <div style="font-family:var(--mono);font-size:.72rem;font-weight:700;color:#ff9090;margin-bottom:3px;">HALT</div>
+            <div style="font-size:.8rem;color:var(--muted);line-height:1.55;">Cryptographic veto — execution stops. Immutable override receipt issued. EU AI Act Article 14 compliant. Critical and Emergency consequence tiers.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;text-align:right;">
+        <a href="/substrate.html" style="font-family:var(--mono);font-size:.65rem;color:var(--cyan);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;">See HSEA Architecture →</a>
+      </div>
+    </div>
     <!-- 5 CORE LAYERS -->
     <div class="s-tag reveal">Five Core Governance Layers · Click to Explore</div>
     <h2 class="s-title reveal" style="transition-delay:.06s">Which governance layer do you need?</h2>
@@ -1050,7 +1087,17 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);
         </a>
 
       </div>
-    </div>
+    
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:1.2rem;">⚡</span>
+            <div style="font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);">Energy &amp; Utilities</div>
+          </div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:6px;">Emergency override governance for critical infrastructure AI</div>
+          <div style="font-size:.78rem;color:var(--muted);line-height:1.6;">Emergency Governance Mode with Break-Glass overrides. Grid management, predictive maintenance, and safety-critical AI — governed with mandatory post-hoc reconciliation.</div>
+          <div style="margin-top:10px;font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.35);">POST /v1/emergency/governance/extended</div>
+        </div>
+      </div>
   </div>
 </section>
 
@@ -1100,6 +1147,104 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);
   </div>
 </section>
 
+
+
+<!-- ── HOW IT WORKS + ENTERPRISE ADOPTION ────── -->
+<section class="section">
+  <div class="s-inner">
+    <div class="s-tag reveal">How It Works · 4 Steps · 30 Days to Production</div>
+    <h2 class="s-title reveal" style="transition-delay:.06s">Govern AI Workflows, Not Just Models.</h2>
+    <p class="s-sub reveal" style="transition-delay:.09s">Procurement teams think in workflows. VeriSigil speaks that language — from discovery to production-ready governance in four stages.</p>
+    <div class="s-divider reveal"></div>
+
+    <!-- 4-Step How It Works -->
+    <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:44px;" class="reveal" style="transition-delay:.12s">
+
+      <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:10px;padding:18px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:rgba(0,240,255,.25);flex-shrink:0;min-width:28px;">1</div>
+        <div>
+          <div style="font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:4px;">Map Decision Authority</div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.65;">Define who — or what — can approve, escalate, or halt each workflow step. Compile org charts, policies, and escalation rules into machine-enforceable authority manifests.</div>
+          <div style="margin-top:8px;font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.35);">POST /v1/authority/map</div>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:10px;padding:18px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:rgba(0,240,255,.25);flex-shrink:0;min-width:28px;">2</div>
+        <div>
+          <div style="font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:4px;">Enforce at Runtime</div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.65;">Every AI action passes through VeriSigil's governance gateway before reaching production. Classified by consequence tier — Advisory, Operational, Critical, Emergency.</div>
+          <div style="margin-top:8px;font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.35);">ALLOW · DENY · REQUIRE_HUMAN_APPROVAL — in under 50ms</div>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:10px;padding:18px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:rgba(0,240,255,.25);flex-shrink:0;min-width:28px;">3</div>
+        <div>
+          <div style="font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:4px;">Seal Evidence for Audit</div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.65;">Cryptographic receipts prove what happened, why, and under whose authority — sealed with SHA-256, offline verifiable, EU AI Act Art.11 mapped. No platform access required for verification.</div>
+          <div style="margin-top:8px;font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.35);">POST /v1/constitutional-gateway/prove</div>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:10px;padding:18px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:rgba(0,240,255,.25);flex-shrink:0;min-width:28px;">4</div>
+        <div>
+          <div style="font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:4px;">Resolve Cross-Domain Reliance</div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.65;">Ensure downstream systems can trust upstream governance proofs under their own policies, jurisdictions, and liability frameworks. Verification proves authenticity. Reliance establishes executable legitimacy.</div>
+          <div style="margin-top:8px;font-family:var(--mono);font-size:.6rem;color:rgba(0,240,255,.35);">POST /v1/reliance/resolve</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Enterprise Adoption Path -->
+    <div class="s-tag reveal" style="margin-bottom:12px;">Enterprise Adoption Path · 4 Stages</div>
+    <h3 style="font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:6px;" class="reveal">From first scan to production governance in 30 days.</h3>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:20px;line-height:1.65;" class="reveal">Enterprises buy confidence, not just capability. Here is the exact path from discovery to deployment.</p>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:10px;" class="reveal" style="transition-delay:.14s">
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:.7rem;color:var(--cyan);background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.2);padding:3px 10px;border-radius:3px;white-space:nowrap;height:fit-content;flex-shrink:0;">Week 1</div>
+        <div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:3px;">Discovery</div>
+          <div style="font-size:.77rem;color:var(--muted);line-height:1.6;">Free Shadow AI Scan · Governance Posture Assessment · Pilot scope definition · Zero installation required</div>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:.7rem;color:var(--cyan);background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.2);padding:3px 10px;border-radius:3px;white-space:nowrap;height:fit-content;flex-shrink:0;">Week 2–3</div>
+        <div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:3px;">Integration</div>
+          <div style="font-size:.77rem;color:var(--muted);line-height:1.6;">SDK installation (Python · Node.js · LangChain · CrewAI) · Authority mapping workshop · Test environment deployment · API key + documentation</div>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:.7rem;color:var(--cyan);background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.2);padding:3px 10px;border-radius:3px;white-space:nowrap;height:fit-content;flex-shrink:0;">Week 4</div>
+        <div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:3px;">Validation</div>
+          <div style="font-size:.77rem;color:var(--muted);line-height:1.6;">Pilot workflow governance · Evidence bundle review · Compliance mapping (EU AI Act · NIST · ISO 42001) · Stakeholder sign-off</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.16);border-radius:8px;padding:16px 20px;display:flex;gap:16px;">
+        <div style="font-family:var(--mono);font-size:.7rem;color:var(--cyan);background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.2);padding:3px 10px;border-radius:3px;white-space:nowrap;height:fit-content;flex-shrink:0;">Week 5+</div>
+        <div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:3px;">Production</div>
+          <div style="font-size:.77rem;color:var(--muted);line-height:1.6;">Full deployment + monitoring · SOC 2 Type I ready · 99.9% uptime SLA · 4-hour P1 response · Dedicated CSM · Quarterly governance reviews</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;" class="reveal" style="transition-delay:.18s">
+      <a href="/scanner.html" class="btn-primary">Start Free — Scan Your Org</a>
+      <a href="mailto:enterprise@verisigilai.com" class="btn-outline">Talk to Enterprise Sales</a>
+    </div>
+  </div>
+</section>
 
 <!-- ── SOCIAL PROOF BAR ─────────────────────── -->
 <div style="position:relative;z-index:1;padding:36px 5vw;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);">
@@ -1229,6 +1374,73 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);
         </div>
       </div>
     </div></div>
+  </div>
+</section>
+
+
+
+<!-- ── PRICING TIERS ─────────────────────── -->
+<section class="section section-alt">
+  <div class="s-inner">
+    <div class="s-tag reveal">Pricing · Commercial Pathway</div>
+    <h2 class="s-title reveal" style="transition-delay:.06s">Start free. Scale to enterprise.</h2>
+    <p class="s-sub reveal" style="transition-delay:.09s">One API. Four tiers. No lock-in until you are production-ready.</p>
+    <div class="s-divider reveal"></div>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:12px;" class="reveal" style="transition-delay:.12s">
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="min-width:100px;">
+          <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px;">Free · Developer</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--white);">$0</div>
+          <div style="font-size:.72rem;color:var(--muted);">forever</div>
+        </div>
+        <div style="flex:1;font-size:.8rem;color:var(--muted);line-height:1.8;">
+          1,000 verifications/month · Sandbox API access · Shadow AI scanner · Governance Coverage Score · Community support
+        </div>
+        <a href="/auth.html?mode=signup" style="font-family:var(--font);font-weight:700;font-size:.75rem;background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--cyan);padding:9px 20px;border-radius:6px;text-decoration:none;white-space:nowrap;align-self:center;text-transform:uppercase;letter-spacing:.05em;transition:all .2s;" onmouseover="this.style.background='rgba(0,240,255,.2)'" onmouseout="this.style.background='rgba(0,240,255,.1)'">Start Free →</a>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="min-width:100px;">
+          <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px;">Pro · SMB</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--white);">$499</div>
+          <div style="font-size:.72rem;color:var(--muted);">/month</div>
+        </div>
+        <div style="flex:1;font-size:.8rem;color:var(--muted);line-height:1.8;">
+          10K verifications/month · Decision Authority Mapping (5 workflows) · EU AI Act compliance reports · HSEA Observe/Intervene · Email support + SLA
+        </div>
+        <a href="mailto:enterprise@verisigilai.com" style="font-family:var(--font);font-weight:700;font-size:.75rem;background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--cyan);padding:9px 20px;border-radius:6px;text-decoration:none;white-space:nowrap;align-self:center;text-transform:uppercase;letter-spacing:.05em;transition:all .2s;" onmouseover="this.style.background='rgba(0,240,255,.2)'" onmouseout="this.style.background='rgba(0,240,255,.1)'">Get Pro →</a>
+      </div>
+
+      <div style="background:rgba(0,240,255,.04);border:1.5px solid rgba(0,240,255,.2);border-radius:10px;padding:20px 22px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="min-width:100px;">
+          <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan);margin-bottom:5px;">Enterprise</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--white);">Custom</div>
+          <div style="font-size:.72rem;color:var(--muted);">contract</div>
+        </div>
+        <div style="flex:1;font-size:.8rem;color:var(--muted);line-height:1.8;">
+          Unlimited verifications · Full stack: DAME + CRG + HSA + GEI + ELE + EGM · On-prem option · SOC 2 Type I ready · 99.9% uptime SLA · Dedicated CSM + 4-hour P1 response
+        </div>
+        <a href="mailto:enterprise@verisigilai.com" style="font-family:var(--font);font-weight:700;font-size:.75rem;background:var(--cyan);color:#05071a;padding:9px 20px;border-radius:6px;text-decoration:none;white-space:nowrap;align-self:center;text-transform:uppercase;letter-spacing:.05em;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Contact Sales →</a>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+        <div style="min-width:100px;">
+          <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px;">Government</div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--white);">Annual</div>
+          <div style="font-size:.72rem;color:var(--muted);">contract</div>
+        </div>
+        <div style="flex:1;font-size:.8rem;color:var(--muted);line-height:1.8;">
+          White-label verification portal · Regulatory reporting dashboards · Audit trail export for EU AI Act conformity · NITDA · Training + certification programmes
+        </div>
+        <a href="mailto:enterprise@verisigilai.com" style="font-family:var(--font);font-weight:700;font-size:.75rem;background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--cyan);padding:9px 20px;border-radius:6px;text-decoration:none;white-space:nowrap;align-self:center;text-transform:uppercase;letter-spacing:.05em;transition:all .2s;" onmouseover="this.style.background='rgba(0,240,255,.2)'" onmouseout="this.style.background='rgba(0,240,255,.1)'">Talk to Us →</a>
+      </div>
+
+    </div>
+    <div style="margin-top:14px;text-align:center;">
+      <a href="/pricing.html" style="font-family:var(--mono);font-size:.68rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--border);padding:7px 20px;border-radius:5px;transition:all .2s;" onmouseover="this.style.color='var(--cyan)';this.style.borderColor='rgba(0,240,255,.3)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">View Full Pricing →</a>
+    </div>
   </div>
 </section>
 

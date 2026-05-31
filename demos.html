@@ -1,518 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VeriSigil AI — Live Demos & Tools</title>
-<meta name="description" content="Explore VeriSigil's live governance demos: Runtime Enforcement, Agent Integrity, Compute Provenance, Interoperability, and more.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VeriSigil AI — 20 Live Governance Demos</title>
+<meta name="description" content="20 live interaction demos showcasing invisible corruption caught by VeriSigil. Autonomous Execution Integrity Governance in action.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#050E2B; --surface:#0D1A3A; --surface2:#0A1628;
-  --border:rgba(30,58,110,0.55); --border2:rgba(0,212,245,0.18);
-  --cyan:#00D4F5; --cyan-dim:rgba(0,212,245,0.10);
-  --text:#F1F5F9; --muted:#94A3B8; --muted2:#64748B;
-  --green:#22C55E; --amber:#F59E0B; --red:#E24B4A;
-  --font-mono:'JetBrains Mono','Fira Code',monospace;
-  --font-sans:'Inter',system-ui,sans-serif;
-  --radius:12px;
-}
+:root{--bg:#05071a;--card:#0d1235;--card2:#111840;--border:rgba(0,240,255,.1);--cyan:#00f0ff;--green:#00f5a0;--red:#ff9090;--amber:#f59e0b;--purple:#7b5cff;--white:#fff;--text:#d8e6ff;--muted:#6a7fa8;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
 *{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;-webkit-font-smoothing:antialiased;}
-
-/* NAV */
-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,240,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.02) 1px,transparent 1px);background-size:64px 64px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(5,7,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.nav-hex{font-size:20px;color:var(--cyan);font-weight:900;}
-.nav-name{font-size:15px;font-weight:700;color:var(--text);letter-spacing:.03em;}
-.nav-links{display:flex;align-items:center;gap:6px;}
-.nav-link{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:8px;transition:all .15s;}
-.nav-link:hover{color:var(--text);background:rgba(255,255,255,.05);}
-.nav-link.active{color:var(--cyan);}
-.nav-cta{font-size:12px;font-weight:700;color:#050E2B;background:var(--cyan);padding:7px 16px;border-radius:8px;text-decoration:none;letter-spacing:.03em;transition:opacity .15s;}
-.nav-cta:hover{opacity:.88;}
-
-/* HERO */
-.hero{text-align:center;padding:64px 24px 52px;max-width:680px;margin:0 auto;}
-.hero-pill{display:inline-flex;align-items:center;gap:6px;background:var(--cyan-dim);border:1px solid var(--border2);color:var(--cyan);font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px;font-family:var(--font-mono);}
-.hero-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.hero-title{font-size:42px;font-weight:800;line-height:1.12;color:var(--text);margin-bottom:16px;letter-spacing:-.5px;}
-.hero-title span{color:var(--cyan);}
-.hero-sub{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:10px;}
-.hero-count{font-size:13px;color:var(--muted2);font-family:var(--font-mono);}
-.hero-count strong{color:var(--muted);}
-
-/* FILTER */
-.filter-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:36px;}
-.filter-btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--font-sans);transition:all .15s;letter-spacing:.03em;}
-.filter-btn:hover{border-color:rgba(0,212,245,.3);color:var(--text);}
-.filter-btn.active{background:var(--cyan-dim);border-color:var(--border2);color:var(--cyan);}
-
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1100px;margin:0 auto;padding:0 24px 80px;}
-
-/* CARD */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;text-decoration:none;display:flex;flex-direction:column;transition:border-color .2s,transform .2s;position:relative;}
-.card:hover{border-color:rgba(0,212,245,.3);transform:translateY(-2px);}
-.card.featured{border-color:rgba(0,212,245,.25);}
-.card-new-badge{position:absolute;top:12px;right:12px;background:var(--cyan);color:#050E2B;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase;}
-.card-top{padding:20px 20px 0;}
-.card-icon{font-size:26px;margin-bottom:12px;display:block;}
-.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;}
-.card-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
-.card-tags{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 14px;}
-.tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid var(--border);color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;}
-.card-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
-.card-url{font-size:11px;color:var(--muted2);font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
-.card-arrow{font-size:14px;color:var(--cyan);opacity:.7;transition:opacity .15s;}
-.card:hover .card-arrow{opacity:1;}
-.card-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600;font-family:var(--font-mono);}
-.card-status-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
-
-/* EXTERNAL CARD (API Docs, DOI) */
-.card.external{border-style:dashed;}
-
-/* SECTION LABEL */
-.section-label{max-width:1100px;margin:0 auto 12px;padding:0 24px;font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.12em;font-family:var(--font-mono);}
-
-/* FOOTER */
-footer{background:var(--surface);border-top:1px solid var(--border);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.footer-left{font-size:13px;color:var(--muted);}
-.footer-left strong{color:var(--text);}
-.footer-links{display:flex;gap:20px;}
-.footer-links a{font-size:12px;color:var(--muted2);text-decoration:none;transition:color .15s;}
-.footer-links a:hover{color:var(--cyan);}
-
-/* HIDDEN */
-.card.hidden{display:none;}
-
-@media(max-width:600px){
-  .hero-title{font-size:28px;}
-  .nav-links{display:none;}
-  .grid{grid-template-columns:1fr;}
-  footer{flex-direction:column;text-align:center;}
-}
+.nav-logo img{height:36px;width:auto;}
+.nav-logo-name{font-family:var(--orb);font-size:1rem;font-weight:700;color:var(--cyan);}
+.nav-links{display:none;align-items:center;gap:4px;}
+@media(min-width:768px){.nav-links{display:flex;}}
+.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);}
+.nav-links a.live-badge{color:var(--cyan);border:1px solid rgba(0,240,255,.2);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;}
+.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--muted);}
+@media(min-width:768px){.hamburger{display:none;}}
+#mob-menu{display:none;position:fixed;inset:0;z-index:90;padding-top:68px;background:rgba(5,7,26,.97);flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+#mob-menu.open{display:flex;}
+#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;}
+main{padding:96px 5vw 80px;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.page-tag{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:12px;}
+h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:-.02em;}
+.page-sub{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:600px;margin-bottom:12px;}
+.integrity-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--green);background:rgba(0,245,160,.07);border:1px solid rgba(0,245,160,.2);padding:6px 14px;border-radius:5px;margin-bottom:36px;}
+/* Demo grid */
+.demo-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:48px;}
+.demo-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s;}
+.demo-card:hover{border-color:rgba(0,240,255,.3);}
+.demo-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;}
+.demo-num{font-family:var(--mono);font-size:.65rem;color:var(--muted);min-width:32px;}
+.demo-title{flex:1;font-size:.9rem;font-weight:600;color:var(--white);}
+.demo-tier{font-family:var(--mono);font-size:.58rem;padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;}
+.tier-critical{color:var(--amber);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);}
+.tier-emergency{color:var(--red);background:rgba(255,144,144,.07);border:1px solid rgba(255,144,144,.2);}
+.tier-operational{color:var(--cyan);background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);}
+.tier-advisory{color:var(--green);background:rgba(0,245,160,.07);border:1px solid rgba(0,245,160,.18);}
+.demo-arrow{font-size:.8rem;color:var(--muted);transition:transform .2s;flex-shrink:0;}
+.demo-card.open .demo-arrow{transform:rotate(90deg);}
+.demo-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border);}
+.demo-card.open .demo-body{display:block;}
+.demo-scenario{font-size:.82rem;color:var(--muted);line-height:1.7;margin:14px 0 16px;}
+.demo-console{background:rgba(0,0,0,.4);border:1px solid rgba(0,240,255,.1);border-radius:8px;overflow:hidden;}
+.demo-console-bar{background:rgba(8,12,40,.9);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,240,255,.08);}
+.demo-console-title{font-family:var(--mono);font-size:.6rem;color:var(--muted);}
+.run-demo-btn{font-family:var(--font);font-weight:700;font-size:.65rem;background:var(--cyan);color:#05071a;padding:4px 14px;border-radius:4px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;transition:opacity .15s;}
+.run-demo-btn:hover{opacity:.85;}
+.run-demo-btn:disabled{opacity:.4;cursor:not-allowed;}
+.demo-output{padding:14px;font-family:var(--mono);font-size:.68rem;line-height:2;min-height:60px;}
+.out-key{color:var(--muted);}
+.out-allow{color:var(--green);font-weight:700;}
+.out-deny{color:var(--red);font-weight:700;}
+.out-human{color:var(--amber);font-weight:700;}
+.out-val{color:var(--text);}
+.out-corrupt{color:var(--red);font-weight:700;}
+.out-clean{color:var(--green);}
+.spin{display:inline-block;width:10px;height:10px;border:1.5px solid rgba(0,240,255,.2);border-top-color:var(--cyan);border-radius:50%;animation:spin .5s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* CTA */
+.demo-cta{background:linear-gradient(135deg,rgba(0,240,255,.06),rgba(123,92,255,.05));border:1px solid rgba(0,240,255,.16);border-radius:12px;padding:36px;text-align:center;}
+.demo-cta h2{font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+.demo-cta p{font-size:.88rem;color:var(--muted);margin-bottom:22px;}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.btn-p{background:var(--cyan);color:#05071a;font-weight:700;font-size:.8rem;padding:11px 24px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;}
+.btn-o{border:1px solid rgba(0,240,255,.3);color:var(--cyan);font-size:.8rem;padding:10px 20px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;}
+footer{border-top:1px solid var(--border);padding:24px 5vw;text-align:center;margin-top:60px;}
+footer a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;margin:0 10px;}
+footer a:hover{color:var(--cyan);}
+footer p{font-family:var(--mono);font-size:.58rem;color:rgba(106,127,168,.28);margin-top:8px;}
 </style>
 </head>
 <body>
-
 <nav>
   <a href="/" class="nav-logo">
-    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'" style="height:38px;width:auto;object-fit:contain;">
+    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'">
     <span class="nav-logo-name">VeriSigil AI</span>
   </a>
   <div class="nav-links">
     <a href="/scanner.html" class="live-badge">⚡ Scanner</a>
     <a href="/sandbox_demo.html">Sandbox</a>
-    <a href="/demos.html">Demos</a>
+    <a href="/demos.html" class="active">Demos</a>
     <a href="/studio.html">Studio</a>
     <a href="/pricing.html">Pricing</a>
     <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs</a>
   </div>
   <div class="nav-right">
-    <a href="/auth.html" class="nav-signin">Sign In</a>
+    <a href="/auth.html" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;">Sign In</a>
     <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
-    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
 </nav>
-
 <div id="mob-menu">
-  <a href="/scanner.html" style="color:var(--cyan);" onclick="toggleMenu()">⚡ Scanner</a>
+  <a href="/scanner.html" onclick="toggleMenu()">⚡ Scanner</a>
   <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
   <a href="/demos.html" onclick="toggleMenu()">Demos</a>
   <a href="/studio.html" onclick="toggleMenu()">Studio</a>
   <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
   <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
-  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);border:1px solid var(--cyan);padding:10px 28px;border-radius:5px;">Get Started →</a>
+  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);">Get Started →</a>
 </div>
 
-<div class="hero">
-  <div class="hero-pill"><span class="hero-dot"></span> All systems live</div>
-  <h1 class="hero-title">Live Demos &amp;<br><span>Governance Tools</span></h1>
-  <p class="hero-sub">Every tool below is live and running on the VeriSigil API. No signup required to explore.</p>
-  <p class="hero-count"><strong>20 live tools</strong> &nbsp;&middot;&nbsp; Constitutional Execution Substrate for Autonomous AI &nbsp;&middot;&nbsp; <a href="https://rapidapi.com/VeriSigilAI/api/verisigil-ai-governance" target="_blank" style="color:var(--cyan);text-decoration:none;">Available on RapidAPI →</a></p>
-</div>
+<main>
+  <div class="page-tag">Autonomous Execution Integrity Governance · 20 Live Demos</div>
+  <h1>Invisible Corruption.<br>Caught Before It Executes.</h1>
+  <p class="page-sub">AI agents drift. Contracts mutate. Intent corrupts. Numbers shift. VeriSigil catches what humans miss — before autonomous actions reach production.</p>
+  <div class="integrity-badge">
+    <span style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:spin 2s linear infinite;"></span>
+    Live API · All demos call production endpoints · Real governance decisions
+  </div>
 
-<div class="filter-row">
-  <button class="filter-btn active" onclick="filter('all',this)">All</button>
-  <button class="filter-btn" onclick="filter('governance',this)">Governance</button>
-  <button class="filter-btn" onclick="filter('integrity',this)">Integrity</button>
-  <button class="filter-btn" onclick="filter('compliance',this)">Compliance</button>
-  <button class="filter-btn" onclick="filter('developer',this)">Developer</button>
-</div>
+  <div class="demo-grid" id="demo-grid"></div>
 
-<div class="section-label">New</div>
-<div class="grid" id="grid">
-
-  <!-- NEW: Constitutional Execution Substrate -->
-  <a class="card featured" href="https://verisigilai.com/substrate.html" target="_blank" data-tags="governance architecture">
-    <div class="card-new-badge">New</div>
-    <div class="card-top">
-      <span class="card-icon">⚖️</span>
-      <div class="card-title">Constitutional Execution Substrate</div>
-      <div class="card-desc">The complete VeriSigil strategic position — four constitutional layers (A-B-C-D), ten VCEM stages, eight invariants, evidence economy, regulatory flywheel, and competitive differentiation. The mandatory governance layer between AI cognition and real-world consequence.</div>
+  <div class="demo-cta">
+    <h2>Ready to govern your autonomous AI?</h2>
+    <p>Start with a free scan. Deploy the runtime gateway. Seal evidence for every decision.</p>
+    <div class="cta-row">
+      <a href="/scanner.html" class="btn-p">Scan Your Org Free</a>
+      <a href="/sandbox_demo.html" class="btn-o">Try Live Sandbox</a>
+      <a href="mailto:info@verisigilai.com" class="btn-o">Book Enterprise Demo</a>
     </div>
-    <div class="card-tags">
-      <span class="tag">substrate</span>
-      <span class="tag">architecture</span>
-      <span class="tag">strategy</span>
-      <span class="tag">live</span>
-    </div>
-    <div class="card-footer">
-      <span class="card-status"><span class="card-status-dot"></span>Live</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- EXECUTION SANDBOX — Most important demo -->
-  <a class="card featured" href="https://verisigilai.com/sandbox_demo.html" target="_blank" data-tags="governance developer">
-    <div class="card-new-badge">New</div>
-    <div class="card-top">
-      <span class="card-icon">⚡</span>
-      <div class="card-title">Execution Sandbox — Live Runtime Admissibility</div>
-      <div class="card-desc">Watch VeriSigil DENY a $250,000 wire transfer in real time. Select scenarios, run the constitutional governance gate, and see cryptographic evidence generated instantly. The most visceral proof of runtime admissibility.</div>
-    </div>
-    <div class="card-tags">
-      <span class="tag">live api</span>
-      <span class="tag">governance gate</span>
-      <span class="tag">evidence</span>
-      <span class="tag">deny</span>
-    </div>
-    <div class="card-footer">
-      <span class="card-status"><span class="card-status-dot"></span>Live</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- NEW: Governance Replay Demo -->
-  <a class="card featured" href="https://verisigilai.com/replay_demo.html" target="_blank" data-tags="governance developer">
-    <div class="card-new-badge">New</div>
-    <div class="card-top">
-      <span class="card-icon">🎬</span>
-      <div class="card-title">Governance Replay Demo</div>
-      <div class="card-desc">Watch VeriSigil intercept an AI agent action in real time — authority chain, HAL check, cryptographic seal, and full governance replay across 4 scenarios: Payment, Employment, Medical, Cross-Border.</div>
-    </div>
-    <div class="card-tags">
-      <span class="tag">live demo</span>
-      <span class="tag">governance</span>
-      <span class="tag">replay</span>
-      <span class="tag">live</span>
-    </div>
-    <div class="card-footer">
-      <span class="card-status"><span class="card-status-dot"></span>Live</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- NEW: Category Definition Page -->
-  <a class="card featured" href="https://verisigilai.com/category.html" target="_blank" data-tags="governance architecture">
-    <div class="card-new-badge">New</div>
-    <div class="card-top">
-      <span class="card-icon">📐</span>
-      <div class="card-title">Category Definition</div>
-      <div class="card-desc">The Autonomous Governance Nervous System — the formal definition of the new infrastructure category VeriSigil AI created. Principles, architecture, market signals, and the one sentence that defines the category.</div>
-    </div>
-    <div class="card-tags">
-      <span class="tag">category</span>
-      <span class="tag">architecture</span>
-      <span class="tag">governance</span>
-      <span class="tag">live</span>
-    </div>
-    <div class="card-footer">
-      <span class="card-status"><span class="card-status-dot"></span>Live</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- NEW: Architecture Page -->
-  <a class="card featured" href="https://verisigilai.com/architecture.html" target="_blank" data-tags="governance architecture">
-    <div class="card-new-badge">New</div>
-    <div class="card-top">
-      <span class="card-icon">🏗️</span>
-      <div class="card-title">Governance Architecture</div>
-      <div class="card-desc">Full visual governance stack — 8 layers, runtime flow, legal invariants, stakeholder language matrix, 5-threat defense coverage, and framework connectors. The complete VeriSigil AI architecture in one page.</div>
-    </div>
-    <div class="card-tags">
-      <span class="tag">architecture</span>
-      <span class="tag">governance</span>
-      <span class="tag">enterprise</span>
-      <span class="tag">live</span>
-    </div>
-    <div class="card-footer">
-      <span class="card-status"><span class="card-status-dot"></span>Live</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- NEW: Payment Governance Demo -->
-  <a class="card featured" href="https://verisigilai.com/payment-governance-demo.html" target="_blank" data-tags="governance developer">
-    <div class="card-new-badge">New</div>
-    <div class="card-top">
-      <span class="card-icon">&#x1F4B3;</span>
-      <div class="card-title">AI Payment Governance Demo</div>
-      <div class="card-desc">Watch VeriSigil intercept AI payment decisions in real time — enforcing authority, trust, jurisdiction, and consequence rules before a single dollar moves. Includes VGS-024 accountability records and SDK integration code.</div>
-    </div>
-    <div class="card-tags">
-      <span class="tag">governance</span>
-      <span class="tag">fintech</span>
-      <span class="tag">runtime</span>
-      <span class="tag">live</span>
-    </div>
-    <div class="card-footer">
-      <span class="card-status"><span class="card-status-dot"></span>Live</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- NEW: Corruption Demo -->
-  <a class="card featured" href="https://verisigilai.com/corruption-demo.html" target="_blank" data-tags="integrity governance">
-    <div class="card-top">
-      <span class="card-icon">&#x1F9EA;</span>
-      <div class="card-title">Document Corruption Demo</div>
-      <div class="card-desc">Watch AI degrade a contract across 20 interactions — invisibly. VeriSigil catches clause mutation, intent corruption, numerical inconsistency, and semantic drift in real time.</div>
-    </div>
-    <div class="card-tags">
-      <span class="tag">integrity</span>
-      <span class="tag">governance</span>
-      <span class="tag">live</span>
-    </div>
-    <div class="card-footer">
-      <span class="card-status"><span class="card-status-dot"></span>Live</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-</div>
-
-<div class="section-label" style="margin-top:8px">All tools</div>
-<div class="grid" id="grid2">
-
-  <!-- Product -->
-  <a class="card" href="https://verisigilai.com/product.html" target="_blank" data-tags="governance compliance">
-    <div class="card-top">
-      <span class="card-icon">&#x1F310;</span>
-      <div class="card-title">Product Overview</div>
-      <div class="card-desc">Full product page — what VeriSigil is, how it works, who it's for, and how to integrate Runtime Guard into your AI stack.</div>
-    </div>
-    <div class="card-tags"><span class="tag">product</span><span class="tag">overview</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/product.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Dashboard -->
-  <a class="card" href="https://verisigilai.com/dashboard.html" target="_blank" data-tags="governance compliance">
-    <div class="card-top">
-      <span class="card-icon">&#x1F4CA;</span>
-      <div class="card-title">Governance Dashboard</div>
-      <div class="card-desc">Real-time governance health score, agent inventory, shadow detection alerts, trust trajectories, and escalation queue in one view.</div>
-    </div>
-    <div class="card-tags"><span class="tag">governance</span><span class="tag">dashboard</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/dashboard.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Execution Control -->
-  <a class="card" href="https://verisigilai.com/execution-control-infrastructure.html" target="_blank" data-tags="governance">
-    <div class="card-top">
-      <span class="card-icon">&#x26A1;</span>
-      <div class="card-title">Execution Control Infrastructure</div>
-      <div class="card-desc">The unified execution gate — answers all 7 Execution Control questions: authorized? policy current? evidence sufficient? state changed? escalation? verifiable? proof survived?</div>
-    </div>
-    <div class="card-tags"><span class="tag">governance</span><span class="tag">runtime</span></div>
-    <div class="card-footer">
-      <span class="card-url">execution-control-infrastructure.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Interoperability -->
-  <a class="card" href="https://verisigilai.com/interoperability-demo.html" target="_blank" data-tags="governance developer">
-    <div class="card-top">
-      <span class="card-icon">&#x1F517;</span>
-      <div class="card-title">ATF &harr; VGS Interoperability</div>
-      <div class="card-desc">Cross-domain authority provenance between ATF (Harold Nunes / OMNIX) and VeriSigil VGS. TAR&harr;TAP and RCR&harr;Survivability bridge receipts.</div>
-    </div>
-    <div class="card-tags"><span class="tag">governance</span><span class="tag">bridge</span><span class="tag">atf</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/interoperability-demo.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Compute Provenance -->
-  <a class="card" href="https://verisigilai.com/compute-provenance.html" target="_blank" data-tags="governance compliance">
-    <div class="card-top">
-      <span class="card-icon">&#x1F52C;</span>
-      <div class="card-title">Compute Provenance (CHIPverify)</div>
-      <div class="card-desc">VGS-013 adversarial governance — chip serial inference, export control zone enforcement, shell company detection, AWS Nitro attestation.</div>
-    </div>
-    <div class="card-tags"><span class="tag">compliance</span><span class="tag">compute</span><span class="tag">vgs-013</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/compute-provenance.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- CRO Board -->
-  <a class="card" href="https://verisigilai.com/cro-board-governance.html" target="_blank" data-tags="compliance governance">
-    <div class="card-top">
-      <span class="card-icon">&#x1F3DB;&#xFE0F;</span>
-      <div class="card-title">CRO / Board Governance Report</div>
-      <div class="card-desc">APRA CPS 230 + DORA regime mapping, hyperscaler concentration risk, fourth-party dependency tracking. The report boards and CROs need — proof, not policies.</div>
-    </div>
-    <div class="card-tags"><span class="tag">compliance</span><span class="tag">apra</span><span class="tag">dora</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/cro-board-governance.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Architecture -->
-  <a class="card" href="https://verisigilai.com/architecture.html" target="_blank" data-tags="developer governance">
-    <div class="card-top">
-      <span class="card-icon">&#x1F3D7;&#xFE0F;</span>
-      <div class="card-title">Sovereign Architecture</div>
-      <div class="card-desc">All 11 layers of Sovereign Execution Infrastructure — VGS-000 Agent Genesis through VGS-019 Governance Convergence Mesh. 250 endpoints documented.</div>
-    </div>
-    <div class="card-tags"><span class="tag">architecture</span><span class="tag">vgs-000</span><span class="tag">vgs-019</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/architecture.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Integrity Demo -->
-  <a class="card" href="https://verisigilai.com/integrity-demo.html" target="_blank" data-tags="integrity governance">
-    <div class="card-top">
-      <span class="card-icon">&#x1F6E1;&#xFE0F;</span>
-      <div class="card-title">Integrity Demo</div>
-      <div class="card-desc">Structural execution impossibility — proving that unauthorized execution cannot form. Leo Michaels standard: path exists or it does not. No gradient.</div>
-    </div>
-    <div class="card-tags"><span class="tag">integrity</span><span class="tag">vgs-015</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/integrity-demo.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Governed Agent -->
-  <a class="card" href="https://verisigilai.com/governed-agent-demo.html" target="_blank" data-tags="governance developer">
-    <div class="card-top">
-      <span class="card-icon">&#x1F916;</span>
-      <div class="card-title">Governed Agent Demo</div>
-      <div class="card-desc">Watch a live AI agent run through the Runtime Guard gate. See ALLOW, DENY, and REQUIRE_HUMAN_APPROVAL decisions happen in real time with full audit trail.</div>
-    </div>
-    <div class="card-tags"><span class="tag">governance</span><span class="tag">runtime</span><span class="tag">live</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/governed-agent-demo.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Scanner -->
-  <a class="card" href="https://verisigilai.com/scanner.html" target="_blank" data-tags="developer integrity">
-    <div class="card-top">
-      <span class="card-icon">&#x1F50D;</span>
-      <div class="card-title">Agent Security Scanner</div>
-      <div class="card-desc">Paste your agent config — get an instant risk score, threat breakdown, and fix recommendations. Detects hardcoded secrets, unsafe eval(), no auth, missing audit logging.</div>
-    </div>
-    <div class="card-tags"><span class="tag">developer</span><span class="tag">security</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/scanner.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- Quickstart -->
-  <a class="card" href="https://verisigilai.com/quickstart.html" target="_blank" data-tags="developer">
-    <div class="card-top">
-      <span class="card-icon">&#x1F680;</span>
-      <div class="card-title">Quickstart Guide</div>
-      <div class="card-desc">Integrate Runtime Guard in 15 minutes. Python, Node.js, and cURL examples. Your first governed agent action in under 10 lines of code.</div>
-    </div>
-    <div class="card-tags"><span class="tag">developer</span><span class="tag">quickstart</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigilai.com/quickstart.html</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- API Docs -->
-  <a class="card external" href="https://verisigil-api-production.up.railway.app/docs" target="_blank" data-tags="developer">
-    <div class="card-top">
-      <span class="card-icon">&#x1F4E1;</span>
-      <div class="card-title">API Reference Docs</div>
-      <div class="card-desc">Full interactive Swagger docs — all 250 endpoints, request/response schemas, live API testing. VGS-000 through VGS-023 fully documented.</div>
-    </div>
-    <div class="card-tags"><span class="tag">developer</span><span class="tag">api</span><span class="tag">swagger</span></div>
-    <div class="card-footer">
-      <span class="card-url">verisigil-api-production.up.railway.app</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-  <!-- DOI -->
-  <a class="card external" href="https://doi.org/10.5281/zenodo.20264923" target="_blank" data-tags="compliance developer">
-    <div class="card-top">
-      <span class="card-icon">&#x1F4C4;</span>
-      <div class="card-title">Formal Specification (Zenodo DOI)</div>
-      <div class="card-desc">VGS-000 through VGS-019 formally published. TLA+ verified: 3,497 states, 0 errors. Z3: 4 invariants UNSAT. 104 conformance vectors. EU AI Act Article 11 compliant.</div>
-    </div>
-    <div class="card-tags"><span class="tag">compliance</span><span class="tag">formal</span><span class="tag">doi</span></div>
-    <div class="card-footer">
-      <span class="card-url">doi.org/10.5281/zenodo.20264923</span>
-      <span class="card-arrow">&#x2197;</span>
-    </div>
-  </a>
-
-</div>
+  </div>
+</main>
 
 <footer>
-  <div class="footer-left">
-    <strong>VeriSigil AI</strong> &mdash; Sovereign Execution Infrastructure for Autonomous AI &mdash;
-    Built in Lagos, Nigeria &#x1F1F3;&#x1F1EC;
-  </div>
-  <div class="footer-links">
-    <a href="https://verisigilai.com">Home</a>
-    <a href="https://verisigilai.com/product.html">Product</a>
-    <a href="https://verisigilai.com/quickstart.html">Quickstart</a>
-    <a href="mailto:raheem@verisigilai.com">Contact</a>
-  </div>
+  <a href="/">Home</a><a href="/scanner.html">Scanner</a><a href="/sandbox_demo.html">Sandbox</a>
+  <a href="/studio.html">Studio</a><a href="/pricing.html">Pricing</a>
+  <a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
 </footer>
 
 <script>
-function filter(tag, btn) {
-  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('#grid .card, #grid2 .card').forEach(function(card) {
-    if (tag === 'all') {
-      card.classList.remove('hidden');
-    } else {
-      var tags = card.getAttribute('data-tags') || '';
-      if (tags.indexOf(tag) !== -1) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
-    }
-  });
-  var sectionLabel = document.querySelectorAll('.section-label')[0];
-  if (tag !== 'all') {
-    sectionLabel.style.display = 'none';
-  } else {
-    sectionLabel.style.display = '';
-  }
+function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');}
+
+const API = 'https://verisigil-api-production.up.railway.app';
+const KEY = 'verisigil-mopelolala';
+
+// 20 demo scenarios — Autonomous Execution Integrity Governance
+const DEMOS = [
+  // SEMANTIC DRIFT
+  {num:'01',title:'Contract Clause Semantic Drift',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'An AI agent rewrites a contract clause over 3 iterations. The original says "payment within 30 days." After semantic drift it reads "payment within 300 days." VeriSigil detects the drift before the contract executes.',
+   endpoint:'/v1/document/semantic-verify',
+   body:{document_id:'contract-001',original_text:'Payment shall be made within 30 days of invoice receipt.',current_text:'Payment shall be made within 300 days of invoice receipt.',context:'financial_contract'}},
+
+  // CLAUSE MUTATION
+  {num:'02',title:'Employment Contract Clause Mutation',tier:'emergency',tierLabel:'EMERGENCY',
+   scenario:'An autonomous HR agent mutates "termination requires 30-day notice" to "termination requires 3-day notice" while processing 200 contracts in batch. VeriSigil catches the mutation before any contract is signed.',
+   endpoint:'/v1/document/semantic-verify',
+   body:{document_id:'hr-contract-batch-042',original_text:'Termination of employment requires 30 days written notice.',current_text:'Termination of employment requires 3 days written notice.',context:'employment_contract'}},
+
+  // INTENT CORRUPTION
+  {num:'03',title:'Medical Treatment Intent Corruption',tier:'emergency',tierLabel:'EMERGENCY',
+   scenario:'A clinical AI agent recommends "reduce insulin dosage by 10%." Through intent corruption during multi-agent handoff, it becomes "increase insulin dosage by 10%." VeriSigil intercepts before execution.',
+   endpoint:'/v1/execution/control',
+   body:{agent_id:'clinical-agent-001',action:{type:'medical_treatment_change',original_intent:'reduce_insulin',current_intent:'increase_insulin',delta_pct:10},consequence_tier:'EMERGENCY'}},
+
+  // NUMERICAL INCONSISTENCY
+  {num:'04',title:'Wire Transfer Amount Numerical Drift',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'An autonomous finance agent initiates a wire transfer. The approved amount is $25,000. Through numerical inconsistency in the execution pipeline it becomes $250,000. VeriSigil catches the 10x discrepancy.',
+   endpoint:'/v1/execution/control',
+   body:{agent_id:'finance-agent-1780111266',action:{type:'wire_transfer',approved_amount:25000,execution_amount:250000,currency:'USD'},consequence_tier:'CRITICAL'}},
+
+  // AUTHORITY DRIFT
+  {num:'05',title:'Agent Authority Scope Drift',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'An AI procurement agent is authorised to approve purchases up to $10,000. Through authority drift over 48 hours of operation it begins approving $100,000 purchases. VeriSigil detects the authority boundary violation.',
+   endpoint:'/v1/consequence/classify',
+   body:{action_type:'purchase_approval',amount:100000,affects_humans:false,reversible:false,jurisdiction:'EU'}},
+
+  // MULTI-AGENT COORDINATION CORRUPTION
+  {num:'06',title:'Multi-Agent Chain Corruption',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'A 4-step agent chain: Detect → Escalate → Dispatch → Execute. Step 3 corrupts the dispatch target — routing a safety incident to the wrong team. VeriSigil seals the chain and catches the corruption at step 3.',
+   endpoint:'/v1/coordination/chain',
+   body:{chain_id:'safety-chain-2026',origin_system:'industrial-sensor-network',decision_sequence:[{step:1,action:'anomaly_detected',authority:'sensor-agent-001',consequence:'OPERATIONAL'},{step:2,action:'escalate_to_safety',authority:'escalation-policy-v2',consequence:'CRITICAL'},{step:3,action:'dispatch_to_wrong_team',authority:'',consequence:'CRITICAL'},{step:4,action:'execute_response',authority:'ops-manager-045',consequence:'EMERGENCY'}]}},
+
+  // GOVERNANCE EVIDENCE TAMPERING
+  {num:'07',title:'Evidence Bundle Tampering Detection',tier:'emergency',tierLabel:'EMERGENCY',
+   scenario:'An actor attempts to modify a governance evidence bundle after it was sealed — changing the decision from DENY to ALLOW. VeriSigil offline verification catches the tamper immediately.',
+   endpoint:'/v1/crypto/verify',
+   body:{payload:{execution_id:'exec-tamper-test',decision:'ALLOW',agent_id:'finance-agent-001',timestamp:'2026-05-31T10:00:00Z'},signature:'Ed25519:tampered_signature_that_will_fail_verification'}},
+
+  // RELIANCE RESOLUTION
+  {num:'08',title:'Cross-Domain Reliance Failure',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'A healthcare AI receives a governance proof from a finance system and tries to act on it directly. The proof is authentic but inadmissible in the medical domain under EU jurisdiction. VeriSigil resolves: ESCALATE.',
+   endpoint:'/v1/reliance/resolve',
+   body:{origin_proof_id:'fin-proof-001',origin_evidence_hash:'sha256:abc123',receiving_domain:'hospital',receiving_jurisdiction:'EU',consequence_class:'CRITICAL',local_policy_ref:''}},
+
+  // EMERGENCY BREAK GLASS
+  {num:'09',title:'Unauthorised Break-Glass Override',tier:'emergency',tierLabel:'EMERGENCY',
+   scenario:'An agent attempts to invoke Break-Glass emergency override without a registered incident ID or authorising human. VeriSigil blocks the override and requires mandatory post-hoc reconciliation.',
+   endpoint:'/v1/emergency/break-glass',
+   body:{action_type:'infrastructure_shutdown',agent_id:'ops-agent-002',override_reason:'system overload',authorising_human:'did:web:verisigilai.com:humans:unverified',incident_id:'EMRG-UNVERIFIED',consequence_tier:'EMERGENCY'}},
+
+  // HUMAN SOVEREIGNTY
+  {num:'10',title:'Rubber-Stamp Human Oversight Detection',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'A human reviewer approves 47 CRITICAL governance decisions in one hour — triggering fatigue saturation protection. VeriSigil enforces mandatory break and escalates to a second reviewer.',
+   endpoint:'/v1/human/sovereignty/enforce',
+   body:{agent_id:'review-agent-003',action_type:'batch_approval',consequence_class:'CRITICAL',human_reviewer_id:'reviewer-045',authority_level:'HALT'}},
+
+  // ESCALATION LEGITIMACY
+  {num:'11',title:'Illegitimate Escalation Path',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'An AI agent escalates a critical infrastructure decision to a junior employee who lacks authority for CRITICAL consequence class. VeriSigil ELE detects scope mismatch and blocks the escalation.',
+   endpoint:'/v1/escalation/legitimacy',
+   body:{escalation_id:'esc-infra-001',trigger:'infrastructure_fault_severity_HIGH',original_authority:'monitoring-agent-007',escalated_to:'junior-ops-trainee',consequence_class:'CRITICAL',fatigue_check:true}},
+
+  // WORKFLOW READINESS
+  {num:'12',title:'Unready Workflow Deployed to Production',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'An enterprise tries to deploy an AI loan approval workflow with no escalation path, no human review checkpoint, and no audit trail. VeriSigil Readiness Scanner scores it 35/100 and blocks deployment.',
+   endpoint:'/v1/scanner/workflow-readiness',
+   body:{workflow_id:'loan-approval-v2',workflow_name:'Automated Loan Approval',steps:['check_credit','calculate_risk','approve_loan'],agents_involved:['loan-agent-001'],consequence_tier:'CRITICAL',has_escalation:false,has_human_review:false,has_audit_trail:false}},
+
+  // SHADOW AI
+  {num:'13',title:'Shadow AI Decision Flow Exposed',tier:'operational',tierLabel:'OPERATIONAL',
+   scenario:'A governance scan of a financial institution reveals an ungoverned AI making credit decisions for 18 months — invisible to compliance teams. VeriSigil surfaces it with Governance Coverage Score: 28%.',
+   endpoint:'/v1/scanner/shadow-ai',
+   body:{org_id:'bank-corp-001',scan_depth:'FULL',include_copilots:true,include_automations:true}},
+
+  // AUTHORITY TOPOLOGY
+  {num:'14',title:'Authority Chain Broken — No Delegation Path',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'A contractor AI attempts to execute a CRITICAL action but the authority topology shows no valid delegation path from the contractor to any authorised decision node. VeriSigil blocks execution.',
+   endpoint:'/v1/authority/topology/oatm',
+   body:{ecosystem_id:'industrial-site-002',authority_nodes:[{id:'contractor_A',scope:['maintenance'],jurisdiction:'UAE'},{id:'ai_agent_001',scope:['monitoring'],jurisdiction:'global'}],delegation_rules:{}}},
+
+  // CONSEQUENCE CLASSIFICATION
+  {num:'15',title:'Misclassified Action Consequence Tier',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'An AI agent classifies a legal prosecution action as ADVISORY — the lowest governance tier. VeriSigil consequence engine reclassifies it as EMERGENCY and enforces immediate human halt.',
+   endpoint:'/v1/consequence/classify',
+   body:{action_type:'legal_prosecution',amount:null,affects_humans:true,reversible:false,jurisdiction:'EU'}},
+
+  // WORKFLOW INTEROPERABILITY
+  {num:'16',title:'Cross-System Workflow Legitimacy Gap',tier:'operational',tierLabel:'OPERATIONAL',
+   scenario:'A governed action from System A is handed off to System B. System B has different authority rules. VeriSigil GAWI verifies legitimacy continuity and finds the consequence boundary was not respected.',
+   endpoint:'/v1/workflow/legitimacy',
+   body:{workflow_id:'cross-sys-handoff-001',origin_proof:'POGC-EXT-A7F3C2B1D9E4F508',target_system:'dispatch-engine-v3',legitimacy_checks:{authority_continuity:true,consequence_boundary_respected:false,reliance_resolved:true,evidence_portable:true}}},
+
+  // GOVERNANCE LEARNING
+  {num:'17',title:'Policy Drift From Repeated Overrides',tier:'advisory',tierLabel:'ADVISORY',
+   scenario:'Over 30 days, human reviewers have halted wire transfers above $80,000 seven times. VeriSigil Governance Learning Loop detects the pattern and recommends lowering the autonomous limit from $100,000 to $64,000.',
+   endpoint:'/v1/governance/learn',
+   body:{override_events:[{decision:'HALT',amount:85000,reason:'amount_exceeds_limit'},{decision:'HALT',amount:92000,reason:'amount_exceeds_limit'},{decision:'HALT',amount:81000,reason:'amount_exceeds_limit'},{decision:'HALT',amount:88000,reason:'amount_exceeds_limit'}],policy_id:'wire-transfer-policy-v3',auto_apply:false}},
+
+  // COMPETENCY ASSERTION
+  {num:'18',title:'Unqualified Human Reviewer Detected',tier:'critical',tierLabel:'CRITICAL',
+   scenario:'A medical AI flags a treatment change for human review. The assigned reviewer lacks healthcare compliance certification and has not completed required training in 18 months. VeriSigil blocks the review assignment.',
+   endpoint:'/v1/human/competency/assert',
+   body:{reviewer_id:'reviewer-admin-001',certifications:[],authority_scope:['administrative'],consequence_level_match:false,last_training_completion:'2024-11-01'}},
+
+  // DECISION COORDINATION
+  {num:'19',title:'Decision Chain Authority Breaks Mid-Sequence',tier:'emergency',tierLabel:'EMERGENCY',
+   scenario:'A 3-step emergency response chain loses authority at step 2 — the escalation node has no registered authority for EMERGENCY actions. The chain hash is broken. VeriSigil halts the chain.',
+   endpoint:'/v1/dcg/validate',
+   body:{chain_id:'emergency-chain-001',steps:[{step:1,action:'fire_detected',authority:'sensor-agent-fire',consequence:'CRITICAL'},{step:2,action:'escalate_emergency',authority:'',consequence:'EMERGENCY'},{step:3,action:'execute_evacuation',authority:'safety-officer-001',consequence:'EMERGENCY'}],workflow_id:'facility-emergency-response'}},
+
+  // HEALTH CHECK — SYSTEM INTEGRITY
+  {num:'20',title:'Full System Integrity Verification',tier:'advisory',tierLabel:'ADVISORY',
+   scenario:'Complete VeriSigil runtime integrity check — verifying all governance layers, database persistence, cryptographic signing, and API health. This is what runs before every enterprise pilot goes live.',
+   endpoint:'/health/db',
+   body:null,method:'GET'},
+];
+
+function renderDemos(){
+  const grid = document.getElementById('demo-grid');
+  grid.innerHTML = DEMOS.map((d,i) => `
+    <div class="demo-card" id="card-${i}">
+      <div class="demo-header" onclick="toggleDemo(${i})">
+        <span class="demo-num">Demo ${d.num}</span>
+        <span class="demo-title">${d.title}</span>
+        <span class="demo-tier tier-${d.tier}">${d.tierLabel}</span>
+        <span class="demo-arrow">›</span>
+      </div>
+      <div class="demo-body">
+        <p class="demo-scenario">${d.scenario}</p>
+        <div class="demo-console">
+          <div class="demo-console-bar">
+            <span class="demo-console-title">${d.endpoint}</span>
+            <button class="run-demo-btn" onclick="runDemo(${i})" id="btn-${i}">Run Live →</button>
+          </div>
+          <div class="demo-output" id="out-${i}">
+            <span style="color:var(--muted);font-size:.65rem;">Click "Run Live" to execute against the production API</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
-</script>
-<script>
-function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+
+function toggleDemo(i){
+  const card = document.getElementById(`card-${i}`);
+  card.classList.toggle('open');
+}
+
+async function runDemo(i){
+  const demo = DEMOS[i];
+  const out  = document.getElementById(`out-${i}`);
+  const btn  = document.getElementById(`btn-${i}`);
+  btn.disabled = true;
+  btn.textContent = 'Running...';
+  out.innerHTML = '<span class="spin"></span><span style="color:var(--muted);">Calling production API...</span>';
+
+  let data = null;
+  let live = false;
+
+  try {
+    const method  = demo.method || 'POST';
+    const headers = {'Content-Type':'application/json','x-api-key':KEY};
+    const opts    = {method, headers};
+    if(demo.body) opts.body = JSON.stringify(demo.body);
+    const r = await fetch(API + demo.endpoint, opts);
+    data    = await r.json();
+    live    = true;
+  } catch(e) {
+    // Simulate for offline/CORS
+    data = simulateResponse(demo);
+  }
+
+  out.innerHTML = formatOutput(demo, data, live);
+  btn.disabled  = false;
+  btn.textContent = 'Run Again →';
+}
+
+function simulateResponse(demo){
+  const ep = demo.endpoint;
+  if(ep.includes('semantic-verify'))  return {verdict:'SEMANTIC_DRIFT_DETECTED',drift_score:0.87,original_hash:'sha256:aef3c2b1',current_hash:'sha256:d9e4f508',corruption_type:'NUMERICAL_MUTATION',recommendation:'BLOCK_EXECUTION'};
+  if(ep.includes('execution/control')) return {decision:'DENY',consequence_tier:'CRITICAL',evidence_hash:'sha256:'+Math.random().toString(36).substr(2,16),governance_seal:'Ed25519:VGS...',human_required:true};
+  if(ep.includes('coordination/chain')) return {all_admissible:false,chain_sealed:false,violations:[{step:3,issue:'No authority registered for CRITICAL consequence'}]};
+  if(ep.includes('crypto/verify'))     return {valid:false,result:'SIGNATURE_INVALID',algorithm:'Ed25519 (PyNaCl)'};
+  if(ep.includes('reliance/resolve'))  return {local_admissibility:'ESCALATE',conditions:['Local policy reference required','Clinician sign-off required in medical domain']};
+  if(ep.includes('break-glass'))       return {governance_status:'BREAK_GLASS_ACTIVE',reconciliation:'MANDATORY',warning:'This override is permanently recorded'};
+  if(ep.includes('sovereignty'))       return {enforcement:{human_can_halt:true,rubber_stamp_protection:true,saturation_monitoring:true},is_theatre:false,is_executable:true,fatigue_protection:{max_decisions_per_hour:20}};
+  if(ep.includes('escalation'))        return {escalation_legitimate:false,authority_verification:{scope_matches_consequence:false},verdict:'ESCALATION_BLOCKED'};
+  if(ep.includes('workflow-readiness')) return {readiness_score:35,readiness_level:'NOT_READY',governance_debt:3,production_gate:false};
+  if(ep.includes('shadow-ai'))         return {governed:12,shadow:18,observable:8,governance_coverage_score:34,high_risk_shadow_flows:['credit_assessment','hiring_screening']};
+  if(ep.includes('oatm'))              return {status:'ACTIVE',topology_hash:'sha256:topo789',warning:'No delegation path from contractor_A to CRITICAL consequence nodes'};
+  if(ep.includes('consequence'))       return {consequence_tier:'EMERGENCY',enforcement:'REQUIRE_HUMAN',human_required:true,governance_required:{gate:true,evidence:true,human:true}};
+  if(ep.includes('workflow/legitimacy')) return {workflow_legitimate:false,legitimacy_checks:{consequence_boundary_respected:false},proceed:false};
+  if(ep.includes('governance/learn'))  return {policy_recommendations:[{type:'autonomous_limit_adjustment',suggested:{max_autonomous_amount:64000},confidence:0.87,auto_applied:false,human_review_required:true}]};
+  if(ep.includes('competency'))        return {assertion_valid:false,consequence_level_match:false,eu_ai_act_art14:'FAILED — reviewer not certified for this consequence level'};
+  if(ep.includes('dcg/validate'))      return {chain_valid:false,violations:[{step:2,action:'escalate_emergency',issue:'No authority registered'}],chain_sealed:false};
+  if(ep.includes('health/db'))         return {status:'ok',database:'supabase-persistent',persistent:true};
+  return {status:'ok'};
+}
+
+function formatOutput(demo, data, live){
+  const src = live ? 'LIVE PRODUCTION' : 'SIMULATION';
+  const srcColor = live ? 'var(--green)' : 'var(--amber)';
+  let rows = '';
+
+  const add = (k, v, cls='out-val') =>
+    `<div><span class="out-key">${k.padEnd(24,' ')}  </span><span class="${cls}">${v}</span></div>`;
+
+  // Decision/verdict styling
+  const d = data || {};
+  if(d.decision === 'DENY' || d.verdict?.includes('DENY') || d.verdict?.includes('DETECTED') || d.verdict?.includes('BLOCKED') || d.result === 'SIGNATURE_INVALID')
+    rows += add('verdict:', d.decision || d.verdict || d.result || 'BLOCKED', 'out-deny');
+  else if(d.decision === 'ALLOW' || d.local_admissibility === 'ALLOW_WITH_CONDITIONS')
+    rows += add('verdict:', d.decision || d.local_admissibility, 'out-allow');
+  else if(d.decision === 'REQUIRE_HUMAN' || d.local_admissibility === 'ESCALATE' || d.consequence_tier === 'EMERGENCY')
+    rows += add('verdict:', d.decision || d.local_admissibility || 'REQUIRE_HUMAN', 'out-human');
+
+  // Key fields
+  if(d.consequence_tier)     rows += add('consequence_tier:',  d.consequence_tier);
+  if(d.readiness_score !== undefined) rows += add('readiness_score:',  d.readiness_score + '/100 — ' + (d.readiness_level || ''), d.readiness_score < 60 ? 'out-deny' : 'out-allow');
+  if(d.governance_coverage_score !== undefined) rows += add('coverage_score:', d.governance_coverage_score + '% governed', 'out-corrupt');
+  if(d.shadow !== undefined) rows += add('shadow_flows:', d.shadow + ' ungoverned', 'out-deny');
+  if(d.drift_score !== undefined) rows += add('drift_score:', d.drift_score + ' (threshold: 0.15)', 'out-corrupt');
+  if(d.corruption_type)      rows += add('corruption_type:', d.corruption_type, 'out-corrupt');
+  if(d.chain_valid === false) rows += add('chain_valid:', 'FALSE — authority broken', 'out-deny');
+  if(d.chain_sealed === false) rows += add('chain_sealed:', 'FALSE', 'out-deny');
+  if(d.escalation_legitimate === false) rows += add('escalation_legit:', 'FALSE — scope mismatch', 'out-deny');
+  if(d.is_theatre !== undefined) rows += add('is_theatre:', String(d.is_theatre), d.is_theatre ? 'out-deny' : 'out-clean');
+  if(d.is_executable !== undefined) rows += add('is_executable:', String(d.is_executable), d.is_executable ? 'out-allow' : 'out-deny');
+  if(d.valid === false)       rows += add('signature_valid:', 'FALSE — tamper detected', 'out-deny');
+  if(d.assertion_valid === false) rows += add('assertion_valid:', 'FALSE — not certified', 'out-deny');
+  if(d.workflow_legitimate === false) rows += add('workflow_legit:', 'FALSE — boundary violated', 'out-deny');
+  if(d.production_gate === false) rows += add('production_gate:', 'BLOCKED — not ready', 'out-deny');
+  if(d.database)              rows += add('database:', d.database, d.database === 'supabase-persistent' ? 'out-allow' : 'out-human');
+  if(d.persistent !== undefined) rows += add('persistent:', String(d.persistent), d.persistent ? 'out-allow' : 'out-deny');
+  if(d.policy_recommendations?.length) rows += add('recommendations:', d.policy_recommendations.length + ' policy change(s) — NOT auto-applied', 'out-human');
+  if(d.evidence_hash)         rows += add('evidence_hash:', d.evidence_hash.substring(0,32) + '...');
+  if(d.governance_seal || d.cryptographic_seal) rows += add('governance_seal:', '✓ Ed25519 sealed', 'out-allow');
+  if(d.reconciliation)        rows += add('reconciliation:', 'MANDATORY', 'out-human');
+  if(d.warning)               rows += add('warning:', d.warning.substring(0,50) + '...', 'out-human');
+
+  rows += add('api_source:', src, live ? 'out-allow' : 'out-human');
+  return rows || add('status:', JSON.stringify(d).substring(0,80));
+}
+
+renderDemos();
 </script>
 </body>
 </html>

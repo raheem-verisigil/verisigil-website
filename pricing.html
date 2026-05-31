@@ -1,424 +1,270 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
-<title>VeriSigil AI | Pricing</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-<script src="https://js.paystack.co/v1/inline.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VeriSigil AI — Pricing · Free · Pro · Enterprise</title>
+<meta name="description" content="VeriSigil AI pricing. Start free. Scale to enterprise. Operational governance infrastructure for autonomous enterprise AI.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;vertical-align:middle;}
-  body{background:#0a1324;color:#d9e2fb;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100dvh;}
-  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(180,197,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(180,197,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
-  .glass{background:rgba(22,32,49,0.8);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(12px);}
-  .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
-  .reveal.visible{opacity:1;transform:translateY(0);}
-  .card-lift{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;}
-  .card-lift:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(21,101,255,0.12);}
-  .btn-feel{transition:opacity .15s,transform .12s;cursor:pointer;}
-  .btn-feel:hover{opacity:.9;}
-  .btn-feel:active{transform:scale(0.97);}
-  .plan-popular{box-shadow:0 0 0 1px rgba(0,212,245,0.35),0 16px 48px rgba(0,212,245,0.10);}
-  .toast-msg{position:fixed;bottom:24px;right:24px;background:#212a3c;border:1px solid rgba(0,212,245,0.3);color:#d9e2fb;padding:14px 20px;border-radius:10px;font-family:'Space Mono',monospace;font-size:12px;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;max-width:320px;}
-  .toast-msg.show{transform:translateY(0);opacity:1;}
-  .check-yes{color:#00FFC2;}
-  .check-no{color:#424656;}
-  .feature-check{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(66,70,86,0.4);font-size:12px;color:#c2c6d8;line-height:1.5;}
-  .feature-check:last-child{border-bottom:none;}
-  .feature-dim{color:#424656;}
-  input[type=email]{background:#121b2d;border:1px solid rgba(66,70,86,0.8);border-radius:8px;padding:11px 14px;color:#d9e2fb;font-family:'Space Mono',monospace;font-size:12px;outline:none;transition:border-color .15s;width:100%;}
-  input[type=email]:focus{border-color:rgba(148,233,255,0.4);box-shadow:0 0 0 3px rgba(0,211,244,0.08);}
-  input[type=email]::placeholder{color:#424656;}
-
-:root{--bg:#05071a;--nav-bg:rgba(5,7,26,.92);--border:rgba(0,240,255,.1);--cyan:#00f0ff;--muted:#6a7fa8;--text:#d8e6ff;--white:#fff;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+:root{--bg:#05071a;--card:#0d1235;--card2:#111840;--border:rgba(0,240,255,.1);--cyan:#00f0ff;--green:#00f5a0;--red:#ff9090;--amber:#f59e0b;--purple:#7b5cff;--white:#fff;--text:#d8e6ff;--muted:#6a7fa8;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,240,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.02) 1px,transparent 1px);background-size:64px 64px;}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(5,7,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo img{height:36px;width:auto;object-fit:contain;}
 .nav-logo-name{font-family:var(--orb);font-size:1rem;font-weight:700;color:var(--cyan);letter-spacing:.04em;}
 .nav-links{display:none;align-items:center;gap:4px;}
 @media(min-width:768px){.nav-links{display:flex;}}
-.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:all .2s;}
-.nav-links a:hover{color:var(--cyan);}
+.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);}
 .nav-links a.live-badge{color:var(--cyan);border:1px solid rgba(0,240,255,.2);}
 .nav-right{display:flex;align-items:center;gap:8px;}
 .nav-signin{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .2s;}
 .nav-signin:hover{color:var(--cyan);}
-.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;transition:opacity .15s;text-transform:uppercase;letter-spacing:.06em;}
-.nav-cta:hover{opacity:.88;}
+.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;}
 .hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
 .hamburger span{display:block;width:22px;height:1.5px;background:var(--muted);}
 @media(min-width:768px){.hamburger{display:none;}}
 #mob-menu{display:none;position:fixed;inset:0;z-index:90;padding-top:68px;background:rgba(5,7,26,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:24px;}
 #mob-menu.open{display:flex;}
-#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;transition:color .15s;}
+#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;}
 #mob-menu a:hover{color:var(--cyan);}
-
+/* MAIN */
+main{padding:96px 5vw 80px;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.page-tag{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:12px;}
+h1{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:-.02em;}
+.page-sub{font-size:.95rem;color:var(--muted);line-height:1.75;margin-bottom:40px;max-width:560px;}
+/* TIER GRID */
+.tier-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:48px;}
+@media(min-width:700px){.tier-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:1000px){.tier-grid{grid-template-columns:1fr 1fr 1fr 1fr;}}
+.tier-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;transition:border-color .2s;}
+.tier-card:hover{border-color:rgba(0,240,255,.25);}
+.tier-card.featured{background:rgba(0,240,255,.04);border-color:rgba(0,240,255,.3);}
+.tier-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);}
+.tier-label.featured-label{color:var(--cyan);}
+.tier-price{display:flex;align-items:baseline;gap:6px;}
+.tier-amount{font-size:2.4rem;font-weight:700;color:var(--white);letter-spacing:-.02em;}
+.tier-period{font-size:.8rem;color:var(--muted);}
+.tier-desc{font-size:.82rem;color:var(--muted);line-height:1.65;}
+.tier-features{display:flex;flex-direction:column;gap:8px;flex:1;}
+.tier-feature{display:flex;align-items:flex-start;gap:8px;font-size:.8rem;color:var(--text);line-height:1.5;}
+.tier-feature::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px;}
+.tier-btn{display:block;text-align:center;padding:11px;border-radius:7px;font-weight:700;font-size:.82rem;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border:none;transition:opacity .15s;margin-top:auto;}
+.tier-btn-outline{background:transparent;border:1px solid rgba(0,240,255,.3);color:var(--cyan);}
+.tier-btn-outline:hover{background:rgba(0,240,255,.08);}
+.tier-btn-solid{background:var(--cyan);color:#05071a;}
+.tier-btn-solid:hover{opacity:.88;}
+.tier-btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.tier-btn-ghost:hover{border-color:rgba(0,240,255,.2);color:var(--text);}
+/* FAQ */
+.faq-section{margin-bottom:48px;}
+.faq-section h2{font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:20px;letter-spacing:-.01em;}
+.faq-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:700px){.faq-grid{grid-template-columns:1fr 1fr;}}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;}
+.faq-q{font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:6px;}
+.faq-a{font-size:.8rem;color:var(--muted);line-height:1.65;}
+/* CTA */
+.pricing-cta{background:linear-gradient(135deg,rgba(0,240,255,.06),rgba(123,92,255,.05));border:1px solid rgba(0,240,255,.16);border-radius:12px;padding:36px;text-align:center;}
+.pricing-cta h2{font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+.pricing-cta p{font-size:.88rem;color:var(--muted);margin-bottom:22px;}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.btn-p{background:var(--cyan);color:#05071a;font-weight:700;font-size:.82rem;padding:11px 24px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;transition:opacity .15s;}
+.btn-p:hover{opacity:.88;}
+.btn-o{border:1px solid rgba(0,240,255,.3);color:var(--cyan);font-size:.82rem;padding:10px 20px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;}
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:24px 5vw;text-align:center;margin-top:60px;position:relative;z-index:1;}
+footer a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;margin:0 10px;transition:color .15s;}
+footer a:hover{color:var(--cyan);}
+footer p{font-family:var(--mono);font-size:.58rem;color:rgba(106,127,168,.28);margin-top:8px;}
 </style>
 </head>
-<body class="overflow-x-hidden">
+<body>
 
-<!-- NAV -->
-<nav style="position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(10,19,36,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.07);">
-  <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
-    <img src="VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'" style="height:36px;width:auto;object-fit:contain;">
-    <span style="font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:#00f0ff;letter-spacing:.04em;">VeriSigil AI</span>
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'">
+    <span class="nav-logo-name">VeriSigil AI</span>
   </a>
-  <div id="pricing-nav-links" style="display:none;align-items:center;gap:4px;">
-    <a href="/scanner.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#00f0ff;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;border:1px solid rgba(0,240,255,.2);">⚡ Scanner</a>
-    <a href="/sandbox_demo.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">Sandbox</a>
-    <a href="/demos.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">Demos</a>
-    <a href="/studio.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">Studio</a>
-    <a href="/pricing.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#00f0ff;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;background:rgba(0,240,255,.06);">Pricing</a>
-    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">API Docs</a>
+  <div class="nav-links">
+    <a href="/scanner.html" class="live-badge">⚡ Scanner</a>
+    <a href="/sandbox_demo.html">Sandbox</a>
+    <a href="/demos.html">Demos</a>
+    <a href="/studio.html">Studio</a>
+    <a href="/pricing.html" class="active">Pricing</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs</a>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;">
-    <a href="/auth.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;">Sign In</a>
-    <a href="/auth.html?mode=signup" style="font-family:sans-serif;font-weight:700;font-size:.7rem;background:#00f0ff;color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;">Get Started</a>
+  <div class="nav-right">
+    <a href="/auth.html" class="nav-signin">Sign In</a>
+    <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
 </nav>
-<style>@media(min-width:768px){#pricing-nav-links{display:flex!important;}}</style>
 
-<main class="pt-24 pb-24 px-5 md:px-12 max-w-[1160px] mx-auto relative z-10">
+<div id="mob-menu">
+  <a href="/scanner.html" onclick="toggleMenu()">⚡ Scanner</a>
+  <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
+  <a href="/demos.html" onclick="toggleMenu()">Demos</a>
+  <a href="/studio.html" onclick="toggleMenu()">Studio</a>
+  <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
+  <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
+  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);">Get Started →</a>
+</div>
 
-  <!-- HERO -->
-  <div class="text-center mb-12">
-    <div class="reveal inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1565ff]/10 border border-[#b4c5ff]/20 mb-6">
-      <span class="font-mono text-[10px] text-[#b4c5ff] uppercase tracking-widest">Simple, Transparent Pricing</span>
-    </div>
-    <h1 class="reveal font-bold text-[clamp(30px,5vw,52px)] text-white leading-tight tracking-tight mb-4" style="transition-delay:.06s">
-      Start Free. Scale With Confidence.
-    </h1>
-    <p class="reveal text-[#8c90a1] text-[15px] max-w-[500px] mx-auto leading-relaxed" style="transition-delay:.1s">
-      All plans include cryptographic evidence generation and the constitutional governance gate. Enter your email below to receive your API key after payment.
-    </p>
-  </div>
+<main>
+  <div class="page-tag">Pricing · Start Free · Scale to Enterprise</div>
+  <h1>One API.<br>Four Tiers.</h1>
+  <p class="page-sub">Start with a free governance scan. Deploy in 30 days. No lock-in until you are production-ready. All plans include the runtime gateway, evidence generation, and EU AI Act mapping.</p>
 
-  <!-- EMAIL INPUT -->
-  <div class="reveal text-center mb-8" style="transition-delay:.12s">
-    <p class="font-mono text-[11px] text-[#8c90a1] uppercase tracking-widest mb-3">Your email — required to receive API key</p>
-    <div class="flex gap-2 max-w-[420px] mx-auto">
-      <input type="email" id="userEmail" placeholder="you@company.com" class="flex-1">
-      <div class="w-px bg-[#424656]"></div>
-    </div>
-  </div>
+  <div class="tier-grid">
 
-  <!-- BILLING TOGGLE -->
-  <div class="reveal flex items-center justify-center gap-3 mb-10" style="transition-delay:.14s">
-    <span class="font-mono text-[12px] text-white font-bold" id="label-monthly">Monthly</span>
-    <div class="relative w-11 h-6 bg-[#162031] border border-[#424656] rounded-full cursor-pointer" id="billing-toggle" onclick="toggleBilling()">
-      <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-[#8c90a1] rounded-full transition-all duration-200" id="toggle-thumb"></div>
-    </div>
-    <span class="font-mono text-[12px] text-[#8c90a1]" id="label-annual">Annual</span>
-    <span class="bg-[#1fd47a]/15 text-[#1FD47A] font-mono text-[10px] font-bold px-2 py-0.5 rounded">Save 20%</span>
-  </div>
-
-  <!-- 4 PLAN CARDS -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
-
-    <!-- STARTER -->
-    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative" style="transition-delay:.06s">
-      <div class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest mb-3">Free · Developer</div>
-      <div class="font-bold text-[40px] text-white leading-none mb-1">$0</div>
-      <div class="font-mono text-[11px] text-[#8c90a1] mb-3">forever free</div>
-      <div class="font-mono text-[11px] text-[#94e9ff] bg-[#94e9ff]/08 border border-[#94e9ff]/15 rounded-lg px-3 py-2 text-center mb-5">100 requests / month</div>
-      <div class="flex flex-col flex-1 mb-6">
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Runtime governance gate</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Document semantic verify</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Governance OS status</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Fail-safe DENY endpoint</div>
-        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Inference corruption detection</div>
-        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Cognition poisoning shield</div>
-        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Accountability chain (VGS-024)</div>
+    <!-- FREE -->
+    <div class="tier-card">
+      <div class="tier-label">Free · Developer</div>
+      <div class="tier-price">
+        <span class="tier-amount">$0</span>
+        <span class="tier-period">forever</span>
       </div>
-      <button onclick="activateFree()" class="btn-feel w-full py-3 bg-[#162031] border border-[#424656] text-[#c2c6d8] font-semibold rounded-xl text-[13px] hover:border-[#b4c5ff]/40 transition-colors">
-        Get Free Key
-      </button>
+      <p class="tier-desc">Everything you need to discover governance gaps and test the runtime gateway.</p>
+      <div class="tier-features">
+        <div class="tier-feature">1,000 verifications/month</div>
+        <div class="tier-feature">Shadow AI Governance Scanner</div>
+        <div class="tier-feature">Workflow Readiness Scanner</div>
+        <div class="tier-feature">Governance Coverage Score</div>
+        <div class="tier-feature">Sandbox API access</div>
+        <div class="tier-feature">Community support</div>
+        <div class="tier-feature">3 DOI published specifications</div>
+      </div>
+      <a href="https://paystack.shop/pay/w2m0bx1-17" target="_blank" rel="noopener" class="tier-btn tier-btn-outline">Start Free →</a>
     </div>
 
-    <!-- DEVELOPER -->
-    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative" style="transition-delay:.1s">
-      <div class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest mb-3">Developer</div>
-      <div class="flex items-end gap-1 mb-1">
-        <div class="font-bold text-[40px] text-white leading-none" id="price-dev">$49</div>
-        <div class="font-mono text-[13px] text-[#8c90a1] mb-1.5">/mo</div>
+    <!-- PRO -->
+    <div class="tier-card featured">
+      <div class="tier-label featured-label">Pro · SMB · Most Popular</div>
+      <div class="tier-price">
+        <span class="tier-amount">$499</span>
+        <span class="tier-period">/month</span>
       </div>
-      <div class="font-mono text-[11px] text-[#8c90a1] mb-3" id="period-dev">billed monthly</div>
-      <div class="font-mono text-[11px] text-[#94e9ff] bg-[#94e9ff]/08 border border-[#94e9ff]/15 rounded-lg px-3 py-2 text-center mb-5">5,000 requests / month</div>
-      <div class="flex flex-col flex-1 mb-6">
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Everything in Free · Developer</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Inference corruption detection</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Semantic integrity guard</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Cognition poisoning shield</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Adversarial simulator</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Governance collapse risk</div>
-        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Accountability chain (VGS-024)</div>
-        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>ATF bridge</div>
+      <p class="tier-desc">Full runtime governance for growing companies deploying AI in production workflows.</p>
+      <div class="tier-features">
+        <div class="tier-feature">10,000 verifications/month</div>
+        <div class="tier-feature">Decision Authority Mapping (5 flows)</div>
+        <div class="tier-feature">HSEA — Observe / Intervene level</div>
+        <div class="tier-feature">EU AI Act compliance reports</div>
+        <div class="tier-feature">Governance Evidence Infrastructure</div>
+        <div class="tier-feature">Consequence tier classification</div>
+        <div class="tier-feature">Email support + SLA</div>
       </div>
-      <button onclick="pay('developer')" class="btn-feel w-full py-3 bg-[#1565ff] text-white font-semibold rounded-xl text-[13px]">
-        Get Developer Key
-      </button>
-    </div>
-
-    <!-- GROWTH — POPULAR -->
-    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative plan-popular border border-[#00D4F5]/30" style="transition-delay:.14s">
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00D4F5] text-[#050e1f] font-mono text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest whitespace-nowrap">Most Popular</div>
-      <div class="font-mono text-[10px] text-[#94e9ff] uppercase tracking-widest mb-3">Pro · SMB</div><!--$499-->
-      <div class="flex items-end gap-1 mb-1">
-        <div class="font-bold text-[40px] text-white leading-none" id="price-growth">$499</div>
-        <div class="font-mono text-[13px] text-[#8c90a1] mb-1.5">/mo</div>
-      </div>
-      <div class="font-mono text-[11px] text-[#8c90a1] mb-3" id="period-growth">billed monthly</div>
-      <div class="font-mono text-[11px] text-[#94e9ff] bg-[#94e9ff]/08 border border-[#94e9ff]/15 rounded-lg px-3 py-2 text-center mb-5">50,000 requests / month</div>
-      <div class="flex flex-col flex-1 mb-6">
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Everything in Developer</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>All 475 endpoints</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>VGS-024 Accountability Chain</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>ATF bridge (5 endpoints)</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Governance OS kernel</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Sovereign isolation mode</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Consequence simulation</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Domain policy templates</div>
-      </div>
-      <button onclick="pay('growth')" class="btn-feel w-full py-3.5 bg-[#00D4F5] text-[#050e1f] font-bold rounded-xl text-[13px]">
-        Get Pro · SMB Key
-      </button>
+      <a href="https://paystack.shop/pay/y5t592t4q7" target="_blank" rel="noopener" class="tier-btn tier-btn-solid">Subscribe — Pro →</a>
     </div>
 
     <!-- ENTERPRISE -->
-    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative" style="transition-delay:.18s">
-      <div class="font-mono text-[10px] text-[#ffb59b] uppercase tracking-widest mb-3">Enterprise</div>
-      <div class="font-bold text-[32px] text-white leading-none mt-1 mb-1">Custom</div>
-      <div class="font-mono text-[11px] text-[#8c90a1] mb-3">annual contract</div>
-      <div class="font-mono text-[11px] text-[#ffb59b] bg-[#ffb59b]/08 border border-[#ffb59b]/15 rounded-lg px-3 py-2 text-center mb-5">Unlimited requests</div>
-      <div class="flex flex-col flex-1 mb-6">
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Everything in Pro · SMB</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Dedicated API key management</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Custom policy templates</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>SLA guarantee</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Integration support</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Priority escalation handling</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Regulatory evidence packages</div>
-        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Sovereign / air-gapped deploy</div>
+    <div class="tier-card">
+      <div class="tier-label">Enterprise · Custom</div>
+      <div class="tier-price">
+        <span class="tier-amount">Custom</span>
       </div>
-      <button onclick="contactEnterprise()" class="btn-feel w-full py-3 border border-[#ffb59b]/30 text-[#ffb59b] font-semibold rounded-xl text-[13px] hover:border-[#ffb59b]/60 hover:bg-[#ffb59b]/05 transition-colors">
-        Contact Enterprise
-      </button>
+      <p class="tier-desc">Full stack deployment for banks, healthcare, government, and critical infrastructure.</p>
+      <div class="tier-features">
+        <div class="tier-feature">Unlimited verifications + SLA</div>
+        <div class="tier-feature">Full DAME + CRG + HSA + GEI + ELE</div>
+        <div class="tier-feature">Emergency Governance Mode (EGM)</div>
+        <div class="tier-feature">HSEA — Halt + Cryptographic Overrides</div>
+        <div class="tier-feature">Reliance Resolution Layer (Q1 2027)</div>
+        <div class="tier-feature">On-prem deployment option</div>
+        <div class="tier-feature">SOC 2 Type I ready · 99.9% uptime</div>
+        <div class="tier-feature">4-hour P1 response · Dedicated CSM</div>
+        <div class="tier-feature">Quarterly governance reviews</div>
+      </div>
+      <a href="https://paystack.shop/pay/1cgmezjnmg" target="_blank" rel="noopener" class="tier-btn tier-btn-outline">Contact Sales →</a>
     </div>
 
-  </div>
+    <!-- GOVERNMENT -->
+    <div class="tier-card">
+      <div class="tier-label">Government · Regulator</div>
+      <div class="tier-price">
+        <span class="tier-amount">Annual</span>
+        <span class="tier-period">contract</span>
+      </div>
+      <p class="tier-desc">White-label verification portal and regulatory reporting for competent authorities.</p>
+      <div class="tier-features">
+        <div class="tier-feature">White-label verification portal</div>
+        <div class="tier-feature">Regulatory reporting dashboards</div>
+        <div class="tier-feature">EU AI Act conformity audit exports</div>
+        <div class="tier-feature">NITDA Nigeria alignment</div>
+        <div class="tier-feature">Training + certification programmes</div>
+        <div class="tier-feature">Sovereign deployment option</div>
+        <div class="tier-feature">Custom contract ($100K–$1M+)</div>
+      </div>
+      <a href="mailto:info@verisigilai.com?subject=Government%20Tier%20Enquiry" class="tier-btn tier-btn-ghost">Talk to Us →</a>
+    </div>
 
-  <!-- COMPARISON TABLE -->
-  <div class="reveal glass rounded-2xl overflow-hidden mb-12" style="transition-delay:.1s">
-    <div class="px-6 py-4 bg-[#162031] border-b border-white/[0.06] flex items-center gap-2">
-      <span class="material-symbols-outlined text-[#b4c5ff] text-[18px]">compare</span>
-      <h2 class="font-bold text-[15px] text-white">Full Feature Comparison</h2>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse min-w-[600px]">
-        <thead>
-          <tr class="border-b border-white/[0.06]">
-            <th class="px-6 py-4 font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest w-[40%]">Feature</th>
-            <th class="px-4 py-4 font-mono text-[10px] text-[#8c90a1] uppercase text-center">Free · Developer</th>
-            <th class="px-4 py-4 font-mono text-[10px] text-[#b4c5ff] uppercase text-center">Developer</th>
-            <th class="px-4 py-4 font-mono text-[10px] text-[#94e9ff] uppercase text-center">Pro · SMB</th>
-            <th class="px-4 py-4 font-mono text-[10px] text-[#ffb59b] uppercase text-center">Enterprise</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-white/[0.04]">
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Monthly requests</td><td class="px-4 py-3 text-[12px] text-center text-[#8c90a1] font-mono">100</td><td class="px-4 py-3 text-[12px] text-center text-white font-mono">5,000</td><td class="px-4 py-3 text-[12px] text-center text-[#94e9ff] font-mono">50,000</td><td class="px-4 py-3 text-[12px] text-center text-[#00FFC2] font-mono">∞</td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Runtime governance gate</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Document semantic verify</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Inference corruption detection</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Cognition poisoning shield</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">VGS-024 Accountability Chain</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">ATF bridge endpoints</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">EU AI Act compliance mapping</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Sovereign / air-gapped deploy</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
-          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Support</td><td class="px-4 py-3 text-[12px] text-center text-[#8c90a1]">Community</td><td class="px-4 py-3 text-[12px] text-center text-white">Email</td><td class="px-4 py-3 text-[12px] text-center text-[#94e9ff]">Priority email</td><td class="px-4 py-3 text-[12px] text-center text-[#00FFC2]">Dedicated SLA</td></tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 
   <!-- FAQ -->
-  <div class="reveal mb-14" style="transition-delay:.1s">
-    <h2 class="font-bold text-[22px] text-white mb-8 text-center">Frequently Asked Questions</h2>
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="glass rounded-xl p-5">
-        <h3 class="font-bold text-[14px] text-white mb-2">How do I receive my API key?</h3>
-        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Enter your email above, choose a plan, and complete payment. Your key arrives within minutes. Key format: <code class="text-[#94e9ff] font-mono text-[11px]">vs-live-{tier}-{key}</code></p>
+  <div class="faq-section">
+    <h2>Common Questions</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">Can I switch plans later?</div>
+        <div class="faq-a">Yes. You can upgrade at any time. Downgrading takes effect at the next billing cycle. No lock-in.</div>
       </div>
-      <div class="glass rounded-xl p-5">
-        <h3 class="font-bold text-[14px] text-white mb-2">What happens at my request limit?</h3>
-        <p class="text-[13px] text-[#8c90a1] leading-relaxed">You get an email at 80% usage. At the limit, requests return 429. Upgrade anytime from your dashboard — no downtime.</p>
+      <div class="faq-item">
+        <div class="faq-q">What counts as a verification?</div>
+        <div class="faq-a">One API call to any governance endpoint — execution control, consequence classification, evidence generation, or reliance resolution.</div>
       </div>
-      <div class="glass rounded-xl p-5">
-        <h3 class="font-bold text-[14px] text-white mb-2">Does VeriSigil satisfy EU AI Act requirements?</h3>
-        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Yes. VGS-024 Sovereignty Chain satisfies Articles 9, 11, 12, 14, and 22. Pro · SMB and Enterprise include full accountability chains with independently verifiable records. Enforcement: August 2, 2026.</p>
+      <div class="faq-item">
+        <div class="faq-q">Is the evidence verifiable offline?</div>
+        <div class="faq-a">Yes. All evidence bundles are SHA-256 sealed with Ed25519 signatures. Verifiable without platform access — on any device, by any auditor.</div>
       </div>
-      <div class="glass rounded-xl p-5">
-        <h3 class="font-bold text-[14px] text-white mb-2">What is the fail-safe DENY behavior?</h3>
-        <p class="text-[13px] text-[#8c90a1] leading-relaxed">If VeriSigil is unreachable, all SDK connectors return <code class="text-[#94e9ff] font-mono text-[11px]">allowed=False</code> automatically. The system never fails open. Governance gaps are never silently ignored.</p>
+      <div class="faq-item">
+        <div class="faq-q">Which frameworks does the API support?</div>
+        <div class="faq-a">LangChain, CrewAI, AutoGen, and any custom agentic framework via REST API. SDK adapters coming Q4 2026.</div>
       </div>
-      <div class="glass rounded-xl p-5">
-        <h3 class="font-bold text-[14px] text-white mb-2">Works with LangChain, CrewAI, AutoGen?</h3>
-        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Yes. Download VeriSigil connectors from the quickstart guide. One import, ~15 minutes to integrate with any major agentic framework.</p>
+      <div class="faq-item">
+        <div class="faq-q">Does VeriSigil store my AI agent's data?</div>
+        <div class="faq-a">Only governance metadata is stored — decisions, evidence hashes, and audit events. Your agent's model or training data is never accessed.</div>
       </div>
-      <div class="glass rounded-xl p-5">
-        <h3 class="font-bold text-[14px] text-white mb-2">Can I cancel anytime?</h3>
-        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Monthly plans can be cancelled any time with no penalty. Annual plans are non-refundable after 30 days. Your data is retained for 90 days after cancellation.</p>
+      <div class="faq-item">
+        <div class="faq-q">How long does deployment take?</div>
+        <div class="faq-a">Free: 5 minutes to first governed call. Pro: 30 days to full production governance. Enterprise: guided 30-day deployment with dedicated support.</div>
       </div>
     </div>
   </div>
 
   <!-- CTA -->
-  <div class="reveal glass rounded-2xl p-8 md:p-12 text-center border border-[#1565ff]/15">
-    <h2 class="font-bold text-[clamp(20px,4vw,34px)] text-white leading-tight mb-4">Start governing your AI systems today.</h2>
-    <p class="text-[#8c90a1] text-[14px] max-w-[380px] mx-auto mb-8">Free plan available. No credit card required for Free · Developer. Upgrade when you need more governance capacity.</p>
-    <div class="flex flex-col sm:flex-row gap-3 justify-center">
-      <a href="/replay_demo.html" class="btn-feel border border-[#424656] text-[#c2c6d8] font-medium py-3 px-8 rounded-xl text-[13px] hover:border-[#b4c5ff]/40 transition-colors">Watch Demo First</a>
-      <a href="/auth.html?mode=signup" class="btn-feel bg-[#1565ff] text-white font-semibold py-3 px-8 rounded-xl text-[13px]">Create Account</a>
+  <div class="pricing-cta">
+    <h2>Not sure which tier?</h2>
+    <p>Start with the free scanner. We will recommend the right plan after seeing your governance exposure.</p>
+    <div class="cta-row">
+      <a href="/scanner.html" class="btn-p">Scan Your Org Free</a>
+      <a href="mailto:info@verisigilai.com?subject=Pricing%20Question" class="btn-o">Ask a Question</a>
     </div>
   </div>
-
 </main>
 
-<footer class="border-t border-white/[0.06] px-5 md:px-12 py-8 text-center relative z-10">
-  <div class="flex flex-wrap justify-center gap-4 mb-3">
-    <a href="/" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Home</a>
-    <a href="/demos.html" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Demos</a>
-    <a href="/substrate.html" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Platform</a>
-    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">API Docs</a>
-    <a href="mailto:raheem@verisigilai.com" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Contact</a>
-  </div>
-  <span class="font-mono text-[10px] text-[#424656]">© 2026 VeriSigil AI · Lagos, Nigeria · VGS-ELI-Certified</span>
+<footer>
+  <a href="/">Home</a>
+  <a href="/scanner.html">Scanner</a>
+  <a href="/sandbox_demo.html">Sandbox</a>
+  <a href="/demos.html">Demos</a>
+  <a href="/studio.html">Studio</a>
+  <a href="/contact.html">Contact</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/terms.html">Terms</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
 </footer>
 
-<div class="toast-msg" id="toast"></div>
-
 <script>
-// ── PAYSTACK CONFIG ──────────────────────────────────────────
-// Replace with your actual Paystack public key
-var PAYSTACK_PUBLIC_KEY = 'YOUR_PAYSTACK_PUBLIC_KEY_HERE';
-
-var billing = 'monthly';
-var PRICES = {
-  monthly: {
-    developer: { amount: 49,  label: '$49',  period: 'billed monthly' },
-    growth:    { amount: 199, label: '$499', period: 'billed monthly' },
-  },
-  annual: {
-    developer: { amount: 470,  label: '$0',  period: 'billed annually (Custom/yr)' },
-    growth:    { amount: 1910, label: '$159', period: 'billed annually (Contact Us/yr)' },
-  }
-};
-
-function toggleBilling() {
-  billing = billing === 'monthly' ? 'annual' : 'monthly';
-  var toggle = document.getElementById('billing-toggle');
-  var thumb  = document.getElementById('toggle-thumb');
-  var lm     = document.getElementById('label-monthly');
-  var la     = document.getElementById('label-annual');
-
-  var isAnnual = billing === 'annual';
-  thumb.style.transform = isAnnual ? 'translateX(20px)' : 'translateX(0)';
-  thumb.style.background = isAnnual ? '#00D4F5' : '#8c90a1';
-  toggle.style.background = isAnnual ? 'rgba(0,212,245,0.2)' : '';
-  toggle.style.borderColor = isAnnual ? 'rgba(0,212,245,0.4)' : '';
-
-  lm.style.color = isAnnual ? '#8c90a1' : '#ffffff';
-  lm.style.fontWeight = isAnnual ? '400' : '700';
-  la.style.color = isAnnual ? '#ffffff' : '#8c90a1';
-  la.style.fontWeight = isAnnual ? '700' : '400';
-
-  var p = PRICES[billing];
-  document.getElementById('price-dev').textContent    = p.developer.label;
-  document.getElementById('period-dev').textContent   = p.developer.period;
-  document.getElementById('price-growth').textContent = p.growth.label;
-  document.getElementById('period-growth').textContent= p.growth.period;
+function toggleMenu(){
+  var m = document.getElementById('mob-menu');
+  m.classList.toggle('open');
+  document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
 }
-
-function getEmail() {
-  var email = document.getElementById('userEmail').value.trim();
-  if (!email || !email.includes('@')) {
-    showToast('Please enter your email address first');
-    document.getElementById('userEmail').focus();
-    return null;
-  }
-  return email;
-}
-
-function pay(plan) {
-  var email = getEmail();
-  if (!email) return;
-  var price = PRICES[billing][plan];
-  var planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
-
-  if (PAYSTACK_PUBLIC_KEY === 'YOUR_PAYSTACK_PUBLIC_KEY_HERE') {
-    showToast('Redirecting to payment...');
-    setTimeout(function() {
-      window.location.href = 'mailto:raheem@verisigilai.com?subject=VeriSigil ' + planLabel + ' Plan&body=I would like to subscribe to the ' + planLabel + ' plan (' + price.label + '/mo). My email: ' + email;
-    }, 800);
-    return;
-  }
-
-  var handler = PaystackPop.setup({
-    key:      PAYSTACK_PUBLIC_KEY,
-    email:    email,
-    amount:   price.amount * 100,
-    currency: 'USD',
-    ref:      'VSG-' + Date.now() + '-' + plan.toUpperCase(),
-    metadata: {
-      custom_fields: [
-        { display_name: 'Plan',    variable_name: 'plan',    value: planLabel },
-        { display_name: 'Billing', variable_name: 'billing', value: billing },
-      ]
-    },
-    callback: function(response) {
-      showToast('Payment successful! Your API key will be emailed to ' + email);
-      console.log('Payment ref:', response.reference);
-    },
-    onClose: function() {
-      showToast('Payment cancelled');
-    }
-  });
-  handler.openIframe();
-}
-
-function activateFree() {
-  var email = getEmail();
-  if (!email) return;
-  showToast('Free key requested — check ' + email + ' within 24 hours');
-}
-
-function contactEnterprise() {
-  var email = getEmail();
-  var body = email
-    ? 'I am interested in the Enterprise plan. My email: ' + email
-    : 'I am interested in the Enterprise plan.';
-  window.location.href = 'mailto:raheem@verisigilai.com?subject=' + encodeURIComponent('VeriSigil Enterprise Plan Inquiry') + '&body=' + encodeURIComponent(body);
-}
-
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 3500);
-}
-
-// Scroll reveal
-var obs = new IntersectionObserver(function(entries) {
-  entries.forEach(function(e, i) {
-    if (e.isIntersecting) {
-      setTimeout(function() { e.target.classList.add('visible'); }, i * 60);
-      obs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.08 });
-document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
-</script>
-<script>
-function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 </script>
 </body>
 </html>

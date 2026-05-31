@@ -29,9 +29,36 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
 </head>
 <body>
 <nav>
-  <a href="/" class="brand">VeriSigil AI</a>
-  <a href="/" class="nav-back">← Platform</a>
+  <a href="/" class="nav-logo">
+    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'" style="height:38px;width:auto;object-fit:contain;">
+    <span class="nav-logo-name">VeriSigil AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/scanner.html" class="live-badge">⚡ Scanner</a>
+    <a href="/sandbox_demo.html">Sandbox</a>
+    <a href="/demos.html">Demos</a>
+    <a href="/studio.html">Studio</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs</a>
+  </div>
+  <div class="nav-right">
+    <a href="/auth.html" class="nav-signin">Sign In</a>
+    <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+
+<div id="mob-menu">
+  <a href="/scanner.html" style="color:var(--cyan);" onclick="toggleMenu()">⚡ Scanner</a>
+  <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
+  <a href="/demos.html" onclick="toggleMenu()">Demos</a>
+  <a href="/studio.html" onclick="toggleMenu()">Studio</a>
+  <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
+  <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
+  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);border:1px solid var(--cyan);padding:10px 28px;border-radius:5px;">Get Started →</a>
+</div>
 <main>
   <h1>Security Disclosure</h1>
   <p class="meta">VeriSigil AI · Lagos, Nigeria</p>
@@ -39,7 +66,7 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
   <div class="box">We take security seriously. If you have found a vulnerability, please report it responsibly. We commit to responding within 72 hours.</div>
 
   <h2>Responsible Disclosure</h2>
-  <p>If you discover a security vulnerability in VeriSigil AI's platform, API, or infrastructure, please report it to <a href="mailto:security@verisigilai.com">security@verisigilai.com</a> before public disclosure.</p>
+  <p>If you discover a security vulnerability in VeriSigil AI's platform, API, or infrastructure, please report it to <a href="mailto:info@verisigilai.com">info@verisigilai.com</a> before public disclosure.</p>
   <p>Include: description of the vulnerability, steps to reproduce, potential impact, and your contact details. We will acknowledge receipt within 72 hours and aim to resolve critical issues within 30 days.</p>
 
   <h2>Scope</h2>
@@ -50,7 +77,7 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
   <p>Do not access, modify, or delete data that does not belong to you. Do not disrupt live services. Give us reasonable time to fix before public disclosure. We will not pursue legal action against researchers who follow these guidelines.</p>
 
   <h2>Contact</h2>
-  <p><a href="mailto:security@verisigilai.com">security@verisigilai.com</a><br>VeriSigil AI · Lagos, Nigeria</p>
+  <p><a href="mailto:info@verisigilai.com">info@verisigilai.com</a><br>VeriSigil AI · Lagos, Nigeria</p>
 </main>
 <footer>
   <a href="/privacy.html">Privacy</a>
@@ -59,5 +86,8 @@ footer p{font-family:var(--mono);font-size:10px;color:var(--outline-v);margin-to
   <a href="/contact.html">Contact</a>
   <p>© 2026 VeriSigil AI · Lagos, Nigeria</p>
 </footer>
+<script>
+function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+</script>
 </body>
 </html>

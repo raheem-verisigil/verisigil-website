@@ -1,342 +1,341 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VeriSigil AI — Pricing</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>VeriSigil AI | Pricing</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-:root{
-  --bg:#030A1A;--s1:#07122A;--s2:#0A1828;--s3:#0E2040;
-  --border:rgba(0,180,220,0.10);--b2:rgba(0,212,245,0.22);
-  --cyan:#00D4F5;--cdim:rgba(0,212,245,0.08);
-  --text:#E8F4F8;--muted:#6B8FAA;--muted2:#3D5A70;
-  --green:#1FD47A;--amber:#F0A030;
-  --mono:'JetBrains Mono',monospace;--sans:'Syne',system-ui,sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;vertical-align:middle;}
+  body{background:#0a1324;color:#d9e2fb;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100dvh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(180,197,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(180,197,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+  .glass{background:rgba(22,32,49,0.8);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(12px);}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  .card-lift{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;}
+  .card-lift:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(21,101,255,0.12);}
+  .btn-feel{transition:opacity .15s,transform .12s;cursor:pointer;}
+  .btn-feel:hover{opacity:.9;}
+  .btn-feel:active{transform:scale(0.97);}
+  .plan-popular{box-shadow:0 0 0 1px rgba(0,212,245,0.35),0 16px 48px rgba(0,212,245,0.10);}
+  .toast-msg{position:fixed;bottom:24px;right:24px;background:#212a3c;border:1px solid rgba(0,212,245,0.3);color:#d9e2fb;padding:14px 20px;border-radius:10px;font-family:'Space Mono',monospace;font-size:12px;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;max-width:320px;}
+  .toast-msg.show{transform:translateY(0);opacity:1;}
+  .check-yes{color:#00FFC2;}
+  .check-no{color:#424656;}
+  .feature-check{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(66,70,86,0.4);font-size:12px;color:#c2c6d8;line-height:1.5;}
+  .feature-check:last-child{border-bottom:none;}
+  .feature-dim{color:#424656;}
+  input[type=email]{background:#121b2d;border:1px solid rgba(66,70,86,0.8);border-radius:8px;padding:11px 14px;color:#d9e2fb;font-family:'Space Mono',monospace;font-size:12px;outline:none;transition:border-color .15s;width:100%;}
+  input[type=email]:focus{border-color:rgba(148,233,255,0.4);box-shadow:0 0 0 3px rgba(0,211,244,0.08);}
+  input[type=email]::placeholder{color:#424656;}
 
-nav{position:sticky;top:0;z-index:100;background:rgba(3,10,26,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--b2);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
-.nav-brand{font-size:15px;font-weight:700;color:var(--text);}
-.nav-sub{font-size:11px;color:var(--muted);font-family:var(--mono);}
-.nav-links{display:flex;gap:20px;}
-.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s;}
-.nav-links a:hover{color:var(--text);}
+:root{--bg:#05071a;--nav-bg:rgba(5,7,26,.92);--border:rgba(0,240,255,.1);--cyan:#00f0ff;--muted:#6a7fa8;--text:#d8e6ff;--white:#fff;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-name{font-family:var(--orb);font-size:1rem;font-weight:700;color:var(--cyan);letter-spacing:.04em;}
+.nav-links{display:none;align-items:center;gap:4px;}
+@media(min-width:768px){.nav-links{display:flex;}}
+.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:all .2s;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-links a.live-badge{color:var(--cyan);border:1px solid rgba(0,240,255,.2);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-signin{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .2s;}
+.nav-signin:hover{color:var(--cyan);}
+.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;transition:opacity .15s;text-transform:uppercase;letter-spacing:.06em;}
+.nav-cta:hover{opacity:.88;}
+.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--muted);}
+@media(min-width:768px){.hamburger{display:none;}}
+#mob-menu{display:none;position:fixed;inset:0;z-index:90;padding-top:68px;background:rgba(5,7,26,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+#mob-menu.open{display:flex;}
+#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;transition:color .15s;}
+#mob-menu a:hover{color:var(--cyan);}
 
-.hero{text-align:center;padding:60px 24px 40px;position:relative;z-index:2;}
-.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--cdim);border:1px solid var(--b2);color:var(--cyan);font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;font-family:var(--mono);}
-.hero h1{font-size:44px;font-weight:800;line-height:1.1;margin-bottom:16px;}
-.hero h1 span{color:var(--cyan);}
-.hero p{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto;line-height:1.7;}
-
-.main{max-width:1100px;margin:0 auto;padding:0 20px 80px;position:relative;z-index:2;}
-
-/* EMAIL INPUT */
-.email-section{text-align:center;margin-bottom:40px;}
-.email-section p{font-size:13px;color:var(--muted);margin-bottom:12px;font-family:var(--mono);}
-.email-row{display:flex;gap:10px;max-width:420px;margin:0 auto;}
-.email-input{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;transition:border-color .15s;}
-.email-input:focus{border-color:rgba(0,212,245,.4);}
-.email-input::placeholder{color:var(--muted2);}
-
-/* TOGGLE */
-.toggle-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:40px;}
-.toggle-label{font-size:13px;color:var(--muted);}
-.toggle-label.active{color:var(--text);font-weight:600;}
-.toggle{width:44px;height:24px;background:var(--s3);border-radius:12px;cursor:pointer;position:relative;transition:background .2s;border:1px solid var(--border);}
-.toggle.on{background:rgba(0,212,245,.3);border-color:var(--b2);}
-.toggle-thumb{width:18px;height:18px;background:var(--muted);border-radius:50%;position:absolute;top:2px;left:3px;transition:all .2s;}
-.toggle.on .toggle-thumb{left:22px;background:var(--cyan);}
-.save-badge{background:rgba(31,212,122,.15);color:var(--green);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;font-family:var(--mono);}
-
-/* PLANS GRID */
-.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px;}
-.plan{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;flex-direction:column;position:relative;transition:border-color .2s;}
-.plan:hover{border-color:rgba(0,212,245,.3);}
-.plan.popular{border-color:var(--b2);background:linear-gradient(180deg,rgba(0,212,245,.05) 0%,var(--s1) 100%);}
-.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--cyan);color:#030A1A;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;}
-.plan-name{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;font-family:var(--mono);}
-.plan-price{font-size:38px;font-weight:800;color:var(--text);line-height:1;margin-bottom:4px;font-family:var(--mono);}
-.plan-price span{font-size:16px;color:var(--muted);font-weight:400;}
-.plan-period{font-size:12px;color:var(--muted);margin-bottom:20px;font-family:var(--mono);}
-.plan-requests{font-size:12px;color:var(--cyan);font-family:var(--mono);margin-bottom:16px;padding:8px 12px;background:var(--cdim);border-radius:6px;text-align:center;}
-.plan-features{flex:1;list-style:none;margin-bottom:24px;}
-.plan-features li{font-size:12px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;line-height:1.4;}
-.plan-features li::before{content:'✓';color:var(--green);flex-shrink:0;font-weight:700;}
-.plan-features li.dim::before{content:'—';color:var(--muted2);}
-.plan-features li.dim{color:var(--muted2);}
-.btn-plan{width:100%;padding:12px;border-radius:8px;border:none;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
-.btn-free{background:var(--s3);color:var(--muted);border:1px solid var(--border);}
-.btn-free:hover{border-color:rgba(0,212,245,.3);color:var(--text);}
-.btn-paid{background:var(--cyan);color:#030A1A;}
-.btn-paid:hover{opacity:.88;}
-.btn-enterprise{background:transparent;color:var(--cyan);border:1px solid var(--b2);}
-.btn-enterprise:hover{background:var(--cdim);}
-
-/* COMPARISON TABLE */
-.sec-label{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.16em;font-family:var(--mono);margin-bottom:16px;margin-top:48px;}
-.compare{width:100%;border-collapse:collapse;margin-bottom:48px;}
-.compare th{background:var(--s3);padding:12px 16px;font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);text-align:center;}
-.compare th:first-child{text-align:left;}
-.compare td{padding:12px 16px;font-size:12px;border-bottom:1px solid var(--border);color:var(--muted);text-align:center;}
-.compare td:first-child{color:var(--text);text-align:left;font-size:13px;}
-.compare tr:hover td{background:rgba(0,212,245,.02);}
-.check{color:var(--green);font-size:14px;}
-.cross{color:var(--muted2);}
-
-/* FAQ */
-.faq{margin-bottom:48px;}
-.faq-item{border-bottom:1px solid var(--border);padding:16px 0;}
-.faq-q{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.faq-a{font-size:13px;color:var(--muted);line-height:1.7;}
-.faq-a a{color:var(--cyan);}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--s3);border:1px solid var(--b2);color:var(--text);padding:14px 20px;border-radius:8px;font-size:13px;font-family:var(--mono);z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;}
-.toast.show{transform:translateY(0);opacity:1;}
-
-footer{text-align:center;padding:40px 20px;font-size:12px;color:var(--muted2);font-family:var(--mono);border-top:1px solid var(--border);position:relative;z-index:2;}
-footer a{color:var(--muted);text-decoration:none;}
-
-@media(max-width:900px){
-  .plans{grid-template-columns:repeat(2,1fr);}
-}
-@media(max-width:500px){
-  .plans{grid-template-columns:1fr;}
-  .hero h1{font-size:32px;}
-}
 </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
 
-<nav>
-  <div>
-    <div class="nav-brand">VeriSigil AI</div>
-    <div class="nav-sub">Pricing</div>
+<!-- NAV -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(10,19,36,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.07);">
+  <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <img src="VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'" style="height:36px;width:auto;object-fit:contain;">
+    <span style="font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:#00f0ff;letter-spacing:.04em;">VeriSigil AI</span>
+  </a>
+  <div id="pricing-nav-links" style="display:none;align-items:center;gap:4px;">
+    <a href="/scanner.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#00f0ff;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;border:1px solid rgba(0,240,255,.2);">⚡ Scanner</a>
+    <a href="/sandbox_demo.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">Sandbox</a>
+    <a href="/demos.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">Demos</a>
+    <a href="/studio.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">Studio</a>
+    <a href="/pricing.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#00f0ff;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;background:rgba(0,240,255,.06);">Pricing</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;">API Docs</a>
   </div>
-  <div class="nav-links">
-    <a href="https://verisigilai.com">Home</a>
-    <a href="https://verisigilai.com/demos.html">Demos</a>
-    <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <a href="/auth.html" style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:#8094c0;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;">Sign In</a>
+    <a href="/auth.html?mode=signup" style="font-family:sans-serif;font-weight:700;font-size:.7rem;background:#00f0ff;color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;">Get Started</a>
   </div>
 </nav>
+<style>@media(min-width:768px){#pricing-nav-links{display:flex!important;}}</style>
 
-<div class="hero">
-  <div class="hero-tag">Simple Pricing</div>
-  <h1>Governance Infrastructure<br><span>Priced for Builders</span></h1>
-  <p>Start free. Scale as your AI agents do. Every plan includes the runtime enforcement gate and fail-safe DENY by default.</p>
-</div>
+<main class="pt-24 pb-24 px-5 md:px-12 max-w-[1160px] mx-auto relative z-10">
 
-<div class="main">
+  <!-- HERO -->
+  <div class="text-center mb-12">
+    <div class="reveal inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1565ff]/10 border border-[#b4c5ff]/20 mb-6">
+      <span class="font-mono text-[10px] text-[#b4c5ff] uppercase tracking-widest">Simple, Transparent Pricing</span>
+    </div>
+    <h1 class="reveal font-bold text-[clamp(30px,5vw,52px)] text-white leading-tight tracking-tight mb-4" style="transition-delay:.06s">
+      Start Free. Scale With Confidence.
+    </h1>
+    <p class="reveal text-[#8c90a1] text-[15px] max-w-[500px] mx-auto leading-relaxed" style="transition-delay:.1s">
+      All plans include cryptographic evidence generation and the constitutional governance gate. Enter your email below to receive your API key after payment.
+    </p>
+  </div>
 
-  <!-- EMAIL -->
-  <div class="email-section">
-    <p>Enter your email to activate your API key after payment</p>
-    <div class="email-row">
-      <input class="email-input" id="userEmail" type="email" placeholder="you@company.com">
+  <!-- EMAIL INPUT -->
+  <div class="reveal text-center mb-8" style="transition-delay:.12s">
+    <p class="font-mono text-[11px] text-[#8c90a1] uppercase tracking-widest mb-3">Your email — required to receive API key</p>
+    <div class="flex gap-2 max-w-[420px] mx-auto">
+      <input type="email" id="userEmail" placeholder="you@company.com" class="flex-1">
+      <div class="w-px bg-[#424656]"></div>
     </div>
   </div>
 
   <!-- BILLING TOGGLE -->
-  <div class="toggle-row">
-    <span class="toggle-label active" id="label-monthly">Monthly</span>
-    <div class="toggle" id="billing-toggle" onclick="toggleBilling()">
-      <div class="toggle-thumb"></div>
+  <div class="reveal flex items-center justify-center gap-3 mb-10" style="transition-delay:.14s">
+    <span class="font-mono text-[12px] text-white font-bold" id="label-monthly">Monthly</span>
+    <div class="relative w-11 h-6 bg-[#162031] border border-[#424656] rounded-full cursor-pointer" id="billing-toggle" onclick="toggleBilling()">
+      <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-[#8c90a1] rounded-full transition-all duration-200" id="toggle-thumb"></div>
     </div>
-    <span class="toggle-label" id="label-annual">Annual</span>
-    <span class="save-badge">Save 20%</span>
+    <span class="font-mono text-[12px] text-[#8c90a1]" id="label-annual">Annual</span>
+    <span class="bg-[#1fd47a]/15 text-[#1FD47A] font-mono text-[10px] font-bold px-2 py-0.5 rounded">Save 20%</span>
   </div>
 
-  <!-- PLANS -->
-  <div class="plans">
+  <!-- 4 PLAN CARDS -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
 
-    <!-- FREE -->
-    <div class="plan">
-      <div class="plan-name">Starter</div>
-      <div class="plan-price">$0</div>
-      <div class="plan-period">forever free</div>
-      <div class="plan-requests">100 requests / month</div>
-      <ul class="plan-features">
-        <li>Runtime governance gate</li>
-        <li>Document semantic verify</li>
-        <li>Governance OS status</li>
-        <li>Fail-safe DENY endpoint</li>
-        <li class="dim">Inference corruption detection</li>
-        <li class="dim">Cognition poisoning shield</li>
-        <li class="dim">Accountability chain (VGS-024)</li>
-        <li class="dim">Priority support</li>
-      </ul>
-      <button class="btn-plan btn-free" onclick="activateFree()">Get Free Key</button>
+    <!-- STARTER -->
+    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative" style="transition-delay:.06s">
+      <div class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest mb-3">Starter</div>
+      <div class="font-bold text-[40px] text-white leading-none mb-1">$0</div>
+      <div class="font-mono text-[11px] text-[#8c90a1] mb-3">forever free</div>
+      <div class="font-mono text-[11px] text-[#94e9ff] bg-[#94e9ff]/08 border border-[#94e9ff]/15 rounded-lg px-3 py-2 text-center mb-5">100 requests / month</div>
+      <div class="flex flex-col flex-1 mb-6">
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Runtime governance gate</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Document semantic verify</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Governance OS status</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Fail-safe DENY endpoint</div>
+        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Inference corruption detection</div>
+        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Cognition poisoning shield</div>
+        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Accountability chain (VGS-024)</div>
+      </div>
+      <button onclick="activateFree()" class="btn-feel w-full py-3 bg-[#162031] border border-[#424656] text-[#c2c6d8] font-semibold rounded-xl text-[13px] hover:border-[#b4c5ff]/40 transition-colors">
+        Get Free Key
+      </button>
     </div>
 
     <!-- DEVELOPER -->
-    <div class="plan">
-      <div class="plan-name">Developer</div>
-      <div class="plan-price" id="price-dev">$49<span>/mo</span></div>
-      <div class="plan-period" id="period-dev">billed monthly</div>
-      <div class="plan-requests">5,000 requests / month</div>
-      <ul class="plan-features">
-        <li>Everything in Starter</li>
-        <li>Inference corruption detection</li>
-        <li>Semantic integrity guard</li>
-        <li>Cognition poisoning shield</li>
-        <li>Adversarial simulator</li>
-        <li>Governance collapse risk</li>
-        <li>Calibration engine</li>
-        <li class="dim">Accountability chain (VGS-024)</li>
-        <li class="dim">ATF bridge</li>
-      </ul>
-      <button class="btn-plan btn-paid" onclick="pay('developer')">Get Developer Key</button>
+    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative" style="transition-delay:.1s">
+      <div class="font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest mb-3">Developer</div>
+      <div class="flex items-end gap-1 mb-1">
+        <div class="font-bold text-[40px] text-white leading-none" id="price-dev">$49</div>
+        <div class="font-mono text-[13px] text-[#8c90a1] mb-1.5">/mo</div>
+      </div>
+      <div class="font-mono text-[11px] text-[#8c90a1] mb-3" id="period-dev">billed monthly</div>
+      <div class="font-mono text-[11px] text-[#94e9ff] bg-[#94e9ff]/08 border border-[#94e9ff]/15 rounded-lg px-3 py-2 text-center mb-5">5,000 requests / month</div>
+      <div class="flex flex-col flex-1 mb-6">
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Everything in Starter</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Inference corruption detection</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Semantic integrity guard</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Cognition poisoning shield</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Adversarial simulator</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Governance collapse risk</div>
+        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>Accountability chain (VGS-024)</div>
+        <div class="feature-check feature-dim"><span class="material-symbols-outlined check-no text-[15px] shrink-0">remove</span>ATF bridge</div>
+      </div>
+      <button onclick="pay('developer')" class="btn-feel w-full py-3 bg-[#1565ff] text-white font-semibold rounded-xl text-[13px]">
+        Get Developer Key
+      </button>
     </div>
 
     <!-- GROWTH — POPULAR -->
-    <div class="plan popular">
-      <div class="plan-badge">Most Popular</div>
-      <div class="plan-name">Growth</div>
-      <div class="plan-price" id="price-growth">$199<span>/mo</span></div>
-      <div class="plan-period" id="period-growth">billed monthly</div>
-      <div class="plan-requests">50,000 requests / month</div>
-      <ul class="plan-features">
-        <li>Everything in Developer</li>
-        <li>All 332 endpoints</li>
-        <li>VGS-024 Accountability Chain</li>
-        <li>ATF bridge (5 endpoints)</li>
-        <li>Governance OS kernel</li>
-        <li>Sovereign isolation mode</li>
-        <li>Consequence simulation</li>
-        <li>Domain policy templates</li>
-        <li>Benchmarking engine</li>
-      </ul>
-      <button class="btn-plan btn-paid" onclick="pay('growth')">Get Growth Key</button>
+    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative plan-popular border border-[#00D4F5]/30" style="transition-delay:.14s">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00D4F5] text-[#050e1f] font-mono text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest whitespace-nowrap">Most Popular</div>
+      <div class="font-mono text-[10px] text-[#94e9ff] uppercase tracking-widest mb-3">Growth</div>
+      <div class="flex items-end gap-1 mb-1">
+        <div class="font-bold text-[40px] text-white leading-none" id="price-growth">$199</div>
+        <div class="font-mono text-[13px] text-[#8c90a1] mb-1.5">/mo</div>
+      </div>
+      <div class="font-mono text-[11px] text-[#8c90a1] mb-3" id="period-growth">billed monthly</div>
+      <div class="font-mono text-[11px] text-[#94e9ff] bg-[#94e9ff]/08 border border-[#94e9ff]/15 rounded-lg px-3 py-2 text-center mb-5">50,000 requests / month</div>
+      <div class="flex flex-col flex-1 mb-6">
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Everything in Developer</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>All 475 endpoints</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>VGS-024 Accountability Chain</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>ATF bridge (5 endpoints)</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Governance OS kernel</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Sovereign isolation mode</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Consequence simulation</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Domain policy templates</div>
+      </div>
+      <button onclick="pay('growth')" class="btn-feel w-full py-3.5 bg-[#00D4F5] text-[#050e1f] font-bold rounded-xl text-[13px]">
+        Get Growth Key
+      </button>
     </div>
 
     <!-- ENTERPRISE -->
-    <div class="plan">
-      <div class="plan-name">Enterprise</div>
-      <div class="plan-price">Custom</div>
-      <div class="plan-period">annual contract</div>
-      <div class="plan-requests">Unlimited requests</div>
-      <ul class="plan-features">
-        <li>Everything in Growth</li>
-        <li>Dedicated API key management</li>
-        <li>Custom policy templates</li>
-        <li>SLA guarantee</li>
-        <li>Integration support</li>
-        <li>Priority escalation handling</li>
-        <li>Regulatory evidence packages</li>
-        <li>Custom jurisdictions</li>
-      </ul>
-      <button class="btn-plan btn-enterprise" onclick="contactEnterprise()">Contact Us</button>
+    <div class="reveal glass card-lift rounded-2xl p-6 flex flex-col relative" style="transition-delay:.18s">
+      <div class="font-mono text-[10px] text-[#ffb59b] uppercase tracking-widest mb-3">Enterprise</div>
+      <div class="font-bold text-[32px] text-white leading-none mt-1 mb-1">Custom</div>
+      <div class="font-mono text-[11px] text-[#8c90a1] mb-3">annual contract</div>
+      <div class="font-mono text-[11px] text-[#ffb59b] bg-[#ffb59b]/08 border border-[#ffb59b]/15 rounded-lg px-3 py-2 text-center mb-5">Unlimited requests</div>
+      <div class="flex flex-col flex-1 mb-6">
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Everything in Growth</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Dedicated API key management</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Custom policy templates</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>SLA guarantee</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Integration support</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Priority escalation handling</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Regulatory evidence packages</div>
+        <div class="feature-check"><span class="material-symbols-outlined check-yes text-[15px] shrink-0">check_circle</span>Sovereign / air-gapped deploy</div>
+      </div>
+      <button onclick="contactEnterprise()" class="btn-feel w-full py-3 border border-[#ffb59b]/30 text-[#ffb59b] font-semibold rounded-xl text-[13px] hover:border-[#ffb59b]/60 hover:bg-[#ffb59b]/05 transition-colors">
+        Contact Enterprise
+      </button>
     </div>
 
   </div>
 
-  <!-- COMPARISON -->
-  <div class="sec-label">Feature Comparison</div>
-  <table class="compare">
-    <thead>
-      <tr>
-        <th>Feature</th>
-        <th>Starter</th>
-        <th>Developer</th>
-        <th>Growth</th>
-        <th>Enterprise</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Runtime governance gate</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Document integrity (semantic-verify)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Fail-safe DENY by default</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Inference corruption detection</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Cognition poisoning shield</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Semantic chain verification</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Adversarial simulator</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>VGS-024 Accountability Chain</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>ATF bridge (cross-protocol)</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Sovereign isolation mode</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Governance OS kernel</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>SLA guarantee</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-      <tr><td>Monthly requests</td><td>100</td><td>5,000</td><td>50,000</td><td>Unlimited</td></tr>
-      <tr><td>Rate limit</td><td>10/min</td><td>60/min</td><td>300/min</td><td>Custom</td></tr>
-    </tbody>
-  </table>
+  <!-- COMPARISON TABLE -->
+  <div class="reveal glass rounded-2xl overflow-hidden mb-12" style="transition-delay:.1s">
+    <div class="px-6 py-4 bg-[#162031] border-b border-white/[0.06] flex items-center gap-2">
+      <span class="material-symbols-outlined text-[#b4c5ff] text-[18px]">compare</span>
+      <h2 class="font-bold text-[15px] text-white">Full Feature Comparison</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse min-w-[600px]">
+        <thead>
+          <tr class="border-b border-white/[0.06]">
+            <th class="px-6 py-4 font-mono text-[10px] text-[#8c90a1] uppercase tracking-widest w-[40%]">Feature</th>
+            <th class="px-4 py-4 font-mono text-[10px] text-[#8c90a1] uppercase text-center">Starter</th>
+            <th class="px-4 py-4 font-mono text-[10px] text-[#b4c5ff] uppercase text-center">Developer</th>
+            <th class="px-4 py-4 font-mono text-[10px] text-[#94e9ff] uppercase text-center">Growth</th>
+            <th class="px-4 py-4 font-mono text-[10px] text-[#ffb59b] uppercase text-center">Enterprise</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/[0.04]">
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Monthly requests</td><td class="px-4 py-3 text-[12px] text-center text-[#8c90a1] font-mono">100</td><td class="px-4 py-3 text-[12px] text-center text-white font-mono">5,000</td><td class="px-4 py-3 text-[12px] text-center text-[#94e9ff] font-mono">50,000</td><td class="px-4 py-3 text-[12px] text-center text-[#00FFC2] font-mono">∞</td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Runtime governance gate</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Document semantic verify</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Inference corruption detection</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Cognition poisoning shield</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">VGS-024 Accountability Chain</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">ATF bridge endpoints</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">EU AI Act compliance mapping</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Sovereign / air-gapped deploy</td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-no text-[16px]">remove</span></td><td class="px-4 py-3 text-center"><span class="material-symbols-outlined check-yes text-[16px]">check</span></td></tr>
+          <tr class="hover:bg-white/[0.02]"><td class="px-6 py-3 text-[13px] text-[#c2c6d8]">Support</td><td class="px-4 py-3 text-[12px] text-center text-[#8c90a1]">Community</td><td class="px-4 py-3 text-[12px] text-center text-white">Email</td><td class="px-4 py-3 text-[12px] text-center text-[#94e9ff]">Priority email</td><td class="px-4 py-3 text-[12px] text-center text-[#00FFC2]">Dedicated SLA</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <!-- FAQ -->
-  <div class="sec-label">Frequently Asked Questions</div>
-  <div class="faq">
-    <div class="faq-item">
-      <div class="faq-q">How do I get my API key after payment?</div>
-      <div class="faq-a">Your API key is sent to your email immediately after payment is confirmed. You can start making API calls within minutes. Key format: <code style="color:var(--cyan);font-family:var(--mono);">vs-live-{tier}-{unique-key}</code></div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">What happens when I exceed my monthly requests?</div>
-      <div class="faq-a">You will receive an email notification at 80% usage. When the limit is reached, requests return a 429 response. You can upgrade your plan anytime or purchase additional requests.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">Can I use VeriSigil with LangChain, CrewAI, or AutoGen?</div>
-      <div class="faq-a">Yes. Download the VeriSigil connectors file from <a href="https://verisigilai.com">verisigilai.com</a>. One import, 15 minutes to integrate with LangChain, CrewAI, AutoGen, or LangGraph.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">Does VeriSigil satisfy EU AI Act requirements?</div>
-      <div class="faq-a">VeriSigil's Sovereign Accountability Chain (VGS-024) is designed to satisfy Articles 9, 11, 12, and 14 of the EU AI Act. Growth and Enterprise plans include the full accountability chain with independently verifiable records.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">What is the fail-safe DENY behavior?</div>
-      <div class="faq-a">If VeriSigil cannot be reached, all SDK connectors automatically return <code style="color:var(--cyan);font-family:var(--mono);">allowed=False</code>. The system never fails open. Governance gaps are never silently ignored.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">Can I cancel anytime?</div>
-      <div class="faq-a">Yes. Monthly plans can be cancelled anytime with no penalty. Annual plans are non-refundable after 30 days.</div>
+  <div class="reveal mb-14" style="transition-delay:.1s">
+    <h2 class="font-bold text-[22px] text-white mb-8 text-center">Frequently Asked Questions</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-bold text-[14px] text-white mb-2">How do I receive my API key?</h3>
+        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Enter your email above, choose a plan, and complete payment. Your key arrives within minutes. Key format: <code class="text-[#94e9ff] font-mono text-[11px]">vs-live-{tier}-{key}</code></p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-bold text-[14px] text-white mb-2">What happens at my request limit?</h3>
+        <p class="text-[13px] text-[#8c90a1] leading-relaxed">You get an email at 80% usage. At the limit, requests return 429. Upgrade anytime from your dashboard — no downtime.</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-bold text-[14px] text-white mb-2">Does VeriSigil satisfy EU AI Act requirements?</h3>
+        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Yes. VGS-024 Sovereignty Chain satisfies Articles 9, 11, 12, 14, and 22. Growth and Enterprise include full accountability chains with independently verifiable records. Enforcement: August 2, 2026.</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-bold text-[14px] text-white mb-2">What is the fail-safe DENY behavior?</h3>
+        <p class="text-[13px] text-[#8c90a1] leading-relaxed">If VeriSigil is unreachable, all SDK connectors return <code class="text-[#94e9ff] font-mono text-[11px]">allowed=False</code> automatically. The system never fails open. Governance gaps are never silently ignored.</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-bold text-[14px] text-white mb-2">Works with LangChain, CrewAI, AutoGen?</h3>
+        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Yes. Download VeriSigil connectors from the quickstart guide. One import, ~15 minutes to integrate with any major agentic framework.</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-bold text-[14px] text-white mb-2">Can I cancel anytime?</h3>
+        <p class="text-[13px] text-[#8c90a1] leading-relaxed">Monthly plans can be cancelled any time with no penalty. Annual plans are non-refundable after 30 days. Your data is retained for 90 days after cancellation.</p>
+      </div>
     </div>
   </div>
 
-</div>
+  <!-- CTA -->
+  <div class="reveal glass rounded-2xl p-8 md:p-12 text-center border border-[#1565ff]/15">
+    <h2 class="font-bold text-[clamp(20px,4vw,34px)] text-white leading-tight mb-4">Start governing your AI systems today.</h2>
+    <p class="text-[#8c90a1] text-[14px] max-w-[380px] mx-auto mb-8">Free plan available. No credit card required for Starter. Upgrade when you need more governance capacity.</p>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="/replay_demo.html" class="btn-feel border border-[#424656] text-[#c2c6d8] font-medium py-3 px-8 rounded-xl text-[13px] hover:border-[#b4c5ff]/40 transition-colors">Watch Demo First</a>
+      <a href="/auth.html?mode=signup" class="btn-feel bg-[#1565ff] text-white font-semibold py-3 px-8 rounded-xl text-[13px]">Create Account</a>
+    </div>
+  </div>
 
-<div class="toast" id="toast"></div>
+</main>
 
-<footer>
-  VeriSigil AI &nbsp;&middot;&nbsp; <a href="https://verisigilai.com">verisigilai.com</a> &nbsp;&middot;&nbsp;
-  <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a> &nbsp;&middot;&nbsp;
-  Sovereign Execution Infrastructure for Autonomous AI
+<footer class="border-t border-white/[0.06] px-5 md:px-12 py-8 text-center relative z-10">
+  <div class="flex flex-wrap justify-center gap-4 mb-3">
+    <a href="/" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Home</a>
+    <a href="/demos.html" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Demos</a>
+    <a href="/substrate.html" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Platform</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">API Docs</a>
+    <a href="mailto:raheem@verisigilai.com" class="font-mono text-[11px] text-[#8c90a1] hover:text-[#b4c5ff] transition-colors">Contact</a>
+  </div>
+  <span class="font-mono text-[10px] text-[#424656]">© 2026 VeriSigil AI · Lagos, Nigeria · VGS-ELI-Certified</span>
 </footer>
 
-<script>
-// ── CONFIG — Replace with your Paystack public key ────────────
-var PAYSTACK_PUBLIC_KEY = 'YOUR_PAYSTACK_PUBLIC_KEY_HERE';
-var EMAIL_ENDPOINT = 'mailto:raheem@verisigilai.com'; // fallback
+<div class="toast-msg" id="toast"></div>
 
-// ── PRICING ───────────────────────────────────────────────────
-var PRICES = {
-  monthly: {
-    developer: { amount: 4900,  label: '$49/mo',  period: 'billed monthly' },
-    growth:    { amount: 19900, label: '$199/mo', period: 'billed monthly' },
-  },
-  annual: {
-    developer: { amount: 47040,  label: '$39/mo', period: 'billed annually ($468/yr)' },
-    growth:    { amount: 191040, label: '$159/mo', period: 'billed annually ($1,908/yr)' },
-  }
-};
+<script>
+// ── PAYSTACK CONFIG ──────────────────────────────────────────
+// Replace with your actual Paystack public key
+var PAYSTACK_PUBLIC_KEY = 'YOUR_PAYSTACK_PUBLIC_KEY_HERE';
 
 var billing = 'monthly';
+var PRICES = {
+  monthly: {
+    developer: { amount: 49,  label: '$49',  period: 'billed monthly' },
+    growth:    { amount: 199, label: '$199', period: 'billed monthly' },
+  },
+  annual: {
+    developer: { amount: 470,  label: '$39',  period: 'billed annually ($470/yr)' },
+    growth:    { amount: 1910, label: '$159', period: 'billed annually ($1,910/yr)' },
+  }
+};
 
 function toggleBilling() {
   billing = billing === 'monthly' ? 'annual' : 'monthly';
   var toggle = document.getElementById('billing-toggle');
-  var lm = document.getElementById('label-monthly');
-  var la = document.getElementById('label-annual');
+  var thumb  = document.getElementById('toggle-thumb');
+  var lm     = document.getElementById('label-monthly');
+  var la     = document.getElementById('label-annual');
 
-  toggle.classList.toggle('on', billing === 'annual');
-  lm.classList.toggle('active', billing === 'monthly');
-  la.classList.toggle('active', billing === 'annual');
+  var isAnnual = billing === 'annual';
+  thumb.style.transform = isAnnual ? 'translateX(20px)' : 'translateX(0)';
+  thumb.style.background = isAnnual ? '#00D4F5' : '#8c90a1';
+  toggle.style.background = isAnnual ? 'rgba(0,212,245,0.2)' : '';
+  toggle.style.borderColor = isAnnual ? 'rgba(0,212,245,0.4)' : '';
+
+  lm.style.color = isAnnual ? '#8c90a1' : '#ffffff';
+  lm.style.fontWeight = isAnnual ? '400' : '700';
+  la.style.color = isAnnual ? '#ffffff' : '#8c90a1';
+  la.style.fontWeight = isAnnual ? '700' : '400';
 
   var p = PRICES[billing];
-  document.getElementById('price-dev').innerHTML    = p.developer.label + '<span>/mo</span>';
-  document.getElementById('period-dev').textContent = p.developer.period;
-  document.getElementById('price-growth').innerHTML = p.growth.label + '<span>/mo</span>';
-  document.getElementById('period-growth').textContent = p.growth.period;
+  document.getElementById('price-dev').textContent    = p.developer.label;
+  document.getElementById('period-dev').textContent   = p.developer.period;
+  document.getElementById('price-growth').textContent = p.growth.label;
+  document.getElementById('period-growth').textContent= p.growth.period;
 }
 
 function getEmail() {
@@ -352,35 +351,31 @@ function getEmail() {
 function pay(plan) {
   var email = getEmail();
   if (!email) return;
-
   var price = PRICES[billing][plan];
   var planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
 
-  // Check if Paystack key is configured
-  if (PAYSTACK_PUBLIC_KEY === 'pk_test_835e5b8dfb76199fbc4b5986eaf6fba8b0c83ec2') {
-    // Fallback — direct email
+  if (PAYSTACK_PUBLIC_KEY === 'YOUR_PAYSTACK_PUBLIC_KEY_HERE') {
     showToast('Redirecting to payment...');
     setTimeout(function() {
-      window.location.href = 'mailto:raheem@verisigilai.com?subject=VeriSigil ' + planLabel + ' Plan&body=I would like to subscribe to the ' + planLabel + ' plan (' + price.label + '). My email is: ' + email;
+      window.location.href = 'mailto:raheem@verisigilai.com?subject=VeriSigil ' + planLabel + ' Plan&body=I would like to subscribe to the ' + planLabel + ' plan (' + price.label + '/mo). My email: ' + email;
     }, 800);
     return;
   }
 
   var handler = PaystackPop.setup({
-    key:       PAYSTACK_PUBLIC_KEY,
-    email:     email,
-    amount:    price.amount * 100,  // Paystack uses kobo/cents
-    currency:  'USD',
-    ref:       'VSG-' + Date.now() + '-' + plan.toUpperCase(),
+    key:      PAYSTACK_PUBLIC_KEY,
+    email:    email,
+    amount:   price.amount * 100,
+    currency: 'USD',
+    ref:      'VSG-' + Date.now() + '-' + plan.toUpperCase(),
     metadata: {
       custom_fields: [
-        { display_name: "Plan",    variable_name: "plan",    value: planLabel },
-        { display_name: "Billing", variable_name: "billing", value: billing },
+        { display_name: 'Plan',    variable_name: 'plan',    value: planLabel },
+        { display_name: 'Billing', variable_name: 'billing', value: billing },
       ]
     },
     callback: function(response) {
       showToast('Payment successful! Your API key will be emailed to ' + email);
-      // In production: call your backend to provision API key
       console.log('Payment ref:', response.reference);
     },
     onClose: function() {
@@ -394,16 +389,14 @@ function activateFree() {
   var email = getEmail();
   if (!email) return;
   showToast('Free key requested — check ' + email + ' within 24 hours');
-  // In production: POST to your backend to issue free key
 }
 
 function contactEnterprise() {
   var email = getEmail();
-  var subject = 'VeriSigil Enterprise Plan Inquiry';
   var body = email
     ? 'I am interested in the Enterprise plan. My email: ' + email
     : 'I am interested in the Enterprise plan.';
-  window.location.href = 'mailto:raheem@verisigilai.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  window.location.href = 'mailto:raheem@verisigilai.com?subject=' + encodeURIComponent('VeriSigil Enterprise Plan Inquiry') + '&body=' + encodeURIComponent(body);
 }
 
 function showToast(msg) {
@@ -412,6 +405,20 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(function() { t.classList.remove('show'); }, 3500);
 }
+
+// Scroll reveal
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e, i) {
+    if (e.isIntersecting) {
+      setTimeout(function() { e.target.classList.add('visible'); }, i * 60);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+</script>
+<script>
+function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 </script>
 </body>
 </html>

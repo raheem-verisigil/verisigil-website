@@ -228,6 +228,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(3,10,26,0.92);backdrop-fil
     </button>
   </div>
 </nav>
+<div id="clock" style="display:none;"></div>
 
 <div id="mob-menu">
   <a href="/scanner.html" style="color:var(--cyan);" onclick="toggleMenu()">⚡ Scanner</a>
@@ -395,7 +396,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(3,10,26,0.92);backdrop-fil
 
 <script>
 var API = 'https://verisigil-api-production.up.railway.app';
-var KEY = 'verisigil-secret-2026';
+var KEY = 'verisigil-mopelolala';
 
 function hdr(){return{'x-api-key':KEY,'Content-Type':'application/json'};}
 
@@ -409,7 +410,7 @@ async function get(path){
 
 // ── CLOCK ─────────────────────────────────────────────────────
 function updateClock(){
-  document.getElementById('clock').textContent=new Date().toUTCString().split(' ').slice(4,5)[0]+' UTC';
+  (document.getElementById('clock')||{}).textContent=new Date().toUTCString().split(' ').slice(4,5)[0]+' UTC';
 }
 setInterval(updateClock,1000);updateClock();
 
@@ -458,24 +459,24 @@ async function loadDashboard(){
   var shadow=agents.filter(a=>a.shadow_risk==='CRITICAL').length;
   var avgTrust=agents.reduce((s,a)=>s+a.trust_score,0)/agents.length;
 
-  document.getElementById('h-active').textContent=active;
-  document.getElementById('h-risk').textContent=atRisk;
-  document.getElementById('h-shadow').textContent=shadow;
-  document.getElementById('h-records').textContent=d?d.total_records||0:0;
-  document.getElementById('m-total').textContent=agents.length;
-  document.getElementById('m-trust').textContent=avgTrust.toFixed(3);
-  document.getElementById('m-esc').textContent=agents.reduce((s,a)=>s+a.total_escalations,0);
-  document.getElementById('m-shadow').textContent=atRisk;
+  (document.getElementById('h-active')||{}).textContent=active;
+  (document.getElementById('h-risk')||{}).textContent=atRisk;
+  (document.getElementById('h-shadow')||{}).textContent=shadow;
+  (document.getElementById('h-records')||{}).textContent=d?d.total_records||0:0;
+  (document.getElementById('m-total')||{}).textContent=agents.length;
+  (document.getElementById('m-trust')||{}).textContent=avgTrust.toFixed(3);
+  (document.getElementById('m-esc')||{}).textContent=agents.reduce((s,a)=>s+a.total_escalations,0);
+  (document.getElementById('m-shadow')||{}).textContent=atRisk;
 
   var score=d?d.health_score||(avgTrust*100).toFixed(1):(avgTrust*100).toFixed(1);
   var grade=score>=90?'A':score>=75?'B':score>=55?'C':'F';
-  document.getElementById('h-grade').textContent=grade;
+  (document.getElementById('h-grade')||{}).textContent=grade;
   document.getElementById('h-grade').className='health-grade '+grade;
-  document.getElementById('h-score').textContent=parseFloat(score).toFixed(1);
+  (document.getElementById('h-score')||{}).textContent=parseFloat(score).toFixed(1);
   var barEl=document.getElementById('h-bar');
   barEl.style.width=score+'%';
   barEl.className='bar-fill'+(score<55?' red':score<75?' amber':'');
-  document.getElementById('h-sub').textContent=
+  (document.getElementById('h-sub')||{}).textContent=
     grade==='A'?'All invariants passing · System healthy':
     grade==='B'?'Minor alerts · Monitoring required':
     'Governance intervention required';
@@ -484,7 +485,7 @@ async function loadDashboard(){
 async function loadAgents(){
   var data=await get('/v1/inventory/summary');
   var agents=data&&data.agents?data.agents:SIM_AGENTS;
-  document.getElementById('agent-badge').textContent=agents.length+' agents';
+  (document.getElementById('agent-badge')||{}).textContent=agents.length+' agents';
 
   if(!agents.length){
     document.getElementById('agent-list').innerHTML='<div class="empty">No agents registered</div>';
@@ -550,7 +551,7 @@ async function loadInvariants(){
   var badge=document.getElementById('inv-badge');
   badge.textContent=passCount+'/4 passing';
   badge.className='panel-badge '+(passCount===4?'ok':passCount>=2?'warn':'critical');
-  document.getElementById('m-inv').textContent=passCount+'/4';
+  (document.getElementById('m-inv')||{}).textContent=passCount+'/4';
 
   var html='';
   invs.forEach(function(inv){
@@ -566,9 +567,9 @@ async function loadInvariants(){
   document.getElementById('inv-list').innerHTML=html;
 
   if(d){
-    document.getElementById('acc-count').textContent=d.total_records||0;
+    (document.getElementById('acc-count')||{}).textContent=d.total_records||0;
     var grades=d.accountability_grades||{};
-    document.getElementById('acc-grades').textContent=
+    (document.getElementById('acc-grades')||{}).textContent=
       Object.entries(grades).map(function(e){return e[0]+':'+e[1];}).join(' · ')||'—';
   }
 }
@@ -576,7 +577,7 @@ async function loadInvariants(){
 async function loadFeed(){
   var data=await get('/v1/audit/chain');
   var events=data&&data.events?data.events:SIM_EVENTS;
-  document.getElementById('feed-badge').textContent=events.length+' events';
+  (document.getElementById('feed-badge')||{}).textContent=events.length+' events';
 
   if(!events.length){
     document.getElementById('feed-list').innerHTML='<div class="empty">No governance events yet</div>';
@@ -600,7 +601,7 @@ async function loadFeed(){
 
 async function loadRisk(){
   var agents=SIM_AGENTS.filter(function(a){return['HIGH','CRITICAL'].includes(a.shadow_risk);});
-  document.getElementById('risk-badge').textContent=agents.length+' agents';
+  (document.getElementById('risk-badge')||{}).textContent=agents.length+' agents';
   document.getElementById('risk-badge').className='panel-badge '+(agents.length>0?'critical':'ok');
 
   if(!agents.length){

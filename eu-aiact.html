@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🇪🇺 EU AI Act Compliance Scanner — VeriSigil AI</title>
+<meta name="description" content="Are you EU AI Act compliant? Deadline: August 2, 2026. Free compliance assessment in 60 seconds. Fine: €30M or 6% global revenue.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05071a;--card:#0d1235;--border:rgba(0,240,255,.1);--cyan:#00f0ff;--green:#00f5a0;--red:#ff9090;--amber:#f59e0b;--white:#fff;--text:#d8e6ff;--muted:#6a7fa8;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,240,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.02) 1px,transparent 1px);background-size:64px 64px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(5,7,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-name{font-family:var(--orb);font-size:1rem;font-weight:700;color:var(--cyan);}
+.nav-links{display:none;align-items:center;gap:4px;}
+@media(min-width:768px){.nav-links{display:flex;}}
+.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);}
+.nav-links a.live-badge{color:var(--cyan);border:1px solid rgba(0,240,255,.2);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;}
+.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--muted);}
+@media(min-width:768px){.hamburger{display:none;}}
+#mob-menu{display:none;position:fixed;inset:0;z-index:90;padding-top:68px;background:rgba(5,7,26,.97);flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+#mob-menu.open{display:flex;}
+#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;}
+main{padding:96px 5vw 80px;max-width:860px;margin:0 auto;position:relative;z-index:1;}
+/* DEADLINE BANNER */
+.deadline-banner{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(255,144,144,.08));border:1px solid rgba(245,158,11,.35);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:20px;margin-bottom:36px;flex-wrap:wrap;}
+.deadline-count{text-align:center;min-width:80px;}
+.deadline-days{font-family:var(--orb);font-size:2.8rem;font-weight:900;color:var(--amber);line-height:1;}
+.deadline-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:4px;}
+.deadline-text{flex:1;}
+.deadline-text h2{font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.deadline-text p{font-size:.82rem;color:var(--muted);line-height:1.6;}
+.deadline-fine{font-family:var(--mono);font-size:.72rem;color:var(--red);font-weight:700;}
+/* PAGE HEADER */
+.page-tag{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:12px;}
+h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:-.02em;}
+.page-sub{font-size:.95rem;color:var(--muted);line-height:1.75;margin-bottom:32px;max-width:600px;}
+/* FORM */
+.scan-form{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;}
+.form-grid{display:grid;grid-template-columns:1fr;gap:16px;}
+@media(min-width:600px){.form-grid{grid-template-columns:1fr 1fr;}}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+label{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
+input,select,textarea{background:rgba(0,0,0,.3);border:1px solid rgba(0,240,255,.15);border-radius:6px;padding:10px 12px;color:var(--text);font-family:var(--font);font-size:.85rem;width:100%;outline:none;transition:border-color .2s;}
+input:focus,select:focus,textarea:focus{border-color:rgba(0,240,255,.4);}
+select option{background:#0d1235;}
+.checkbox-group{display:flex;flex-direction:column;gap:8px;}
+.checkbox-item{display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--text);cursor:pointer;}
+.checkbox-item input[type=checkbox]{width:16px;height:16px;flex-shrink:0;cursor:pointer;accent-color:var(--cyan);}
+.scan-btn{width:100%;margin-top:20px;background:var(--cyan);color:#05071a;font-family:var(--font);font-weight:700;font-size:.9rem;padding:14px;border-radius:8px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:opacity .15s;}
+.scan-btn:hover{opacity:.88;}
+.scan-btn:disabled{opacity:.4;cursor:not-allowed;}
+/* RESULTS */
+#results{display:none;margin-top:28px;}
+.score-header{display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;flex-wrap:wrap;}
+.score-circle{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--orb);font-size:1.4rem;font-weight:900;}
+.score-info h3{font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.score-info p{font-size:.82rem;color:var(--muted);}
+.risk-badge{font-family:var(--mono);font-size:.65rem;padding:4px 12px;border-radius:4px;text-transform:uppercase;letter-spacing:.1em;display:inline-block;margin-top:6px;}
+.risk-HIGH{color:var(--red);background:rgba(255,144,144,.1);border:1px solid rgba(255,144,144,.25);}
+.risk-LIMITED{color:var(--amber);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);}
+.risk-MINIMAL{color:var(--green);background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.25);}
+.risk-UNACCEPTABLE{color:var(--red);background:rgba(255,0,0,.15);border:1px solid rgba(255,0,0,.3);}
+.gaps-section h3{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:12px;}
+.gap-card{background:rgba(0,0,0,.2);border-left:3px solid var(--red);border-radius:6px;padding:14px 16px;margin-bottom:10px;}
+.gap-card.HIGH{border-left-color:var(--amber);}
+.gap-card.MEDIUM{border-left-color:var(--cyan);}
+.gap-article{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
+.gap-text{font-size:.82rem;color:var(--text);margin-bottom:6px;}
+.gap-fix{font-size:.75rem;color:var(--cyan);}
+.gap-fine{font-size:.72rem;color:var(--red);margin-top:4px;}
+.compliant-banner{background:rgba(0,245,160,.07);border:1px solid rgba(0,245,160,.2);border-radius:8px;padding:16px 20px;text-align:center;}
+.compliant-banner h3{color:var(--green);font-size:1rem;margin-bottom:4px;}
+.compliant-banner p{font-size:.82rem;color:var(--muted);}
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.btn-p{background:var(--cyan);color:#05071a;font-weight:700;font-size:.82rem;padding:11px 22px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;border:none;cursor:pointer;}
+.btn-o{border:1px solid rgba(0,240,255,.3);color:var(--cyan);font-size:.82rem;padding:10px 18px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;background:transparent;cursor:pointer;}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(5,7,26,.3);border-top-color:#05071a;border-radius:50%;animation:spin .5s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+footer{border-top:1px solid var(--border);padding:24px 5vw;text-align:center;margin-top:60px;position:relative;z-index:1;}
+footer a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;margin:0 10px;}
+footer a:hover{color:var(--cyan);}
+footer p{font-family:var(--mono);font-size:.58rem;color:rgba(106,127,168,.28);margin-top:8px;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" height="36" onerror="this.style.display='none'">
+    <span class="nav-logo-name">VeriSigil AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/scanner.html" class="live-badge">⚡ Scanner</a>
+    <a href="/sandbox_demo.html">Sandbox</a>
+    <a href="/demos.html">Demos</a>
+    <a href="/studio.html">Studio</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/eu-aiact.html" class="active">🇪🇺 EU AI Act</a>
+  </div>
+  <div class="nav-right">
+    <a href="/auth.html" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;">Sign In</a>
+    <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div id="mob-menu">
+  <a href="/scanner.html" onclick="toggleMenu()">⚡ Scanner</a>
+  <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
+  <a href="/demos.html" onclick="toggleMenu()">Demos</a>
+  <a href="/studio.html" onclick="toggleMenu()">Studio</a>
+  <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
+  <a href="/eu-aiact.html" onclick="toggleMenu()">EU AI Act</a>
+  <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
+  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);">Get Started →</a>
+</div>
+
+<main>
+  <!-- DEADLINE BANNER -->
+  <div class="deadline-banner">
+    <div class="deadline-count">
+      <div class="deadline-days" id="days-count">--</div>
+      <div class="deadline-label">Days Left</div>
+    </div>
+    <div class="deadline-text">
+      <h2>🇪🇺 EU AI Act Enforcement Deadline</h2>
+      <p>August 2, 2026 — High-risk AI systems must be compliant.<br>
+      <span class="deadline-fine">Fine: €30,000,000 or 6% of global annual revenue — whichever is higher.</span></p>
+    </div>
+  </div>
+
+  <div class="page-tag">🇪🇺 EU AI Act · Free Compliance Assessment · 60 Seconds</div>
+  <h1>Are You EU AI Act Compliant?</h1>
+  <p class="page-sub">Describe your AI system. VeriSigil maps it against EU AI Act Articles 9–26, identifies your compliance gaps, calculates your fine exposure, and gives you a remediation plan — in seconds, not months.</p>
+
+  <div class="scan-form">
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Organisation Name</label>
+        <input type="text" id="org_name" placeholder="e.g. Acme Financial Services" value="My Organisation">
+      </div>
+      <div class="form-group full">
+        <label>Describe Your AI Use Case</label>
+        <textarea id="use_case" rows="3" placeholder="e.g. We use AI to automate loan approval decisions for retail customers across the EU..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Sector</label>
+        <select id="sector">
+          <option value="finance">Finance / Banking</option>
+          <option value="insurance">Insurance</option>
+          <option value="healthcare">Healthcare / Medical</option>
+          <option value="legal">Legal</option>
+          <option value="employment">HR / Employment</option>
+          <option value="education">Education</option>
+          <option value="government">Government / Public Sector</option>
+          <option value="critical infrastructure">Critical Infrastructure</option>
+          <option value="general" selected>General / Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Annual Revenue (EUR) — for fine calculation</label>
+        <input type="number" id="revenue" placeholder="e.g. 10000000" min="0">
+      </div>
+      <div class="form-group full">
+        <label>What Controls Do You Currently Have? (check all that apply)</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" id="audit_trail"> Automatic audit trail / logging of AI decisions</label>
+          <label class="checkbox-item"><input type="checkbox" id="human_oversight"> Human oversight mechanism — humans can halt AI</label>
+          <label class="checkbox-item"><input type="checkbox" id="risk_assessment"> Documented risk management system</label>
+          <label class="checkbox-item"><input type="checkbox" id="technical_docs"> Technical documentation for the AI system</label>
+          <label class="checkbox-item"><input type="checkbox" id="data_governance"> Data governance / training data quality controls</label>
+          <label class="checkbox-item"><input type="checkbox" id="monitoring"> Post-deployment monitoring system</label>
+        </div>
+      </div>
+    </div>
+    <button class="scan-btn" onclick="runAssessment()" id="scan-btn">🇪🇺 Run Free EU AI Act Assessment →</button>
+  </div>
+
+  <div id="results"></div>
+</main>
+
+<footer>
+  <a href="/">Home</a><a href="/scanner.html">Scanner</a><a href="/sandbox_demo.html">Sandbox</a>
+  <a href="/demos.html">Demos</a><a href="/studio.html">Studio</a><a href="/pricing.html">Pricing</a>
+  <a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not legal advice. Consult qualified counsel for regulatory compliance.</p>
+</footer>
+
+<script>
+const API = 'https://verisigil-api-production.up.railway.app';
+const KEY = 'verisigil-secret-2026';
+
+function toggleMenu(){
+  var m = document.getElementById('mob-menu');
+  m.classList.toggle('open');
+}
+
+// Deadline countdown
+async function loadDeadline(){
+  try {
+    const r = await fetch(`${API}/v1/eu-aiact/deadline`);
+    const d = await r.json();
+    const el = document.getElementById('days-count');
+    if(el) el.textContent = d.days_remaining;
+  } catch(e) {
+    const deadline = new Date('2026-08-02');
+    const today    = new Date();
+    const days     = Math.ceil((deadline - today) / (1000*60*60*24));
+    const el = document.getElementById('days-count');
+    if(el) el.textContent = days;
+  }
+}
+loadDeadline();
+
+async function runAssessment(){
+  const btn     = document.getElementById('scan-btn');
+  const results = document.getElementById('results');
+  const useCase = document.getElementById('use_case').value.trim();
+
+  if(!useCase){
+    alert('Please describe your AI use case first.');
+    return;
+  }
+
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spin"></span>Assessing...';
+  results.style.display = 'none';
+
+  const payload = {
+    org_name:            document.getElementById('org_name').value || 'My Organisation',
+    use_case:            useCase,
+    sector:              document.getElementById('sector').value,
+    affects_humans:      true,
+    has_audit_trail:     document.getElementById('audit_trail').checked,
+    has_human_oversight: document.getElementById('human_oversight').checked,
+    has_risk_assessment: document.getElementById('risk_assessment').checked,
+    has_technical_docs:  document.getElementById('technical_docs').checked,
+    has_data_governance: document.getElementById('data_governance').checked,
+    has_monitoring:      document.getElementById('monitoring').checked,
+    annual_revenue_eur:  parseFloat(document.getElementById('revenue').value) || 0,
+    jurisdiction:        'EU',
+  };
+
+  let data = null;
+  try {
+    const r = await fetch(`${API}/v1/eu-aiact/assess`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-api-key':KEY},
+      body: JSON.stringify(payload)
+    });
+    data = await r.json();
+  } catch(e) {
+    data = simulateAssessment(payload);
+  }
+
+  results.style.display = 'block';
+  results.innerHTML     = renderResults(data);
+  results.scrollIntoView({behavior:'smooth',block:'start'});
+  btn.disabled  = false;
+  btn.innerHTML = '🇪🇺 Run Free EU AI Act Assessment →';
+}
+
+function simulateAssessment(p){
+  const sector    = p.sector.toLowerCase();
+  const highRisk  = ['finance','banking','insurance','healthcare','legal','employment','government','critical infrastructure'].includes(sector);
+  const risk      = highRisk ? 'HIGH' : 'LIMITED';
+  const gaps      = [];
+  if(!p.has_audit_trail)     gaps.push({article:"Article 12 — Record Keeping",gap:"No automatic logging of AI decisions",severity:"CRITICAL",vgs_fix:"Deploy /v1/evidence/generate — cryptographic audit trail",fine_risk:"€15M+ if audited without compliant logging"});
+  if(!p.has_human_oversight) gaps.push({article:"Article 14 — Human Oversight",gap:"No human oversight mechanism",severity:"CRITICAL",vgs_fix:"Deploy /v1/human/sovereignty/enforce — HSEA engine",fine_risk:"€15M+ for high-risk AI without human oversight"});
+  if(!p.has_risk_assessment) gaps.push({article:"Article 9 — Risk Management",gap:"No formal risk management system",severity:"HIGH",vgs_fix:"Deploy /v1/score/governance — governance coverage score",fine_risk:"€10M+ without documented risk management"});
+  if(!p.has_technical_docs)  gaps.push({article:"Article 11 — Technical Documentation",gap:"No technical documentation for AI system",severity:"HIGH",vgs_fix:"Deploy /v1/passport/issue — agent identity + DID",fine_risk:"Required before market placement"});
+  const score = Math.max(0, 100 - (gaps.filter(g=>g.severity==='CRITICAL').length*25) - (gaps.filter(g=>g.severity==='HIGH').length*15));
+  const fineExp = p.annual_revenue_eur > 0 ? Math.min(p.annual_revenue_eur * 0.06, 30000000) : 0;
+  const deadline = new Date('2026-08-02');
+  const today    = new Date();
+  const daysLeft = Math.ceil((deadline - today)/(1000*60*60*24));
+  return {risk_category:risk,compliance_score:score,gaps,gaps_found:gaps.length,
+          days_remaining:daysLeft,fine_exposure_eur:fineExp,
+          compliance_level:score>=90?'COMPLIANT':score>=70?'MOSTLY_COMPLIANT':score>=50?'PARTIALLY_COMPLIANT':'NON_COMPLIANT',
+          assessment_id:'EUAIA-DEMO-'+Date.now(),remediation_plan:gaps.map(g=>({priority:g.severity,article:g.article,action:g.vgs_fix,time_to_fix:'1-3 days with VeriSigil API'}))};
+}
+
+function renderResults(d){
+  const scoreColor = d.compliance_score >= 80 ? '#00f5a0' : d.compliance_score >= 50 ? '#f59e0b' : '#ff9090';
+  const scoreBg    = d.compliance_score >= 80 ? 'rgba(0,245,160,.1)' : d.compliance_score >= 50 ? 'rgba(245,158,11,.1)' : 'rgba(255,144,144,.1)';
+
+  let gapsHtml = '';
+  if(d.gaps && d.gaps.length > 0){
+    gapsHtml = `<div class="gaps-section" style="margin-top:16px;">
+      <h3>${d.gaps.length} Compliance Gap${d.gaps.length>1?'s':''} Found</h3>
+      ${d.gaps.map(g=>`
+        <div class="gap-card ${g.severity}">
+          <div class="gap-article">${g.article}</div>
+          <div class="gap-text">${g.gap}</div>
+          <div class="gap-fix">→ ${g.vgs_fix}</div>
+          ${g.fine_risk ? `<div class="gap-fine">⚠️ ${g.fine_risk}</div>` : ''}
+        </div>`).join('')}
+    </div>`;
+  } else {
+    gapsHtml = `<div class="compliant-banner" style="margin-top:16px;">
+      <h3>✅ No Critical Gaps Found</h3>
+      <p>Your current controls address the primary EU AI Act requirements for your risk category. Continue monitoring.</p>
+    </div>`;
+  }
+
+  const fineDisplay = d.fine_exposure_eur && typeof d.fine_exposure_eur === 'number'
+    ? `€${d.fine_exposure_eur.toLocaleString()} potential fine exposure`
+    : 'Enter annual revenue above for fine calculation';
+
+  return `
+    <div class="score-header">
+      <div class="score-circle" style="background:${scoreBg};color:${scoreColor};border:2px solid ${scoreColor}40;">
+        ${Math.round(d.compliance_score)}
+      </div>
+      <div class="score-info">
+        <h3>${d.compliance_level?.replace(/_/g,' ')} — ${d.risk_category} Risk AI</h3>
+        <p>${d.gaps_found} compliance gap${d.gaps_found!==1?'s':''} identified · ${d.days_remaining} days to deadline</p>
+        <p style="color:#ff9090;font-size:.78rem;margin-top:4px;">${fineDisplay}</p>
+        <span class="risk-badge risk-${d.risk_category}">${d.risk_category} RISK</span>
+      </div>
+    </div>
+    ${gapsHtml}
+    <div class="cta-row" style="margin-top:20px;">
+      <a href="/auth.html?mode=signup" class="btn-p">Start Fixing Gaps →</a>
+      <a href="mailto:info@verisigilai.com?subject=EU AI Act Compliance — ${d.assessment_id}" class="btn-o">Talk to an Expert</a>
+      <a href="/pricing.html" class="btn-o">View Pricing</a>
+    </div>
+    <p style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:14px;">Assessment ID: ${d.assessment_id} · This is a governance screening tool, not legal advice. Consult qualified EU counsel for regulatory compliance.</p>
+  `;
+}
+</script>
+</body>
+</html>

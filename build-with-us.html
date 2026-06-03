@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Build With VeriSigil AI — Constitutional Infrastructure</title>
+<meta name="description" content="VeriSigil AI is building foundational governance infrastructure for autonomous systems. Looking for mission-aligned technical co-builders, not employees.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05071a;--card:#0d1235;--border:rgba(0,240,255,.1);--cyan:#00f0ff;--green:#00f5a0;--red:#ff9090;--amber:#f59e0b;--white:#fff;--text:#d8e6ff;--muted:#6a7fa8;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,240,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.02) 1px,transparent 1px);background-size:64px 64px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(5,7,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-name{font-family:var(--orb);font-size:1rem;font-weight:700;color:var(--cyan);}
+.nav-links{display:none;align-items:center;gap:4px;}
+@media(min-width:768px){.nav-links{display:flex;}}
+.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;}
+.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--muted);}
+@media(min-width:768px){.hamburger{display:none;}}
+#mob-menu{display:none;position:fixed;inset:0;z-index:90;padding-top:68px;background:rgba(5,7,26,.97);flex-direction:column;align-items:center;justify-content:center;gap:24px;}
+#mob-menu.open{display:flex;}
+#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;}
+main{padding:96px 5vw 80px;max-width:800px;margin:0 auto;position:relative;z-index:1;}
+.page-tag{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:12px;}
+h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:-.02em;line-height:1.15;}
+.page-sub{font-size:1rem;color:var(--muted);line-height:1.8;margin-bottom:40px;max-width:620px;}
+.stage-card{background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.15);border-radius:10px;padding:24px 28px;margin-bottom:32px;}
+.stage-card h2{font-size:1rem;font-weight:700;color:var(--cyan);margin-bottom:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;}
+.stage-card p{font-size:.88rem;color:var(--text);line-height:1.75;}
+.stage-card p + p{margin-top:10px;}
+.divider{border:none;border-top:1px solid var(--border);margin:36px 0;}
+h2.section{font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:20px;}
+.role-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:36px;}
+@media(min-width:600px){.role-grid{grid-template-columns:1fr 1fr;}}
+.role-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;}
+.role-card .role-tag{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--cyan);margin-bottom:8px;}
+.role-card h3{font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+.role-card p{font-size:.8rem;color:var(--muted);line-height:1.65;}
+.areas{display:flex;flex-direction:column;gap:8px;margin-bottom:36px;}
+.area-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:rgba(0,0,0,.2);border-radius:6px;border-left:2px solid rgba(0,240,255,.2);}
+.area-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:6px;}
+.area-text{font-size:.83rem;color:var(--text);line-height:1.6;}
+.area-text strong{color:var(--white);}
+.not-looking{background:rgba(255,144,144,.04);border:1px solid rgba(255,144,144,.12);border-radius:8px;padding:18px 22px;margin-bottom:32px;}
+.not-looking h3{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:10px;}
+.not-looking ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.not-looking ul li{font-size:.82rem;color:var(--muted);padding-left:16px;position:relative;}
+.not-looking ul li::before{content:'×';position:absolute;left:0;color:var(--red);}
+.cta-block{background:linear-gradient(135deg,rgba(0,240,255,.06),rgba(0,245,160,.04));border:1px solid rgba(0,240,255,.2);border-radius:12px;padding:28px 32px;text-align:center;}
+.cta-block h2{font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:10px;}
+.cta-block p{font-size:.85rem;color:var(--muted);line-height:1.7;margin-bottom:20px;max-width:480px;margin-left:auto;margin-right:auto;}
+.btn-p{display:inline-block;background:var(--cyan);color:#05071a;font-weight:700;font-size:.82rem;padding:12px 28px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;}
+.btn-o{display:inline-block;border:1px solid rgba(0,240,255,.3);color:var(--cyan);font-size:.82rem;padding:11px 22px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;margin-left:10px;}
+footer{border-top:1px solid var(--border);padding:24px 5vw;text-align:center;margin-top:60px;position:relative;z-index:1;}
+footer a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;margin:0 10px;}
+footer a:hover{color:var(--cyan);}
+footer p{font-family:var(--mono);font-size:.58rem;color:rgba(106,127,168,.28);margin-top:8px;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" height="36" onerror="this.style.display='none'">
+    <span class="nav-logo-name">VeriSigil AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/scanner.html">⚡ Scanner</a>
+    <a href="/sandbox_demo.html">Sandbox</a>
+    <a href="/demos.html">Demos</a>
+    <a href="/eu-aiact.html">🇪🇺 EU AI Act</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/build-with-us.html" class="active">Build With Us</a>
+  </div>
+  <div class="nav-right">
+    <a href="/auth.html" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;">Sign In</a>
+    <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div id="mob-menu">
+  <a href="/scanner.html" onclick="toggleMenu()">⚡ Scanner</a>
+  <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
+  <a href="/demos.html" onclick="toggleMenu()">Demos</a>
+  <a href="/eu-aiact.html" onclick="toggleMenu()">🇪🇺 EU AI Act</a>
+  <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
+  <a href="/build-with-us.html" onclick="toggleMenu()">Build With Us</a>
+  <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
+  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);">Get Started →</a>
+</div>
+
+<main>
+  <div class="page-tag">Build With VeriSigil AI · Equity-First · Mission-Driven</div>
+  <h1>We Are Not Hiring.<br>We Are Looking for<br>Co-Builders.</h1>
+  <p class="page-sub">VeriSigil AI is building foundational governance infrastructure for autonomous systems. This is not a job listing. It is an invitation for exceptional technical builders who understand what infrastructure-level category creation actually requires.</p>
+
+  <div class="stage-card">
+    <h2>Where We Are</h2>
+    <p>VeriSigil AI is currently focused on building core infrastructure and closing its first enterprise pilots. We are not scaling a traditional hiring pipeline.</p>
+    <p>Instead, we are looking for one exceptional technical co-founder or systems-level engineer who deeply understands distributed systems, runtime infrastructure, governance architecture, or cryptographic execution layers — and wants to help build foundational AI governance infrastructure long-term.</p>
+    <p>This is an early-stage, equity-first build focused on creating the constitutional runtime layer for autonomous AI systems. If that resonates, the conversation is different.</p>
+  </div>
+
+  <hr class="divider">
+
+  <h2 class="section">Who We Are Actually Looking For</h2>
+
+  <div class="role-grid">
+    <div class="role-card">
+      <div class="role-tag">Role 1 — Primary</div>
+      <h3>Technical Co-Founder / CTO</h3>
+      <p>One person. Systems-level thinker. Owns the technical architecture independently. Sees infrastructure category creation as the mission, not a job. Equity-heavy, long-term, foundational.</p>
+    </div>
+    <div class="role-card">
+      <div class="role-tag">Role 2 — Ecosystem</div>
+      <h3>Open Source Contributors</h3>
+      <p>Engineers who want to contribute to infrastructure that matters. SDKs, connectors, integrations, documentation. This is how infrastructure ecosystems form. Linux. Kubernetes. LangChain. Same pattern.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2 class="section">Technical Areas We Are Building In</h2>
+
+  <div class="areas">
+    <div class="area-item">
+      <div class="area-dot"></div>
+      <div class="area-text"><strong>Runtime Admissibility Infrastructure</strong> — continuous governance determination at every state transition, not one-time auth</div>
+    </div>
+    <div class="area-item">
+      <div class="area-dot"></div>
+      <div class="area-text"><strong>Cryptographic Evidence Systems</strong> — Ed25519 signing, VES-1.0 standard, offline-verifiable proof chains, RFC 3161 timestamping</div>
+    </div>
+    <div class="area-item">
+      <div class="area-dot"></div>
+      <div class="area-text"><strong>Distributed Governance Architecture</strong> — multi-tenant isolation, authority continuity, cross-domain sovereignty</div>
+    </div>
+    <div class="area-item">
+      <div class="area-dot"></div>
+      <div class="area-text"><strong>Agent Identity Infrastructure</strong> — AI passports, agent-to-agent trust protocols, authority delegation chains</div>
+    </div>
+    <div class="area-item">
+      <div class="area-dot"></div>
+      <div class="area-text"><strong>Developer Tooling</strong> — Python SDK, framework connectors (LangChain, CrewAI, AutoGen), GovLang compiler</div>
+    </div>
+    <div class="area-item">
+      <div class="area-dot"></div>
+      <div class="area-text"><strong>Enterprise Hardening</strong> — JWT auth, Redis rate limiting, SOC 2 readiness, multi-tenant RLS enforcement</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="not-looking">
+    <h3>What We Are Not Looking For Right Now</h3>
+    <ul>
+      <li>Salary-first engineers expecting immediate payroll</li>
+      <li>Partners who want VeriSigil to fund their own product roadmap</li>
+      <li>Consultants pitching paid engagements to us</li>
+      <li>Advisors who want equity for introductions</li>
+      <li>Anyone who needs a large team around them to build</li>
+    </ul>
+  </div>
+
+  <div class="cta-block">
+    <h2>If This Resonates</h2>
+    <p>Do not send a CV. Send a message that shows you understand what we are building and why it matters. Show us something you have built. Tell us which technical layer you would own.</p>
+    <a href="mailto:info@verisigilai.com?subject=Build With VeriSigil — Technical Co-Builder" class="btn-p">Start the Conversation</a>
+    <a href="/sandbox_demo.html" class="btn-o">Explore the Sandbox First</a>
+  </div>
+</main>
+
+<footer>
+  <a href="/">Home</a><a href="/scanner.html">Scanner</a><a href="/eu-aiact.html">EU AI Act</a>
+  <a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a>
+  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Building constitutional infrastructure for autonomous AI.</p>
+</footer>
+
+<script>
+function toggleMenu(){
+  document.getElementById('mob-menu').classList.toggle('open');
+}
+</script>
+</body>
+</html>

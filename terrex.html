@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terrex — The Operating Standard for AI on Earth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Martian+Mono:wght@300;400;500;700&family=Freight+Display+Pro:ital@1&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & ROOT ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#060608;
+  --earth:#0a0d0b;
+  --soil:#111610;
+  --ore:#1c2318;
+  --copper:#b87333;
+  --copper-2:#d4882a;
+  --copper-glow:#e8a040;
+  --signal:#4aff8c;
+  --signal-dim:#1a5c38;
+  --ash:#f0ece4;
+  --ash-dim:rgba(240,236,228,0.55);
+  --ash-ghost:rgba(240,236,228,0.12);
+  --ash-trace:rgba(240,236,228,0.04);
+  --rule:rgba(240,236,228,0.07);
+  --rule-bright:rgba(240,236,228,0.15);
+  --serif:'Instrument Serif',Georgia,serif;
+  --mono:'Martian Mono',monospace;
+}
+html{scroll-behavior:smooth;cursor:crosshair}
+body{
+  background:var(--void);
+  color:var(--ash);
+  font-family:var(--mono);
+  font-size:13px;
+  line-height:1.6;
+  font-weight:300;
+  overflow-x:hidden;
+}
+
+/* ── GLOBAL GRID TEXTURE ──────────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(184,115,51,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(184,115,51,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── SCAN LINE OVERLAY ────────────────────────────────────── */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events:none;
+  z-index:0;
+  opacity:0.4;
+}
+
+/* ── NAV ──────────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 3rem;height:52px;
+  background:rgba(6,6,8,0.92);
+  border-bottom:1px solid var(--rule);
+  backdrop-filter:blur(12px);
+}
+.nav-left{display:flex;align-items:center;gap:2rem}
+.nav-mark{
+  font-family:var(--serif);font-size:1.25rem;
+  color:var(--ash);letter-spacing:0.02em;font-style:italic;
+}
+.nav-mark span{color:var(--copper);font-style:normal}
+.nav-status{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--signal);
+}
+.nav-status::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--signal);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,255,140,0.4)}50%{opacity:0.7;box-shadow:0 0 0 4px rgba(74,255,140,0)}}
+.nav-right{display:flex;align-items:center;gap:2.5rem}
+.nav-link{
+  font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ash-dim);text-decoration:none;transition:color 0.2s;
+}
+.nav-link:hover{color:var(--copper-glow)}
+.nav-cta{
+  font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;
+  padding:0.45rem 1.1rem;border:1px solid var(--copper);
+  color:var(--copper);text-decoration:none;
+  transition:all 0.2s;background:transparent;cursor:pointer;
+}
+.nav-cta:hover{background:var(--copper);color:var(--void)}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero{
+  position:relative;min-height:100vh;
+  display:grid;grid-template-rows:1fr auto;
+  padding:52px 0 0;overflow:hidden;
+}
+
+/* Animated telemetry lines */
+.hero-telemetry{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.tline{
+  position:absolute;height:1px;
+  background:linear-gradient(90deg,transparent,var(--copper),transparent);
+  opacity:0;
+  animation:tline-sweep 8s ease-in-out infinite;
+}
+.tline:nth-child(1){top:23%;width:40%;left:-40%;animation-delay:0s}
+.tline:nth-child(2){top:47%;width:60%;left:-60%;animation-delay:2.5s}
+.tline:nth-child(3){top:71%;width:30%;left:-30%;animation-delay:5s}
+.tline:nth-child(4){top:35%;width:50%;right:-50%;left:auto;animation-delay:1.2s;background:linear-gradient(90deg,transparent,rgba(74,255,140,0.4),transparent)}
+.tline:nth-child(5){top:62%;width:45%;right:-45%;left:auto;animation-delay:3.8s;background:linear-gradient(90deg,transparent,rgba(74,255,140,0.3),transparent)}
+@keyframes tline-sweep{
+  0%{opacity:0;transform:translateX(0)}
+  10%{opacity:1}
+  90%{opacity:0.6}
+  100%{opacity:0;transform:translateX(200vw)}
+}
+
+/* Corner brackets */
+.hero-bracket{
+  position:absolute;width:40px;height:40px;
+  border-color:var(--copper);border-style:solid;opacity:0.4;
+}
+.hero-bracket.tl{top:80px;left:40px;border-width:1px 0 0 1px}
+.hero-bracket.tr{top:80px;right:40px;border-width:1px 1px 0 0}
+.hero-bracket.bl{bottom:60px;left:40px;border-width:0 0 1px 1px}
+.hero-bracket.br{bottom:60px;right:40px;border-width:0 1px 1px 0}
+
+/* Data readouts */
+.hero-readouts{
+  position:absolute;right:3rem;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:1.5rem;
+  border-left:1px solid var(--rule-bright);
+  padding-left:1.5rem;
+}
+.readout{display:flex;flex-direction:column;gap:0.25rem}
+.readout-label{
+  font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:rgba(184,115,51,0.6);
+}
+.readout-val{
+  font-size:1.1rem;font-weight:500;color:var(--ash);
+  font-variant-numeric:tabular-nums;
+}
+.readout-val.live{color:var(--signal);animation:flicker 4s ease-in-out infinite}
+@keyframes flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:0.7}94%{opacity:1}97%{opacity:0.85}98%{opacity:1}}
+.readout-unit{font-size:0.55rem;color:var(--ash-dim)}
+
+.hero-content{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 3rem;max-width:820px;
+  margin-top:8vh;
+}
+.hero-eyebrow{
+  font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--copper);margin-bottom:2.5rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.hero-eyebrow::before{content:'//';color:rgba(184,115,51,0.4)}
+h1{
+  font-family:var(--serif);
+  font-size:clamp(3.5rem,8vw,7.5rem);
+  font-weight:400;line-height:0.92;
+  letter-spacing:-0.02em;
+  color:var(--ash);
+  margin-bottom:2rem;
+}
+h1 em{
+  font-style:italic;color:var(--copper);
+  display:block;
+}
+.hero-position{
+  font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ash-dim);max-width:480px;line-height:1.8;
+  border-left:2px solid var(--copper);padding-left:1.2rem;
+  margin-bottom:3.5rem;
+}
+.hero-actions{display:flex;align-items:center;gap:2rem}
+.btn-primary{
+  font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;
+  padding:0.8rem 2rem;background:var(--copper);
+  color:var(--void);text-decoration:none;
+  transition:all 0.2s;display:inline-block;
+  font-family:var(--mono);cursor:pointer;border:none;
+}
+.btn-primary:hover{background:var(--copper-glow)}
+.btn-ghost{
+  font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;
+  padding:0.8rem 2rem;border:1px solid var(--rule-bright);
+  color:var(--ash-dim);text-decoration:none;
+  transition:all 0.2s;display:inline-block;
+}
+.btn-ghost:hover{border-color:var(--ash-dim);color:var(--ash)}
+
+/* Hero bottom strip */
+.hero-strip{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--rule);
+  margin-top:auto;
+}
+.strip-cell{
+  padding:1.5rem 2rem;
+  border-right:1px solid var(--rule);
+}
+.strip-cell:last-child{border-right:none}
+.strip-num{
+  font-family:var(--serif);font-size:2rem;font-style:italic;
+  color:var(--copper);line-height:1;display:block;margin-bottom:0.4rem;
+}
+.strip-label{
+  font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(240,236,228,0.3);line-height:1.5;
+}
+
+/* ── SECTION COMMON ───────────────────────────────────────── */
+.section{
+  position:relative;z-index:1;
+  padding:7rem 3rem;
+  border-top:1px solid var(--rule);
+}
+.sec-head{
+  font-size:0.55rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:rgba(184,115,51,0.5);margin-bottom:3rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.sec-head::before{content:'';width:20px;height:1px;background:var(--copper);opacity:0.4}
+h2{
+  font-family:var(--serif);
+  font-size:clamp(2rem,4vw,3.8rem);
+  font-weight:400;line-height:1.1;color:var(--ash);
+  letter-spacing:-0.01em;margin-bottom:1rem;
+}
+h2 em{font-style:italic;color:var(--copper)}
+
+/* ── DECLARATION SECTION ──────────────────────────────────── */
+.declaration{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;border-top:1px solid var(--rule);
+}
+.decl-left{
+  padding:6rem 3rem;
+  border-right:1px solid var(--rule);
+}
+.decl-right{padding:6rem 3rem}
+.decl-quote{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1.4rem,2.8vw,2.4rem);
+  color:var(--ash);line-height:1.35;margin-bottom:3rem;
+}
+.decl-quote span{color:var(--copper)}
+.decl-body{
+  font-size:0.78rem;color:var(--ash-dim);
+  line-height:1.85;max-width:480px;
+}
+.decl-body+.decl-body{margin-top:1.2rem}
+.not-list{display:flex;flex-direction:column;gap:0;margin-bottom:3rem}
+.not-item{
+  display:flex;align-items:baseline;gap:1rem;
+  padding:0.85rem 0;border-bottom:1px solid var(--rule);
+}
+.not-item:first-child{border-top:1px solid var(--rule)}
+.not-x{font-size:0.6rem;color:rgba(240,236,228,0.2);width:12px;flex-shrink:0}
+.not-text{font-size:0.72rem;color:rgba(240,236,228,0.35);text-decoration:line-through}
+.is-list{display:flex;flex-direction:column;gap:0}
+.is-item{
+  display:flex;align-items:baseline;gap:1rem;
+  padding:0.85rem 0;border-bottom:1px solid var(--rule);
+}
+.is-item:first-child{border-top:1px solid var(--rule)}
+.is-check{font-size:0.6rem;color:var(--copper);width:12px;flex-shrink:0}
+.is-text{font-size:0.72rem;color:var(--ash);font-weight:500}
+
+/* ── FOUR PILLARS ─────────────────────────────────────────── */
+.pillars-section{background:var(--earth)}
+.pillars-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;border:1px solid var(--rule);margin-top:3rem;
+}
+.pillar{
+  padding:2.5rem 2rem;border-right:1px solid var(--rule);
+  position:relative;overflow:hidden;transition:background 0.3s;
+}
+.pillar:hover{background:var(--ash-trace)}
+.pillar:last-child{border-right:none}
+.pillar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.p1::before{background:linear-gradient(90deg,#1a3a5c,#2d6699)}
+.p2::before{background:linear-gradient(90deg,#2d1a4d,#6b4fa0)}
+.p3::before{background:linear-gradient(90deg,var(--copper),var(--copper-2))}
+.p4::before{background:linear-gradient(90deg,#4a1a0c,#c0501a)}
+.pillar-num{
+  font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:rgba(240,236,228,0.2);display:block;margin-bottom:1.5rem;
+}
+.pillar-name{
+  font-family:var(--serif);font-size:1.3rem;font-style:italic;
+  color:var(--ash);margin-bottom:0.3rem;display:block;
+}
+.pillar-tag{
+  font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--copper);display:block;margin-bottom:1.5rem;
+}
+.pillar-desc{font-size:0.72rem;color:var(--ash-dim);line-height:1.7;margin-bottom:1.5rem}
+.pillar-mods{display:flex;flex-direction:column;gap:0.3rem}
+.pmod{
+  font-size:0.58rem;padding:0.3rem 0.6rem;
+  background:var(--ash-trace);color:rgba(240,236,228,0.5);
+  border-left:2px solid var(--rule-bright);
+}
+
+/* ── LIVE DEMO SECTION ────────────────────────────────────── */
+.demo-section{background:var(--soil)}
+.demo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:3rem;border:1px solid var(--rule)}
+.demo-left{padding:2.5rem;border-right:1px solid var(--rule)}
+.demo-right{padding:2.5rem}
+.terminal{
+  background:var(--void);border:1px solid var(--rule);
+  font-family:var(--mono);font-size:0.65rem;
+  line-height:1.7;overflow:hidden;
+}
+.term-bar{
+  background:var(--ore);padding:0.6rem 1rem;
+  display:flex;align-items:center;gap:0.5rem;
+  border-bottom:1px solid var(--rule);
+}
+.term-dot{width:8px;height:8px;border-radius:50%}
+.td1{background:#ff5f57}.td2{background:#febc2e}.td3{background:#28c840}
+.term-title{font-size:0.55rem;color:var(--ash-dim);letter-spacing:0.1em;margin-left:0.5rem}
+.term-body{padding:1.25rem 1.25rem;max-height:360px;overflow-y:auto}
+.term-line{display:block;margin-bottom:0.2rem}
+.tc{color:var(--copper-2)}
+.tg{color:var(--signal)}
+.td{color:var(--ash-dim)}
+.tw{color:#e8a040}
+.tr{color:#ff6b6b}
+.demo-label{
+  font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--copper);display:block;margin-bottom:1rem;
+}
+.demo-title{
+  font-family:var(--serif);font-size:1.6rem;font-style:italic;
+  color:var(--ash);margin-bottom:1rem;line-height:1.2;
+}
+.demo-body{font-size:0.72rem;color:var(--ash-dim);line-height:1.8;margin-bottom:2rem}
+.decision-cards{display:flex;flex-direction:column;gap:0.5rem}
+.dc{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.75rem 1rem;border:1px solid var(--rule);
+  transition:border-color 0.2s;
+}
+.dc:hover{border-color:var(--copper)}
+.dc-label{font-size:0.58rem;color:var(--ash-dim)}
+.dc-badge{
+  font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;
+  padding:0.2rem 0.55rem;border-radius:1px;font-weight:500;
+}
+.allow{background:rgba(74,255,140,0.1);color:var(--signal);border:1px solid rgba(74,255,140,0.2)}
+.throttle{background:rgba(232,160,64,0.1);color:var(--copper-glow);border:1px solid rgba(232,160,64,0.2)}
+.delay{background:rgba(45,102,153,0.15);color:#7ab3e0;border:1px solid rgba(45,102,153,0.3)}
+.deny{background:rgba(255,107,107,0.1);color:#ff6b6b;border:1px solid rgba(255,107,107,0.2)}
+
+/* ── SCORE VISUAL ─────────────────────────────────────────── */
+.score-section{
+  display:grid;grid-template-columns:1fr 2fr;gap:0;
+  border-top:1px solid var(--rule);
+}
+.score-left{
+  padding:5rem 3rem;border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  background:var(--earth);
+}
+.score-ring{
+  width:160px;height:160px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:2rem;
+}
+.score-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.score-ring circle{fill:none;stroke-width:3}
+.score-bg{stroke:var(--ore)}
+.score-fill{
+  stroke:var(--copper);
+  stroke-dasharray:440;stroke-dashoffset:44; /* 90% */
+  stroke-linecap:round;
+  animation:score-draw 2s ease-out forwards;
+}
+@keyframes score-draw{from{stroke-dashoffset:440}to{stroke-dashoffset:44}}
+.score-num{
+  font-family:var(--serif);font-size:3rem;font-style:italic;
+  color:var(--ash);text-align:center;
+}
+.score-grade{
+  font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--signal);text-align:center;display:block;
+}
+.score-right{padding:5rem 3rem}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+.sg{border:1px solid var(--rule);padding:1.5rem}
+.sg-label{font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:0.5rem}
+.sg-val{font-family:var(--serif);font-size:1.8rem;font-style:italic;color:var(--ash);display:block}
+.sg-unit{font-size:0.6rem;color:var(--ash-dim)}
+
+/* ── MOAT SECTION ─────────────────────────────────────────── */
+.moat-section{background:var(--earth)}
+.moat-hero-text{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1.5rem,3vw,2.8rem);
+  color:var(--ash);line-height:1.3;max-width:800px;
+  margin-bottom:4rem;
+}
+.moat-hero-text span{color:var(--copper)}
+.moat-rows{display:flex;flex-direction:column;gap:0}
+.moat-row{
+  display:grid;grid-template-columns:200px 1fr 140px;gap:0;
+  padding:1.5rem 0;border-bottom:1px solid var(--rule);
+  align-items:baseline;transition:background 0.2s;
+}
+.moat-row:first-child{border-top:1px solid var(--rule)}
+.moat-row:hover{background:var(--ash-trace);margin:0 -3rem;padding-left:3rem;padding-right:3rem}
+.moat-name{font-size:0.7rem;font-weight:500;color:var(--ash)}
+.moat-desc{font-size:0.68rem;color:var(--ash-dim);line-height:1.6;padding:0 2rem}
+.moat-strength{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--copper);text-align:right}
+
+/* ── GTM PHASES ───────────────────────────────────────────── */
+.gtm-section{}
+.phase-row{
+  display:grid;grid-template-columns:80px 1fr;gap:0;
+  border-top:1px solid var(--rule);
+}
+.phase-row:last-child{border-bottom:1px solid var(--rule)}
+.phase-num-col{
+  background:var(--ore);padding:2.5rem 1.5rem;
+  display:flex;align-items:flex-start;justify-content:center;
+  border-right:1px solid var(--rule);
+}
+.phase-n{
+  font-family:var(--serif);font-size:2.5rem;font-style:italic;
+  color:rgba(184,115,51,0.3);writing-mode:vertical-rl;
+  letter-spacing:0.05em;
+}
+.phase-content{padding:2.5rem 3rem}
+.phase-label{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:0.5rem}
+.phase-title{font-family:var(--serif);font-size:1.5rem;font-style:italic;color:var(--ash);margin-bottom:0.5rem}
+.phase-window{font-size:0.6rem;color:var(--ash-dim);display:block;margin-bottom:1.25rem}
+.phase-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.25rem}
+.phase-tag{
+  font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.22rem 0.55rem;background:var(--ore);
+  color:rgba(240,236,228,0.5);border:1px solid var(--rule);
+}
+.phase-desc{font-size:0.7rem;color:var(--ash-dim);line-height:1.7;max-width:600px}
+.phase-trigger{
+  font-size:0.58rem;color:var(--copper);
+  margin-top:1rem;padding-top:1rem;
+  border-top:1px solid var(--rule);display:block;
+}
+
+/* ── VERISIGIL BRIDGE ─────────────────────────────────────── */
+.bridge-section{background:var(--soil)}
+.bridge-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;
+  margin-top:3rem;
+}
+.bridge-card{border:1px solid var(--rule);overflow:hidden}
+.bc-head{
+  padding:1.5rem 2rem;border-bottom:1px solid var(--rule);
+  background:var(--ore);
+}
+.bc-head h3{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--ash)}
+.bc-head span{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--copper);display:block;margin-top:0.2rem}
+.bc-body{padding:1.5rem 2rem}
+.bc-item{
+  padding:0.75rem 0;border-bottom:1px solid var(--rule);
+  display:flex;align-items:flex-start;gap:0.75rem;
+}
+.bc-item:last-child{border-bottom:none}
+.bc-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:0.4rem}
+.bc-t{font-size:0.7rem;color:var(--ash);display:block;margin-bottom:0.15rem}
+.bc-s{font-size:0.6rem;color:var(--ash-dim)}
+
+/* ── CLOSING ──────────────────────────────────────────────── */
+.closing{
+  position:relative;padding:10rem 3rem;text-align:center;
+  background:var(--void);overflow:hidden;
+  border-top:1px solid var(--rule);
+}
+.closing::before{
+  content:'';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(184,115,51,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.closing-label{
+  font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--copper);display:block;margin-bottom:3rem;
+}
+.closing h2{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(3rem,7vw,7rem);
+  color:var(--ash);line-height:0.95;letter-spacing:-0.02em;
+  margin-bottom:3rem;
+}
+.closing h2 em{color:var(--copper);font-style:normal}
+.closing-sub{
+  font-size:0.72rem;color:var(--ash-dim);max-width:500px;
+  margin:0 auto 4rem;line-height:1.8;
+}
+.closing-actions{display:flex;justify-content:center;gap:1.5rem}
+.closing-row{
+  display:flex;justify-content:center;gap:4rem;
+  margin-top:5rem;padding-top:3rem;border-top:1px solid var(--rule);
+}
+.cr-item{text-align:center}
+.cr-label{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,236,228,0.25);display:block;margin-bottom:0.4rem}
+.cr-val{font-size:0.7rem;color:var(--ash-dim)}
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+footer{
+  padding:2rem 3rem;border-top:1px solid var(--rule);
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--void);position:relative;z-index:1;
+}
+.foot-l{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--ash)}
+.foot-l span{color:var(--copper)}
+.foot-r{font-size:0.55rem;color:rgba(240,236,228,0.2);letter-spacing:0.1em;text-align:right;line-height:1.9}
+
+/* ── ANIMATIONS ON LOAD ───────────────────────────────────── */
+.fade-up{
+  opacity:0;transform:translateY(20px);
+  animation:fadeup 0.8s ease forwards;
+}
+@keyframes fadeup{to{opacity:1;transform:none}}
+.hero-content .hero-eyebrow{animation-delay:0.1s}
+.hero-content h1{animation-delay:0.25s}
+.hero-content .hero-position{animation-delay:0.4s}
+.hero-content .hero-actions{animation-delay:0.55s}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media(max-width:900px){
+  nav{padding:0 1.5rem}.nav-right{display:none}
+  .hero-content{padding:0 1.5rem}
+  .hero-readouts{display:none}
+  h1{font-size:3rem}
+  .hero-strip{grid-template-columns:repeat(2,1fr)}
+  .declaration,.demo-wrap,.bridge-wrap{grid-template-columns:1fr}
+  .pillars-grid{grid-template-columns:repeat(2,1fr)}
+  .score-section{grid-template-columns:1fr}
+  .score-left{padding:3rem 1.5rem}
+  .moat-row{grid-template-columns:1fr;gap:0.5rem}
+  .moat-desc{padding:0}
+  .moat-strength{text-align:left}
+  .phase-row{grid-template-columns:48px 1fr}
+  section,.section{padding:4rem 1.5rem}
+  footer{flex-direction:column;gap:1rem;text-align:center}.foot-r{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-mark">Terr<span>ex</span></div>
+    <div class="nav-status">System operational</div>
+  </div>
+  <div class="nav-right">
+    <a href="#pillars" class="nav-link">Architecture</a>
+    <a href="#demo" class="nav-link">Live API</a>
+    <a href="#moat" class="nav-link">Why Terrex</a>
+    <a href="#gtm" class="nav-link">Roadmap</a>
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="nav-cta">Get Access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-telemetry">
+    <div class="tline"></div>
+    <div class="tline"></div>
+    <div class="tline"></div>
+    <div class="tline"></div>
+    <div class="tline"></div>
+  </div>
+  <div class="hero-bracket tl"></div>
+  <div class="hero-bracket tr"></div>
+  <div class="hero-bracket bl"></div>
+  <div class="hero-bracket br"></div>
+
+  <div class="hero-readouts">
+    <div class="readout">
+      <span class="readout-label">AI energy 2030</span>
+      <span class="readout-val">3<span class="readout-unit">% global</span></span>
+    </div>
+    <div class="readout">
+      <span class="readout-label">Water / year</span>
+      <span class="readout-val live">9.3T<span class="readout-unit">L</span></span>
+    </div>
+    <div class="readout">
+      <span class="readout-label">Governance infra</span>
+      <span class="readout-val" style="color:var(--signal)">0<span class="readout-unit">exists</span></span>
+    </div>
+    <div class="readout">
+      <span class="readout-label">Window remaining</span>
+      <span class="readout-val" style="color:var(--copper-glow)">18<span class="readout-unit">months</span></span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow fade-up">AI Resource Infrastructure</div>
+    <h1 class="fade-up">
+      The operating<br>
+      <em>standard for</em><br>
+      AI on Earth.
+    </h1>
+    <p class="hero-position fade-up">
+      Terrex measures, governs, optimizes, certifies, and finances
+      the physical resources powering artificial intelligence.
+      Not a dashboard. Not an ESG tool. Infrastructure.
+    </p>
+    <div class="hero-actions fade-up">
+      <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="btn-primary">Access Live API</a>
+      <a href="#pillars" class="btn-ghost">View Architecture</a>
+    </div>
+  </div>
+
+  <div class="hero-strip">
+    <div class="strip-cell">
+      <span class="strip-num">7</span>
+      <span class="strip-label">Live endpoints<br>in production</span>
+    </div>
+    <div class="strip-cell">
+      <span class="strip-num">4</span>
+      <span class="strip-label">Governance modules<br>TerraGuard · Score · Ledger · Comply</span>
+    </div>
+    <div class="strip-cell">
+      <span class="strip-num">10</span>
+      <span class="strip-label">Grid regions<br>carbon + water indexed</span>
+    </div>
+    <div class="strip-cell">
+      <span class="strip-num">Ed25519</span>
+      <span class="strip-label">Every decision<br>cryptographically signed</span>
+    </div>
+  </div>
+</div>
+
+<!-- DECLARATION -->
+<div class="declaration">
+  <div class="decl-left">
+    <div class="sec-head">The reframe</div>
+    <div class="decl-quote">
+      Terrex is not a<br>
+      <span>sustainability tool.</span><br>
+      It is the protocol<br>
+      AI runs on.
+    </div>
+    <div class="not-list">
+      <div class="not-item"><span class="not-x">&#10007;</span><span class="not-text">Climate tech company</span></div>
+      <div class="not-item"><span class="not-x">&#10007;</span><span class="not-text">ESG reporting software</span></div>
+      <div class="not-item"><span class="not-x">&#10007;</span><span class="not-text">Sustainability platform</span></div>
+      <div class="not-item"><span class="not-x">&#10007;</span><span class="not-text">Carbon dashboard</span></div>
+      <div class="not-item"><span class="not-x">&#10007;</span><span class="not-text">Green data center</span></div>
+    </div>
+  </div>
+  <div class="decl-right">
+    <div class="sec-head">What Terrex is</div>
+    <div class="is-list" style="margin-bottom:2.5rem">
+      <div class="is-item"><span class="is-check">&#10003;</span><span class="is-text">Critical AI infrastructure</span></div>
+      <div class="is-item"><span class="is-check">&#10003;</span><span class="is-text">AI Governance Infrastructure</span></div>
+      <div class="is-item"><span class="is-check">&#10003;</span><span class="is-text">Resource Economics Infrastructure</span></div>
+      <div class="is-item"><span class="is-check">&#10003;</span><span class="is-text">AI Financial Infrastructure</span></div>
+      <div class="is-item"><span class="is-check">&#10003;</span><span class="is-text">The global resource operating standard</span></div>
+    </div>
+    <p class="decl-body">
+      Just as Visa became the operating network for money,
+      Bloomberg became the operating network for financial intelligence,
+      and Cloudflare became the operating network for internet traffic —
+      Terrex becomes the operating network for the physical resources
+      of artificial intelligence.
+    </p>
+    <p class="decl-body" style="margin-top:1rem">
+      It does not ask AI to be sustainable.
+      It makes sustainability the path of lowest cost,
+      highest compliance, and maximum capability.
+    </p>
+  </div>
+</div>
+
+<!-- FOUR PILLARS -->
+<div class="section pillars-section" id="pillars">
+  <div class="sec-head">The architecture</div>
+  <h2>Four pillars. <em>Twelve modules.</em><br>One indispensable standard.</h2>
+  <div class="pillars-grid">
+    <div class="pillar p1">
+      <span class="pillar-num">Pillar 01</span>
+      <span class="pillar-name">Terrex Intelligence</span>
+      <span class="pillar-tag">Planetary Resource Brain</span>
+      <p class="pillar-desc">Real-time global intelligence on every AI resource across every grid, data center, and water system on Earth. Bloomberg Terminal for AI infrastructure — with predictive forecasting and a public-facing global map.</p>
+      <div class="pillar-mods">
+        <div class="pmod">TerraSense — Global telemetry</div>
+        <div class="pmod">TerraForecast — Predictive engine</div>
+        <div class="pmod">TerraAtlas — Global resource map</div>
+      </div>
+    </div>
+    <div class="pillar p2">
+      <span class="pillar-num">Pillar 02</span>
+      <span class="pillar-name">Terrex Governance</span>
+      <span class="pillar-tag">Resource Control Layer · Live Now</span>
+      <p class="pillar-desc">Identity, scoring, and enforcement for every AI workload before execution. Strongest IP in the stack. Four modules live inside VeriSigil today as production endpoints.</p>
+      <div class="pillar-mods">
+        <div class="pmod">TerraIdentity — Resource passport</div>
+        <div class="pmod">TerraScore — Resource credit rating</div>
+        <div class="pmod">TerraGuard — AI Resource Firewall</div>
+        <div class="pmod">TerraComply — Regulatory automation</div>
+      </div>
+    </div>
+    <div class="pillar p3">
+      <span class="pillar-num">Pillar 03</span>
+      <span class="pillar-name">Terrex Optimization</span>
+      <span class="pillar-tag">The Economic Engine</span>
+      <p class="pillar-desc">Where customers save 30–50% on infrastructure costs. Routing, compression, and distributed compute fabric that converts hyperscalers from competitors into infrastructure partners.</p>
+      <div class="pillar-mods">
+        <div class="pmod">TerraRoute — Global workload router</div>
+        <div class="pmod">TerraOptimize — Model efficiency</div>
+        <div class="pmod">TerraMesh — Distributed compute fabric</div>
+      </div>
+    </div>
+    <div class="pillar p4">
+      <span class="pillar-num">Pillar 04</span>
+      <span class="pillar-name">Terrex Markets</span>
+      <span class="pillar-tag">The Trillion-Dollar Layer</span>
+      <p class="pillar-desc">Financial infrastructure for AI resources. Spot markets, derivatives, strategic reserves, and national sovereignty infrastructure. The layer that makes Terrex impossible to displace.</p>
+      <div class="pillar-mods">
+        <div class="pmod">TerraExchange — Resource marketplace</div>
+        <div class="pmod">TerraFutures — Derivatives market</div>
+        <div class="pmod">TerraReserve — Strategic reserve</div>
+        <div class="pmod">TerraSovereign — National infra</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE DEMO -->
+<div class="section demo-section" id="demo">
+  <div class="sec-head">Live API — Powered by VeriSigil</div>
+  <h2>Same workload. <em>1,260&#215;</em><br>difference in carbon impact.</h2>
+  <div class="demo-wrap">
+    <div class="demo-left">
+      <div class="terminal">
+        <div class="term-bar">
+          <div class="term-dot td1"></div>
+          <div class="term-dot td2"></div>
+          <div class="term-dot td3"></div>
+          <span class="term-title">POST /v1/resource/intercept</span>
+        </div>
+        <div class="term-body">
+          <span class="term-line"><span class="tc">// Test 1 — large model, Texas grid</span></span>
+          <span class="term-line"><span class="td">{</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"model_class"</span><span class="td">: </span><span class="tg">"large"</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"estimated_tokens"</span><span class="td">: </span><span class="tg">50000</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"grid_region"</span><span class="td">: </span><span class="tg">"us_texas"</span></span>
+          <span class="term-line"><span class="td">}</span></span>
+          <span class="term-line">&nbsp;</span>
+          <span class="term-line"><span class="tc">// Response</span></span>
+          <span class="term-line"><span class="td">{</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"decision"</span><span class="td">: </span><span class="tr">"THROTTLE"</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"terra_score"</span><span class="td">: {</span></span>
+          <span class="term-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tw">"score"</span><span class="td">: </span><span class="tr">48</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tw">"grade"</span><span class="td">: </span><span class="tr">"D"</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tw">"estimated_carbon_gco2"</span><span class="td">: </span><span class="tr">37.8</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="td">}</span></span>
+          <span class="term-line"><span class="td">}</span></span>
+          <span class="term-line">&nbsp;</span>
+          <span class="term-line"><span class="tc">// Test 2 — small model, Nordic grid</span></span>
+          <span class="term-line"><span class="td">{</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"model_class"</span><span class="td">: </span><span class="tg">"small"</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"estimated_tokens"</span><span class="td">: </span><span class="tg">5000</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"grid_region"</span><span class="td">: </span><span class="tg">"eu_nordic"</span></span>
+          <span class="term-line"><span class="td">}</span></span>
+          <span class="term-line">&nbsp;</span>
+          <span class="term-line"><span class="tc">// Response</span></span>
+          <span class="term-line"><span class="td">{</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"decision"</span><span class="td">: </span><span class="tg">"ALLOW"</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="tw">"terra_score"</span><span class="td">: {</span></span>
+          <span class="term-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tw">"score"</span><span class="td">: </span><span class="tg">98</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tw">"grade"</span><span class="td">: </span><span class="tg">"A"</span><span class="td">,</span></span>
+          <span class="term-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tw">"estimated_carbon_gco2"</span><span class="td">: </span><span class="tg">0.03</span></span>
+          <span class="term-line">&nbsp;&nbsp;<span class="td">}</span></span>
+          <span class="term-line"><span class="td">}</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="demo-right">
+      <span class="demo-label">TerraGuard decision matrix</span>
+      <div class="demo-title">Pre-execution.<br>Before a single watt.</div>
+      <p class="demo-body">Every AI workload is evaluated against resource budgets, carbon intensity, water stress, and sustainability thresholds before it executes. The governance decision is cryptographically signed and stored immutably.</p>
+      <div class="decision-cards">
+        <div class="dc"><span class="dc-label">Grade A–C · Within budgets</span><span class="dc-badge allow">ALLOW</span></div>
+        <div class="dc"><span class="dc-label">Grade D · Batch too large or wrong region</span><span class="dc-badge throttle">THROTTLE</span></div>
+        <div class="dc"><span class="dc-label">Grade F · Queued for renewable window</span><span class="dc-badge delay">DELAY</span></div>
+        <div class="dc"><span class="dc-label">Budget breach · F-grade high water stress</span><span class="dc-badge deny">DENY</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TERRASCORE VISUAL -->
+<div class="score-section">
+  <div class="score-left">
+    <div class="score-ring">
+      <svg viewBox="0 0 160 160" width="160" height="160">
+        <circle class="score-bg" cx="80" cy="80" r="70"/>
+        <circle class="score-fill" cx="80" cy="80" r="70"/>
+      </svg>
+      <div>
+        <div class="score-num">98</div>
+        <span class="score-grade">A-Grade · ALLOW</span>
+      </div>
+    </div>
+    <div style="text-align:center">
+      <span style="font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--copper)">TerraScore-1.0</span>
+      <div style="font-size:0.62rem;color:var(--ash-dim);margin-top:0.4rem">Small model · EU Nordic · 5,000 tokens</div>
+    </div>
+  </div>
+  <div class="score-right">
+    <div class="sec-head">TerraScore methodology</div>
+    <h2>The <em>Moody&#8217;s rating</em><br>for AI resource consumption.</h2>
+    <p style="font-size:0.72rem;color:var(--ash-dim);line-height:1.8;max-width:500px;margin-bottom:1.5rem">A composite 0–100 score weighted across four dimensions. Adjusts for local conditions — 1 litre of water in Arizona is not the same as 1 litre in Norway. Referenced by investors, insurers, and regulators.</p>
+    <div class="score-grid">
+      <div class="sg">
+        <span class="sg-label">Carbon efficiency</span>
+        <span class="sg-val">35<span class="sg-unit">% weight</span></span>
+      </div>
+      <div class="sg">
+        <span class="sg-label">Grid intensity</span>
+        <span class="sg-val">30<span class="sg-unit">% weight</span></span>
+      </div>
+      <div class="sg">
+        <span class="sg-label">Model efficiency</span>
+        <span class="sg-val">20<span class="sg-unit">% weight</span></span>
+      </div>
+      <div class="sg">
+        <span class="sg-label">Water stress</span>
+        <span class="sg-val">15<span class="sg-unit">% weight</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOAT -->
+<div class="section moat-section" id="moat">
+  <div class="sec-head">Why Terrex wins</div>
+  <div class="moat-hero-text">
+    The strongest moat is not technology.<br>
+    It is <span>the standard.</span>
+  </div>
+  <div class="moat-rows">
+    <div class="moat-row">
+      <div class="moat-name">Resource Passport Standard</div>
+      <div class="moat-desc">Terrex defines what AI Water Score, Carbon Score, and Resource Passport mean globally. Once governments mandate the standard, it becomes structural law — not a product feature. The company that defines the standard controls the category.</div>
+      <div class="moat-strength">Permanent</div>
+    </div>
+    <div class="moat-row">
+      <div class="moat-name">Data Network Effects</div>
+      <div class="moat-desc">Every telemetry source improves routing accuracy. Better routing attracts customers. More customers generate more optimization data. A competitor launching 36 months later cannot replicate accumulated optimization history.</div>
+      <div class="moat-strength">3–5 yr compounding</div>
+    </div>
+    <div class="moat-row">
+      <div class="moat-name">TerraReserve Lock-in</div>
+      <div class="moat-desc">Organizations that reserve AI resources hold long-duration commitments that appreciate as scarcity intensifies. Leaving Terrex means abandoning a financial asset already on the balance sheet. Economic lock-in stronger than any contract.</div>
+      <div class="moat-strength">Permanent once active</div>
+    </div>
+    <div class="moat-row">
+      <div class="moat-name">Regulatory Entrenchment</div>
+      <div class="moat-desc">Once a regulator references TerraScore in a mandate, every AI company in that jurisdiction becomes a mandatory customer. Each new country that adopts the standard is a market expansion with zero additional sales cost.</div>
+      <div class="moat-strength">24–48 months</div>
+    </div>
+    <div class="moat-row">
+      <div class="moat-name">TerraSovereign Contracts</div>
+      <div class="moat-desc">National AI resource monitoring contracts are 5–10 year commitments. Once a government's sovereignty infrastructure runs on TerraSovereign, switching requires retendering and migrating years of classified national AI resource data.</div>
+      <div class="moat-strength">10+ years</div>
+    </div>
+    <div class="moat-row">
+      <div class="moat-name">VeriSigil Infrastructure</div>
+      <div class="moat-desc">Four Terrex governance modules ship inside VeriSigil before Terrex has a legal entity. Competitors require 18–24 months to match the governance primitives Terrex inherits from VeriSigil on day one. A permanent head start.</div>
+      <div class="moat-strength">Now · inherent</div>
+    </div>
+  </div>
+</div>
+
+<!-- GTM -->
+<div class="section" id="gtm">
+  <div class="sec-head">Roadmap</div>
+  <h2>Four phases.<br><em>One unstoppable</em> rollout.</h2>
+  <div style="margin-top:3rem">
+    <div class="phase-row">
+      <div class="phase-num-col"><div class="phase-n">I</div></div>
+      <div class="phase-content">
+        <span class="phase-label">Phase One · The Wedge</span>
+        <div class="phase-title">Ship inside VeriSigil</div>
+        <span class="phase-window">Now → August 2026</span>
+        <div class="phase-tags">
+          <span class="phase-tag">TerraGuard · live</span>
+          <span class="phase-tag">TerraScore · live</span>
+          <span class="phase-tag">TerraLedger · live</span>
+          <span class="phase-tag">TerraComply · live</span>
+        </div>
+        <p class="phase-desc">Four Terrex governance modules live inside VeriSigil. Enterprise buyers get resource governance and EU AI Act sustainability compliance before the August 2026 deadline. Every VeriSigil contract seeds the Terrex market.</p>
+        <span class="phase-trigger">Trigger: EU AI Act August 2026 deadline = commercial urgency</span>
+      </div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-num-col"><div class="phase-n">II</div></div>
+      <div class="phase-content">
+        <span class="phase-label">Phase Two · The Platform</span>
+        <div class="phase-title">Incorporate Terrex</div>
+        <span class="phase-window">First revenue confirmed → Month 18</span>
+        <div class="phase-tags">
+          <span class="phase-tag">TerraSense</span>
+          <span class="phase-tag">TerraForecast</span>
+          <span class="phase-tag">TerraIdentity</span>
+          <span class="phase-tag">TerraAtlas</span>
+          <span class="phase-tag">TerraOptimize</span>
+        </div>
+        <p class="phase-desc">Incorporate Terrex. Raise seed using VeriSigil traction as proof. Begin Nordic data center telemetry partnerships. Launch TerraIdentity as free API — land grab for the passport standard. Publish TerraAtlas publicly for regulatory and press attention.</p>
+        <span class="phase-trigger">Trigger: First confirmed enterprise revenue from VeriSigil</span>
+      </div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-num-col"><div class="phase-n">III</div></div>
+      <div class="phase-content">
+        <span class="phase-label">Phase Three · The Standard</span>
+        <div class="phase-title">Own the Protocol</div>
+        <span class="phase-window">Months 18–36</span>
+        <div class="phase-tags">
+          <span class="phase-tag">TerraRoute</span>
+          <span class="phase-tag">TerraMesh</span>
+          <span class="phase-tag">TerraExchange</span>
+          <span class="phase-tag">TerraSovereign pilots</span>
+        </div>
+        <p class="phase-desc">Launch TerraRoute with documented 30–50% savings. Open TerraExchange spot market. Begin TerraSovereign government pilot in one Gulf state. Engage EU Commission on regulatory adoption. Become the cited standard in at least one regulatory instrument.</p>
+        <span class="phase-trigger">Trigger: $50M ARR · First regulatory citation of Terrex standard</span>
+      </div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-num-col"><div class="phase-n">IV</div></div>
+      <div class="phase-content">
+        <span class="phase-label">Phase Four · The Empire</span>
+        <div class="phase-title">Own the Economy</div>
+        <span class="phase-window">Years 3–5</span>
+        <div class="phase-tags">
+          <span class="phase-tag">TerraFutures</span>
+          <span class="phase-tag">TerraReserve</span>
+          <span class="phase-tag">TerraSovereign 5+ nations</span>
+          <span class="phase-tag">TerraFoundation Geneva</span>
+          <span class="phase-tag">IPO · infra utility</span>
+        </div>
+        <p class="phase-desc">Launch TerraFutures with energy traders. Activate TerraReserve for enterprise lock-in. Establish TerraFoundation as neutral global governance board. Expand TerraSovereign to 5+ nations. IPO positioned as critical infrastructure, not tech startup.</p>
+        <span class="phase-trigger">Trigger: TerraExchange liquidity · Mandate in 3+ jurisdictions</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VERISIGIL BRIDGE -->
+<div class="section bridge-section">
+  <div class="sec-head">Powered by VeriSigil</div>
+  <h2>One company now.<br><em>Two companies</em> when the time is right.</h2>
+  <div class="bridge-wrap">
+    <div class="bridge-card">
+      <div class="bc-head">
+        <h3>VeriSigil</h3>
+        <span>Revenue engine · Build now · No new entity</span>
+      </div>
+      <div class="bc-body">
+        <div class="bc-item">
+          <div class="bc-dot" style="background:#7c4dff"></div>
+          <div><span class="bc-t">Pre-Execution Gateway</span><span class="bc-s">Authority + Compliance + Resource admissibility</span></div>
+        </div>
+        <div class="bc-item">
+          <div class="bc-dot" style="background:#7c4dff"></div>
+          <div><span class="bc-t">VES-1.0 Evidence Standard</span><span class="bc-s">+ TerraScore attached to every envelope</span></div>
+        </div>
+        <div class="bc-item">
+          <div class="bc-dot" style="background:var(--signal)"></div>
+          <div><span class="bc-t">TerraGuard · TerraScore · TerraLedger · TerraComply</span><span class="bc-s">Live as /v1/resource/* — 7 endpoints in production</span></div>
+        </div>
+        <div class="bc-item">
+          <div class="bc-dot" style="background:var(--signal)"></div>
+          <div><span class="bc-t">EU AI Act Compliance Engine</span><span class="bc-s">+ TerraComply sustainability auto-reports</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="bridge-card">
+      <div class="bc-head">
+        <h3>Terrex</h3>
+        <span>Spin out at first confirmed enterprise revenue</span>
+      </div>
+      <div class="bc-body">
+        <div class="bc-item">
+          <div class="bc-dot" style="background:#2d6699"></div>
+          <div><span class="bc-t">TerraSense + TerraForecast + TerraAtlas</span><span class="bc-s">Requires: grid + datacenter + utility data partnerships</span></div>
+        </div>
+        <div class="bc-item">
+          <div class="bc-dot" style="background:var(--copper)"></div>
+          <div><span class="bc-t">TerraRoute + TerraOptimize + TerraMesh</span><span class="bc-s">Requires: multi-cloud partnerships + ML infrastructure</span></div>
+        </div>
+        <div class="bc-item">
+          <div class="bc-dot" style="background:#c0501a"></div>
+          <div><span class="bc-t">TerraExchange + TerraFutures + TerraReserve</span><span class="bc-s">Requires: regulated marketplace + financial licenses</span></div>
+        </div>
+        <div class="bc-item">
+          <div class="bc-dot" style="background:rgba(240,236,228,0.25)"></div>
+          <div><span class="bc-t">TerraSovereign + TerraFoundation</span><span class="bc-s">Requires: government contracts + neutral governance board</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSING -->
+<div class="closing">
+  <span class="closing-label">The operating standard for AI on Earth</span>
+  <h2>Not a feature.<br>Not a dashboard.<br><em>The protocol.</em></h2>
+  <p class="closing-sub">By the time competitors understand that this is the winning move, TerraLedger will hold the AI resource history, TerraRoute will define global workload flow, and TerraFutures will be the only liquidity pool. They cannot steal it. They can only join it.</p>
+  <div class="closing-actions">
+    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="btn-primary">Access Live API</a>
+    <a href="mailto:hello@verisigil.ai" class="btn-ghost">Request Enterprise Access</a>
+  </div>
+  <div class="closing-row">
+    <div class="cr-item"><span class="cr-label">Live base URL</span><span class="cr-val">verisigil-api-production.up.railway.app</span></div>
+    <div class="cr-item"><span class="cr-label">Signing standard</span><span class="cr-val">Ed25519 · RFC 3161</span></div>
+    <div class="cr-item"><span class="cr-label">Compliance</span><span class="cr-val">EU AI Act Articles 9, 40, 53</span></div>
+    <div class="cr-item"><span class="cr-label">Status</span><span class="cr-val" style="color:var(--signal)">All systems operational</span></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-l">Terr<span>ex</span></div>
+  <div class="foot-r">
+    Powered by VeriSigil · Lagos, Nigeria<br>
+    TerraScore-1.0 · TerraLedger-1.0 · TerraComply-1.0<br>
+    &#169; 2026 Terrex. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>

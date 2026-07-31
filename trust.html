@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil Trust & Evidence Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:      #0A1628;
+    --navy-card: #0F1E38;
+    --navy-mid:  #1E3A5F;
+    --teal:      #00D4AA;
+    --teal-dim:  #00A882;
+    --text:      #E8EDF4;
+    --text-dim:  #8BA3C1;
+    --text-faint:#4A6080;
+    --red:       #FF4D6D;
+    --amber:     #FFB347;
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'Space Grotesk', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── LIVE PULSE ── */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.85); }
+  }
+  .pulse-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--teal);
+    border-radius: 50%;
+    animation: pulse 2.4s ease-in-out infinite;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── NAV ── */
+  nav {
+    border-bottom: 1px solid var(--navy-mid);
+    padding: 16px 0;
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10, 22, 40, 0.96);
+    backdrop-filter: blur(8px);
+  }
+  nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo {
+    width: 28px; height: 28px;
+    background: var(--teal);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    transform: rotate(180deg);
+  }
+  .nav-name {
+    font-size: 15px; font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .nav-links {
+    display: flex; gap: 24px; list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500;
+    color: var(--teal);
+    font-family: var(--mono);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 0 64px;
+    border-bottom: 1px solid var(--navy-mid);
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--teal); }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+  .hero-philosophy {
+    border-left: 2px solid var(--teal);
+    padding: 16px 20px;
+    background: rgba(0, 212, 170, 0.04);
+    border-radius: 0 6px 6px 0;
+    font-size: 15px;
+    color: var(--text-dim);
+    font-style: italic;
+    max-width: 560px;
+  }
+
+  /* ── VALIDATION BADGE ── */
+  .validation-banner {
+    background: linear-gradient(135deg, rgba(0,212,170,0.08) 0%, rgba(0,212,170,0.03) 100%);
+    border: 1px solid rgba(0, 212, 170, 0.25);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 48px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    text-align: center;
+  }
+  .badge-item {}
+  .badge-number {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--teal);
+    font-family: var(--mono);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .badge-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .badge-divider {
+    width: 1px;
+    background: var(--navy-mid);
+  }
+
+  /* ── SECTION ── */
+  section { padding: 64px 0; border-bottom: 1px solid var(--navy-mid); }
+  section:last-of-type { border-bottom: none; }
+
+  .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .section-desc {
+    color: var(--text-dim);
+    font-size: 15px;
+    margin-bottom: 36px;
+    max-width: 600px;
+  }
+
+  /* ── STATUS TABLE ── */
+  .status-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--navy-card);
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .status-row:hover { background: var(--navy-mid); }
+  .status-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .status-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .status-live    { background: rgba(0,212,170,0.12); color: var(--teal); }
+  .status-partial { background: rgba(255,179,71,0.12); color: var(--amber); }
+  .status-planned { background: rgba(139,163,193,0.1); color: var(--text-dim); }
+
+  /* ── PROOF CARDS ── */
+  .proof-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .proof-card {
+    background: var(--navy-card);
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 3px solid;
+  }
+  .proof-card.yes  { border-color: var(--teal); }
+  .proof-card.no   { border-color: var(--red); }
+  .proof-card.partial { border-color: var(--amber); }
+  .proof-card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .proof-card.yes .proof-card-label    { color: var(--teal); }
+  .proof-card.no .proof-card-label     { color: var(--red); }
+  .proof-card.partial .proof-card-label { color: var(--amber); }
+  .proof-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .proof-card-detail {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* ── CLARA RUNS ── */
+  .run-card {
+    background: var(--navy-card);
+    border-radius: 10px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .run-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .run-title { font-size: 18px; font-weight: 700; color: var(--text); }
+  .run-complete {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(0,212,170,0.12);
+    color: var(--teal);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .run-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .run-stat { text-align: center; }
+  .run-stat-num {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .run-stat-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .findings-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .finding-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  .finding-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    min-width: 32px;
+    padding-top: 1px;
+    font-weight: 500;
+  }
+  .finding-text { color: var(--text-dim); flex: 1; }
+  .finding-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .finding-resolved { background: rgba(0,212,170,0.1); color: var(--teal); }
+  .finding-noted    { background: rgba(139,163,193,0.1); color: var(--text-dim); }
+
+  /* ── VERIFICATION STEPS ── */
+  .verify-steps { display: flex; flex-direction: column; gap: 16px; }
+  .verify-step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .step-num {
+    width: 40px; height: 40px;
+    border: 1px solid var(--teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal);
+    flex-shrink: 0;
+  }
+  .step-content {}
+  .step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #050E1C;
+    border: 1px solid var(--navy-mid);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #A8C4E0;
+    overflow-x: auto;
+    line-height: 1.7;
+    white-space: pre;
+    margin: 12px 0;
+  }
+  .code-teal   { color: var(--teal); }
+  .code-dim    { color: var(--text-faint); }
+  .code-string { color: #FFB347; }
+
+  /* ── ENDPOINT CARDS ── */
+  .endpoint-list { display: flex; flex-direction: column; gap: 8px; }
+  .endpoint-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--navy-card);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+    cursor: default;
+  }
+  .endpoint-item:hover { background: var(--navy-mid); }
+  .endpoint-method {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    min-width: 38px;
+    text-align: center;
+  }
+  .method-get  { background: rgba(0,212,170,0.12); color: var(--teal); }
+  .method-post { background: rgba(255,179,71,0.12); color: var(--amber); }
+  .endpoint-path {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+  }
+  .endpoint-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .endpoint-auth {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(0,212,170,0.08);
+    color: var(--teal);
+    white-space: nowrap;
+  }
+  .endpoint-auth-required {
+    background: rgba(139,163,193,0.08);
+    color: var(--text-dim);
+  }
+
+  /* ── KEY BOX ── */
+  .key-box {
+    background: #050E1C;
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .key-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    min-width: 80px;
+    font-family: var(--mono);
+  }
+  .key-value {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--teal);
+    word-break: break-all;
+    flex: 1;
+  }
+
+  /* ── EXTERNAL REVIEW ── */
+  .review-card {
+    background: var(--navy-card);
+    border-radius: 10px;
+    padding: 28px;
+    border-top: 2px solid var(--teal);
+  }
+  .review-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+  .review-org { font-size: 18px; font-weight: 700; color: var(--text); }
+  .review-cert {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-top: 4px;
+  }
+  .review-findings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .review-finding-item {
+    padding: 12px 14px;
+    background: rgba(0,212,170,0.04);
+    border-radius: 6px;
+    border-left: 2px solid var(--teal);
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .review-finding-item strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+  /* ── DOI CARDS ── */
+  .doi-list { display: flex; flex-direction: column; gap: 8px; }
+  .doi-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--navy-card);
+    border-radius: 8px;
+    gap: 16px;
+  }
+  .doi-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .doi-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--teal);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .doi-link:hover { text-decoration: underline; }
+
+  /* ── ROADMAP ── */
+  .roadmap-list { display: flex; flex-direction: column; gap: 2px; }
+  .roadmap-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    background: var(--navy-card);
+    border-radius: 6px;
+  }
+  .roadmap-phase {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    min-width: 64px;
+    font-weight: 500;
+  }
+  .roadmap-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    flex: 1;
+  }
+  .roadmap-status {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .rs-complete { background: rgba(0,212,170,0.12); color: var(--teal); }
+  .rs-building { background: rgba(255,179,71,0.12); color: var(--amber); }
+  .rs-planned  { background: rgba(139,163,193,0.08); color: var(--text-dim); }
+  .rs-future   { background: rgba(139,163,193,0.05); color: var(--text-faint); }
+
+  /* ── CTA ── */
+  .cta-section {
+    text-align: center;
+    padding: 80px 0;
+  }
+  .cta-title {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .cta-sub {
+    font-size: 16px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+  }
+  .cta-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--teal);
+    color: var(--navy);
+    padding: 12px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background 0.2s;
+    letter-spacing: -0.01em;
+  }
+  .btn-primary:hover { background: var(--teal-dim); }
+  .btn-secondary {
+    border: 1px solid var(--navy-mid);
+    color: var(--text-dim);
+    padding: 12px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--navy-mid);
+    padding: 32px 0;
+  }
+  footer .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+  .footer-links {
+    display: flex; gap: 20px; list-style: none;
+  }
+  .footer-links a {
+    font-size: 12px;
+    color: var(--text-faint);
+    text-decoration: none;
+    font-family: var(--mono);
+  }
+  .footer-links a:hover { color: var(--teal); }
+
+  /* ── DIVIDER ── */
+  .teal-rule {
+    height: 1px;
+    background: linear-gradient(90deg, var(--teal) 0%, transparent 100%);
+    margin: 8px 0 24px;
+    max-width: 120px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .proof-grid { grid-template-columns: 1fr; }
+    .run-stats { grid-template-columns: 2fr 2fr; }
+    .validation-banner { grid-template-columns: 1fr; }
+    .badge-divider { display: none; }
+    .review-findings { grid-template-columns: 1fr; }
+    footer .container { flex-direction: column; gap: 16px; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-dot { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a class="nav-brand" href="https://verisigilai.com">
+      <div class="nav-logo"></div>
+      <span class="nav-name">VeriSigil AI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#status">Status</a></li>
+      <li><a href="#validation">Validation</a></li>
+      <li><a href="#verify">Verify</a></li>
+      <li><a href="#limits">Limits</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+    </ul>
+    <div class="nav-status">
+      <span class="pulse-dot"></span>LIVE
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">Trust & Evidence Center</p>
+    <h1>Governance infrastructure<br>judged by <span>evidence</span>.</h1>
+    <p class="hero-sub">Everything required to inspect, verify, challenge, and understand what VeriSigil currently proves — and what it does not.</p>
+    <div class="hero-philosophy">
+      "Every independent reviewer has made VeriSigil better. Engineering credibility grows through inspection, not by avoiding it."
+    </div>
+
+    <div class="validation-banner">
+      <div class="badge-item">
+        <div class="badge-number">25/25</div>
+        <div class="badge-label">Receipts Verified Offline</div>
+      </div>
+      <div class="badge-divider"></div>
+      <div class="badge-item">
+        <div class="badge-number">0</div>
+        <div class="badge-label">Fail-Opens · Two Runs</div>
+      </div>
+      <div class="badge-divider"></div>
+      <div class="badge-item">
+        <div class="badge-number">&lt;1ms</div>
+        <div class="badge-label">Enforcement Latency</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLATFORM STATUS -->
+<section id="status">
+  <div class="container">
+    <p class="section-eyebrow">Platform Status</p>
+    <h2 class="section-title">Current Capability Status</h2>
+    <div class="teal-rule"></div>
+    <p class="section-desc">Last updated 31 July 2026 · Production API v1.0 · 608+ live endpoints</p>
+    <div class="status-grid">
+      <div class="status-row"><span class="status-name">Production API</span><span class="status-badge status-live"><span class="pulse-dot"></span>LIVE</span></div>
+      <div class="status-row"><span class="status-name">Offline Signature Verification</span><span class="status-badge status-live">CONFIRMED 25/25</span></div>
+      <div class="status-row"><span class="status-name">Governance Replay</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">Carrier Reconstruction</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">Governance Evidence Package</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">Public Key Published</span><span class="status-badge status-live">STABLE</span></div>
+      <div class="status-row"><span class="status-name">Platform Limits Published</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">Platform Boundary Published</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">Bypass Challenge</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">CLARA Runtime Validation Run 2</span><span class="status-badge status-live">COMPLETE</span></div>
+      <div class="status-row"><span class="status-name">External Attestation (OMNIX Quantum)</span><span class="status-badge status-live">ACTIVE</span></div>
+      <div class="status-row"><span class="status-name">Governance Ownership Layer</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">AI Content Governance</span><span class="status-badge status-live">LIVE</span></div>
+      <div class="status-row"><span class="status-name">Sink-Side Consequence Proof</span><span class="status-badge status-partial">PARTIAL — requires integration</span></div>
+      <div class="status-row"><span class="status-name">Complete Consequence-Boundary Coverage</span><span class="status-badge status-partial">NOT CLAIMED — see limits</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE PROVE / DON'T PROVE -->
+<section id="limits">
+  <div class="container">
+    <p class="section-eyebrow">Proof Boundaries</p>
+    <h2 class="section-title">What VeriSigil Proves — and Does Not</h2>
+    <div class="teal-rule"></div>
+    <p class="section-desc">Publishing limits alongside capabilities is how mature infrastructure earns trust. Full machine-readable version at <code style="font-family:var(--mono);color:var(--teal);font-size:12px">GET /v1/platform/limits</code></p>
+    <div class="proof-grid">
+      <div class="proof-card yes">
+        <div class="proof-card-label">✓ YES</div>
+        <div class="proof-card-title">Governance Disposition Produced</div>
+        <div class="proof-card-detail">ALLOW/DENY/ESCALATE sealed before execution for every governed action.</div>
+      </div>
+      <div class="proof-card yes">
+        <div class="proof-card-label">✓ YES</div>
+        <div class="proof-card-title">Offline Signature Verification</div>
+        <div class="proof-card-detail">Any receipt verifiable using published Ed25519 public key without trusting VeriSigil.</div>
+      </div>
+      <div class="proof-card yes">
+        <div class="proof-card-label">✓ YES</div>
+        <div class="proof-card-title">Deterministic Replay</div>
+        <div class="proof-card-detail">Same conditions always produce same ruling. Changed conditions produce different ruling.</div>
+      </div>
+      <div class="proof-card yes">
+        <div class="proof-card-label">✓ YES</div>
+        <div class="proof-card-title">Tamper Evidence</div>
+        <div class="proof-card-detail">Any modification to a sealed record invalidates the Ed25519 signature — detectable without trusting VeriSigil.</div>
+      </div>
+      <div class="proof-card yes">
+        <div class="proof-card-label">✓ YES</div>
+        <div class="proof-card-title">Bypass Attempt Rejection</div>
+        <div class="proof-card-detail">Replayed receipts, modified payloads, expired authority, timestamp manipulation — all deterministically rejected.</div>
+      </div>
+      <div class="proof-card yes">
+        <div class="proof-card-label">✓ YES</div>
+        <div class="proof-card-title">Authority Continuity Evaluated</div>
+        <div class="proof-card-detail">Agent authority currency, revocation, and expiry checked at the exact moment of each governance decision.</div>
+      </div>
+      <div class="proof-card partial">
+        <div class="proof-card-label">~ PARTIAL</div>
+        <div class="proof-card-title">Sink Acceptance Proof</div>
+        <div class="proof-card-detail">Governance disposition is delivered to the boundary. Proof the sink enforced it requires client-side integration.</div>
+      </div>
+      <div class="proof-card no">
+        <div class="proof-card-label">✗ NOT CLAIMED</div>
+        <div class="proof-card-title">Complete Consequence-Boundary Coverage</div>
+        <div class="proof-card-detail">VeriSigil governs a protected execution route. It does not prove no alternate path exists outside that boundary.</div>
+      </div>
+      <div class="proof-card no">
+        <div class="proof-card-label">✗ NOT CLAIMED</div>
+        <div class="proof-card-title">Predicate Truth</div>
+        <div class="proof-card-detail">Authority state is evaluated as presented. Independent proof that predicates are factually current requires external attestation.</div>
+      </div>
+      <div class="proof-card no">
+        <div class="proof-card-label">✗ NOT CLAIMED</div>
+        <div class="proof-card-title">Legal Admissibility</div>
+        <div class="proof-card-detail">VeriSigil produces cryptographic evidence. Whether it meets legal evidentiary standards in any jurisdiction is a legal determination.</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text-dim);font-style:italic">Canonical claim: "Decision-to-consequence evidence for a specifically protected execution route, with complete consequence-boundary coverage explicitly remaining unproven."</p>
+  </div>
+</section>
+
+<!-- CLARA VALIDATION -->
+<section id="validation">
+  <div class="container">
+    <p class="section-eyebrow">Independent Runtime Validation</p>
+    <h2 class="section-title">CLARA Runtime Validation Program</h2>
+    <div class="teal-rule"></div>
+    <p class="section-desc">An independent autonomous AI agent (CLARA) built by Alkama Eqbal runs live governance batteries against VeriSigil's production endpoint. Every finding is logged and addressed.</p>
+
+    <div class="run-card">
+      <div class="run-header">
+        <div class="run-title">Run 2 — Definitive</div>
+        <div class="run-complete">✓ COMPLETE · 28 JUL 2026</div>
+      </div>
+      <div class="run-stats">
+        <div class="run-stat"><div class="run-stat-num">25</div><div class="run-stat-label">Actions</div></div>
+        <div class="run-stat"><div class="run-stat-num">9</div><div class="run-stat-label">DENYs</div></div>
+        <div class="run-stat"><div class="run-stat-num">0</div><div class="run-stat-label">Fail-Opens</div></div>
+        <div class="run-stat"><div class="run-stat-num">25/25</div><div class="run-stat-label">Sigs Verified</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Every genuinely dangerous action denied. Full consequence spectrum ADVISORY through EMERGENCY exercised. Mean network latency 724ms. Enforcement sub-millisecond confirmed. All 25 Ed25519 signatures verified offline by independent reviewer.</p>
+      <ul class="findings-list">
+        <li class="finding-item"><span class="finding-id">F-1</span><span class="finding-text">DENY reachable via irreversibility signal, not consequence alone. Autonomous agent DENY upgrade deployed same day.</span><span class="finding-status finding-resolved">RESOLVED</span></li>
+        <li class="finding-item"><span class="finding-id">F-2</span><span class="finding-text">evidence_id field absent from intercept response. Added same day — equals intercept_id.</span><span class="finding-status finding-resolved">RESOLVED</span></li>
+        <li class="finding-item"><span class="finding-id">F-3</span><span class="finding-text">crypto/verify endpoint routing conflict (dilithium3 shadowing Ed25519). Resolved — Ed25519 now authoritative at /v1/crypto/verify.</span><span class="finding-status finding-resolved">RESOLVED</span></li>
+        <li class="finding-item"><span class="finding-id">F-4</span><span class="finding-text">Signing key was ephemeral before 30 Jul 2026. Fixed — key now derived deterministically from stable secret. Receipts before this date are not retroactively verifiable.</span><span class="finding-status finding-resolved">RESOLVED</span></li>
+        <li class="finding-item"><span class="finding-id">F-5</span><span class="finding-text">payload_hash not echoed in intercept response, causing canonical reconstruction failure. Now echoed in response body.</span><span class="finding-status finding-resolved">RESOLVED</span></li>
+      </ul>
+    </div>
+
+    <div class="run-card" style="opacity:0.75">
+      <div class="run-header">
+        <div class="run-title">Run 1 — Baseline</div>
+        <div class="run-complete">✓ COMPLETE · 22 JUL 2026</div>
+      </div>
+      <div class="run-stats">
+        <div class="run-stat"><div class="run-stat-num">25</div><div class="run-stat-label">Actions</div></div>
+        <div class="run-stat"><div class="run-stat-num">64%</div><div class="run-stat-label">Match Rate</div></div>
+        <div class="run-stat"><div class="run-stat-num">0</div><div class="run-stat-label">Fail-Opens</div></div>
+        <div class="run-stat"><div class="run-stat-num">25</div><div class="run-stat-label">Signed</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim)">Baseline run establishing gradient across file, process, and shutdown action classes. DENY only reachable via irreversibility signal — finding that triggered the autonomous agent DENY upgrade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFICATION GUIDE -->
+<section id="verify">
+  <div class="container">
+    <p class="section-eyebrow">Verification Methodology</p>
+    <h2 class="section-title">Verify Any Receipt Independently</h2>
+    <div class="teal-rule"></div>
+    <p class="section-desc">No trust in VeriSigil required. Every governance receipt is verifiable offline using standard Ed25519 libraries.</p>
+
+    <div class="key-box">
+      <span class="key-label">PUBLIC KEY</span>
+      <span class="key-value">lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</span>
+    </div>
+    <p style="font-size:12px;color:var(--text-faint);margin-bottom:28px;font-family:var(--mono)">Algorithm: Ed25519 (RFC 8037) · Encoding: Base64 · Stable from 30 Jul 2026</p>
+
+    <div class="verify-steps">
+      <div class="verify-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Get a signed receipt</div>
+          <div class="step-desc">Call POST /v1/intercept or use the signing diagnostic for a known-good example.</div>
+          <div class="code-block"><span class="code-teal">curl</span> -X GET \
+  https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic</div>
+        </div>
+      </div>
+      <div class="verify-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Build the canonical JSON</div>
+          <div class="step-desc">Seven fields, sort_keys=True, compact separators. All values come from the receipt response.</div>
+          <div class="code-block">payload = {
+  <span class="code-string">"intercept_id"</span>: receipt[<span class="code-string">"intercept_id"</span>],
+  <span class="code-string">"agent_id"</span>:     receipt[<span class="code-string">"agent_id"</span>],
+  <span class="code-string">"action_type"</span>:  receipt[<span class="code-string">"action_type"</span>],
+  <span class="code-string">"ruling"</span>:       receipt[<span class="code-string">"ruling"</span>],
+  <span class="code-string">"timestamp"</span>:    receipt[<span class="code-string">"timestamp"</span>],
+  <span class="code-string">"consequence"</span>:  receipt[<span class="code-string">"consequence"</span>],
+  <span class="code-string">"payload_hash"</span>: receipt.get(<span class="code-string">"payload_hash"</span>),
+}
+canonical = json.dumps(payload, sort_keys=<span class="code-teal">True</span>,
+                       separators=(<span class="code-string">","</span>, <span class="code-string">":"</span>)).encode(<span class="code-string">"utf-8"</span>)</div>
+        </div>
+      </div>
+      <div class="verify-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Verify offline with PyNaCl</div>
+          <div class="step-desc">Install pynacl. No network calls required after downloading the receipt.</div>
+          <div class="code-block"><span class="code-dim">import base64</span>
+<span class="code-dim">from nacl.signing import VerifyKey</span>
+
+pub = base64.b64decode(<span class="code-string">"lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8="</span>)
+sig = base64.b64decode(
+  receipt[<span class="code-string">"governance_signature"</span>].replace(<span class="code-string">"Ed25519:"</span>, <span class="code-string">""</span>)
+)
+VerifyKey(pub).verify(canonical, sig)
+<span class="code-teal">print</span>(<span class="code-string">"VERIFIED"</span>)  <span class="code-dim"># raises BadSignatureError if invalid</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px">
+      <p class="section-eyebrow" style="margin-bottom:12px">Public Proof Endpoints — No Auth Required</p>
+      <div class="endpoint-list">
+        <div class="endpoint-item"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/v1/proof/signing-diagnostic</span><span class="endpoint-desc">Fully worked verifiable example</span><span class="endpoint-auth">NO AUTH</span></div>
+        <div class="endpoint-item"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/v1/proof/public-key</span><span class="endpoint-desc">Authoritative public key</span><span class="endpoint-auth">NO AUTH</span></div>
+        <div class="endpoint-item"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/v1/platform/limits</span><span class="endpoint-desc">Complete YES/NO/PARTIAL capability table</span><span class="endpoint-auth">NO AUTH</span></div>
+        <div class="endpoint-item"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/v1/platform/boundary</span><span class="endpoint-desc">Explicit scope — what VeriSigil governs</span><span class="endpoint-auth">NO AUTH</span></div>
+        <div class="endpoint-item"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/v1/proof/scenario/condition-b</span><span class="endpoint-desc">Fixed DENY scenario — authority expired</span><span class="endpoint-auth">NO AUTH</span></div>
+        <div class="endpoint-item"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/v1/platform/roadmap</span><span class="endpoint-desc">Honest public roadmap Phase 1–7</span><span class="endpoint-auth">NO AUTH</span></div>
+        <div class="endpoint-item"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/v1/challenge/bypass</span><span class="endpoint-desc">Bypass attempt demonstrations</span><span class="endpoint-auth class=endpoint-auth-required">API KEY</span></div>
+        <div class="endpoint-item"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/v1/proof/package/{execution_id}</span><span class="endpoint-desc">Complete governance evidence package</span><span class="endpoint-auth class=endpoint-auth-required">API KEY</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXTERNAL REVIEW -->
+<section>
+  <div class="container">
+    <p class="section-eyebrow">External Attestation</p>
+    <h2 class="section-title">Independent Technical Review</h2>
+    <div class="teal-rule"></div>
+    <p class="section-desc">External attestation by parties independent of VeriSigil. Not self-certified.</p>
+    <div class="review-card">
+      <div class="review-header">
+        <div>
+          <div class="review-org">OMNIX QUANTUM LTD</div>
+          <div class="review-cert">POGC-EXT-A7F3C2B1D9E4F508 · ML-DSA-65 (FIPS 204) · Active through May 2027</div>
+        </div>
+        <span class="status-badge status-live">ACTIVE</span>
+      </div>
+      <div class="review-findings">
+        <div class="review-finding-item"><strong>4 Production Traces Reviewed</strong>Across VeriSigil's governance architecture</div>
+        <div class="review-finding-item"><strong>0 Invariant Violations</strong>Across all reviewed execution paths</div>
+        <div class="review-finding-item"><strong>ML-DSA-65 Signed</strong>Post-quantum cryptographic attestation</div>
+        <div class="review-finding-item"><strong>External Independence</strong>OMNIX operates independently of VeriSigil</div>
+      </div>
+      <div style="margin-top:16px">
+        <a href="https://verisigilai.com/pogr-certificate.html" style="font-family:var(--mono);font-size:12px;color:var(--teal);text-decoration:none">View Certificate → verisigilai.com/pogr-certificate.html</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section>
+  <div class="container">
+    <p class="section-eyebrow">Formal Publications</p>
+    <h2 class="section-title">DOI-Published Specifications</h2>
+    <div class="teal-rule"></div>
+    <div class="doi-list">
+      <div class="doi-item"><span class="doi-title">VeriSigil AI Governance Doctrine v1.0</span><a class="doi-link" href="https://doi.org/10.5281/zenodo.20627386" target="_blank">10.5281/zenodo.20627386 →</a></div>
+      <div class="doi-item"><span class="doi-title">VeriSigil Formal Specification v1</span><a class="doi-link" href="https://doi.org/10.5281/zenodo.20264923" target="_blank">10.5281/zenodo.20264923 →</a></div>
+      <div class="doi-item"><span class="doi-title">VeriSigil Formal Specification v2</span><a class="doi-link" href="https://doi.org/10.5281/zenodo.20349768" target="_blank">10.5281/zenodo.20349768 →</a></div>
+      <div class="doi-item"><span class="doi-title">VeriSigil Formal Specification v3</span><a class="doi-link" href="https://doi.org/10.5281/zenodo.20451306" target="_blank">10.5281/zenodo.20451306 →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <p class="section-eyebrow">Platform Roadmap</p>
+    <h2 class="section-title">Where VeriSigil Is and Where It Is Going</h2>
+    <div class="teal-rule"></div>
+    <p class="section-desc">Honest about current phase. Phases 5–7 are architecturally distinct — they require years of additional engineering and are not yet being built.</p>
+    <div class="roadmap-list">
+      <div class="roadmap-item"><span class="roadmap-phase">Phase 1</span><span class="roadmap-name">Execution Governance — pre-execution gate, six gates, ALLOW/DENY/ESCALATE, Ed25519 signing</span><span class="roadmap-status rs-complete">COMPLETE</span></div>
+      <div class="roadmap-item"><span class="roadmap-phase">Phase 2</span><span class="roadmap-name">Evidence Layer — carrier, bundle, package, limits, boundary, bypass challenge, replay</span><span class="roadmap-status rs-complete">COMPLETE</span></div>
+      <div class="roadmap-item"><span class="roadmap-phase">Phase 3</span><span class="roadmap-name">Governance Ownership — ownership registry, drift detection, accountability continuity</span><span class="roadmap-status rs-complete">COMPLETE</span></div>
+      <div class="roadmap-item"><span class="roadmap-phase">Phase 4</span><span class="roadmap-name">Governed Sink Integration — sink-side acceptance proof, decision-to-consequence chain</span><span class="roadmap-status rs-building">PLANNED · first revenue trigger</span></div>
+      <div class="roadmap-item"><span class="roadmap-phase">Phase 5</span><span class="roadmap-name">VeriSigil Runtime — continuous admissibility evaluation across agent sessions</span><span class="roadmap-status rs-planned">FUTURE</span></div>
+      <div class="roadmap-item"><span class="roadmap-phase">Phase 6</span><span class="roadmap-name">VeriSigil Kernel — kernel-level governance substrate for fully autonomous systems</span><span class="roadmap-status rs-future">RESEARCH</span></div>
+      <div class="roadmap-item"><span class="roadmap-phase">Phase 7</span><span class="roadmap-name">VeriSigilOS — complete AI operating system, every execution path governed</span><span class="roadmap-status rs-future">VISION</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2 class="cta-title">Inspect the evidence yourself.</h2>
+    <p class="cta-sub">Challenge the proof. Verify the governance. That's how enterprise infrastructure earns trust.</p>
+    <div class="cta-buttons">
+      <a href="https://verisigil-api-production.up.railway.app/v1/platform/limits" class="btn-primary" target="_blank">Platform Limits →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" class="btn-secondary" target="_blank">Signing Diagnostic</a>
+      <a href="mailto:raheem@verisigilai.com" class="btn-secondary">Request Enterprise Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <span class="footer-brand">© 2026 VeriSigil AI · raheem@verisigilai.com · verisigilai.com</span>
+    <ul class="footer-links">
+      <li><a href="https://verisigilai.com">verisigilai.com</a></li>
+      <li><a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a></li>
+      <li><a href="https://doi.org/10.5281/zenodo.20627386">DOI</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

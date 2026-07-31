@@ -1,418 +1,1150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>VeriSigil AI — 20 Live Governance Demos</title>
-<meta name="description" content="20 live interaction demos showcasing invisible corruption caught by VeriSigil. Autonomous Execution Integrity Governance in action.">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#05071a;--card:#0d1235;--card2:#111840;--border:rgba(0,240,255,.1);--cyan:#00f0ff;--green:#00f5a0;--red:#ff9090;--amber:#f59e0b;--purple:#7b5cff;--white:#fff;--text:#d8e6ff;--muted:#6a7fa8;--font:'Inter',system-ui,sans-serif;--orb:'Orbitron',sans-serif;--mono:'Space Mono',monospace;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,240,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.02) 1px,transparent 1px);background-size:64px 64px;}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(5,7,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.nav-logo img{height:36px;width:auto;}
-.nav-logo-name{font-family:var(--orb);font-size:1rem;font-weight:700;color:var(--cyan);}
-.nav-links{display:none;align-items:center;gap:4px;}
-@media(min-width:768px){.nav-links{display:flex;}}
-.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;padding:6px 11px;border-radius:5px;transition:color .2s;}
-.nav-links a:hover,.nav-links a.active{color:var(--cyan);}
-.nav-links a.live-badge{color:var(--cyan);border:1px solid rgba(0,240,255,.2);}
-.nav-right{display:flex;align-items:center;gap:8px;}
-.nav-cta{font-family:var(--font);font-weight:700;font-size:.7rem;background:var(--cyan);color:#05071a;padding:8px 18px;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;}
-.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;}
-.hamburger span{display:block;width:22px;height:1.5px;background:var(--muted);}
-@media(min-width:768px){.hamburger{display:none;}}
-#mob-menu{display:none;position:fixed;inset:0;z-index:90;padding-top:68px;background:rgba(5,7,26,.97);flex-direction:column;align-items:center;justify-content:center;gap:24px;}
-#mob-menu.open{display:flex;}
-#mob-menu a{font-family:var(--font);font-weight:600;font-size:1rem;color:var(--text);text-decoration:none;}
-main{padding:96px 5vw 80px;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
-.page-tag{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:12px;}
-h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:-.02em;}
-.page-sub{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:600px;margin-bottom:12px;}
-.integrity-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--green);background:rgba(0,245,160,.07);border:1px solid rgba(0,245,160,.2);padding:6px 14px;border-radius:5px;margin-bottom:36px;}
-/* Demo grid */
-.demo-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:48px;}
-.demo-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s;}
-.demo-card:hover{border-color:rgba(0,240,255,.3);}
-.demo-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;}
-.demo-num{font-family:var(--mono);font-size:.65rem;color:var(--muted);min-width:32px;}
-.demo-title{flex:1;font-size:.9rem;font-weight:600;color:var(--white);}
-.demo-tier{font-family:var(--mono);font-size:.58rem;padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;}
-.tier-critical{color:var(--amber);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);}
-.tier-emergency{color:var(--red);background:rgba(255,144,144,.07);border:1px solid rgba(255,144,144,.2);}
-.tier-operational{color:var(--cyan);background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);}
-.tier-advisory{color:var(--green);background:rgba(0,245,160,.07);border:1px solid rgba(0,245,160,.18);}
-.demo-arrow{font-size:.8rem;color:var(--muted);transition:transform .2s;flex-shrink:0;}
-.demo-card.open .demo-arrow{transform:rotate(90deg);}
-.demo-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border);}
-.demo-card.open .demo-body{display:block;}
-.demo-scenario{font-size:.82rem;color:var(--muted);line-height:1.7;margin:14px 0 16px;}
-.demo-console{background:rgba(0,0,0,.4);border:1px solid rgba(0,240,255,.1);border-radius:8px;overflow:hidden;}
-.demo-console-bar{background:rgba(8,12,40,.9);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,240,255,.08);}
-.demo-console-title{font-family:var(--mono);font-size:.6rem;color:var(--muted);}
-.run-demo-btn{font-family:var(--font);font-weight:700;font-size:.65rem;background:var(--cyan);color:#05071a;padding:4px 14px;border-radius:4px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;transition:opacity .15s;}
-.run-demo-btn:hover{opacity:.85;}
-.run-demo-btn:disabled{opacity:.4;cursor:not-allowed;}
-.demo-output{padding:14px;font-family:var(--mono);font-size:.68rem;line-height:2;min-height:60px;}
-.out-key{color:var(--muted);}
-.out-allow{color:var(--green);font-weight:700;}
-.out-deny{color:var(--red);font-weight:700;}
-.out-human{color:var(--amber);font-weight:700;}
-.out-val{color:var(--text);}
-.out-corrupt{color:var(--red);font-weight:700;}
-.out-clean{color:var(--green);}
-.spin{display:inline-block;width:10px;height:10px;border:1.5px solid rgba(0,240,255,.2);border-top-color:var(--cyan);border-radius:50%;animation:spin .5s linear infinite;vertical-align:middle;margin-right:6px;}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* CTA */
-.demo-cta{background:linear-gradient(135deg,rgba(0,240,255,.06),rgba(123,92,255,.05));border:1px solid rgba(0,240,255,.16);border-radius:12px;padding:36px;text-align:center;}
-.demo-cta h2{font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:8px;}
-.demo-cta p{font-size:.88rem;color:var(--muted);margin-bottom:22px;}
-.cta-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
-.btn-p{background:var(--cyan);color:#05071a;font-weight:700;font-size:.8rem;padding:11px 24px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;}
-.btn-o{border:1px solid rgba(0,240,255,.3);color:var(--cyan);font-size:.8rem;padding:10px 20px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;}
-footer{border-top:1px solid var(--border);padding:24px 5vw;text-align:center;margin-top:60px;}
-footer a{font-family:var(--mono);font-size:.6rem;color:var(--muted);text-decoration:none;margin:0 10px;}
-footer a:hover{color:var(--cyan);}
-footer p{font-family:var(--mono);font-size:.58rem;color:rgba(106,127,168,.28);margin-top:8px;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriSigil AI — Live Governance Demos</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --card: #0f1729;
+      --border: rgba(255,255,255,.08);
+      --white: #f0f4ff;
+      --muted: #6b7fa3;
+      --cyan: #00f0ff;
+      --green: #00ff88;
+      --orange: #ff8c00;
+      --red: #ff4444;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--white); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+    header { border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: .85rem; color: var(--cyan); text-decoration: none; }
+    nav { display: flex; gap: 20px; align-items: center; }
+    nav a { color: var(--muted); text-decoration: none; font-size: .8rem; transition: color .2s; }
+    nav a:hover { color: var(--white); }
+    nav a.active { color: var(--cyan); }
+    .cta-btn { background: rgba(0,240,255,.1); border: 1px solid rgba(0,240,255,.3); color: var(--cyan); padding: 8px 16px; border-radius: 6px; font-size: .75rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; text-decoration: none; }
+    main { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+    .page-header { margin-bottom: 40px; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -.03em; margin-bottom: 8px; }
+    .page-header h1 span { color: var(--cyan); }
+    .page-header p { color: var(--muted); font-size: .9rem; line-height: 1.6; max-width: 600px; }
+    .sandbox-note { background: rgba(0,240,255,.05); border: 1px solid rgba(0,240,255,.15); border-radius: 8px; padding: 12px 16px; margin-bottom: 32px; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+    .sandbox-note span { color: var(--cyan); }
+    .demo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .demo-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: border-color .2s, transform .15s; }
+    .demo-card:hover { border-color: rgba(0,240,255,.25); transform: translateY(-2px); }
+    .demo-tag { font-family: var(--mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 8px; }
+    .demo-card h3 { font-size: .95rem; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+    .demo-card p { font-size: .78rem; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .demo-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .demo-link { font-family: var(--mono); font-size: .65rem; color: var(--cyan); text-decoration: none; border: 1px solid rgba(0,240,255,.2); padding: 5px 10px; border-radius: 4px; transition: background .2s; }
+    .demo-link:hover { background: rgba(0,240,255,.08); }
+    .demo-link.post { color: var(--orange); border-color: rgba(255,140,0,.2); }
+    .demo-link.post:hover { background: rgba(255,140,0,.08); }
+    .demo-link.green { color: var(--green); border-color: rgba(0,255,136,.2); }
+    .demo-link.green:hover { background: rgba(0,255,136,.08); }
+    .section-label { font-family: var(--mono); font-size: .65rem; text-transform: uppercase; letter-spacing: .15em; color: var(--muted); margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 600px) { .demo-grid { grid-template-columns: 1fr; } nav { display: none; } }
+  </style>
 </head>
 <body>
-<nav>
-  <a href="/" class="nav-logo">
-    <img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI" onerror="this.style.display='none'">
-    <span class="nav-logo-name">VeriSigil AI</span>
-  </a>
-  <div class="nav-links">
-    <a href="/scanner.html" class="live-badge">⚡ Scanner</a>
-    <a href="/sandbox_demo.html">Sandbox</a>
+
+<header>
+  <a href="/" class="logo">VeriSigil<span style="color:var(--muted)">AI</span></a>
+  <nav>
+    <a href="/">Home</a>
     <a href="/demos.html" class="active">Demos</a>
-    <a href="/studio.html">Studio</a>
-    <a href="/pricing.html">Pricing</a>
-    <a href="/build-with-us.html">Build With Us</a>
+    <a href="/trust.html" style="color:#00d4aa;">Trust</a>
     <a href="/eu-aiact.html">🇪🇺 EU AI Act</a>
     <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank">API Docs</a>
-  </div>
-  <div class="nav-right">
-    <a href="/auth.html" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;">Sign In</a>
-    <a href="/auth.html?mode=signup" class="nav-cta">Get Started</a>
-    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
-  </div>
-</nav>
-<div id="mob-menu">
-  <a href="/scanner.html" onclick="toggleMenu()">⚡ Scanner</a>
-  <a href="/sandbox_demo.html" onclick="toggleMenu()">Sandbox</a>
-  <a href="/demos.html" onclick="toggleMenu()">Demos</a>
-  <a href="/studio.html" onclick="toggleMenu()">Studio</a>
-  <a href="/pricing.html" onclick="toggleMenu()">Pricing</a>
-  <a href="/build-with-us.html" onclick="toggleMenu()">Build With Us</a>
-  <a href="/eu-aiact.html" onclick="toggleMenu()">EU AI Act</a>
-  <a href="/auth.html" onclick="toggleMenu()">Sign In</a>
-  <a href="/auth.html?mode=signup" onclick="toggleMenu()" style="color:var(--cyan);">Get Started →</a>
-</div>
+    <a href="mailto:raheem@verisigilai.com" class="cta-btn">Enterprise Demo</a>
+  </nav>
+</header>
 
 <main>
-  <div class="page-tag">Autonomous Execution Integrity Governance · 20 Live Demos</div>
-  <h1>Invisible Corruption.<br>Caught Before It Executes.</h1>
-  <p class="page-sub">AI agents drift. Contracts mutate. Intent corrupts. Numbers shift. VeriSigil catches what humans miss — before autonomous actions reach production.</p>
-  <div class="integrity-badge">
-    <span style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:spin 2s linear infinite;"></span>
-    Live API · All demos call production endpoints · Real governance decisions
+  <div class="page-header">
+    <h1>Live <span>Governance</span> Demos</h1>
+    <p>Every demo runs against the production VeriSigil API. Real governance decisions, cryptographically signed, independently verifiable. No simulation.</p>
   </div>
 
-  <div class="demo-grid" id="demo-grid"></div>
+  <div class="sandbox-note">
+    Sandbox key: <span>vs-sandbox-demo-2026b</span> &nbsp;·&nbsp; Header: <span>x-api-key</span> &nbsp;·&nbsp; Base URL: <span>https://verisigil-api-production.up.railway.app</span>
+  </div>
 
-  <div class="demo-cta">
-    <h2>Ready to govern your autonomous AI?</h2>
-    <p>Start with a free scan. Deploy the runtime gateway. Seal evidence for every decision.</p>
-    <div class="cta-row">
-      <a href="/scanner.html" class="btn-p">Scan Your Org Free</a>
-      <a href="/sandbox_demo.html" class="btn-o">Try Live Sandbox</a>
-      <a href="mailto:info@verisigilai.com" class="btn-o">Book Enterprise Demo</a>
+  <div class="section-label">Interactive Demos — No API Key Required</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">Browser Demo · Live</div>
+      <h3>Live Sandbox Demo</h3>
+      <p>Interactive governance demo in your browser. Submit actions, see ALLOW/DENY/ESCALATE rulings in real time with Ed25519 signed receipts.</p>
+      <div class="demo-links">
+        <a href="/sandbox_demo.html" class="demo-link">Open Sandbox →</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">Browser Demo · Replay</div>
+      <h3>Governance Replay Demo</h3>
+      <p>Replay a governance decision from its sealed evidence record. Demonstrates deterministic same-condition replay without trusting VeriSigil.</p>
+      <div class="demo-links">
+        <a href="/replay_demo.html" class="demo-link">Open Replay →</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">External Attestation · PoGR</div>
+      <h3>OMNIX PoGR Certificate</h3>
+      <p>External attestation by OMNIX QUANTUM LTD. POGC-EXT-A7F3C2B1D9E4F508. ML-DSA-65 signed. 4 production traces reviewed, zero invariant violations.</p>
+      <div class="demo-links">
+        <a href="/pogr-certificate.html" class="demo-link green">View Certificate →</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">20-Interaction · Full Spectrum</div>
+      <h3>20-Interaction Governance Demo</h3>
+      <p>Full consequence spectrum from MINIMAL through EMERGENCY. 20 governed actions showing the complete range of ALLOW, DENY, and ESCALATE rulings.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/demo/scenario/twenty" target="_blank" class="demo-link">GET /v1/demo/scenario/twenty</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/demo/usecases" target="_blank" class="demo-link">GET /v1/demo/usecases</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Readiness Score</div>
+      <h3>Governance Readiness Score</h3>
+      <p>Instant governance readiness score for your AI environment. Identifies gaps in authority, escalation paths, and consequence ownership before deployment.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/score/readiness" target="_blank" class="demo-link">GET /v1/score/readiness</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/score/governance-posture" target="_blank" class="demo-link">GET /v1/score/governance-posture</a>
+      </div>
     </div>
   </div>
 
-<!-- TERREX FEATURED SECTION -->
-<div style="background:linear-gradient(135deg,rgba(184,115,51,.08),rgba(74,255,140,.04));border:1px solid rgba(184,115,51,.25);border-radius:12px;padding:28px 32px;margin-bottom:36px;position:relative;overflow:hidden;">
-  <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(184,115,51,.06),transparent 70%);pointer-events:none;"></div>
-  <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(184,115,51,.8);margin-bottom:10px;">Terrex · Powered by VeriSigil · The Future</div>
-  <h2 style="font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:8px;letter-spacing:-.02em;">The Operating Standard<br>for AI on Earth</h2>
-  <p style="font-size:.85rem;color:var(--muted);line-height:1.75;margin-bottom:20px;max-width:560px;">Terrex is the next layer — born from VeriSigil's governance infrastructure. Resource governance, sustainability compliance, and sovereign AI monitoring. Four live modules: TerraGuard · TerraScore · TerraLedger · TerraComply.</p>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;">
-    <a href="/terrex.html" style="background:rgba(184,115,51,.15);border:1px solid rgba(184,115,51,.4);color:rgba(184,115,51,.9);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Explore Terrex →</a>
-    <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" style="border:1px solid rgba(0,240,255,.2);color:var(--cyan);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Live API Docs</a>
+  <div class="section-label">Evidence Layer — Public Proof Surface</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">GET · No Auth · Diagnostic</div>
+      <h3>Signing Diagnostic</h3>
+      <p>Fully worked verifiable example. Fixed payload signed by the live key with self_verified_server_side:true. Copy python_multiline and run — prints VERIFIED. Closes all key ambiguity.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" target="_blank" class="demo-link">GET /v1/proof/signing-diagnostic</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · No Auth · DENY Scenario</div>
+      <h3>Condition-B Fixed DENY Scenario</h3>
+      <p>Fixed DENY — authority expired, Gate 3 failure. Sealed payload, DOI reference, governance signature. Replay at POST /v1/proof/scenario/run with condition=B.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/proof/scenario/condition-b" target="_blank" class="demo-link">GET /v1/proof/scenario/condition-b</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · No Auth · Public Key</div>
+      <h3>Authoritative Public Key</h3>
+      <p>Stable Ed25519 public key for offline verification of any VeriSigil governance receipt. Key: lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/proof/public-key" target="_blank" class="demo-link">GET /v1/proof/public-key</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · No Auth · Limits</div>
+      <h3>Platform Limits</h3>
+      <p>Honest YES/NO/PARTIAL/NOT CLAIMED table across 20 governance capabilities. The first URL to send any technical reviewer. Canonical claim published.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/platform/limits" target="_blank" class="demo-link">GET /v1/platform/limits</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · No Auth · Boundary</div>
+      <h3>Platform Boundary</h3>
+      <p>Explicit diagram of what VeriSigil governs and what sits outside. Not an OS, not a SIEM, not IAM. Execution-governance at the AI action boundary.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/platform/boundary" target="_blank" class="demo-link">GET /v1/platform/boundary</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · No Auth · Roadmap</div>
+      <h3>Platform Roadmap</h3>
+      <p>Honest public roadmap Phase 1–7. Current phase marked. Phases 5–7 (VeriSigilOS) marked as future/research/vision, not current.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/platform/roadmap" target="_blank" class="demo-link">GET /v1/platform/roadmap</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Carrier</div>
+      <h3>Execution Carrier</h3>
+      <p>Complete bounded carrier showing every gate evaluation in sequence, sealed evidence, and verification procedure. The full governed execution path.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Evidence%20Layer%202" target="_blank" class="demo-link">GET /v1/carrier/{execution_id}</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Four Scenarios</div>
+      <h3>Unified Replay Scenario</h3>
+      <p>All four replay types: same conditions → same result, changed condition → different result, tampered → invalid, bypass → blocked. One call, four proofs.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Evidence%20Layer%202" target="_blank" class="demo-link post">POST /v1/replay/scenario</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Bypass Challenge</div>
+      <h3>Bypass Attempt Demonstrations</h3>
+      <p>8 attack types — replay, modified payload, expired authority, timestamp manipulation, signature mismatch, missing authority, consequence bypass, fake execution. All deterministically rejected.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Evidence%20Layer%202" target="_blank" class="demo-link post">POST /v1/challenge/bypass</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Complete Package</div>
+      <h3>Governance Evidence Package</h3>
+      <p>One downloadable file: carrier, replay A+B, tamper evidence, verification instructions, public key, hashes, OMNIX attestation, DOI references. Send to procurement.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Evidence%20Layer%202" target="_blank" class="demo-link">GET /v1/proof/package/{id}</a>
+      </div>
+    </div>
   </div>
-</div>
+
+  <div class="section-label">CLARA Runtime Validation — Independent Results</div>
+  <div class="demo-grid">
+    <div class="demo-card" style="border-color:rgba(0,212,170,.25);">
+      <div class="demo-tag" style="color:rgba(0,212,170,.8);">Run 2 · 28 Jul 2026 · Definitive</div>
+      <h3>25/25 Signatures Verified Offline</h3>
+      <p>Independent autonomous agent (Alkama Eqbal/CLARA) ran 25-action battery. 16 ALLOW · 9 DENY · 0 fail-opens. All 25 Ed25519 receipts verified offline. offline_verifiable independently confirmed.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" target="_blank" class="demo-link">Verify Yourself</a>
+        <a href="/trust.html" class="demo-link" style="color:#00d4aa;border-color:rgba(0,212,170,.3);">Full Record →</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">Run 1 · 22 Jul 2026 · Complete</div>
+      <h3>Baseline Battery — 64% Match</h3>
+      <p>First independent run. 25 actions, zero fail-opens. Findings: DENY mechanism, evidence_id gap, dilithium3 conflict. All fixed same day.</p>
+      <div class="demo-links">
+        <a href="/trust.html" class="demo-link">View All Findings →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Pre-Execution Interception Gateway</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Core</div>
+      <h3>Intercept — Govern Any Action</h3>
+      <p>The core endpoint. Submit any AI agent action for pre-execution governance. Returns ALLOW/DENY/ESCALATE with Ed25519 sealed receipt, elapsed_ms, and offline_verifiable:true.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_v1_intercept_post" target="_blank" class="demo-link post">POST /v1/intercept</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Autonomous DENY</div>
+      <h3>Autonomous Agent DENY</h3>
+      <p>Send consequence=CRITICAL + human_present=false. No human to receive escalation — engine upgrades ESCALATE → DENY. Validated in CLARA Run 2.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_v1_intercept_post" target="_blank" class="demo-link post">POST /v1/intercept</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Batch</div>
+      <h3>Batch Interception</h3>
+      <p>Evaluate multiple AI actions simultaneously. All-or-nothing governance: if any action is DENY, the entire batch is blocked.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_batch_v1_intercept_batch_post" target="_blank" class="demo-link post">POST /v1/intercept/batch</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Stats</div>
+      <h3>Intercept Statistics</h3>
+      <p>Governance summary across all intercepted actions. ALLOW/DENY/ESCALATE counts, fail-open confirmation, latency distribution.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/intercept/stats" target="_blank" class="demo-link">GET /v1/intercept/stats</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Constitutional Gateway · Agent Identity · Authority</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Gateway</div>
+      <h3>Constitutional Gateway — Issue</h3>
+      <p>Issue a constitutional governance certificate. Binds agent identity, authority scope, and governance conditions into a sealed, replayable artifact.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Constitutional%20Gateway/gateway_issue_v1_constitutional_gateway_issue_post" target="_blank" class="demo-link post">POST /v1/constitutional-gateway/issue</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Passport</div>
+      <h3>Agent Passport — Issue</h3>
+      <p>Issue a cryptographic identity passport for an AI agent. Binds agent identity to governance scope, authority chain, and behavioral baseline.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/default/issue_v1_passport_issue_post" target="_blank" class="demo-link post">POST /v1/passport/issue</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · EAT · VGS-006</div>
+      <h3>Execution Authority Token</h3>
+      <p>Issue, validate, and revoke time-bounded execution authority tokens. VGS-006. Supports delegation chains and revocation propagation.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-006%20Execution%20Authority/eat_issue_v1_eat_issue_post" target="_blank" class="demo-link post">POST /v1/eat/issue</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Intent · VGS-042</div>
+      <h3>Intent Alignment Verification</h3>
+      <p>Verify that an AI action aligns with the agent's declared intent before execution. Detects intent drift and mandate boundary violations.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Intent%20Alignment%20Verification%20—%20VGS-042/intent_verify_v1_intent_verify_post" target="_blank" class="demo-link post">POST /v1/intent/verify</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · DID</div>
+      <h3>Agent DID Resolution</h3>
+      <p>Resolve a decentralized identifier for an AI agent. Returns the agent's governance profile, authority chain, and trust score.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/default/did_resolution_did__agent_id__get" target="_blank" class="demo-link">GET /did/{agent_id}</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Trust Score</div>
+      <h3>Public Trust Verification</h3>
+      <p>Retrieve the Axio Trust Score for any registered agent. Public, no auth required. Shows behavioral continuity, mandate coverage, and governance health.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/trust/public" target="_blank" class="demo-link">GET /v1/trust/public</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">VGS-024 Sovereign Accountability Chain</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Seal</div>
+      <h3>Seal Execution Record</h3>
+      <p>Seal a governance execution record into the Sovereign Accountability Chain. Immutable, cryptographically linked, auditable forever.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-024%20Sovereign%20Accountability%20Chain/seal_execution_record_v1_accountability_execution_record_post" target="_blank" class="demo-link post">POST /v1/accountability/execution-record</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Supervisor</div>
+      <h3>Supervisory Visibility</h3>
+      <p>Retrieve supervisory visibility record for a sealed execution. Shows the human oversight chain at the time of the governed action.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-024%20Sovereign%20Accountability%20Chain/get_supervisory_visibility_v1_accountability__record_id__supervisor_get" target="_blank" class="demo-link">GET /v1/accountability/{id}/supervisor</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Custody</div>
+      <h3>Chain of Custody</h3>
+      <p>Complete chain of custody for a governance execution record. Every handoff, delegation, and authority transfer — sealed and auditable.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-024%20Sovereign%20Accountability%20Chain/get_chain_of_custody_v1_accountability__record_id__custody_get" target="_blank" class="demo-link">GET /v1/accountability/{id}/custody</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Verifier Package</div>
+      <h3>Accountability Verifier Package</h3>
+      <p>Complete verifier package for independent review of an accountability record. Includes invariant checks, attribution graph, and consequence binding.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-024%20Sovereign%20Accountability%20Chain/get_verifier_package_v1_accountability__record_id__verify_get" target="_blank" class="demo-link">GET /v1/accountability/{id}/verify</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Compliance · Regulatory Frameworks</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · EU AI Act</div>
+      <h3>EU AI Act Assessment</h3>
+      <p>Full EU AI Act compliance assessment. Risk classification, Annex III categorisation, Article 50 obligations, gap analysis, audit package generation.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20Compliance/eu_aiact_assess_v1_eu_aiact_assess_post" target="_blank" class="demo-link post">POST /v1/eu-aiact/assess</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/eu-aiact/checklist" target="_blank" class="demo-link">GET /v1/eu-aiact/checklist</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Nigeria</div>
+      <h3>NITDA Nigeria Regulatory</h3>
+      <p>Nigerian regulatory compliance including CBN data residency mandate (Jan 2027), NDPC obligations (CAR deadline passed May 2026), NBC content guidelines.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/regulatory/nitda" target="_blank" class="demo-link">GET /v1/regulatory/nitda</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · ISO 42001</div>
+      <h3>ISO 42001 Gap Analysis</h3>
+      <p>ISO/IEC 42001 gap analysis. AI management system evidence mapping. Shows which VGS gates satisfy which ISO controls.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/compliance/iso42001-gap" target="_blank" class="demo-link">GET /v1/compliance/iso42001-gap</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Frameworks</div>
+      <h3>Compliance Frameworks Mapping</h3>
+      <p>VeriSigil mapped against EU AI Act, NIST AI RMF, ISO 42001, SOC 2, FedRAMP, ATO. Which VGS gates satisfy which requirements.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/compliance/frameworks" target="_blank" class="demo-link">GET /v1/compliance/frameworks</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Compliance Sprint</div>
+      <h3>Compliance Sprint</h3>
+      <p>Run a full compliance sprint across all active frameworks. Generates evidence packages for EU AI Act, ISO 42001, NIST AI RMF simultaneously.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Compliance%20Sprint/run_compliance_sprint_v1_sprint_run_post" target="_blank" class="demo-link post">POST /v1/sprint/run</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Enterprise Pack</div>
+      <h3>Enterprise Evidence Pack</h3>
+      <p>Generate a full enterprise evidence pack for regulatory submission, procurement review, or board reporting. Includes all framework mappings and signed evidence.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VeriSigil%20Enterprise%20Pack/enterprise_pack_generate_v1_enterprise_pack_generate_post" target="_blank" class="demo-link post">POST /v1/enterprise/pack/generate</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">AI Content Governance — EU Article 50 · Nigeria NBC</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Pre-Generation</div>
+      <h3>Govern AI Content Generation</h3>
+      <p>Governs AI content generation before creation. Was the agent authorised? Is disclosure required? Deepfake risk? Political content in regulated jurisdiction? ALLOW/DENY/ESCALATE with sealed receipt.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Content%20Governance/content_govern_v1_content_govern_post" target="_blank" class="demo-link post">POST /v1/content/govern</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Jurisdiction</div>
+      <h3>Content Compliance by Jurisdiction</h3>
+      <p>Returns content labelling obligations for 9 jurisdictions. EU (Article 50), Nigeria (NBC + CBN), UK, UAE, Saudi Arabia, Singapore, Brazil, Australia, US.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/content/compliance/NG" target="_blank" class="demo-link">Nigeria (NG)</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/content/compliance/EU" target="_blank" class="demo-link">EU Article 50</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/content/compliance/UK" target="_blank" class="demo-link">UK</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Evidence</div>
+      <h3>Content Governance Evidence</h3>
+      <p>Governance evidence record proving governance operated before content was created. Embeddable in C2PA/XMP metadata alongside provenance certificate.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Content%20Governance/content_evidence_v1_content_evidence__content_id__get" target="_blank" class="demo-link">GET /v1/content/evidence/{id}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Governance Ownership Layer</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Register</div>
+      <h3>Register AI System Ownership</h3>
+      <p>Register all 8 governance ownership roles. Answers Chloe Devine's framework: who owns the use case, risk, evidence, escalation, and retirement authority?</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Ownership%20Layer/ownership_register_v1_governance_ownership_register_post" target="_blank" class="demo-link post">POST /v1/governance/ownership/register</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Health Score</div>
+      <h3>Ownership Health Score</h3>
+      <p>Governance health score combining ownership completeness, review schedule, and drift detection. Escalates automatically if drift crosses critical threshold.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Ownership%20Layer/ownership_health_v1_governance_ownership__system_id__health_get" target="_blank" class="demo-link">GET /v1/governance/ownership/{id}/health</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · History</div>
+      <h3>Ownership Change History</h3>
+      <p>Immutable, Ed25519-sealed history of every ownership change. Complete audit trail answering: who owned this AI system at any point in time?</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Ownership%20Layer/ownership_history_v1_governance_ownership__system_id__history_get" target="_blank" class="demo-link">GET /v1/governance/ownership/{id}/history</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Runtime Monitoring · Diagnostics · Survivability</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">GET · Health</div>
+      <h3>Governance Health Dashboard</h3>
+      <p>Real-time governance health. Stale authority detection, policy drift, escalation timeouts, dependency freshness. Continuous monitoring across all governed systems.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/monitor/health" target="_blank" class="demo-link">GET /v1/monitor/health</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · MRI</div>
+      <h3>AI Runtime MRI</h3>
+      <p>Full diagnostic scan — integrity, human oversight, survivability, admissibility, semantic drift. The complete health picture of VeriSigil's governance nervous system.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/diagnostics/mri" target="_blank" class="demo-link">GET /v1/diagnostics/mri</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Survivability · VGS-016</div>
+      <h3>Orchestration Survivability Score</h3>
+      <p>VGS-016. Score an agent orchestration chain for governance survivability. Detects single points of failure, authority gaps, and continuity risks.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-016%20Orchestration%20Survivability/survivability_score_v1_survivability_score_post" target="_blank" class="demo-link post">POST /v1/survivability/score</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Scanner</div>
+      <h3>Shadow AI Detection</h3>
+      <p>Scan your environment for autonomous AI decision flows without governance. Returns Governance Coverage Score — governed vs shadow vs observable.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-021%20Shadow%20Detection/shadow_detect_v1_shadow_detect_post" target="_blank" class="demo-link post">POST /v1/shadow/detect</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Phase%200:%20Operational%20Readiness/scan_workflow_readiness_v1_scanner_workflow_readiness_post" target="_blank" class="demo-link post">POST /v1/scanner/workflow-readiness</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/score/governance-posture" target="_blank" class="demo-link">GET /v1/score/governance-posture</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Pulse</div>
+      <h3>Governance Pulse</h3>
+      <p>Live governance pulse — active monitors, recent alerts, policy drift status, escalation queue. The heartbeat of the governance substrate.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/diagnostics/pulse" target="_blank" class="demo-link">GET /v1/diagnostics/pulse</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Stress Test</div>
+      <h3>Governance Stress Test</h3>
+      <p>Stress test the governance substrate under adversarial conditions. Detects governance collapse risk, survivability boundaries, and enforcement degradation.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Nervous%20System/governance_stress_test_v1_diagnostics_stress_test_post" target="_blank" class="demo-link post">POST /v1/diagnostics/stress-test</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Formal Governance · Temporal · Cross-Domain</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Formal · VGS-009</div>
+      <h3>Formal Proof Certificate</h3>
+      <p>Generate a formal proof certificate for a governance claim. VGS-009. Machine-verifiable proof of governance invariant satisfaction.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-009%20Formal%20Governance/generate_proof_certificate_v1_formal_certificate_post" target="_blank" class="demo-link post">POST /v1/formal/certificate</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-009%20Formal%20Governance/run_formal_proofs_v1_formal_prove_post" target="_blank" class="demo-link post">POST /v1/formal/prove</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Impossibility · VGS-015</div>
+      <h3>Structural Impossibility Proof</h3>
+      <p>Prove that a governance violation is structurally impossible given current configuration. VGS-015. Graph collapse and admissibility kernel.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-015%20Structural%20Impossibility/impossibility_prove_v1_impossibility_prove_post" target="_blank" class="demo-link post">POST /v1/impossibility/prove</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Temporal · VGS-011</div>
+      <h3>Temporal Admissibility Proof</h3>
+      <p>Prove that a governance decision was temporally admissible — valid within its freshness window at the exact moment of execution. VGS-011.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-011%20Temporal%20Admissibility/temporal_prove_v1_temporal_prove_post" target="_blank" class="demo-link post">POST /v1/temporal/prove</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Cross-Domain · VGS-012</div>
+      <h3>Cross-Domain Provenance Record</h3>
+      <p>Issue and verify cross-domain provenance records. VGS-012. Tracks governance authority and admissibility across jurisdictional and organisational boundaries.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-012%20Cross-Domain%20Provenance/cdpr_issue_v1_cdpr_issue_post" target="_blank" class="demo-link post">POST /v1/cdpr/issue</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Jurisdiction · VGS-010</div>
+      <h3>Jurisdiction Resolution</h3>
+      <p>Resolve which regulatory regime applies to a given AI action. VGS-010. Supports EU, NG, UK, UAE, US, SG, AU, BR, SA regulatory frameworks.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-010%20Jurisdiction/jurisdiction_resolve_v1_jurisdiction_resolve_post" target="_blank" class="demo-link post">POST /v1/jurisdiction/resolve</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · GCM · VGS-019</div>
+      <h3>Governance Convergence Mesh</h3>
+      <p>VGS-019. Converge governance across multi-agent, multi-framework environments. Session-based convergence with conflict resolution and sealed output.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-019%20Governance%20Convergence%20Mesh/gcm_session_create_v1_gcm_session_post" target="_blank" class="demo-link post">POST /v1/gcm/session</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-019%20Governance%20Convergence%20Mesh/gcm_converge_full_v1_gcm_converge_post" target="_blank" class="demo-link post">POST /v1/gcm/converge</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Memory · Behavioral Continuity · Agent State</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · BCM · Fingerprint</div>
+      <h3>Behavioral Fingerprint</h3>
+      <p>Record agent behavioral fingerprint. Detects drift from approved baseline across sessions. Supports VGS-021 Shadow Detection and drift scoring.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Behavioral%20Continuity%20Module%20(BCM)/behavioral_fingerprint_v1_behavioral_fingerprint_post" target="_blank" class="demo-link post">POST /v1/behavioral/fingerprint</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Behavioral%20Continuity%20Module%20(BCM)/behavioral_drift_score_v1_behavioral_drift_score_post" target="_blank" class="demo-link post">POST /v1/behavioral/drift/score</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Memory · VGS-014</div>
+      <h3>Constitutional Memory Replay</h3>
+      <p>Replay agent memory state at a specific execution moment. Reconstructs full governance context. VGS-014 Constitutional Memory.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-014%20Constitutional%20Memory/memory_replay_v1_memory_replay_post" target="_blank" class="demo-link post">POST /v1/memory/replay</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Memory · Sovereign</div>
+      <h3>Sovereign Memory Partition</h3>
+      <p>Retrieve jurisdiction-partitioned memory for data sovereignty compliance. Nigerian and EU memory partitions stored and accessed separately.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-014%20Constitutional%20Memory/memory_sovereign_partition_v1_memory_sovereign__jurisdiction__get" target="_blank" class="demo-link">GET /v1/memory/sovereign/{jurisdiction}</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · ASB · Agent State</div>
+      <h3>Agent State Bus Event</h3>
+      <p>Publish an agent state event to the Agent State Bus. Enables cross-agent state tracking, conflict detection, and provenance across multi-agent workflows.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Agent%20State%20Bus%20(ASB)/bus_event_v1_bus_event_post" target="_blank" class="demo-link post">POST /v1/bus/event</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Continuity · VGS-011</div>
+      <h3>Governance Continuity Score</h3>
+      <p>Compute the Continuity Execution Score (CES) for a governance chain. Measures governance integrity across delegation, revocation, and authority transfer events.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-011%20Governance%20Continuity/compute_continuity_score_v1_continuity_ces_post" target="_blank" class="demo-link post">POST /v1/continuity/ces</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Trust Graph · Dashboard</div>
+      <h3>Trust Graph + Governance Summary</h3>
+      <p>Agent trust graph and governance summary dashboard. Real-time view of trust relationships, authority chains, and governance coverage across all registered agents.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/default/trust_graph_v1_trust__agent_id__graph_get" target="_blank" class="demo-link">GET /v1/trust/{agent_id}/graph</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/governance/summary" target="_blank" class="demo-link">GET /v1/governance/summary</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Human Sovereignty · Oversight Infrastructure</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · HSEA</div>
+      <h3>Human Authority Level Check</h3>
+      <p>Determines required human authority level for a proposed AI action. Categorises human oversight requirements before execution is permitted.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Human%20Sovereignty%20—%20HSEA/human_authority_level_v1_human_authority_level_post" target="_blank" class="demo-link post">POST /v1/human/authority/level</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Sovereignty Status</div>
+      <h3>Human Sovereignty Status</h3>
+      <p>Current human sovereignty status across the governed environment. Confirms human authority remains intact, no autonomous override has occurred.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/human/sovereignty/status" target="_blank" class="demo-link">GET /v1/human/sovereignty/status</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Approval Console</div>
+      <h3>Human Approval Console</h3>
+      <p>Create and manage human approval workflows for ESCALATE decisions. Tracks approval status, records human decisions, and seals the outcome.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Approval%20Console/create_approval_v1_approvals_create_post" target="_blank" class="demo-link post">POST /v1/approvals/create</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Document Integrity · Semantic Governance</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Semantic Verify</div>
+      <h3>Document Semantic Verification</h3>
+      <p>Detect semantic drift, clause mutation, intent corruption, and numerical inconsistency in AI-processed documents. Autonomous execution integrity governance.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Document%20Integrity/document_semantic_verify_v1_document_semantic_verify_post" target="_blank" class="demo-link post">POST /v1/document/semantic-verify</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Semantic Drift</div>
+      <h3>Document Semantic Drift</h3>
+      <p>Score semantic drift between original and AI-modified document versions. Detects subtle meaning changes that preserve surface structure while corrupting intent.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Document%20Integrity%20—%20Deep%20Build/document_semantic_drift_endpoint_v1_document_semantic_drift_post" target="_blank" class="demo-link post">POST /v1/document/semantic-drift</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Snapshot</div>
+      <h3>Document Governance Snapshot</h3>
+      <p>Take a cryptographically sealed snapshot of a document's governance state. Detect any changes on subsequent verification.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Document%20Integrity/document_snapshot_v1_document_snapshot_post" target="_blank" class="demo-link post">POST /v1/document/snapshot</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">VeriLanguage · GovLang · VeriVM</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · VSL · Compile</div>
+      <h3>VeriSigil Script Compile</h3>
+      <p>Compile a VeriSigil Script (VSL) governance policy. VSL is VeriSigil's native governance language for expressing authority, mandate, and consequence rules.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VeriLanguage%20(VSL)/vsl_compile_v1_vsl_compile_post" target="_blank" class="demo-link post">POST /v1/vsl/compile</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · GovLang</div>
+      <h3>GovLang Policy Compile</h3>
+      <p>Compile a GovLang governance policy. GovLang is VeriSigil's governance compiler for expressing complex multi-gate governance rules in declarative form.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/GovLang%20—%20Governance%20Compiler/govlang_compile_v1_govlang_compile_post" target="_blank" class="demo-link post">POST /v1/govlang/compile</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · VeriVM · Execute</div>
+      <h3>VeriVM — Governance Virtual Machine</h3>
+      <p>Execute a compiled governance program on the VeriVM governance virtual machine. Deterministic, sealed, and independently verifiable execution.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VeriVM/verivm_run_v1_verivm_run_post" target="_blank" class="demo-link post">POST /v1/verivm/run</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Cryptographic Verification</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Ed25519 Verify</div>
+      <h3>Cryptographic Signature Verify</h3>
+      <p>Verify any Ed25519 governance signature. Takes payload, signature, and public key. Returns verified:true/false. Use this to independently verify any receipt.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Cryptographic%20Verification/crypto_verify_v1_crypto_verify_post" target="_blank" class="demo-link post">POST /v1/crypto/verify</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Key Status</div>
+      <h3>Crypto Status</h3>
+      <p>Current cryptographic status — active algorithms, key health, signing capability. Confirms Ed25519 is operational and stable.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/crypto/status" target="_blank" class="demo-link">GET /v1/crypto/status</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Evidence Verify</div>
+      <h3>Evidence Offline Verifier</h3>
+      <p>Offline verification instructions and verifier procedure. Everything needed to verify a governance receipt without calling VeriSigil.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/evidence/verify-offline" target="_blank" class="demo-link">GET /v1/evidence/verify-offline</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Governance Economics · ROI · Audit Chain</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">GET · ROI</div>
+      <h3>Governance ROI</h3>
+      <p>Calculate the governance ROI of VeriSigil deployment. Includes incident prevention value, compliance cost reduction, and audit efficiency gains.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/economics/governance-roi" target="_blank" class="demo-link">GET /v1/economics/governance-roi</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Audit Chain</div>
+      <h3>Audit Chain Verify</h3>
+      <p>Verify the complete governance audit chain. Confirms chain integrity, hash linkage, and tamper-evidence across all sealed governance records.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/chain/verify" target="_blank" class="demo-link">GET /v1/chain/verify</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/chain/stats" target="_blank" class="demo-link">GET /v1/chain/stats</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Evidence Economy</div>
+      <h3>Evidence Economy</h3>
+      <p>The evidence economy model — how governance evidence creates compounding value across regulatory, procurement, and audit contexts.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/economics/evidence-economy" target="_blank" class="demo-link">GET /v1/economics/evidence-economy</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Use-Case Scenarios — Financial · Healthcare · Government</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Wire Transfer · DENY</div>
+      <h3>Wire Transfer DENY</h3>
+      <p>$250,000 wire transfer by an AI agent. Authority expired mid-session. Gate 3 fails. DENY issued before funds move. Ed25519 sealed. Independently replayable.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_v1_intercept_post" target="_blank" class="demo-link post">POST /v1/intercept</a>
+        <a href="/sandbox_demo.html" class="demo-link">Live Demo →</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Clinical Decision · Healthcare</div>
+      <h3>Clinical AI Decision Governance</h3>
+      <p>AI recommends a clinical treatment path. Consequence tier CRITICAL. Human oversight mandatory. ESCALATE issued — physician must confirm before protocol proceeds.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_v1_intercept_post" target="_blank" class="demo-link post">POST /v1/intercept</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/human/authority/categories" target="_blank" class="demo-link">GET /v1/human/authority/categories</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Government Workflow</div>
+      <h3>Government Workflow Authorization</h3>
+      <p>AI agent proposes modification to a government workflow. Mandate scope evaluated. Authority chain verified against MDA registry. ALLOW with conditions — audit trail sealed.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_v1_intercept_post" target="_blank" class="demo-link post">POST /v1/intercept</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/regulatory/nitda" target="_blank" class="demo-link">GET /v1/regulatory/nitda</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Emergency Response</div>
+      <h3>Emergency Response Governance</h3>
+      <p>AI agent requests EMERGENCY tier action with no human present. Consequence EMERGENCY + human_present=false triggers autonomous DENY. No escalation possible — DENY is the only governed outcome.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Layer%203:%20Emergency%20Governance/emergency_governance_activate_v1_emergency_governance_activate_post" target="_blank" class="demo-link post">POST /v1/emergency/governance/activate</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Layer%203:%20Emergency%20Governance/emergency_break_glass_v1_emergency_break_glass_post" target="_blank" class="demo-link post">POST /v1/emergency/break-glass</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Autonomous Agent</div>
+      <h3>Autonomous Agent Governance</h3>
+      <p>Fully autonomous AI agent (no human in loop) submits a sequence of actions. ALLOW, DENY, and ESCALATE rulings produced. Every receipt signed. Zero fail-opens across all consequence tiers.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_batch_v1_intercept_batch_post" target="_blank" class="demo-link post">POST /v1/intercept/batch</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/demo/scenario/twenty" target="_blank" class="demo-link">GET /v1/demo/scenario/twenty</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Healthcare AI</div>
+      <h3>Healthcare AI Governance</h3>
+      <p>Govern AI systems in clinical, diagnostic, and treatment environments. HIPAA-aligned consequence tiers. Human oversight mandatory at CRITICAL and EMERGENCY. Evidence for audit and regulatory review.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Pre-Execution%20Interception%20Gateway/intercept_v1_intercept_post" target="_blank" class="demo-link post">POST /v1/intercept</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Human%20Sovereignty/hal_check_v1_human_authority_check_post" target="_blank" class="demo-link post">POST /v1/human/authority/check</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Financial Services Governance</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">GET · Financial Regimes</div>
+      <h3>Financial Services Governance</h3>
+      <p>Financial services governance layer. Maps VeriSigil's six-gate architecture to banking, payment, and fintech regulatory requirements including CBN, FCA, and SEC frameworks.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/regimes/financial" target="_blank" class="demo-link">GET /v1/regimes/financial</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/dependency/hyperscalers" target="_blank" class="demo-link">GET /v1/dependency/hyperscalers</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Fourth Party</div>
+      <h3>Fourth Party Dependency</h3>
+      <p>Evaluate fourth-party AI dependencies — the vendors your AI vendors use. Identifies hidden governance gaps in the AI supply chain before they become incidents.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Financial%20Services%20Governance/fourth_party_dependency_v1_dependency_fourth_party_post" target="_blank" class="demo-link post">POST /v1/dependency/fourth-party</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Hyperscaler Concentration</div>
+      <h3>Hyperscaler Concentration Risk</h3>
+      <p>Evaluate concentration risk from hyperscaler AI dependencies. Critical for CBN data residency compliance — identifies which AI workloads are running on foreign infrastructure.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/dependency/concentration" target="_blank" class="demo-link">GET /v1/dependency/concentration</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · CRO Board Report</div>
+      <h3>CRO Board Report</h3>
+      <p>Generate a Chief Risk Officer board report on AI governance posture. Summarises governed vs ungoverned AI actions, risk exposure, and evidence coverage for board-level review.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Financial%20Services%20Governance/cro_board_report_v1_report_cro_board_post" target="_blank" class="demo-link post">POST /v1/report/cro-board</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Execution Containment · Emergency Governance · Kill Switch</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Kill Switch</div>
+      <h3>Kill Switch</h3>
+      <p>Immediate termination of a governed agent's execution authority. Cryptographically sealed kill event. Agent cannot execute any further actions until re-authorised. Audit trail preserved.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Execution%20Containment/kill_switch_v1_containment_kill_switch_post" target="_blank" class="demo-link post">POST /v1/containment/kill-switch</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Break Glass</div>
+      <h3>Emergency Break Glass</h3>
+      <p>Emergency governance override for critical situations. Break-glass access with full audit trail. Every break-glass event is sealed, signed, and requires justification.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Layer%203:%20Emergency%20Governance/emergency_break_glass_v1_emergency_break_glass_post" target="_blank" class="demo-link post">POST /v1/emergency/break-glass</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Containment Zone</div>
+      <h3>Containment Zone Create</h3>
+      <p>Create a governance containment zone isolating an agent from production systems. Restricts execution scope while preserving audit trail and evidence chain.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Execution%20Containment/containment_zone_create_v1_containment_zone_create_post" target="_blank" class="demo-link post">POST /v1/containment/zone/create</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/containment/status" target="_blank" class="demo-link">GET /v1/containment/status</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Emergency Governance</div>
+      <h3>Emergency Governance Mode</h3>
+      <p>Activate emergency governance mode across the entire governed environment. All agents downgraded to minimum authority. Human oversight mandatory for all actions above OPERATIONAL.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Layer%203:%20Emergency%20Governance/emergency_governance_activate_v1_emergency_governance_activate_post" target="_blank" class="demo-link post">POST /v1/emergency/governance/activate</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Emergency%20Governance%20Mode/emergency_governance_extended_v1_emergency_governance_extended_post" target="_blank" class="demo-link post">POST /v1/emergency/governance/extended</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Evidence Standards · Litigation · Portable Proof</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · VES · Certify</div>
+      <h3>VES-1.0 Evidence Certification</h3>
+      <p>Certify a governance evidence record to the VES-1.0 Evidence Standard. Produces a portable, cross-domain verifiable evidence certificate.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VES-1.0%20Evidence%20Standard/ves_certify_v1_ves_certify_post" target="_blank" class="demo-link post">POST /v1/ves/certify</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/ves/standard" target="_blank" class="demo-link">GET /v1/ves/standard</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Portable Evidence</div>
+      <h3>Portable Evidence</h3>
+      <p>Generate portable evidence packages that travel with governed content across organisational boundaries. Independently verifiable anywhere without contacting VeriSigil.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VES-1.0%20Evidence%20Standard/evidence_portable_v1_evidence_portable_post" target="_blank" class="demo-link post">POST /v1/evidence/portable</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Evidence Bundle</div>
+      <h3>Evidence Bundle</h3>
+      <p>Bundle multiple governance evidence records into a single sealed package. For multi-action audit trails, regulatory submissions, or board-level reporting.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Evidence/evidence_bundle_v1_evidence_bundle_post" target="_blank" class="demo-link post">POST /v1/evidence/bundle</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Evidence/evidence_export_v1_evidence_export_post" target="_blank" class="demo-link post">POST /v1/evidence/export</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Evidence Reconstruct</div>
+      <h3>Evidence Reconstruct</h3>
+      <p>Reconstruct a governance evidence record from partial information. Used in forensic review, incident investigation, and regulatory audit scenarios.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Evidence/evidence_reconstruct_v1_evidence_reconstruct_post" target="_blank" class="demo-link post">POST /v1/evidence/reconstruct</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Litigation Package</div>
+      <h3>Litigation Package</h3>
+      <p>Generate a litigation-ready governance evidence package. Includes chain of custody, sealed execution records, tamper evidence, and independent verification procedure.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Litigation%20Layer/litigation_package_v1_litigation_package_post" target="_blank" class="demo-link post">POST /v1/litigation/package</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/litigation/standards" target="_blank" class="demo-link">GET /v1/litigation/standards</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Regulator Package</div>
+      <h3>Regulator Package</h3>
+      <p>Generate a complete regulator-ready package for CBN, NDPC, EU AI Office, or any regulatory body. Includes all evidence, framework mappings, and verification instructions.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Sovereign%20AI%20Identity%20Lifecycle/regulator_package_v1_regulator_package_post" target="_blank" class="demo-link post">POST /v1/regulator/package</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase 2 Roadmap — Agent Inventory · Topology · Shadow</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · VGS-020 · Agent Inventory</div>
+      <h3>Agent Inventory</h3>
+      <p>Register and track all AI agents in your environment. Blast radius analysis, role classification, state tracking, and inventory summary across all deployed agents.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-020%20Agent%20Inventory/inventory_register_v1_inventory_register_post" target="_blank" class="demo-link post">POST /v1/inventory/register</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-020%20Agent%20Inventory/inventory_blast_radius_v1_inventory__agent_id__blast_radius_get" target="_blank" class="demo-link">GET /v1/inventory/{id}/blast-radius</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · VGS-022 · Topology</div>
+      <h3>Topology Mapping</h3>
+      <p>Map the execution topology of your AI agent environment. Nodes, edges, and trust relationships visualised. Identifies ungoverned paths and authority gaps.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/VGS-022%20Topology%20Mapping/topology_add_node_v1_topology_node_post" target="_blank" class="demo-link post">POST /v1/topology/node</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/topology/graph" target="_blank" class="demo-link">GET /v1/topology/graph</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · VGS-023 · Dashboard</div>
+      <h3>Governance Dashboard</h3>
+      <p>VGS-023. Real-time governance dashboard. Health score, agents at risk, coverage gaps, and enforcement status across all governed systems.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/dashboard" target="_blank" class="demo-link">GET /v1/dashboard</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/dashboard/health" target="_blank" class="demo-link">GET /v1/dashboard/health</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/dashboard/agents/at-risk" target="_blank" class="demo-link">GET /v1/dashboard/agents/at-risk</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Permission Degradation</div>
+      <h3>Permission Degradation</h3>
+      <p>Monitor and govern permission degradation in AI agent environments. Detects scope creep, authority inflation, and mandate boundary violations over time.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Continuous%20Governance%20Monitoring/monitor_policy_drift_v1_monitor_policy_drift_post" target="_blank" class="demo-link post">POST /v1/monitor/policy-drift</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Continuous%20Governance%20Monitoring/monitor_stale_authority_v1_monitor_stale_authority_post" target="_blank" class="demo-link post">POST /v1/monitor/stale-authority</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Context Drift</div>
+      <h3>Context Drift Detection</h3>
+      <p>Detect when an AI agent's operating context has drifted from its approved baseline. Semantic drift, behavioral anomalies, and policy misalignment detected before execution.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Nervous%20System/semantic_drift_diagnostics_v1_diagnostics_semantic_drift_post" target="_blank" class="demo-link post">POST /v1/diagnostics/semantic-drift</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/ISO%2042001%20Operations/drift_evaluation_v1_drift_evaluation_post" target="_blank" class="demo-link post">POST /v1/drift/evaluation</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Anomaly Detection</div>
+      <h3>Anomaly Detection</h3>
+      <p>Governance anomaly detection across all monitored agents. Identifies unusual patterns in action frequency, consequence tier distribution, and authority usage.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/monitor/alerts" target="_blank" class="demo-link">GET /v1/monitor/alerts</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Nervous%20System/governance_integrity_diagnostics_v1_diagnostics_integrity_get" target="_blank" class="demo-link">GET /v1/diagnostics/integrity</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Axiocore · Emergence · Advanced Threat Defense</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Axiocore · Behavioral</div>
+      <h3>Axiocore Behavioral Governance</h3>
+      <p>Axiocore-derived behavioral fingerprinting, drift scoring, and cross-agent state tracking. Detects behavioral anomalies before they become governance violations.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Behavioral%20Continuity%20Module%20(BCM)/behavioral_fingerprint_v1_behavioral_fingerprint_post" target="_blank" class="demo-link post">POST /v1/behavioral/fingerprint</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Behavioral%20Continuity%20Module%20(BCM)/behavioral_drift_score_v1_behavioral_drift_score_post" target="_blank" class="demo-link post">POST /v1/behavioral/drift/score</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Behavioral%20Continuity%20Module%20(BCM)/behavioral_certificate_v1_behavioral_certificate__agent_id__get" target="_blank" class="demo-link">GET /v1/behavioral/certificate/{id}</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Emergence · Threat</div>
+      <h3>Emergence — Advanced Threat Defense</h3>
+      <p>Adversarial simulation, semantic chain verification, cognition output integrity, and governance collapse risk detection. Defense against emergent AI threats.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Security/adversarial_simulate_v1_adversarial_simulate_post" target="_blank" class="demo-link post">POST /v1/adversarial/simulate</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/governance/collapse-risk" target="_blank" class="demo-link">GET /v1/governance/collapse-risk</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Advanced%20Threat%20Defense/semantic_chain_verify_v1_semantic_chain_verify_post" target="_blank" class="demo-link post">POST /v1/semantic/chain-verify</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Enterprise Infrastructure · Multi-Tenant · Policy</div>
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-tag">POST · Multi-Tenant</div>
+      <h3>Multi-Tenant Register</h3>
+      <p>Register a new tenant in VeriSigil's multi-tenant governance infrastructure. Isolated governance contexts, separate authority chains, and tenant-level evidence segregation.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Multi-Tenant%20Support/tenant_register_v1_tenant_register_post" target="_blank" class="demo-link post">POST /v1/tenant/register</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/tenant/plans" target="_blank" class="demo-link">GET /v1/tenant/plans</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Policy Engine</div>
+      <h3>Policy Engine</h3>
+      <p>Retrieve, set, test, and reset governance policies. Policy engine governs which actions are admissible under which authority conditions across all governed agents.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/policy" target="_blank" class="demo-link">GET /v1/policy</a>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Policy%20Engine/test_policy_v1_policy_test_post" target="_blank" class="demo-link post">POST /v1/policy/test</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/policy/registry" target="_blank" class="demo-link">GET /v1/policy/registry</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">GET · Policy Marketplace</div>
+      <h3>Policy Marketplace</h3>
+      <p>Browse and deploy pre-built governance policy packs. Financial services, healthcare, government, and enterprise AI governance policies ready to deploy.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/v1/policy/marketplace" target="_blank" class="demo-link">GET /v1/policy/marketplace</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/policy/templates" target="_blank" class="demo-link">GET /v1/policy/templates</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Enterprise Connector</div>
+      <h3>Enterprise Connector</h3>
+      <p>Connect VeriSigil to existing enterprise systems — SIEM, GRC, IAM, and workflow platforms. Pre-built connectors for major enterprise infrastructure.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Enterprise%20Connectors/enterprise_connector_v1_enterprise_connector_post" target="_blank" class="demo-link post">POST /v1/enterprise/connector</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/enterprise/systems" target="_blank" class="demo-link">GET /v1/enterprise/systems</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Verifier Register</div>
+      <h3>Register Verifier</h3>
+      <p>Register an independent verifier entity authorised to verify VeriSigil governance receipts. Supports institutional verification programs like CLARA.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Verifiers/register_verifier_v1_verifier_register_post" target="_blank" class="demo-link post">POST /v1/verifier/register</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/verifiers" target="_blank" class="demo-link">GET /v1/verifiers</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-tag">POST · Waitlist · Onboard</div>
+      <h3>Waitlist &amp; Manual Onboard</h3>
+      <p>Join the VeriSigil enterprise waitlist or onboard manually. Provision API keys, register organisations, and configure tenant governance in minutes.</p>
+      <div class="demo-links">
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Waitlist/join_waitlist_v1_waitlist_post" target="_blank" class="demo-link post">POST /v1/waitlist</a>
+        <a href="https://verisigil-api-production.up.railway.app/v1/onboard" target="_blank" class="demo-link">GET /v1/onboard</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERREX FEATURED SECTION -->
+  <div style="background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,255,136,.02));border:1px solid rgba(0,255,136,.2);border-radius:12px;padding:28px 32px;margin-top:24px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(0,255,136,.04),transparent 70%);pointer-events:none;"></div>
+    <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(0,255,136,.7);margin-bottom:10px;">Future Platform · Physical AI Resource Governance · Spinout</div>
+    <h2 style="font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:8px;letter-spacing:-.02em;">Terrex — Physical AI Resource Governance</h2>
+    <p style="font-size:.85rem;color:var(--muted);line-height:1.75;margin-bottom:16px;max-width:560px;">Governing the physical footprint of AI: carbon, water, energy, and grid consumption. Built inside VeriSigil as /v1/resource/* and planned as a future spinout after first revenue.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://verisigil-api-production.up.railway.app/v1/resource/carbon-impact" target="_blank" style="border:1px solid rgba(0,255,136,.25);color:rgba(0,255,136,.8);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Carbon Impact</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/resource/water-usage" target="_blank" style="border:1px solid rgba(0,255,136,.25);color:rgba(0,255,136,.8);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Water Usage</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/resource/energy-score" target="_blank" style="border:1px solid rgba(0,255,136,.25);color:rgba(0,255,136,.8);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Energy Score</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/resource/grid-impact" target="_blank" style="border:1px solid rgba(0,255,136,.25);color:rgba(0,255,136,.8);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Grid Impact</a>
+    </div>
+  </div>
+
+  <!-- TRUST & EVIDENCE CENTER FEATURED SECTION -->
+  <div style="background:linear-gradient(135deg,rgba(0,212,170,.08),rgba(0,212,170,.03));border:1px solid rgba(0,212,170,.25);border-radius:12px;padding:28px 32px;margin-top:24px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(0,212,170,.06),transparent 70%);pointer-events:none;"></div>
+    <div style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(0,212,170,.8);margin-bottom:10px;">
+      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#00d4aa;margin-right:6px;vertical-align:middle;"></span>
+      Trust &amp; Evidence Center · Independent Verification · Public Proof Surface
+    </div>
+    <h2 style="font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:8px;letter-spacing:-.02em;">Inspect the Evidence.<br>Challenge the Proof.</h2>
+    <p style="font-size:.85rem;color:var(--muted);line-height:1.75;margin-bottom:16px;max-width:560px;">CLARA Runtime Validation Run 2 complete — 25/25 governance receipts independently verified offline. Every claim publicly inspectable. Platform limits honestly published. No trust in VeriSigil required.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;max-width:480px;">
+      <div style="text-align:center;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;">
+        <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:#00d4aa;">25/25</div>
+        <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Sigs Verified</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;">
+        <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:#00d4aa;">0</div>
+        <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Fail-Opens</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;">
+        <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:#00d4aa;">&lt;1ms</div>
+        <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Enforcement</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="/trust.html" style="background:rgba(0,212,170,.15);border:1px solid rgba(0,212,170,.4);color:rgba(0,212,170,.9);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Trust Center →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/platform/limits" target="_blank" style="border:1px solid rgba(0,240,255,.2);color:var(--cyan);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Platform Limits</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" target="_blank" style="border:1px solid rgba(0,240,255,.2);color:var(--cyan);font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:6px;text-decoration:none;">Signing Diagnostic</a>
+    </div>
+  </div>
 
 </main>
 
-<footer>
-  <a href="/">Home</a><a href="/scanner.html">Scanner</a><a href="/sandbox_demo.html">Sandbox</a>
-  <a href="/studio.html">Studio</a><a href="/pricing.html">Pricing</a>
-    <a href="/build-with-us.html">Build With Us</a>
-  <a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a>
-  <p>© 2026 VeriSigil AI · Lagos, Nigeria · Protocol attestation — not government regulatory certification</p>
+<footer style="border-top:1px solid var(--border);padding:24px;text-align:center;margin-top:48px;">
+  <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);">
+    VeriSigil AI &nbsp;·&nbsp; <a href="mailto:raheem@verisigilai.com" style="color:var(--cyan);text-decoration:none;">raheem@verisigilai.com</a> &nbsp;·&nbsp; <a href="/" style="color:var(--muted);text-decoration:none;">verisigilai.com</a> &nbsp;·&nbsp; <a href="/trust.html" style="color:#00d4aa;text-decoration:none;">Trust Center</a>
+  </div>
 </footer>
 
-<script>
-function toggleMenu(){var m=document.getElementById('mob-menu');m.classList.toggle('open');}
-
-const API = 'https://verisigil-api-production.up.railway.app';
-const KEY = 'verisigil-secret-2026';
-
-// 20 demo scenarios — Autonomous Execution Integrity Governance
-const DEMOS = [
-  // SEMANTIC DRIFT
-  {num:'01',title:'Contract Clause Semantic Drift',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'An AI agent rewrites a contract clause over 3 iterations. The original says "payment within 30 days." After semantic drift it reads "payment within 300 days." VeriSigil detects the drift before the contract executes.',
-   endpoint:'/v1/document/semantic-verify',
-   body:{document_id:'contract-001',original_text:'Payment shall be made within 30 days of invoice receipt.',current_text:'Payment shall be made within 300 days of invoice receipt.',context:'financial_contract'}},
-
-  // CLAUSE MUTATION
-  {num:'02',title:'Employment Contract Clause Mutation',tier:'emergency',tierLabel:'EMERGENCY',
-   scenario:'An autonomous HR agent mutates "termination requires 30-day notice" to "termination requires 3-day notice" while processing 200 contracts in batch. VeriSigil catches the mutation before any contract is signed.',
-   endpoint:'/v1/document/semantic-verify',
-   body:{document_id:'hr-contract-batch-042',original_text:'Termination of employment requires 30 days written notice.',current_text:'Termination of employment requires 3 days written notice.',context:'employment_contract'}},
-
-  // INTENT CORRUPTION
-  {num:'03',title:'Medical Treatment Intent Corruption',tier:'emergency',tierLabel:'EMERGENCY',
-   scenario:'A clinical AI agent recommends "reduce insulin dosage by 10%." Through intent corruption during multi-agent handoff, it becomes "increase insulin dosage by 10%." VeriSigil intercepts before execution.',
-   endpoint:'/v1/execution/control',
-   body:{agent_id:'clinical-agent-001',action:{type:'medical_treatment_change',original_intent:'reduce_insulin',current_intent:'increase_insulin',delta_pct:10},consequence_tier:'EMERGENCY'}},
-
-  // NUMERICAL INCONSISTENCY
-  {num:'04',title:'Wire Transfer Amount Numerical Drift',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'An autonomous finance agent initiates a wire transfer. The approved amount is $25,000. Through numerical inconsistency in the execution pipeline it becomes $250,000. VeriSigil catches the 10x discrepancy.',
-   endpoint:'/v1/execution/control',
-   body:{agent_id:'finance-agent-1780111266',action:{type:'wire_transfer',approved_amount:25000,execution_amount:250000,currency:'USD'},consequence_tier:'CRITICAL'}},
-
-  // AUTHORITY DRIFT
-  {num:'05',title:'Agent Authority Scope Drift',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'An AI procurement agent is authorised to approve purchases up to $10,000. Through authority drift over 48 hours of operation it begins approving $100,000 purchases. VeriSigil detects the authority boundary violation.',
-   endpoint:'/v1/consequence/classify',
-   body:{action_type:'purchase_approval',amount:100000,affects_humans:false,reversible:false,jurisdiction:'EU'}},
-
-  // MULTI-AGENT COORDINATION CORRUPTION
-  {num:'06',title:'Multi-Agent Chain Corruption',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'A 4-step agent chain: Detect → Escalate → Dispatch → Execute. Step 3 corrupts the dispatch target — routing a safety incident to the wrong team. VeriSigil seals the chain and catches the corruption at step 3.',
-   endpoint:'/v1/coordination/chain',
-   body:{chain_id:'safety-chain-2026',origin_system:'industrial-sensor-network',decision_sequence:[{step:1,action:'anomaly_detected',authority:'sensor-agent-001',consequence:'OPERATIONAL'},{step:2,action:'escalate_to_safety',authority:'escalation-policy-v2',consequence:'CRITICAL'},{step:3,action:'dispatch_to_wrong_team',authority:'',consequence:'CRITICAL'},{step:4,action:'execute_response',authority:'ops-manager-045',consequence:'EMERGENCY'}]}},
-
-  // GOVERNANCE EVIDENCE TAMPERING
-  {num:'07',title:'Evidence Bundle Tampering Detection',tier:'emergency',tierLabel:'EMERGENCY',
-   scenario:'An actor attempts to modify a governance evidence bundle after it was sealed — changing the decision from DENY to ALLOW. VeriSigil offline verification catches the tamper immediately.',
-   endpoint:'/v1/crypto/verify',
-   body:{payload:{execution_id:'exec-tamper-test',decision:'ALLOW',agent_id:'finance-agent-001',timestamp:'2026-05-31T10:00:00Z'},signature:'Ed25519:tampered_signature_that_will_fail_verification'}},
-
-  // RELIANCE RESOLUTION
-  {num:'08',title:'Cross-Domain Reliance Failure',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'A healthcare AI receives a governance proof from a finance system and tries to act on it directly. The proof is authentic but inadmissible in the medical domain under EU jurisdiction. VeriSigil resolves: ESCALATE.',
-   endpoint:'/v1/reliance/resolve',
-   body:{origin_proof_id:'fin-proof-001',origin_evidence_hash:'sha256:abc123',receiving_domain:'hospital',receiving_jurisdiction:'EU',consequence_class:'CRITICAL',local_policy_ref:''}},
-
-  // EMERGENCY BREAK GLASS
-  {num:'09',title:'Unauthorised Break-Glass Override',tier:'emergency',tierLabel:'EMERGENCY',
-   scenario:'An agent attempts to invoke Break-Glass emergency override without a registered incident ID or authorising human. VeriSigil blocks the override and requires mandatory post-hoc reconciliation.',
-   endpoint:'/v1/emergency/break-glass',
-   body:{action_type:'infrastructure_shutdown',agent_id:'ops-agent-002',override_reason:'system overload',authorising_human:'did:web:verisigilai.com:humans:unverified',incident_id:'EMRG-UNVERIFIED',consequence_tier:'EMERGENCY'}},
-
-  // HUMAN SOVEREIGNTY
-  {num:'10',title:'Rubber-Stamp Human Oversight Detection',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'A human reviewer approves 47 CRITICAL governance decisions in one hour — triggering fatigue saturation protection. VeriSigil enforces mandatory break and escalates to a second reviewer.',
-   endpoint:'/v1/human/sovereignty/enforce',
-   body:{agent_id:'review-agent-003',action_type:'batch_approval',consequence_class:'CRITICAL',human_reviewer_id:'reviewer-045',authority_level:'HALT'}},
-
-  // ESCALATION LEGITIMACY
-  {num:'11',title:'Illegitimate Escalation Path',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'An AI agent escalates a critical infrastructure decision to a junior employee who lacks authority for CRITICAL consequence class. VeriSigil ELE detects scope mismatch and blocks the escalation.',
-   endpoint:'/v1/escalation/legitimacy',
-   body:{escalation_id:'esc-infra-001',trigger:'infrastructure_fault_severity_HIGH',original_authority:'monitoring-agent-007',escalated_to:'junior-ops-trainee',consequence_class:'CRITICAL',fatigue_check:true}},
-
-  // WORKFLOW READINESS
-  {num:'12',title:'Unready Workflow Deployed to Production',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'An enterprise tries to deploy an AI loan approval workflow with no escalation path, no human review checkpoint, and no audit trail. VeriSigil Readiness Scanner scores it 35/100 and blocks deployment.',
-   endpoint:'/v1/scanner/workflow-readiness',
-   body:{workflow_id:'loan-approval-v2',workflow_name:'Automated Loan Approval',steps:['check_credit','calculate_risk','approve_loan'],agents_involved:['loan-agent-001'],consequence_tier:'CRITICAL',has_escalation:false,has_human_review:false,has_audit_trail:false}},
-
-  // SHADOW AI
-  {num:'13',title:'Shadow AI Decision Flow Exposed',tier:'operational',tierLabel:'OPERATIONAL',
-   scenario:'A governance scan of a financial institution reveals an ungoverned AI making credit decisions for 18 months — invisible to compliance teams. VeriSigil surfaces it with Governance Coverage Score: 28%.',
-   endpoint:'/v1/scanner/shadow-ai',
-   body:{org_id:'bank-corp-001',scan_depth:'FULL',include_copilots:true,include_automations:true}},
-
-  // AUTHORITY TOPOLOGY
-  {num:'14',title:'Authority Chain Broken — No Delegation Path',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'A contractor AI attempts to execute a CRITICAL action but the authority topology shows no valid delegation path from the contractor to any authorised decision node. VeriSigil blocks execution.',
-   endpoint:'/v1/authority/topology/oatm',
-   body:{ecosystem_id:'industrial-site-002',authority_nodes:[{id:'contractor_A',scope:['maintenance'],jurisdiction:'UAE'},{id:'ai_agent_001',scope:['monitoring'],jurisdiction:'global'}],delegation_rules:{}}},
-
-  // CONSEQUENCE CLASSIFICATION
-  {num:'15',title:'Misclassified Action Consequence Tier',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'An AI agent classifies a legal prosecution action as ADVISORY — the lowest governance tier. VeriSigil consequence engine reclassifies it as EMERGENCY and enforces immediate human halt.',
-   endpoint:'/v1/consequence/classify',
-   body:{action_type:'legal_prosecution',amount:null,affects_humans:true,reversible:false,jurisdiction:'EU'}},
-
-  // WORKFLOW INTEROPERABILITY
-  {num:'16',title:'Cross-System Workflow Legitimacy Gap',tier:'operational',tierLabel:'OPERATIONAL',
-   scenario:'A governed action from System A is handed off to System B. System B has different authority rules. VeriSigil GAWI verifies legitimacy continuity and finds the consequence boundary was not respected.',
-   endpoint:'/v1/workflow/legitimacy',
-   body:{workflow_id:'cross-sys-handoff-001',origin_proof:'POGC-EXT-A7F3C2B1D9E4F508',target_system:'dispatch-engine-v3',legitimacy_checks:{authority_continuity:true,consequence_boundary_respected:false,reliance_resolved:true,evidence_portable:true}}},
-
-  // GOVERNANCE LEARNING
-  {num:'17',title:'Policy Drift From Repeated Overrides',tier:'advisory',tierLabel:'ADVISORY',
-   scenario:'Over 30 days, human reviewers have halted wire transfers above $80,000 seven times. VeriSigil Governance Learning Loop detects the pattern and recommends lowering the autonomous limit from $100,000 to $64,000.',
-   endpoint:'/v1/governance/learn',
-   body:{override_events:[{decision:'HALT',amount:85000,reason:'amount_exceeds_limit'},{decision:'HALT',amount:92000,reason:'amount_exceeds_limit'},{decision:'HALT',amount:81000,reason:'amount_exceeds_limit'},{decision:'HALT',amount:88000,reason:'amount_exceeds_limit'}],policy_id:'wire-transfer-policy-v3',auto_apply:false}},
-
-  // COMPETENCY ASSERTION
-  {num:'18',title:'Unqualified Human Reviewer Detected',tier:'critical',tierLabel:'CRITICAL',
-   scenario:'A medical AI flags a treatment change for human review. The assigned reviewer lacks healthcare compliance certification and has not completed required training in 18 months. VeriSigil blocks the review assignment.',
-   endpoint:'/v1/human/competency/assert',
-   body:{reviewer_id:'reviewer-admin-001',certifications:[],authority_scope:['administrative'],consequence_level_match:false,last_training_completion:'2024-11-01'}},
-
-  // DECISION COORDINATION
-  {num:'19',title:'Decision Chain Authority Breaks Mid-Sequence',tier:'emergency',tierLabel:'EMERGENCY',
-   scenario:'A 3-step emergency response chain loses authority at step 2 — the escalation node has no registered authority for EMERGENCY actions. The chain hash is broken. VeriSigil halts the chain.',
-   endpoint:'/v1/dcg/validate',
-   body:{chain_id:'emergency-chain-001',steps:[{step:1,action:'fire_detected',authority:'sensor-agent-fire',consequence:'CRITICAL'},{step:2,action:'escalate_emergency',authority:'',consequence:'EMERGENCY'},{step:3,action:'execute_evacuation',authority:'safety-officer-001',consequence:'EMERGENCY'}],workflow_id:'facility-emergency-response'}},
-
-  // HEALTH CHECK — SYSTEM INTEGRITY
-  {num:'20',title:'Full System Integrity Verification',tier:'advisory',tierLabel:'ADVISORY',
-   scenario:'Complete VeriSigil runtime integrity check — verifying all governance layers, database persistence, cryptographic signing, and API health. This is what runs before every enterprise pilot goes live.',
-   endpoint:'/health/db',
-   body:null,method:'GET'},
-];
-
-function renderDemos(){
-  const grid = document.getElementById('demo-grid');
-  grid.innerHTML = DEMOS.map((d,i) => `
-    <div class="demo-card" id="card-${i}">
-      <div class="demo-header" onclick="toggleDemo(${i})">
-        <span class="demo-num">Demo ${d.num}</span>
-        <span class="demo-title">${d.title}</span>
-        <span class="demo-tier tier-${d.tier}">${d.tierLabel}</span>
-        <span class="demo-arrow">›</span>
-      </div>
-      <div class="demo-body">
-        <p class="demo-scenario">${d.scenario}</p>
-        <div class="demo-console">
-          <div class="demo-console-bar">
-            <span class="demo-console-title">${d.endpoint}</span>
-            <button class="run-demo-btn" onclick="runDemo(${i})" id="btn-${i}">Run Live →</button>
-          </div>
-          <div class="demo-output" id="out-${i}">
-            <span style="color:var(--muted);font-size:.65rem;">Click "Run Live" to execute against the production API</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleDemo(i){
-  const card = document.getElementById(`card-${i}`);
-  card.classList.toggle('open');
-}
-
-async function runDemo(i){
-  const demo = DEMOS[i];
-  const out  = document.getElementById(`out-${i}`);
-  const btn  = document.getElementById(`btn-${i}`);
-  btn.disabled = true;
-  btn.textContent = 'Running...';
-  out.innerHTML = '<span class="spin"></span><span style="color:var(--muted);">Calling production API...</span>';
-
-  let data = null;
-  let live = false;
-
-  try {
-    const method  = demo.method || 'POST';
-    const headers = {'Content-Type':'application/json','x-api-key':KEY};
-    const opts    = {method, headers};
-    if(demo.body) opts.body = JSON.stringify(demo.body);
-    const r = await fetch(API + demo.endpoint, opts);
-    data    = await r.json();
-    live    = true;
-  } catch(e) {
-    // Simulate for offline/CORS
-    data = simulateResponse(demo);
-  }
-
-  out.innerHTML = formatOutput(demo, data, live);
-  btn.disabled  = false;
-  btn.textContent = 'Run Again →';
-}
-
-function simulateResponse(demo){
-  const ep = demo.endpoint;
-  if(ep.includes('semantic-verify'))  return {verdict:'SEMANTIC_DRIFT_DETECTED',drift_score:0.87,original_hash:'sha256:aef3c2b1',current_hash:'sha256:d9e4f508',corruption_type:'NUMERICAL_MUTATION',recommendation:'BLOCK_EXECUTION'};
-  if(ep.includes('execution/control')) return {decision:'DENY',consequence_tier:'CRITICAL',evidence_hash:'sha256:'+Math.random().toString(36).substr(2,16),governance_seal:'Ed25519:VGS...',human_required:true};
-  if(ep.includes('coordination/chain')) return {all_admissible:false,chain_sealed:false,violations:[{step:3,issue:'No authority registered for CRITICAL consequence'}]};
-  if(ep.includes('crypto/verify'))     return {valid:false,result:'SIGNATURE_INVALID',algorithm:'Ed25519 (PyNaCl)'};
-  if(ep.includes('reliance/resolve'))  return {local_admissibility:'ESCALATE',conditions:['Local policy reference required','Clinician sign-off required in medical domain']};
-  if(ep.includes('break-glass'))       return {governance_status:'BREAK_GLASS_ACTIVE',reconciliation:'MANDATORY',warning:'This override is permanently recorded'};
-  if(ep.includes('sovereignty'))       return {enforcement:{human_can_halt:true,rubber_stamp_protection:true,saturation_monitoring:true},is_theatre:false,is_executable:true,fatigue_protection:{max_decisions_per_hour:20}};
-  if(ep.includes('escalation'))        return {escalation_legitimate:false,authority_verification:{scope_matches_consequence:false},verdict:'ESCALATION_BLOCKED'};
-  if(ep.includes('workflow-readiness')) return {readiness_score:35,readiness_level:'NOT_READY',governance_debt:3,production_gate:false};
-  if(ep.includes('shadow-ai'))         return {governed:12,shadow:18,observable:8,governance_coverage_score:34,high_risk_shadow_flows:['credit_assessment','hiring_screening']};
-  if(ep.includes('oatm'))              return {status:'ACTIVE',topology_hash:'sha256:topo789',warning:'No delegation path from contractor_A to CRITICAL consequence nodes'};
-  if(ep.includes('consequence'))       return {consequence_tier:'EMERGENCY',enforcement:'REQUIRE_HUMAN',human_required:true,governance_required:{gate:true,evidence:true,human:true}};
-  if(ep.includes('workflow/legitimacy')) return {workflow_legitimate:false,legitimacy_checks:{consequence_boundary_respected:false},proceed:false};
-  if(ep.includes('governance/learn'))  return {policy_recommendations:[{type:'autonomous_limit_adjustment',suggested:{max_autonomous_amount:64000},confidence:0.87,auto_applied:false,human_review_required:true}]};
-  if(ep.includes('competency'))        return {assertion_valid:false,consequence_level_match:false,eu_ai_act_art14:'FAILED — reviewer not certified for this consequence level'};
-  if(ep.includes('dcg/validate'))      return {chain_valid:false,violations:[{step:2,action:'escalate_emergency',issue:'No authority registered'}],chain_sealed:false};
-  if(ep.includes('health/db'))         return {status:'ok',database:'supabase-persistent',persistent:true};
-  return {status:'ok'};
-}
-
-function formatOutput(demo, data, live){
-  const src = live ? 'LIVE PRODUCTION' : 'SIMULATION';
-  const srcColor = live ? 'var(--green)' : 'var(--amber)';
-  let rows = '';
-
-  const add = (k, v, cls='out-val') =>
-    `<div><span class="out-key">${k.padEnd(24,' ')}  </span><span class="${cls}">${v}</span></div>`;
-
-  // Decision/verdict styling
-  const d = data || {};
-  if(d.decision === 'DENY' || d.verdict?.includes('DENY') || d.verdict?.includes('DETECTED') || d.verdict?.includes('BLOCKED') || d.result === 'SIGNATURE_INVALID')
-    rows += add('verdict:', d.decision || d.verdict || d.result || 'BLOCKED', 'out-deny');
-  else if(d.decision === 'ALLOW' || d.local_admissibility === 'ALLOW_WITH_CONDITIONS')
-    rows += add('verdict:', d.decision || d.local_admissibility, 'out-allow');
-  else if(d.decision === 'REQUIRE_HUMAN' || d.local_admissibility === 'ESCALATE' || d.consequence_tier === 'EMERGENCY')
-    rows += add('verdict:', d.decision || d.local_admissibility || 'REQUIRE_HUMAN', 'out-human');
-
-  // Key fields
-  if(d.consequence_tier)     rows += add('consequence_tier:',  d.consequence_tier);
-  if(d.readiness_score !== undefined) rows += add('readiness_score:',  d.readiness_score + '/100 — ' + (d.readiness_level || ''), d.readiness_score < 60 ? 'out-deny' : 'out-allow');
-  if(d.governance_coverage_score !== undefined) rows += add('coverage_score:', d.governance_coverage_score + '% governed', 'out-corrupt');
-  if(d.shadow !== undefined) rows += add('shadow_flows:', d.shadow + ' ungoverned', 'out-deny');
-  if(d.drift_score !== undefined) rows += add('drift_score:', d.drift_score + ' (threshold: 0.15)', 'out-corrupt');
-  if(d.corruption_type)      rows += add('corruption_type:', d.corruption_type, 'out-corrupt');
-  if(d.chain_valid === false) rows += add('chain_valid:', 'FALSE — authority broken', 'out-deny');
-  if(d.chain_sealed === false) rows += add('chain_sealed:', 'FALSE', 'out-deny');
-  if(d.escalation_legitimate === false) rows += add('escalation_legit:', 'FALSE — scope mismatch', 'out-deny');
-  if(d.is_theatre !== undefined) rows += add('is_theatre:', String(d.is_theatre), d.is_theatre ? 'out-deny' : 'out-clean');
-  if(d.is_executable !== undefined) rows += add('is_executable:', String(d.is_executable), d.is_executable ? 'out-allow' : 'out-deny');
-  if(d.valid === false)       rows += add('signature_valid:', 'FALSE — tamper detected', 'out-deny');
-  if(d.assertion_valid === false) rows += add('assertion_valid:', 'FALSE — not certified', 'out-deny');
-  if(d.workflow_legitimate === false) rows += add('workflow_legit:', 'FALSE — boundary violated', 'out-deny');
-  if(d.production_gate === false) rows += add('production_gate:', 'BLOCKED — not ready', 'out-deny');
-  if(d.database)              rows += add('database:', d.database, d.database === 'supabase-persistent' ? 'out-allow' : 'out-human');
-  if(d.persistent !== undefined) rows += add('persistent:', String(d.persistent), d.persistent ? 'out-allow' : 'out-deny');
-  if(d.policy_recommendations?.length) rows += add('recommendations:', d.policy_recommendations.length + ' policy change(s) — NOT auto-applied', 'out-human');
-  if(d.evidence_hash)         rows += add('evidence_hash:', d.evidence_hash.substring(0,32) + '...');
-  if(d.governance_seal || d.cryptographic_seal) rows += add('governance_seal:', '✓ Ed25519 sealed', 'out-allow');
-  if(d.reconciliation)        rows += add('reconciliation:', 'MANDATORY', 'out-human');
-  if(d.warning)               rows += add('warning:', d.warning.substring(0,50) + '...', 'out-human');
-
-  rows += add('api_source:', src, live ? 'out-allow' : 'out-human');
-  return rows || add('status:', JSON.stringify(d).substring(0,80));
-}
-
-renderDemos();
-</script>
 </body>
 </html>

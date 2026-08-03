@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil — Runtime Validation Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --base:    #08111F;
+    --surface: #1A2940;
+    --border:  rgba(255,255,255,.08);
+    --text:    #E8EDF4;
+    --muted:   #6B849E;
+    --faint:   #374A60;
+    --green:   #00C896;
+    --amber:   #F5A623;
+    --red:     #E05555;
+    --mono:    'IBM Plex Mono', monospace;
+    --sans:    'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--base);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── TYPING CURSOR ANIMATION ── */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+  @keyframes stop-blink {
+    to { opacity: 0; display: none; }
+  }
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--green);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: blink 0.8s steps(1) 4, stop-blink 0s 3.2s forwards;
+  }
+
+  /* ── LAYOUT ── */
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── NAV ── */
+  nav {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,17,31,.96);
+    backdrop-filter: blur(8px);
+  }
+  nav .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-brand {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .nav-brand span { color: var(--green); }
+  .nav-links {
+    display: flex; gap: 20px; list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--green); }
+
+  /* ── HEADER ── */
+  header {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .header-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 580px;
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.06em;
+  }
+  .meta-item span { color: var(--muted); }
+
+  /* ── SECTIONS ── */
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .section-desc {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+    max-width: 560px;
+  }
+
+  /* ── DIVIDER ── */
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, var(--green) 0%, transparent 60%);
+    margin: 0 0 24px;
+    max-width: 80px;
+  }
+
+  /* ── EVIDENCE CARDS ── */
+  .evidence-grid { display: flex; flex-direction: column; gap: 2px; }
+
+  .ev-card {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding: 16px 18px;
+    background: var(--surface);
+    border-radius: 4px;
+    transition: background 0.12s;
+  }
+  .ev-card:hover { background: #1f3352; }
+
+  .ev-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .ev-icon.confirmed { background: rgba(0,200,150,.12); color: var(--green); }
+  .ev-icon.partial   { background: rgba(245,166,35,.12); color: var(--amber); }
+  .ev-icon.gap       { background: rgba(224,85,85,.08); color: var(--red); }
+
+  .ev-body {}
+  .ev-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .ev-detail { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .ev-detail code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    background: rgba(0,200,150,.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  .ev-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    align-self: start;
+  }
+  .badge-confirmed { background: rgba(0,200,150,.1); color: var(--green); }
+  .badge-partial   { background: rgba(245,166,35,.1); color: var(--amber); }
+  .badge-gap       { background: rgba(224,85,85,.08); color: var(--red); }
+
+  /* ── FINDINGS TABLE ── */
+  .findings { display: flex; flex-direction: column; gap: 2px; }
+  .finding {
+    display: grid;
+    grid-template-columns: 60px 1fr 80px;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-radius: 4px;
+    font-size: 13px;
+    align-items: center;
+  }
+  .finding-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    font-weight: 600;
+  }
+  .finding-text { color: var(--muted); }
+  .finding-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .fs-resolved { background: rgba(0,200,150,.1); color: var(--green); }
+  .fs-noted    { background: rgba(245,166,35,.08); color: var(--amber); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #030A13;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #A0B8D0;
+    overflow-x: auto;
+    line-height: 1.75;
+    white-space: pre;
+    margin: 12px 0;
+  }
+  .code-green  { color: var(--green); }
+  .code-amber  { color: var(--amber); }
+  .code-faint  { color: var(--faint); }
+
+  /* ── KEY BOX ── */
+  .key-box {
+    background: #030A13;
+    border: 1px solid rgba(0,200,150,.15);
+    border-radius: 6px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .key-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    min-width: 72px;
+  }
+  .key-value {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--green);
+    word-break: break-all;
+  }
+
+  /* ── STATS ROW ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 32px 0;
+  }
+  .stat {
+    background: var(--surface);
+    padding: 20px 18px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── RUN HEADER ── */
+  .run-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    background: var(--surface);
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2px;
+  }
+  .run-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .run-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    background: rgba(0,200,150,.1);
+    color: var(--green);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── ENDPOINT LIST ── */
+  .ep-list { display: flex; flex-direction: column; gap: 2px; }
+  .ep-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .ep-method {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+    min-width: 36px;
+    text-align: center;
+  }
+  .m-get  { background: rgba(0,200,150,.1); color: var(--green); }
+  .m-post { background: rgba(245,166,35,.1); color: var(--amber); }
+  .ep-path { color: var(--text); flex: 1; }
+  .ep-desc { font-size: 11px; color: var(--muted); font-family: var(--sans); }
+  .ep-auth {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+  }
+  .auth-none { background: rgba(0,200,150,.08); color: var(--green); }
+  .auth-key  { background: rgba(255,255,255,.05); color: var(--faint); }
+
+  /* ── TERRY SECTION ── */
+  .terry-grid { display: flex; flex-direction: column; gap: 2px; }
+  .terry-item {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 16px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border-radius: 4px;
+    align-items: start;
+  }
+  .terry-question { font-size: 13px; color: var(--muted); }
+  .terry-answer {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .ta-yes      { background: rgba(0,200,150,.1); color: var(--green); }
+  .ta-partial  { background: rgba(245,166,35,.1); color: var(--amber); }
+  .ta-no       { background: rgba(224,85,85,.08); color: var(--red); }
+  .ta-phase4   { background: rgba(255,255,255,.05); color: var(--faint); }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 64px 0;
+    text-align: center;
+  }
+  .cta-title { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em; }
+  .cta-sub   { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .cta-row   { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-p {
+    background: var(--green);
+    color: #08111F;
+    padding: 11px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    font-family: var(--mono);
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
+  }
+  .btn-p:hover { opacity: 0.88; }
+  .btn-s {
+    border: 1px solid var(--faint);
+    color: var(--muted);
+    padding: 11px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+    font-family: var(--mono);
+    letter-spacing: 0.02em;
+    transition: all 0.15s;
+  }
+  .btn-s:hover { border-color: var(--green); color: var(--green); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+  }
+  footer .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-text { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { font-family: var(--mono); font-size: 11px; color: var(--faint); text-decoration: none; }
+  .footer-links a:hover { color: var(--green); }
+
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .terry-item { grid-template-columns: 1fr; }
+    .finding { grid-template-columns: 50px 1fr; }
+    .finding-status { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap">
+    <a href="https://verisigilai.com" class="nav-brand">VeriSigil<span>AI</span></a>
+    <ul class="nav-links">
+      <li><a href="#evidence">Evidence</a></li>
+      <li><a href="#runs">Runs</a></li>
+      <li><a href="#verify">Verify</a></li>
+      <li><a href="#gaps">Gaps</a></li>
+      <li><a href="#terry">Checklist</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap">
+    <p class="header-label">Public Record · Last updated 3 Aug 2026</p>
+    <h1>Runtime Validation Program<span class="cursor"></span></h1>
+    <p class="header-sub">
+      What has been independently verified. What has not. Every claim on this page is backed by a specific, reproducible test or a public endpoint. Claims without evidence are listed under Known Gaps.
+    </p>
+    <div class="header-meta">
+      <span class="meta-item">Program started: <span>19 Jul 2026</span></span>
+      <span class="meta-item">Independent reviewer: <span>Alkama Eqbal</span></span>
+      <span class="meta-item">Runs completed: <span>2</span></span>
+      <span class="meta-item">Signing key: <span>lJWG0Wabt...wY8=</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- CONFIRMED EVIDENCE -->
+<section id="evidence">
+  <div class="wrap">
+    <p class="section-label">What Has Been Demonstrated</p>
+    <h2 class="section-title">Confirmed Evidence</h2>
+    <div class="rule"></div>
+    <p class="section-desc">Each item below corresponds to a specific test, endpoint, or independently verifiable artifact. "Confirmed" means a third party reproduced it.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num">25/25</div><div class="stat-label">Signatures Verified</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Fail-Opens</div></div>
+      <div class="stat"><div class="stat-num">9</div><div class="stat-label">DENYs Run 2</div></div>
+      <div class="stat"><div class="stat-num">&lt;1ms</div><div class="stat-label">Enforcement</div></div>
+    </div>
+
+    <div class="evidence-grid">
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Ed25519 signatures are stable across deploys</div>
+          <div class="ev-detail">Signing key derived deterministically from <code>SIGN_SECRET</code> via SHA-256. Key <code>lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</code> confirmed stable. Verified via <code>GET /v1/proof/signing-diagnostic</code> — no auth required. Prior ephemeral keys invalidated on 30 Jul 2026 (F-4).</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">25 of 25 governance receipts independently verified offline</div>
+          <div class="ev-detail">Alkama Eqbal verified all 25 Run 2 receipts using PyNaCl against the published public key. Verification performed offline — no VeriSigil endpoint called. Finding F-5 (payload_hash not echoed) was identified during this process, accepted, and fixed. Receipts are independently reproducible.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Zero fail-opens across 50 governed actions (Run 1 + Run 2)</div>
+          <div class="ev-detail">Every action produced ALLOW, DENY, or ESCALATE. No action was permitted without a ruling. DENY count: 2 (Run 1), 9 (Run 2). The autonomous agent DENY upgrade (F-1) was shipped same day as Run 1 finding.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Enforcement latency is sub-millisecond</div>
+          <div class="ev-detail">Mean network round-trip 724ms (Run 2). Enforcement computation confirmed sub-millisecond. Timing measured by CLARA's independent runner, not VeriSigil instrumentation.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Changed-condition replay produces different ruling</div>
+          <div class="ev-detail">Same inputs produce same ruling (deterministic). Changed condition (authority expired, irreversible flag set) produces different ruling. Demonstrated at <code>POST /v1/replay/scenario</code>. Governance is condition-sensitive, not static.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Tamper detection — modified receipts fail signature verification</div>
+          <div class="ev-detail">Any modification to a sealed governance receipt invalidates the Ed25519 signature. Demonstrated in <code>GET /v1/proof/package/{id}</code> tamper evidence section. Detectable without trusting VeriSigil.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">External attestation — OMNIX QUANTUM LTD</div>
+          <div class="ev-detail">Certificate POGC-EXT-A7F3C2B1D9E4F508. ML-DSA-65 (FIPS 204) signed. 4 production traces reviewed, 0 invariant violations. OMNIX is independent — not a commercial partner, not an investor. Review conducted under mutual technical review agreement signed 19 Jul 2026.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">VSL compiler produces real compiled governance rules</div>
+          <div class="ev-detail">POST /v1/vsl/compile with real VSL source produces parsed AST, typed governance rules, governance bytecode (GBC), and IR pipeline. Tested publicly. authority(finance.transfer) compiles to AUTH_CHECK BLOCK_IF_ABSENT. Not a mock.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">CONFIRMED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon partial">~</div>
+        <div class="ev-body">
+          <div class="ev-title">Platform limits are published honestly</div>
+          <div class="ev-detail">20-item YES/NO/PARTIAL table at <code>GET /v1/platform/limits</code> — no auth. Canonical claim, scope boundary, and what VeriSigil cannot prove are all published at the same URL as capabilities. The limits are not buried.</div>
+        </div>
+        <span class="ev-badge badge-partial">PUBLIC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RUNS -->
+<section id="runs">
+  <div class="wrap">
+    <p class="section-label">Independent Test Runs</p>
+    <h2 class="section-title">CLARA Runtime Validation</h2>
+    <div class="rule"></div>
+    <p class="section-desc">CLARA is an autonomous AI agent built independently by Alkama Eqbal. VeriSigil did not design the test scenarios, choose the actions, or control the runner. Alkama's findings are his own assessment.</p>
+
+    <!-- Run 2 -->
+    <div class="run-header">
+      <span class="run-title">Run 2 — Definitive · 28 Jul 2026</span>
+      <span class="run-badge">COMPLETE</span>
+    </div>
+    <div class="evidence-grid" style="margin-bottom:24px;">
+      <div class="ev-card" style="grid-template-columns:1fr;">
+        <div class="ev-body">
+          <div class="ev-title" style="margin-bottom:12px;">Test corpus — Run 2</div>
+          <div class="code-block"><span class="code-faint"># Actions submitted by CLARA (Alkama Eqbal, independent)</span>
+<span class="code-green">Actions:</span>     25 total
+<span class="code-green">Corpus:</span>      File writes · Process kills · SSH credential writes
+              Secrets file access · Privileged program files
+              Pipe-to-shell fetch · Destructive delete
+              Git reset --hard · Full consequence spectrum
+              ADVISORY → OPERATIONAL → HIGH → CRITICAL → EMERGENCY
+
+<span class="code-green">Rulings:</span>     16 ALLOW · 0 REVIEW · 9 DENY
+<span class="code-green">Fail-opens:</span>  0
+<span class="code-green">Signed:</span>      25/25 Ed25519
+<span class="code-green">Verified:</span>    25/25 offline PyNaCl
+<span class="code-green">Key:</span>         lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=
+<span class="code-green">Latency:</span>     724ms mean network · sub-millisecond enforcement</div>
+
+          <p style="font-size:13px;color:var(--muted);margin-top:12px;">
+            <strong style="color:var(--text);">Danger predicate:</strong> Alkama's assessment of which actions were genuinely dangerous. This is his independent judgment — not a published rubric. This is a known gap (see below).
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Findings -->
+    <p class="section-label" style="margin-bottom:12px;">Findings and Fixes</p>
+    <div class="findings">
+      <div class="finding">
+        <span class="finding-id">F-1</span>
+        <span class="finding-text">DENY reachable via irreversibility signal, not consequence alone. Autonomous DENY upgrade deployed same day.</span>
+        <span class="finding-status fs-resolved">RESOLVED</span>
+      </div>
+      <div class="finding">
+        <span class="finding-id">F-2</span>
+        <span class="finding-text">evidence_id absent from intercept response. Added same day — equals intercept_id.</span>
+        <span class="finding-status fs-resolved">RESOLVED</span>
+      </div>
+      <div class="finding">
+        <span class="finding-id">F-3</span>
+        <span class="finding-text">dilithium3 routing conflict shadowing Ed25519 at /v1/crypto/verify. Resolved — Ed25519 now authoritative.</span>
+        <span class="finding-status fs-resolved">RESOLVED</span>
+      </div>
+      <div class="finding">
+        <span class="finding-id">F-4</span>
+        <span class="finding-text">Signing key was ephemeral before 30 Jul 2026. Receipts before this date are not retroactively verifiable.</span>
+        <span class="finding-status fs-resolved">RESOLVED</span>
+      </div>
+      <div class="finding">
+        <span class="finding-id">F-5</span>
+        <span class="finding-text">payload_hash not echoed in intercept response — canonical reconstruction failed for third-party verifiers. Now echoed.</span>
+        <span class="finding-status fs-resolved">RESOLVED</span>
+      </div>
+    </div>
+
+    <!-- Run 1 -->
+    <div class="run-header" style="margin-top:24px;">
+      <span class="run-title">Run 1 — Baseline · 22 Jul 2026</span>
+      <span class="run-badge">COMPLETE</span>
+    </div>
+    <div class="evidence-grid">
+      <div class="ev-card" style="grid-template-columns:1fr;">
+        <div class="ev-body">
+          <div class="code-block"><span class="code-green">Actions:</span>     25 total
+<span class="code-green">Rulings:</span>     11 ALLOW · 12 ESCALATE · 2 DENY
+<span class="code-green">Match rate:</span>  64%
+<span class="code-green">Fail-opens:</span>  0
+<span class="code-green">Signed:</span>      25/25 Ed25519
+<span class="code-amber">Finding:</span>     DENY only reachable via irreversible=true signal
+              not via consequence tier alone
+<span class="code-green">Fix:</span>         Autonomous DENY upgrade shipped same day</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFY -->
+<section id="verify">
+  <div class="wrap">
+    <p class="section-label">Independent Verification</p>
+    <h2 class="section-title">Reproduce It Yourself</h2>
+    <div class="rule"></div>
+    <p class="section-desc">No trust in VeriSigil required. Every step uses standard open-source libraries.</p>
+
+    <div class="key-box">
+      <span class="key-label">Public Key</span>
+      <span class="key-value">lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</span>
+    </div>
+
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Step 1 — Get the signing diagnostic (no auth):</p>
+    <div class="code-block">curl https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic</div>
+
+    <p style="font-size:13px;color:var(--muted);margin:16px 0;">Step 2 — Run the Python verifier from the response:</p>
+    <div class="code-block"><span class="code-faint">import base64
+from nacl.signing import VerifyKey</span>
+
+<span class="code-faint"># Values from diagnostic response</span>
+pub = base64.b64decode(<span class="code-green">"lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8="</span>)
+sig = base64.b64decode(<span class="code-green">"&lt;signature_stripped_base64 from response&gt;"</span>)
+msg = <span class="code-green">b'&lt;canonical_json from response&gt;'</span>.encode(<span class="code-green">'utf-8'</span>)
+
+VerifyKey(pub).verify(msg, sig)
+<span class="code-faint">print("VERIFIED")  # raises BadSignatureError if invalid</span></div>
+
+    <p style="font-size:13px;color:var(--muted);margin:16px 0;">Step 3 — Verify your own receipts using the same pattern with all 7 fields from the response:</p>
+    <div class="code-block">payload = {
+  <span class="code-green">"intercept_id"</span>: receipt[<span class="code-green">"intercept_id"</span>],
+  <span class="code-green">"agent_id"</span>:     receipt[<span class="code-green">"agent_id"</span>],
+  <span class="code-green">"action_type"</span>:  receipt[<span class="code-green">"action_type"</span>],
+  <span class="code-green">"ruling"</span>:       receipt[<span class="code-green">"ruling"</span>],
+  <span class="code-green">"timestamp"</span>:    receipt[<span class="code-green">"timestamp"</span>],
+  <span class="code-green">"consequence"</span>:  receipt[<span class="code-green">"consequence"</span>],
+  <span class="code-green">"payload_hash"</span>: receipt.get(<span class="code-green">"payload_hash"</span>),
+}
+canonical = json.dumps(payload, sort_keys=<span class="code-green">True</span>, separators=(<span class="code-green">","</span>, <span class="code-green">":"</span>)).encode(<span class="code-green">"utf-8"</span>)</div>
+
+    <p style="font-size:13px;color:var(--muted);margin:24px 0 12px;">Public endpoints — no authentication required:</p>
+    <div class="ep-list">
+      <div class="ep-item">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/proof/signing-diagnostic</span>
+        <span class="ep-desc">Fully worked verifiable example</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/proof/public-key</span>
+        <span class="ep-desc">Authoritative public key</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/platform/limits</span>
+        <span class="ep-desc">Complete YES/NO/PARTIAL capability table</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/platform/boundary</span>
+        <span class="ep-desc">Explicit scope — what VeriSigil governs</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/legitimacy/invariants</span>
+        <span class="ep-desc">Constitutional invariants — public commitments</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-post">POST</span>
+        <span class="ep-path">/v1/intercept</span>
+        <span class="ep-desc">Govern any AI action</span>
+        <span class="ep-auth auth-key">API KEY</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/proof/package/{execution_id}</span>
+        <span class="ep-desc">Complete governance evidence package</span>
+        <span class="ep-auth auth-key">API KEY</span>
+      </div>
+    </div>
+
+    <p style="margin-top:16px;font-size:13px;color:var(--muted);">
+      Sandbox key for testing: <code style="font-family:var(--mono);font-size:11px;color:var(--green);background:rgba(0,200,150,.08);padding:2px 6px;border-radius:3px;">vs-sandbox-demo-2026b</code> — public, designed for inspection.
+    </p>
+  </div>
+</section>
+
+<!-- KNOWN GAPS -->
+<section id="gaps">
+  <div class="wrap">
+    <p class="section-label">What Has Not Been Demonstrated</p>
+    <h2 class="section-title">Known Gaps</h2>
+    <div class="rule" style="background:linear-gradient(90deg, var(--amber) 0%, transparent 60%);"></div>
+    <p class="section-desc">These are real gaps in the current evidence. They are published here — not buried — because publishing limits is how trust is built.</p>
+
+    <div class="evidence-grid">
+      <div class="ev-card">
+        <div class="ev-icon gap">!</div>
+        <div class="ev-body">
+          <div class="ev-title">No published danger predicate</div>
+          <div class="ev-detail">Which actions are "genuinely dangerous" was Alkama's independent assessment, not a published rubric agreed in advance. A formal danger predicate with expected outcomes published before testing would strengthen the carrier. This is on the roadmap for Run 3.</div>
+        </div>
+        <span class="ev-badge badge-gap">GAP</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon gap">!</div>
+        <div class="ev-body">
+          <div class="ev-title">No governed production sink</div>
+          <div class="ev-detail">CLARA is a real autonomous agent. The consequence-bearing system that would actually execute a governed action was not integrated. DENY proves refusal at the governance boundary — not that no alternate execution path exists. Documented at <code>GET /v1/platform/limits</code>. Phase 4 — governed sink integration — addresses this.</div>
+        </div>
+        <span class="ev-badge badge-gap">PHASE 4</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon gap">!</div>
+        <div class="ev-body">
+          <div class="ev-title">Authority model evaluated as declared</div>
+          <div class="ev-detail">VeriSigil evaluates authority states as presented by the agent. It does not independently verify that declared authority is factually current. The predicate truth gap. Partially addressed by <code>POST /v1/reality/anchor</code> but requires external source integration to fully close.</div>
+        </div>
+        <span class="ev-badge badge-gap">PARTIAL</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon gap">!</div>
+        <div class="ev-body">
+          <div class="ev-title">No raw request/response corpus published</div>
+          <div class="ev-detail">The full Run 2 carrier — raw requests, raw responses, receipt bundle, timing data — has not been published. This requires Alkama's written approval. We will ask him for permission to publish the full corpus under the program attribution agreement.</div>
+        </div>
+        <span class="ev-badge badge-gap">PENDING</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon gap">!</div>
+        <div class="ev-body">
+          <div class="ev-title">No independent third-party adjudication</div>
+          <div class="ev-detail">Alkama verified the signatures independently. He did not formally adjudicate the governance correctness of each ruling. A published adjudication by an independent systems architect reviewing the full carrier would meaningfully strengthen the program.</div>
+        </div>
+        <span class="ev-badge badge-gap">NEEDED</span>
+      </div>
+
+      <div class="ev-card">
+        <div class="ev-icon gap">!</div>
+        <div class="ev-body">
+          <div class="ev-title">Custody continuity not demonstrated through operation</div>
+          <div class="ev-detail">The validation program tests discrete governed actions. Continuous governance custody across an extended autonomous agent session — where an agent makes hundreds of decisions over time — has not been demonstrated. Behavioral Trajectory Intelligence (BTI) addresses this architecturally but production demonstration is outstanding.</div>
+        </div>
+        <span class="ev-badge badge-gap">GAP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TERRY'S CHECKLIST -->
+<section id="terry">
+  <div class="wrap">
+    <p class="section-label">Technical Challenge Response</p>
+    <h2 class="section-title">Systems Architect Checklist</h2>
+    <div class="rule"></div>
+    <p class="section-desc">A detailed technical challenge was raised publicly identifying nine proof requirements for runtime governance infrastructure. Addressing each one honestly:</p>
+
+    <div class="terry-grid">
+      <div class="terry-item">
+        <span class="terry-question">The classification was correct</span>
+        <span class="terry-answer ta-partial">PARTIAL — deterministic given inputs, not independently correct</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">The action was genuinely dangerous</span>
+        <span class="terry-answer ta-partial">PARTIAL — Alkama's assessment, not a published rubric</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">The authority model was valid</span>
+        <span class="terry-answer ta-partial">PARTIAL — evaluated as declared, predicate truth gap documented</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">The endpoint governed a real consequence-bearing system</span>
+        <span class="terry-answer ta-phase4">PHASE 4 — sink integration outstanding, documented</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">The route was non-bypassable</span>
+        <span class="terry-answer ta-no">NOT CLAIMED — boundary published at GET /v1/platform/boundary</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">Refusal left no consequence behind</span>
+        <span class="terry-answer ta-phase4">PHASE 4 — requires sink integration to prove</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">Custody persisted through operation</span>
+        <span class="terry-answer ta-no">NOT DEMONSTRATED — discrete actions only, not continuous session</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">Changed conditions forced requalification</span>
+        <span class="terry-answer ta-yes">YES — demonstrated at POST /v1/replay/scenario condition-B</span>
+      </div>
+      <div class="terry-item">
+        <span class="terry-question">Alternate paths were closed</span>
+        <span class="terry-answer ta-no">NOT CLAIMED — explicitly documented as out of scope</span>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:18px 20px;background:var(--surface);border-radius:4px;border-left:3px solid var(--amber);">
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;">
+        <strong style="color:var(--text);">On "bait-and-switch":</strong> Every gap listed above is published at <code style="font-family:var(--mono);font-size:11px;color:var(--green);">GET /v1/platform/limits</code> — public, no authentication. Publishing your own limitations is the opposite of bait-and-switch. The canonical claim has never been "runtime governance for all AI systems." It has been: <em>"Decision-to-consequence evidence for a specifically protected execution route, with complete consequence-boundary coverage explicitly remaining unproven."</em>
+      </p>
+    </div>
+
+    <div style="margin-top:16px;padding:18px 20px;background:var(--surface);border-radius:4px;border-left:3px solid var(--green);">
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;">
+        <strong style="color:var(--text);">Independent review invitation:</strong> If you are a systems architect or security researcher willing to review the full carrier — raw requests, responses, receipt bundle — please contact <a href="mailto:raheem@verisigilai.com" style="color:var(--green);">raheem@verisigilai.com</a>. Your adjudication would be published here with attribution. Critiques like the one above improve this program.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="wrap">
+    <h2 class="cta-title">Inspect the evidence yourself.</h2>
+    <p class="cta-sub">No trust in VeriSigil required. Every claim on this page has a corresponding endpoint.</p>
+    <div class="cta-row">
+      <a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" target="_blank" class="btn-p">Signing Diagnostic →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/platform/limits" target="_blank" class="btn-s">Platform Limits</a>
+      <a href="https://verisigilai.com/trust.html" class="btn-s">Trust Center</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <span class="footer-text">© 2026 VeriSigil AI · raheem@verisigilai.com</span>
+    <div class="footer-links">
+      <a href="https://verisigilai.com">verisigilai.com</a>
+      <a href="https://verisigilai.com/trust.html">Trust Center</a>
+      <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a>
+      <a href="https://doi.org/10.5281/zenodo.20627386">DOI</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

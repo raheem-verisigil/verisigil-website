@@ -614,7 +614,74 @@
   </div>
 </section>
 
-<!-- RUNS -->
+<!-- PROVABLE EXECUTION INTEGRITY -->
+<section>
+  <div class="wrap">
+    <p class="section-label">Architecture — Structural Enforcement</p>
+    <h2 class="section-title">Provable Execution Integrity Layer</h2>
+    <div class="rule"></div>
+    <p class="section-desc">Based on consequence-custody-spec.md. Five distinct gaps — each addressed separately. No gap closes another.</p>
+
+    <div class="evidence-grid">
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Gap 1 — Decision Correctness: f(policy, inputs) = output</div>
+          <div class="ev-detail">Every deterministic policy decision records inputs hash, policy hash, output hash, and trace hash. Any third party can recompute. <code>POST /v1/proof/correctness</code> — honest scope: deterministic components only. ML/LLM reasoning paths explicitly excluded from this claim.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">SCOPED</span>
+      </div>
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Gap 2 — Non-bypassable Custody: Authorization Object architecture</div>
+          <div class="ev-detail">The actuator requires a valid, single-use Authorization Object as a structural precondition — not a checked field, a missing capability. <code>POST /v1/ao/issue</code> → <code>POST /v1/ao/verify</code>. Bypass test at <code>POST /v1/verify/bypass-test</code> — every attempt returns HALT.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">BUILT</span>
+      </div>
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Gap 3 — Replay prevention: single-use nonce ledger</div>
+          <div class="ev-detail">Every AO contains a nonce. Consumption adds it to the ledger. Re-presentation returns ALREADY_CONSUMED. <code>POST /v1/verify/replay-test</code> — attempt replay against consumed AO. <code>GET /v1/ao/nonce</code> — nonce ledger public.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">BUILT</span>
+      </div>
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Gap 4 — State freshness: AO bound to Hash(State) at authorization</div>
+          <div class="ev-detail">State committed at authorization time. If authority is revoked, budget exhausted, or any declared field changes before execution — state hash mismatch — AO invalid. <code>POST /v1/state/commit</code> → <code>POST /v1/state/verify</code>. Conformance vector CV-005.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">BUILT</span>
+      </div>
+      <div class="ev-card">
+        <div class="ev-icon confirmed">✓</div>
+        <div class="ev-body">
+          <div class="ev-title">Gap 5 — Payload continuity: hop-by-hop hash verification</div>
+          <div class="ev-detail">Authorized payload hash sealed at gate. Every system that touches it records a hop. Modification at any hop produces hash mismatch → HALT. <code>POST /v1/continuity/payload</code> → <code>POST /v1/continuity/hop</code>. Conformance vector CV-006.</div>
+        </div>
+        <span class="ev-badge badge-confirmed">BUILT</span>
+      </div>
+      <div class="ev-card">
+        <div class="ev-icon partial">~</div>
+        <div class="ev-body">
+          <div class="ev-title">Gap 5 Reality — Closed-loop consequence verification</div>
+          <div class="ev-detail">The downstream system confirms what actually happened back to VeriSigil. Not VeriSigil asserting — the actuator confirming. <code>POST /v1/consequence/close</code>. Honest gap: depends on downstream system being independently queryable. Not all action types support this yet.</div>
+        </div>
+        <span class="ev-badge badge-partial">PARTIAL</span>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:14px 18px;background:var(--surface);border-radius:6px;border-left:2px solid var(--green);">
+      <p style="font-size:12px;color:var(--muted);line-height:1.7;margin:0;">
+        <strong style="color:var(--text);">Verified Boundary Statement:</strong> All five gaps are addressed in the architecture. Gaps 2–4 are structurally enforced. Gap 1 is scoped to deterministic components. Gap 5 Reality depends on sink integration. The full boundary is at <code style="font-family:var(--mono);font-size:11px;color:var(--green);">GET /v1/verified-boundary</code> — no auth, three sections: VERIFIED, NOT_VERIFIED, PENDING.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CLARA RUNS -->
 <section id="runs">
   <div class="wrap">
     <p class="section-label">Independent Test Runs</p>
@@ -747,6 +814,36 @@ canonical = json.dumps(payload, sort_keys=<span class="code-green">True</span>, 
 
     <p style="font-size:13px;color:var(--muted);margin:24px 0 12px;">Public endpoints — no authentication required:</p>
     <div class="ep-list">
+      <div class="ep-item" style="border-left:2px solid var(--green);background:#1f3352;">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/verified-boundary</span>
+        <span class="ep-desc" style="color:var(--text);font-weight:600;">PRIMARY — Verified/Not-Verified/Pending boundary statement</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item" style="border-left:2px solid var(--green);background:#1f3352;">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/verify/kit</span>
+        <span class="ep-desc" style="color:var(--text);font-weight:600;">PRIMARY — Complete independent verification kit</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-get">GET</span>
+        <span class="ep-path">/v1/verify/conformance</span>
+        <span class="ep-desc">6 published conformance vectors — run them yourself</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-post">POST</span>
+        <span class="ep-path">/v1/verify/bypass-test</span>
+        <span class="ep-desc">Runnable bypass test — every attempt returns HALT</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
+      <div class="ep-item">
+        <span class="ep-method m-post">POST</span>
+        <span class="ep-path">/v1/verify/replay-test</span>
+        <span class="ep-desc">Replay attack prevention — consumed AO returns ALREADY_CONSUMED</span>
+        <span class="ep-auth auth-none">NO AUTH</span>
+      </div>
       <div class="ep-item">
         <span class="ep-method m-get">GET</span>
         <span class="ep-path">/v1/proof/signing-diagnostic</span>
@@ -912,7 +1009,7 @@ canonical = json.dumps(payload, sort_keys=<span class="code-green">True</span>, 
 
     <div style="margin-top:24px;padding:18px 20px;background:var(--surface);border-radius:4px;border-left:3px solid var(--amber);">
       <p style="font-size:13px;color:var(--muted);line-height:1.7;">
-        <strong style="color:var(--text);">On "bait-and-switch":</strong> Every gap listed above is published at <code style="font-family:var(--mono);font-size:11px;color:var(--green);">GET /v1/platform/limits</code> — public, no authentication. Publishing your own limitations is the opposite of bait-and-switch. The canonical claim has never been "runtime governance for all AI systems." It has been: <em>"Decision-to-consequence evidence for a specifically protected execution route, with complete consequence-boundary coverage explicitly remaining unproven."</em>
+        <strong style="color:var(--text);">On "bait-and-switch":</strong> Every gap listed above is published at <code style="font-family:var(--mono);font-size:11px;color:var(--green);">GET /v1/verified-boundary</code> — public, no authentication. Three sections: VERIFIED (what is independently checkable), NOT_VERIFIED (what is never claimed), PENDING (honest gaps in progress). Publishing your own limitations as prominently as your capabilities is the opposite of bait-and-switch.
       </p>
     </div>
 
@@ -930,9 +1027,10 @@ canonical = json.dumps(payload, sort_keys=<span class="code-green">True</span>, 
     <h2 class="cta-title">Inspect the evidence yourself.</h2>
     <p class="cta-sub">No trust in VeriSigil required. Every claim on this page has a corresponding endpoint.</p>
     <div class="cta-row">
-      <a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" target="_blank" class="btn-p">Signing Diagnostic →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/verified-boundary" target="_blank" class="btn-p">Verified Boundary →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/verify/kit" target="_blank" class="btn-s">Verification Kit</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" target="_blank" class="btn-s">Signing Diagnostic</a>
       <a href="https://verisigil-api-production.up.railway.app/v1/platform/limits" target="_blank" class="btn-s">Platform Limits</a>
-      <a href="https://verisigilai.com/trust.html" class="btn-s">Trust Center</a>
     </div>
   </div>
 </div>

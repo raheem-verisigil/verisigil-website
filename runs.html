@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil — Independent Validation History</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --base:    #08111F;
+  --surface: #1A2940;
+  --elevated:#1f3352;
+  --border:  rgba(255,255,255,.07);
+  --text:    #E8EDF4;
+  --muted:   #6B849E;
+  --faint:   #374A60;
+  --green:   #00C896;
+  --amber:   #F5A623;
+  --red:     #E05555;
+  --blue:    #4A9EFF;
+  --mono:    'IBM Plex Mono', monospace;
+  --sans:    'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--base); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.65; min-height: 100vh; }
+
+/* NAV */
+nav { border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 100; background: rgba(8,17,31,.96); backdrop-filter: blur(8px); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-family: var(--mono); font-size: 13px; color: var(--text); text-decoration: none; }
+.nav-brand span { color: var(--green); }
+.nav-links { display: flex; gap: 20px; list-style: none; }
+.nav-links a { font-family: var(--mono); font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: .08em; text-transform: uppercase; transition: color .15s; }
+.nav-links a:hover { color: var(--green); }
+
+/* LAYOUT */
+.wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+
+/* HEADER */
+header { padding: 64px 0 48px; border-bottom: 1px solid var(--border); }
+.header-label { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+header h1 { font-family: var(--mono); font-size: clamp(20px,3.5vw,30px); font-weight: 600; line-height: 1.2; margin-bottom: 14px; }
+.header-sub { font-size: 15px; color: var(--muted); max-width: 560px; line-height: 1.75; margin-bottom: 28px; }
+.header-note { font-family: var(--mono); font-size: 11px; color: var(--faint); border-left: 2px solid var(--faint); padding-left: 12px; line-height: 1.6; }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin: 40px 0; }
+.stat { background: var(--surface); padding: 18px 16px; border-radius: 4px; text-align: center; }
+.stat-num { font-family: var(--mono); font-size: 26px; font-weight: 600; line-height: 1; margin-bottom: 6px; }
+.stat-label { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: .08em; text-transform: uppercase; }
+.num-green  { color: var(--green); }
+.num-amber  { color: var(--amber); }
+.num-blue   { color: var(--blue); }
+
+/* RUN CARDS */
+.run { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 2px; overflow: hidden; }
+.run-header { display: flex; align-items: center; gap: 16px; padding: 18px 20px; background: var(--surface); border-bottom: 1px solid var(--border); }
+.run-badge { font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 3px; letter-spacing: .05em; white-space: nowrap; }
+.badge-complete  { background: rgba(0,200,150,.1); color: var(--green); }
+.badge-pending   { background: rgba(245,166,35,.1); color: var(--amber); }
+.badge-retest    { background: rgba(74,158,255,.1); color: var(--blue); }
+.run-title { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+.run-date  { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+
+.run-body { padding: 20px; }
+.run-meta { display: grid; grid-template-columns: 120px 1fr; gap: 6px 16px; margin-bottom: 16px; font-size: 13px; }
+.run-meta-label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.run-meta-value { font-family: var(--mono); font-size: 11px; color: var(--text); }
+
+/* CHECK TABLE */
+.check-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+.check-table th { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.check-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.03); vertical-align: top; }
+.check-table tr:last-child td { border-bottom: none; }
+.check-table tr:hover td { background: rgba(255,255,255,.02); }
+.check-name { color: var(--text); font-family: var(--mono); font-size: 11px; }
+.check-detail { color: var(--muted); font-size: 11px; line-height: 1.5; }
+.check-result { font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+.r-pass     { background: rgba(0,200,150,.1); color: var(--green); }
+.r-dev      { background: rgba(224,85,85,.08); color: var(--red); }
+.r-fixed    { background: rgba(245,166,35,.1); color: var(--amber); }
+.r-retest   { background: rgba(74,158,255,.08); color: var(--blue); }
+
+/* FINDING CARDS */
+.finding { background: var(--elevated); border-radius: 6px; padding: 14px 16px; margin-bottom: 8px; border-left: 3px solid; }
+.finding-deviation { border-left-color: var(--red); }
+.finding-resolved  { border-left-color: var(--green); }
+.finding-minor     { border-left-color: var(--amber); }
+.finding-note      { border-left-color: var(--faint); }
+.finding-id    { font-family: var(--mono); font-size: 10px; color: var(--faint); font-weight: 600; margin-bottom: 6px; letter-spacing: .06em; }
+.finding-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.finding-body  { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.finding-fix   { font-family: var(--mono); font-size: 11px; color: var(--green); margin-top: 6px; }
+
+/* RULE */
+.rule { height: 1px; background: linear-gradient(90deg,var(--green),transparent 60%); max-width: 60px; margin: 0 0 20px; }
+
+/* PHILOSOPHY */
+.philosophy { background: var(--surface); border-radius: 8px; padding: 24px; margin: 40px 0; border-left: 3px solid var(--green); }
+.philosophy p { font-size: 14px; color: var(--muted); line-height: 1.75; }
+.philosophy strong { color: var(--text); }
+
+/* CTA */
+.cta { padding: 48px 0; text-align: center; }
+.cta h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; letter-spacing: -.01em; }
+.cta p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+.btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.btn-p { background: var(--green); color: #08111F; padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 13px; font-family: var(--mono); }
+.btn-p:hover { opacity: .88; }
+.btn-s { border: 1px solid var(--faint); color: var(--muted); padding: 10px 22px; border-radius: 4px; text-decoration: none; font-size: 13px; font-family: var(--mono); transition: all .15s; }
+.btn-s:hover { border-color: var(--green); color: var(--green); }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 24px 0; }
+footer .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.footer-text { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+.footer-links { display: flex; gap: 16px; }
+.footer-links a { font-family: var(--mono); font-size: 11px; color: var(--faint); text-decoration: none; }
+.footer-links a:hover { color: var(--green); }
+
+section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+.section-label { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
+h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.section-desc { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+@media (max-width:600px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+  .run-meta { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="https://verisigilai.com" class="nav-brand">VeriSigil<span>AI</span></a>
+    <ul class="nav-links">
+      <li><a href="/validation.html">Validation</a></li>
+      <li><a href="/explorer.html">Explorer</a></li>
+      <li><a href="https://verisigilai.com/trust.html">Trust</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <p class="header-label">Public Engineering Record · Independent Validation History</p>
+    <h1>Every independent review.<br>Every finding. Every fix.</h1>
+    <p class="header-sub">VeriSigil publishes its complete independent validation history — findings included. A clean result can be dismissed as a controlled test. Finding something real, fixing it, and publishing the fix is what builds credibility.</p>
+    <p class="header-note">This record follows the pattern of Chrome Security Bulletins and Kubernetes CVEs. Independent finding → Root cause analysis → Specific fix → Independent re-validation. That cycle is the point.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><div class="stat-num num-blue">3</div><div class="stat-label">Runs Complete</div></div>
+    <div class="stat"><div class="stat-num num-green">75</div><div class="stat-label">Actions Governed</div></div>
+    <div class="stat"><div class="stat-num num-green">0</div><div class="stat-label">Fail-Opens</div></div>
+    <div class="stat"><div class="stat-num num-amber">1</div><div class="stat-label">Deviations Found</div></div>
+  </div>
+</div>
+
+<!-- RUN 3 -->
+<section id="run3">
+  <div class="wrap">
+    <p class="section-label">Most Recent</p>
+    <h2 class="section-title">Run 3 — Authorization Object Architecture</h2>
+    <div class="rule"></div>
+    <p class="section-desc">First independent test of the AO architecture built in response to Run 2 critique. Four specific checks targeting custody, replay prevention, payload continuity, and all six conformance vectors.</p>
+
+    <div class="run">
+      <div class="run-header">
+        <span class="run-title">Run 3 · Independent Validation</span>
+        <span class="run-badge badge-retest">RE-VALIDATION PENDING</span>
+        <span class="run-date">2026-08-04</span>
+      </div>
+      <div class="run-body">
+        <div class="run-meta">
+          <span class="run-meta-label">Reviewer</span>
+          <span class="run-meta-value">Alkama Eqbal / CLARA (independent)</span>
+          <span class="run-meta-label">Target</span>
+          <span class="run-meta-value">VeriSigil sandbox — verisigil-api-production.up.railway.app</span>
+          <span class="run-meta-label">Public key</span>
+          <span class="run-meta-value">lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8= — matches Run 2</span>
+          <span class="run-meta-label">Terms</span>
+          <span class="run-meta-value">Non-exclusive · Commercial deferred · Attribution by written approval</span>
+          <span class="run-meta-label">Build note</span>
+          <span class="run-meta-value">Predates 2026-08-05 updates (SQLite nonce ledger, tiered TTLs, TLA+ spec). Re-validation of Check 2 and AO expiry path recommended against new infrastructure.</span>
+        </div>
+
+        <table class="check-table">
+          <thead>
+            <tr>
+              <th>Check</th>
+              <th>Description</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="check-name">Check 1</td>
+              <td class="check-detail">Custody — actuator cannot operate without valid AO. Four bypass scenarios: no AO, fabricated AO, replayed nonce, expired AO.</td>
+              <td><span class="check-result r-pass">PASS</span></td>
+            </tr>
+            <tr>
+              <td class="check-name">Check 2</td>
+              <td class="check-detail">AO issue → verify → replay → fabricate. First verify returns PROCEED. Second verify same AO returns ALREADY_CONSUMED. Fabricated AO returns NOT_FOUND.</td>
+              <td><span class="check-result r-pass">PASS</span></td>
+            </tr>
+            <tr>
+              <td class="check-name">Check 3</td>
+              <td class="check-detail">Payload continuity. Unmodified payload → CONTINUE. Modified payload (amount 100→999999, account→EVIL) → HALT tampered.</td>
+              <td><span class="check-result r-pass">PASS</span></td>
+            </tr>
+            <tr>
+              <td class="check-name">Check 4</td>
+              <td class="check-detail">Six conformance vectors. CV-001 ALLOW ✓ · CV-002 DENY ✓ · CV-003 DEVIATION · CV-004 ALREADY_CONSUMED ✓ · CV-005 STATE_CHANGED ✓ · CV-006 HALT tampered ✓</td>
+              <td><span class="check-result r-dev">5/6 · CV-003 DEVIATES</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="section-label" style="margin-bottom:12px;">Findings</p>
+
+        <div class="finding finding-deviation">
+          <div class="finding-id">FINDING-R3-001 · SEVERITY: HIGH · STATUS: FIXED</div>
+          <div class="finding-title">CV-003 Deviation — HIGH irreversible + human present returns ALLOW instead of ESCALATE</div>
+          <div class="finding-body">
+            Conformance vector CV-003: HIGH consequence, transfer_funds, human_present=true, irreversible=true.
+            Expected: ESCALATE. Actual: ALLOW. Reconfirmed twice by reviewer. Consistent.
+            Root cause: engine treated human presence as sufficient to ALLOW rather than route to escalation.
+            Human presence should strengthen governance, not weaken it. A present human means there is someone to escalate to — not a reason to bypass escalation.
+            Control test (human_present=false) correctly returned DENY. The distinction between ALLOW and ESCALATE for human-present HIGH irreversible actions was not implemented.
+          </div>
+          <div class="finding-fix">→ Fixed: Signal 3b HIGH_IRREVERSIBLE_ESCALATE added to _run_intercept. Awaiting independent re-validation by Alkama.</div>
+        </div>
+
+        <div class="finding finding-minor">
+          <div class="finding-id">FINDING-R3-002 · SEVERITY: MINOR · STATUS: FIXED</div>
+          <div class="finding-title">Auth discrepancy — verify/kit and verify/conformance returned 401 until sandbox key supplied</div>
+          <div class="finding-body">
+            POST /v1/verify/kit and GET /v1/verify/conformance documented as "public, no auth" but returned 401 during Run 3. Both were corrected in a prior deploy. Run 3 predated that correction — Alkama used the sandbox key to proceed. Not a security issue (stricter behaviour), but a documentation mismatch.
+          </div>
+          <div class="finding-fix">→ Fixed: auth requirement removed from both endpoints in prior deploy.</div>
+        </div>
+
+        <div class="finding finding-note">
+          <div class="finding-id">FINDING-R3-003 · SEVERITY: NOTE · STATUS: RECHECK PENDING</div>
+          <div class="finding-title">CV-005 anomaly — UNMODIFIED state control also returned STATE_CHANGED</div>
+          <div class="finding-body">
+            CV-005 state freshness check: the specified CHANGED-state case correctly returned STATE_CHANGED HALT. However, the UNMODIFIED control case also returned STATE_CHANGED. Reviewer flagged this as likely a canonicalization difference in how state_fields were resubmitted for verify vs commit in the test harness — not necessarily an engine fault. The primary assertion (changed state → HALT) held correctly. Clean recheck pending with exact payloads shared.
+          </div>
+          <div class="finding-fix">→ Pending: clean recheck with exact harness payloads to isolate engine vs harness.</div>
+        </div>
+
+        <div class="finding finding-resolved">
+          <div class="finding-id">RUN-2 FIX CONFIRMED · STATUS: CLOSED</div>
+          <div class="finding-title">F-5 payload_hash confirmed present in canonical field set</div>
+          <div class="finding-body">Run 2 finding F-5 (payload_hash not echoed in intercept response) confirmed closed by Run 3. Canonical fields note now lists payload_hash. Independent verification of receipts is unambiguous.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RUN 2 -->
+<section id="run2">
+  <div class="wrap">
+    <p class="section-label">Definitive Baseline</p>
+    <h2 class="section-title">Run 2 — Signature Verification · Definitive</h2>
+    <div class="rule"></div>
+
+    <div class="run">
+      <div class="run-header">
+        <span class="run-title">Run 2 · Definitive</span>
+        <span class="run-badge badge-complete">COMPLETE</span>
+        <span class="run-date">2026-07-28</span>
+      </div>
+      <div class="run-body">
+        <div class="run-meta">
+          <span class="run-meta-label">Reviewer</span>
+          <span class="run-meta-value">Alkama Eqbal / CLARA (independent)</span>
+          <span class="run-meta-label">Actions</span>
+          <span class="run-meta-value">25 total · 16 ALLOW · 0 REVIEW · 9 DENY</span>
+          <span class="run-meta-label">Fail-opens</span>
+          <span class="run-meta-value">0</span>
+          <span class="run-meta-label">Signatures</span>
+          <span class="run-meta-value">25/25 verified offline · PyNaCl · key lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</span>
+          <span class="run-meta-label">Latency</span>
+          <span class="run-meta-value">724ms mean network · sub-millisecond enforcement</span>
+        </div>
+
+        <table class="check-table">
+          <thead><tr><th>Finding</th><th>Description</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="check-name">F-1</td><td class="check-detail">DENY only reachable via irreversible=true, not consequence tier alone. Autonomous DENY upgrade deployed same day.</td><td><span class="check-result r-pass">RESOLVED</span></td></tr>
+            <tr><td class="check-name">F-2</td><td class="check-detail">evidence_id absent from intercept response. Added — equals intercept_id.</td><td><span class="check-result r-pass">RESOLVED</span></td></tr>
+            <tr><td class="check-name">F-3</td><td class="check-detail">dilithium3 routing conflict shadowing Ed25519 at /v1/crypto/verify. Ed25519 now authoritative.</td><td><span class="check-result r-pass">RESOLVED</span></td></tr>
+            <tr><td class="check-name">F-4</td><td class="check-detail">Signing key was ephemeral before 30 Jul 2026. Receipts before this date not retroactively verifiable.</td><td><span class="check-result r-pass">RESOLVED</span></td></tr>
+            <tr><td class="check-name">F-5</td><td class="check-detail">payload_hash not echoed in intercept response — canonical reconstruction failed for third-party verifiers.</td><td><span class="check-result r-pass">RESOLVED · confirmed Run 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RUN 1 -->
+<section id="run1">
+  <div class="wrap">
+    <p class="section-label">Baseline</p>
+    <h2 class="section-title">Run 1 — Baseline</h2>
+    <div class="rule"></div>
+
+    <div class="run">
+      <div class="run-header">
+        <span class="run-title">Run 1 · Baseline</span>
+        <span class="run-badge badge-complete">COMPLETE</span>
+        <span class="run-date">2026-07-22</span>
+      </div>
+      <div class="run-body">
+        <div class="run-meta">
+          <span class="run-meta-label">Reviewer</span>
+          <span class="run-meta-value">Alkama Eqbal / CLARA (independent)</span>
+          <span class="run-meta-label">Actions</span>
+          <span class="run-meta-value">25 total · 11 ALLOW · 12 ESCALATE · 2 DENY</span>
+          <span class="run-meta-label">Match rate</span>
+          <span class="run-meta-value">64%</span>
+          <span class="run-meta-label">Fail-opens</span>
+          <span class="run-meta-value">0</span>
+        </div>
+
+        <table class="check-table">
+          <thead><tr><th>Finding</th><th>Description</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="check-name">F-1 (Run 1)</td><td class="check-detail">DENY only reachable via irreversible=true signal, not consequence tier alone. Autonomous DENY upgrade shipped same day.</td><td><span class="check-result r-pass">RESOLVED</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section>
+  <div class="wrap">
+    <p class="section-label">Why We Publish This</p>
+    <h2 class="section-title">Engineering Transparency as a Standard</h2>
+    <div class="rule"></div>
+
+    <div class="philosophy">
+      <p>
+        <strong>Most AI companies publish "We passed."</strong><br><br>
+        Very few publish: "An independent reviewer found a governance deviation. We fixed it. Please verify the fix."<br><br>
+        Security buyers trust the second one more. A clean result can be dismissed as a controlled test. Finding something real, acknowledging it, fixing it, and inviting independent re-validation is what mature engineering programs do.<br><br>
+        <strong>This record is permanent.</strong> Findings are not removed when fixed. The history of what was found, what was fixed, and what is pending is the record of how this platform has evolved. That record is more valuable than any marketing claim.
+      </p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:2px;">
+      <div style="background:var(--surface);padding:16px 18px;border-radius:4px;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">The Cycle</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.75;">
+          Independent finding<br>
+          → Root cause analysis<br>
+          → Specific fix<br>
+          → Independent re-validation<br>
+          → Public record updated
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:16px 18px;border-radius:4px;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">The Standard</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.75;">
+          Chrome Security Bulletins<br>
+          Kubernetes CVEs<br>
+          Cloudflare Incident Reports<br>
+          ——<br>
+          VeriSigil Validation History
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="wrap">
+    <h2>Conduct your own review.</h2>
+    <p>The verification kit, conformance vectors, and bypass tests are public. No authentication required.</p>
+    <div class="btn-row">
+      <a href="https://verisigil-api-production.up.railway.app/v1/verify/kit" target="_blank" class="btn-p">Verification Kit →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/verify/conformance" target="_blank" class="btn-s">Conformance Vectors</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/verified-boundary" target="_blank" class="btn-s">Verified Boundary</a>
+      <a href="/validation.html" class="btn-s">Validation Record</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="footer-text">© 2026 VeriSigil AI · raheem@verisigilai.com</span>
+    <div class="footer-links">
+      <a href="https://verisigilai.com">verisigilai.com</a>
+      <a href="/validation.html">Validation</a>
+      <a href="/explorer.html">Explorer</a>
+      <a href="https://verisigilai.com/trust.html">Trust</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

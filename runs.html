@@ -163,7 +163,7 @@ h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
     <div class="stat"><div class="stat-num num-blue">3</div><div class="stat-label">Runs Complete</div></div>
     <div class="stat"><div class="stat-num num-green">75</div><div class="stat-label">Actions Governed</div></div>
     <div class="stat"><div class="stat-num num-green">0</div><div class="stat-label">Fail-Opens</div></div>
-    <div class="stat"><div class="stat-num num-amber">1</div><div class="stat-label">Deviations Found</div></div>
+    <div class="stat"><div class="stat-num num-green">3</div><div class="stat-label">Deviations Resolved</div></div>
   </div>
 </div>
 
@@ -177,9 +177,9 @@ h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
 
     <div class="run">
       <div class="run-header">
-        <span class="run-title">Run 3 · Independent Validation</span>
-        <span class="run-badge badge-retest">RE-VALIDATION PENDING</span>
-        <span class="run-date">2026-08-04</span>
+        <span class="run-title">Run 3 · Independent Validation + Run 3b</span>
+        <span class="run-badge badge-complete">CLOSED</span>
+        <span class="run-date">2026-08-04 / 2026-08-06</span>
       </div>
       <div class="run-body">
         <div class="run-meta">
@@ -242,22 +242,22 @@ h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
           <div class="finding-fix">→ Fixed: Signal 3b HIGH_IRREVERSIBLE_ESCALATE added to _run_intercept. Awaiting independent re-validation by Alkama.</div>
         </div>
 
-        <div class="finding finding-minor">
-          <div class="finding-id">FINDING-R3-002 · SEVERITY: MINOR · STATUS: FIXED</div>
-          <div class="finding-title">Auth discrepancy — verify/kit and verify/conformance returned 401 until sandbox key supplied</div>
+        <div class="finding finding-resolved">
+          <div class="finding-id">FINDING-R3-002 · SEVERITY: MINOR · STATUS: RESOLVED — CHG-011</div>
+          <div class="finding-title">Auth discrepancy / regression — verify/kit returned 500 after no-auth change</div>
           <div class="finding-body">
-            POST /v1/verify/kit and GET /v1/verify/conformance documented as "public, no auth" but returned 401 during Run 3. Both were corrected in a prior deploy. Run 3 predated that correction — Alkama used the sandbox key to proceed. Not a security issue (stricter behaviour), but a documentation mismatch.
+            Run 3 found verify/kit and verify/conformance returning 401. A prior fix removed the auth requirement but introduced a regression: verify/kit started returning 500 (NameError — stale require_api_key call on undefined variables). Found by Alkama in post-deploy validation Run 3b. CHG-011 deployed: stale call removed. Both endpoints now return HTTP 200 with no key required. Independently revalidated before messaging Alkama.
           </div>
-          <div class="finding-fix">→ Fixed: auth requirement removed from both endpoints in prior deploy.</div>
+          <div class="finding-fix">→ CHG-011 closed. GET /v1/verify/kit → 200 public. GET /v1/verify/conformance → 200 public. Confirmed 2026-08-06.</div>
         </div>
 
-        <div class="finding finding-note">
-          <div class="finding-id">FINDING-R3-003 · SEVERITY: NOTE · STATUS: RECHECK PENDING</div>
-          <div class="finding-title">CV-005 anomaly — UNMODIFIED state control also returned STATE_CHANGED</div>
+        <div class="finding finding-resolved">
+          <div class="finding-id">FINDING-R3-003 · SEVERITY: NOTE · STATUS: RESOLVED — CHG-010</div>
+          <div class="finding-title">CV-005 — UNMODIFIED state returned STATE_CHANGED (field name mismatch)</div>
           <div class="finding-body">
-            CV-005 state freshness check: the specified CHANGED-state case correctly returned STATE_CHANGED HALT. However, the UNMODIFIED control case also returned STATE_CHANGED. Reviewer flagged this as likely a canonicalization difference in how state_fields were resubmitted for verify vs commit in the test harness — not necessarily an engine fault. The primary assertion (changed state → HALT) held correctly. Clean recheck pending with exact payloads shared.
+            Root cause identified by Alkama from the state_hash value: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a is the SHA256 of an empty JSON object. state_verify was reading current_state_fields but callers sent state_fields (same field name as commit). current_fields was always {} — so every verify returned STATE_CHANGED regardless of actual state. Not a harness issue. A real engine bug. Fixed in CHG-010: state_verify now accepts state_fields OR current_state_fields.
           </div>
-          <div class="finding-fix">→ Pending: clean recheck with exact harness payloads to isolate engine vs harness.</div>
+          <div class="finding-fix">→ CHG-010 closed. Independently revalidated 2026-08-06: unchanged state → FRESH (committed_hash == current_hash = 5724b5f8...). Changed state → STATE_CHANGED + HALT. Both directions confirmed before messaging Alkama.</div>
         </div>
 
         <div class="finding finding-resolved">

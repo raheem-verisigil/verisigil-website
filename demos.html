@@ -1255,13 +1255,336 @@
       </div>
     </div>
     <div style="background:rgba(0,0,0,.2);border-radius:6px;padding:12px 16px;margin-bottom:18px;border-left:3px solid rgba(245,166,35,.4);">
-      <div style="font-family:var(--mono);font-size:.65rem;color:rgba(245,166,35,.8);margin-bottom:4px;">RUN 3 · FINDING R3-001 · RESOLVED</div>
-      <div style="font-size:.8rem;color:var(--muted);">CV-003: HIGH consequence + human present returned ALLOW instead of ESCALATE. Fixed same day. Independent re-validation pending.</div>
+      <div style="font-family:var(--mono);font-size:.65rem;color:rgba(0,200,150,.8);margin-bottom:4px;">RUN 3 CYCLE · ALL FINDINGS RESOLVED · CLOSED 2026-08-06</div>
+      <div style="font-size:.8rem;color:var(--muted);">CV-003 (ESCALATE fix), CV-005 (state hash fix CHG-010), verify/kit regression (CHG-011) — all independently revalidated and closed.</div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <a href="/runs.html" style="background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.4);color:rgba(245,166,35,.9);font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;padding:9px 18px;border-radius:6px;text-decoration:none;">View Full History →</a>
       <a href="/validation.html" style="border:1px solid rgba(0,240,255,.2);color:var(--cyan);font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;padding:9px 16px;border-radius:6px;text-decoration:none;">Validation Record</a>
       <a href="https://verisigil-api-production.up.railway.app/v1/audit/changelog" target="_blank" style="border:1px solid rgba(0,240,255,.2);color:var(--cyan);font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;padding:9px 16px;border-radius:6px;text-decoration:none;">Live Changelog</a>
+    </div>
+  </div>
+  <!-- ============================================================ -->
+  <!-- CONSEQUENCE STANDING LAYER -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Consequence Standing Layer — Does This Action Have Standing to Become Consequence?</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Standing Evaluate</h3>
+        <p>Evaluate whether a candidate action has STANDING to become consequence. Six preconditions: intent declared, authority traceable, consequence bounded, payload defined, falsification possible, human accountability.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/standing_evaluate_v1_standing_evaluate_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Standing Score</h3>
+        <p>Retrieve a standing evaluation by ID. Returns score (0.00–1.00), determination (FULL/CONDITIONAL/NO_STANDING), and sealed receipt.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/standing_score_v1_standing_score__standing_id__get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Standing Certificate</h3>
+        <p>Sealed evidence that an execution had standing AND passed governance AND was executed through a structural AO. The document a regulator requests after an AI action with real-world consequences.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/standing_certificate_v1_standing_certificate_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Standing Formula</h3>
+        <p>Published standing formula — six preconditions and weights. No auth required. Independently recomputable. FULL_STANDING ≥ 0.70, CONDITIONAL 0.40–0.70, NO_STANDING below 0.40.</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/standing/formula" target="_blank" class="demo-link">View Formula →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Standing Explain</h3>
+        <p>Plain-language explanation of why an action received its standing determination. Five dimension scores: Authority, Evidence, Context, Consequence, Confidence. For regulators and auditors without technical knowledge.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/standing_explain_v1_standing_explain_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Non-Formation Check</h3>
+        <p>The earliest possible governance layer. Before standing evaluation. Before intercept. Actions that fail formation never become consequence candidates. NON_FORMATION ≠ DENY — it means never qualified for evaluation.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/formation_check_v1_formation_check_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CONSEQUENCE GRAPH -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Consequence Graph — Cryptographically Linked Chain from Formation to Reputation</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Consequence Graph Record</h3>
+        <p>Records the complete cryptographically linked chain: formation → standing → intercept → AO → execution → certificate → reputation. Each node hashes the previous. Modify any node and the chain breaks.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Graph/graph_record_v1_graph_record_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Consequence Graph Verify</h3>
+        <p>Recomputes the chain hash from all nodes and confirms nothing has been modified. INTACT or COMPROMISED ruling with tamper evidence.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Graph/graph_verify_v1_graph_verify_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PROOF REPLAY -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Proof Replay — Recompute Any Governance Decision Years Later</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Proof Replay Record</h3>
+        <p>Records a governance decision with everything needed to recompute it from scratch years later. Not just the log — the decision itself: policy name, version, source hash, exact inputs, exact output, ruling.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Proof%20Replay/proof_replay_record_v1_proof_replay_record_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Proof Replay Verify</h3>
+        <p>Recomputes the decision from stored inputs and confirms it matches the stored ruling. Independently replayable — no trust in VeriSigil required.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Proof%20Replay/proof_replay_verify_v1_proof_replay_verify_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CONVERGENCE LAYER -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Convergence Layer — Accept Evidence from Any Governance System</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Convergence Evaluate</h3>
+        <p>Unifies governance evidence from multiple sources into one execution decision. Accepts: VeriSigil AO (30%), intercept (25%), external auditor (20%), ISO 42001 (10%), NIST AI RMF (8%), EU AI Act (7%), enterprise policy (5%).</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Convergence%20Layer/convergence_evaluate_v1_convergence_evaluate_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Convergence Weights</h3>
+        <p>Published evidence source weights — how VeriSigil weights different evidence sources. No auth required. A single source cannot dominate a governance decision. Independently auditable.</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/convergence/weights" target="_blank" class="demo-link">View Weights →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- EVIDENCE CONSTITUTION -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Evidence Constitution — What Evidence Counts Before Governance Evaluates</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Evidence Constitution Create</h3>
+        <p>Define what evidence counts, what is rejected, priority order, expiry rules, conflict resolution, and trust weights. Different organisations can have different constitutions. VeriSigil enforces the declared one.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Evidence%20Constitution/evidence_constitution_create_v1_evidence_constitution_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Evidence Register</h3>
+        <p>Register an evidence item and evaluate it against the applicable Evidence Constitution. Rejected types are structurally excluded — not weighted low, but inadmissible. SELF_DECLARED_AUTHORITY always rejected.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Evidence%20Constitution/evidence_register_v1_evidence_register_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Default Evidence Constitution</h3>
+        <p>VeriSigil's published baseline rules of evidence. No auth required. Lists accepted types, rejected types (SELF_DECLARED_AUTHORITY, UNSIGNED_ASSERTION), priority order, and conflict rules.</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/evidence/default-constitution" target="_blank" class="demo-link">View Constitution →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- GOVERNANCE MEMORY -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Governance Memory — Append-Only Cryptographic Record of Every Agent Event</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Memory Record</h3>
+        <p>Records any governance-relevant event for an agent. Append-only. Each event chains to the previous via hash. Covers: INTERCEPT, AO, RECEIPT, APPEAL, OVERRIDE, REPUTATION, EXCEPTION, CHALLENGE, VERIFICATION.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Memory/memory_record_v1_memory_record_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Memory Retrieve</h3>
+        <p>Complete governance memory for an agent — all events in order, chain-verified. The full history of every governance-relevant event from first execution to latest reputation.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Memory/memory_retrieve_v1_memory__agent_id__get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Memory Summary</h3>
+        <p>Counts by event type and ruling — the governance history at a glance. How many INTERCEPTs, how many DENYs, how many APPEALs. For auditors and compliance teams.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Memory/memory_summary_v1_memory__agent_id__summary_get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- GOVERNANCE APPEALS -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Governance Appeals — Regulators, Reviewers, and Boards Can Reopen Any Decision</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Appeal Submit</h3>
+        <p>Open a governance appeal. Appellant types: REGULATOR, HUMAN_REVIEWER, SUPERVISOR, ENTERPRISE_BOARD, AFFECTED_PARTY. Original ruling preserved unchanged. The appeal creates an additional sealed record.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Appeals/appeal_submit_v1_appeal_submit_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Appeal Resolve</h3>
+        <p>Resolve an appeal with UPHELD, OVERTURNED, or MODIFIED. Resolution is itself a sealed governance record. Both original ruling and resolution are permanently preserved. Nothing is deleted.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Appeals/appeal_resolve_v1_appeal_resolve_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Appeal History</h3>
+        <p>All appeals filed against a specific governance decision. Shows the complete review chain for any original intercept_id — for litigation, audit, and regulatory review.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Appeals/appeal_history_v1_appeal_history__original_id__get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CANDIDATE MOVEMENT REGISTRY -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Candidate Movement Registry — Explicit Registration Before Consequence</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Candidate Register</h3>
+        <p>Register an explicit candidate action before it reaches standing evaluation. VeriSigil does not infer intent — the agent must declare the candidate. Unregistered candidates cannot proceed to governance.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Candidate%20Movement%20Registry/candidate_register_v1_candidate_register_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Candidate Advance</h3>
+        <p>Advance a candidate through its progression: REGISTERED → STANDING_EVALUATED → GOVERNED → EXECUTED → CONSEQUENCE. Each stage sealed. Invalid progressions rejected structurally.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Candidate%20Movement%20Registry/candidate_advance_v1_candidate_advance_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- OMNIX EWP WITNESS -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(245,166,35,.7);margin-bottom:12px;">OMNIX EWP Institutional Witness — Agreement EWP-IWA-VERISIGIL-001 · ML-DSA-65 (FIPS 204)</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card" style="border-color:rgba(245,166,35,.2);">
+        <h3>Witness Status</h3>
+        <p>VeriSigil OMNIX EWP Institutional Witness status. No auth required. Shows keypair algorithm (ML-DSA-65), custody, scope limits (Section 2.4), and attestation history. Agreement: EWP-IWA-VERISIGIL-001.</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/omnix/witness/status" target="_blank" class="demo-link">View Status →</a>
+      </div>
+
+      <div class="demo-card" style="border-color:rgba(245,166,35,.2);">
+        <h3>Witness Public Key</h3>
+        <p>VeriSigil's ML-DSA-65 (FIPS 204) public key for OMNIX EWP registration. No auth required. Includes offline verification instructions. Anyone can verify VeriSigil's STH attestations using this key.</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/omnix/witness/public-key" target="_blank" class="demo-link">View Key →</a>
+      </div>
+
+      <div class="demo-card" style="border-color:rgba(245,166,35,.2);">
+        <h3>Witness Attest STH</h3>
+        <p>Submit a WitnessAttestation for an OMNIX Signed Tree Head. Validates structure, produces canonical JSON, SHA3-256 hash, ML-DSA-65 signature. Section 2.4 scope: cryptographic consistency only.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/OMNIX%20EWP%20Witness/omnix_witness_attest_v1_omnix_witness_attest_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- VGES GOVERNANCE BENCHMARK -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">VGES — VeriSigil Governance Evaluation Suite · Open Benchmark · CC BY 4.0</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>VGES Benchmark Spec</h3>
+        <p>8 properties every AI governance platform should demonstrate. P1 Authorization Continuity, P2 Replay Resistance, P3 Payload Continuity, P4 State Freshness, P5 Stale Authority, P6 Approval Withdrawal, P7 Multi-party, P8 Audit Reconstruction. CC BY 4.0 — run against any platform.</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/benchmark/vges" target="_blank" class="demo-link">View Benchmark →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>VGES Self-Assessment Run</h3>
+        <p>Runs the VGES benchmark against VeriSigil's own live endpoints. Returns actual results for all 8 properties. VeriSigil current score: 7.5/8. P7 PARTIAL — second signer not yet independently operated.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Benchmark/vges_run_v1_benchmark_vges_run_post" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DESIGN PARTNER PROGRAM -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Design Partner Program — One Workflow · 90 Days · Honest Reporting</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>Design Partner Specification</h3>
+        <p>Complete program specification: ideal partner profile, what you get, what we ask, pilot success definition (6 measurable criteria), and answers to all CTO objections including "why not build ourselves."</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/program/design-partner" target="_blank" class="demo-link">View Program →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- IMPLEMENTATION AUDIT -->
+  <!-- ============================================================ -->
+  <div style="margin-top:32px;">
+    <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(0,200,150,.7);margin-bottom:12px;">Implementation Audit — Honest Internal Record of Gaps, Fixes, and Roadmap</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+
+      <div class="demo-card">
+        <h3>TLA+ Impl-to-Spec Mapping</h3>
+        <p>Maps each TLA+ invariant (NoBypass, NoReplay) to the exact Python implementation. Self-assessed — same engineer wrote both. Independent audit pending. Honest about the gap.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Implementation%20Audit/impl_spec_mapping_v1_audit_impl_spec_mapping_get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Key Management Roadmap</h3>
+        <p>Current state (SHA256 env var) → Phase 2 AWS KMS → Phase 3 HSM FIPS 140-2 → Phase 4 MPC 5-of-7. Trigger for each phase stated. No overclaiming on key security.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Implementation%20Audit/audit_key_management_v1_audit_key_management_get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Second Signer Audit</h3>
+        <p>External co-signer status. OMNIX Quantum Ltd signed EWP-IWA-VERISIGIL-001. Three paths to genuine independence documented. Honest gap: AO co-signing not yet wired for CRITICAL/EMERGENCY.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Implementation%20Audit/audit_second_signer_v1_audit_second_signer_get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Adversarial Testing History</h3>
+        <p>Complete record of all attacks tried: Run 1, 2, 3. Attacks attempted, findings, results. Open attack surfaces listed honestly. Invitation to report vulnerabilities. Nothing patched silently.</p>
+        <a href="https://verisigil-api-production.up.railway.app/docs#/Implementation%20Audit/adversarial_history_v1_audit_adversarial_history_get" target="_blank" class="demo-link">Try it →</a>
+      </div>
+
+      <div class="demo-card">
+        <h3>Public Changelog</h3>
+        <p>Every significant finding, fix, and architectural decision in order. CHG-001 through CHG-011. Found by whom, root cause, fix, confirmation status. No silent patches. No auth required.</p>
+        <a href="https://verisigil-api-production.up.railway.app/v1/audit/changelog" target="_blank" class="demo-link">View Changelog →</a>
+      </div>
+
     </div>
   </div>
 

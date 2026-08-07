@@ -178,8 +178,8 @@ h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
     <div class="run">
       <div class="run-header">
         <span class="run-title">Run 3 · Independent Validation + Run 3b</span>
-        <span class="run-badge badge-complete">CLOSED</span>
-        <span class="run-date">2026-08-04 / 2026-08-06</span>
+        <span class="run-badge badge-complete">CLOSED · INDEPENDENTLY CONFIRMED</span>
+        <span class="run-date">2026-08-04 — 2026-08-07</span>
       </div>
       <div class="run-body">
         <div class="run-meta">
@@ -230,7 +230,7 @@ h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
         <p class="section-label" style="margin-bottom:12px;">Findings</p>
 
         <div class="finding finding-deviation">
-          <div class="finding-id">FINDING-R3-001 · SEVERITY: HIGH · STATUS: FIXED</div>
+          <div class="finding-id">FINDING-R3-001 · SEVERITY: HIGH · STATUS: CLOSED · CONFIRMED 2026-08-07</div>
           <div class="finding-title">CV-003 Deviation — HIGH irreversible + human present returns ALLOW instead of ESCALATE</div>
           <div class="finding-body">
             Conformance vector CV-003: HIGH consequence, transfer_funds, human_present=true, irreversible=true.
@@ -239,7 +239,7 @@ h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
             Human presence should strengthen governance, not weaken it. A present human means there is someone to escalate to — not a reason to bypass escalation.
             Control test (human_present=false) correctly returned DENY. The distinction between ALLOW and ESCALATE for human-present HIGH irreversible actions was not implemented.
           </div>
-          <div class="finding-fix">→ Fixed: Signal 3b HIGH_IRREVERSIBLE_ESCALATE added to _run_intercept. Awaiting independent re-validation by Alkama.</div>
+          <div class="finding-fix">→ CLOSED. Independently confirmed by Alkama Eqbal 2026-08-07: HIGH+irrev+human_present=true returns ESCALATE with HIGH_IRREVERSIBLE_ESCALATE signal. human_present=false control returns DENY. Both directions verified.</div>
         </div>
 
         <div class="finding finding-resolved">
@@ -257,7 +257,7 @@ h2.section-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
           <div class="finding-body">
             Root cause identified by Alkama from the state_hash value: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a is the SHA256 of an empty JSON object. state_verify was reading current_state_fields but callers sent state_fields (same field name as commit). current_fields was always {} — so every verify returned STATE_CHANGED regardless of actual state. Not a harness issue. A real engine bug. Fixed in CHG-010: state_verify now accepts state_fields OR current_state_fields.
           </div>
-          <div class="finding-fix">→ CHG-010 closed. Independently revalidated 2026-08-06: unchanged state → FRESH (committed_hash == current_hash = 5724b5f8...). Changed state → STATE_CHANGED + HALT. Both directions confirmed before messaging Alkama.</div>
+          <div class="finding-fix">→ CLOSED. Independently confirmed by Alkama Eqbal 2026-08-07: commit then verify unchanged fields returns FRESH with PROCEED. Verify modified fields returns STATE_CHANGED with HALT. Matches expected behaviour exactly.</div>
         </div>
 
         <div class="finding finding-resolved">

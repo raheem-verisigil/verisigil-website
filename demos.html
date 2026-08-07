@@ -3,928 +3,924 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VeriSigil AI — Interactive Demo Suite</title>
+<title>VeriSigil AI — Demo Suite &amp; API Reference</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:       #09111E;
-  --surface:  #1A2A3E;
-  --elevated: #243347;
-  --border:   rgba(255,255,255,.07);
-  --text:     #E6EDF6;
-  --muted:    #6B849E;
-  --faint:    #374A60;
-  --green:    #00C896;
-  --amber:    #F5A623;
-  --red:      #E05555;
-  --blue:     #4A9EFF;
-  --mono:     'IBM Plex Mono',monospace;
-  --sans:     'Inter',sans-serif;
+  --bg:#08111F;--surface:#182436;--elevated:#1E2E42;
+  --border:rgba(255,255,255,.07);--text:#E8EDF4;--muted:#6B849E;
+  --faint:#374A60;--green:#00C896;--amber:#F5A623;--red:#E05555;
+  --blue:#4A9EFF;--cyan:#00D4FF;
+  --mono:'IBM Plex Mono',monospace;--sans:'Inter',sans-serif;
 }
-html{-webkit-font-smoothing:antialiased;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;line-height:1.6;}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;min-height:100vh;}
 
-/* ── SHELL ── */
-.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
-@media(max-width:800px){.shell{grid-template-columns:1fr;}}
+/* ── NAV ── */
+nav{border-bottom:1px solid var(--border);padding:13px 0;position:sticky;top:0;z-index:200;
+  background:rgba(8,17,31,.97);backdrop-filter:blur(12px);}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.nav-brand{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);text-decoration:none;}
+.nav-brand span{color:var(--green);}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;}
+.nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;padding:5px 10px;border:1px solid transparent;
+  transition:color .15s,border-color .15s;}
+.nav-links a:hover{color:var(--green);border-color:rgba(0,200,150,.2);}
+.nav-links a.active{color:var(--green);border-color:rgba(0,200,150,.3);}
 
-/* ── RAIL ── */
-.rail{
-  border-right:1px solid var(--border);
-  padding:32px 24px;
-  display:flex;flex-direction:column;gap:32px;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
-}
-@media(max-width:800px){.rail{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border);}}
-.brand-mark{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
-.brand h1{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--text);line-height:1.3;}
-.brand p{font-size:11px;color:var(--muted);margin-top:4px;}
+/* ── LAYOUT ── */
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px;}
 
-.nav-items{display:flex;flex-direction:column;gap:2px;}
-.nav-btn{
-  all:unset;cursor:pointer;
-  padding:11px 12px;
-  border-left:2px solid transparent;
-  display:flex;flex-direction:column;gap:2px;
-  transition:background .15s,border-color .15s;
-}
-.nav-btn:hover{background:rgba(255,255,255,.03);}
-.nav-btn.active{border-left-color:var(--green);background:rgba(0,200,150,.04);}
-.nav-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
-.nav-btn.active .nav-eyebrow{color:var(--green);}
-.nav-label{font-size:13px;font-weight:500;color:var(--text);}
-.nav-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+/* ── HERO ── */
+.hero{padding:60px 0 48px;border-bottom:1px solid var(--border);}
+.hero-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--green);margin-bottom:14px;}
+.hero h1{font-size:clamp(24px,4vw,40px);font-weight:700;line-height:1.15;letter-spacing:-.02em;
+  margin-bottom:12px;}
+.hero h1 span{color:var(--green);}
+.hero-sub{font-size:16px;color:var(--muted);max-width:580px;line-height:1.75;margin-bottom:24px;}
+.hero-stats{display:flex;gap:32px;flex-wrap:wrap;}
+.hero-stat{display:flex;flex-direction:column;gap:2px;}
+.hs-num{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--green);}
+.hs-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
 
-.rail-note{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);font-size:10.5px;color:var(--faint);line-height:1.6;}
+/* ── TABS ── */
+.tabs{display:flex;gap:2px;padding:20px 0 0;border-bottom:1px solid var(--border);overflow-x:auto;}
+.tab-btn{all:unset;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);padding:10px 16px;border-bottom:2px solid transparent;
+  white-space:nowrap;transition:all .15s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);}
 
-/* ── MAIN ── */
-main{padding:44px 48px 80px;max-width:860px;}
-@media(max-width:800px){main{padding:28px 20px 60px;}}
+/* ── TAB PANELS ── */
+.tab-panel{display:none;padding:40px 0;}
+.tab-panel.active{display:block;}
 
-.panel{display:none;}
-.panel.active{display:block;animation:fadeIn .2s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+/* ── INTERACTIVE DEMO PANELS (Tab 1) ── */
+.demo-shell{display:grid;grid-template-columns:240px 1fr;gap:0;border:1px solid var(--border);min-height:500px;}
+@media(max-width:700px){.demo-shell{grid-template-columns:1fr;}}
+.demo-rail{border-right:1px solid var(--border);padding:20px 0;display:flex;flex-direction:column;gap:2px;}
+.demo-nav-btn{all:unset;cursor:pointer;padding:10px 16px;display:flex;flex-direction:column;gap:2px;
+  border-left:2px solid transparent;transition:background .15s,border-color .15s;}
+.demo-nav-btn:hover{background:rgba(255,255,255,.03);}
+.demo-nav-btn.active{border-left-color:var(--green);background:rgba(0,200,150,.04);}
+.dnb-eye{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+.demo-nav-btn.active .dnb-eye{color:var(--green);}
+.dnb-label{font-size:12.5px;font-weight:500;}
+.dnb-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.demo-content{padding:28px 32px;}
+.demo-panel{display:none;}
+.demo-panel.active{display:block;animation:fadeUp .2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+.dp-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.dp-title{font-size:20px;font-weight:600;margin-bottom:8px;letter-spacing:-.01em;}
+.dp-sub{font-size:13px;color:var(--muted);max-width:500px;line-height:1.7;margin-bottom:20px;}
+.btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  padding:9px 18px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.04em;
+  border-radius:2px;transition:all .15s;}
+.btn-p{background:var(--green);color:#08111F;}.btn-p:hover{opacity:.88;}
+.btn-p:disabled{opacity:.3;cursor:not-allowed;}
+.btn-s{border:1px solid var(--faint);color:var(--muted);}.btn-s:hover{border-color:var(--text);color:var(--text);}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
 
-.panel-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
-.panel-title{font-size:26px;font-weight:600;line-height:1.2;margin-bottom:8px;letter-spacing:-.01em;}
-.panel-sub{font-size:14px;color:var(--muted);max-width:56ch;margin-bottom:28px;line-height:1.7;}
+/* Journey steps */
+.j-step{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.03);
+  opacity:.12;transition:opacity .35s;}
+.j-step:last-child{border-bottom:none;}
+.j-step.lit{opacity:1;}
+.j-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:22px;flex-shrink:0;padding-top:2px;}
+.j-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.j-label.g{color:var(--green);}.j-label.r{color:var(--red);}
+.j-text{font-size:12.5px;}.j-detail{font-size:11px;color:var(--muted);margin-top:2px;}
 
-/* ── BUTTONS ── */
-.btn{
-  all:unset;cursor:pointer;
-  display:inline-flex;align-items:center;gap:8px;
-  padding:10px 20px;
-  font-family:var(--mono);font-size:12px;font-weight:500;
-  letter-spacing:.04em;
-  border-radius:2px;
-  transition:all .15s;
-}
-.btn-primary{background:var(--green);color:#09111E;}
-.btn-primary:hover{opacity:.88;}
-.btn-primary:disabled{opacity:.35;cursor:not-allowed;}
-.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--faint);}
-.btn-secondary:hover{border-color:var(--text);}
-.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
-
-/* ── DIVIDER ── */
-.rule{height:1px;background:var(--border);margin:28px 0;}
-
-/* ── POLICY SCENARIOS ── */
-.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-@media(max-width:600px){.scenario-grid{grid-template-columns:1fr;}}
-.scenario-card{
-  all:unset;cursor:pointer;
+/* Gates */
+.gate-list{display:flex;flex-direction:column;gap:3px;margin:16px 0;}
+.gate{display:flex;align-items:center;gap:12px;padding:10px 14px;
   background:var(--surface);border:1px solid var(--border);
-  padding:14px 16px;
-  transition:border-color .15s;
-}
-.scenario-card:hover{border-color:var(--faint);}
-.scenario-card.selected{border-color:var(--green);background:rgba(0,200,150,.04);}
-.scenario-tag{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:5px;}
-.scenario-title{font-size:12.5px;color:var(--text);line-height:1.4;}
+  opacity:.2;transition:opacity .4s,border-color .4s,background .4s;}
+.gate.lit.p{opacity:1;border-color:rgba(0,200,150,.3);background:rgba(0,200,150,.04);}
+.gate.lit.f{opacity:1;border-color:rgba(224,85,85,.3);background:rgba(224,85,85,.04);}
+.gate.lit.r{opacity:.7;border-color:rgba(74,158,255,.3);animation:gp .8s infinite;}
+@keyframes gp{0%,100%{opacity:.5;}50%{opacity:1;}}
+.gate-n{font-family:var(--mono);font-size:10px;color:var(--faint);width:22px;}
+.gate-name{font-size:12.5px;flex:1;}
+.gate-reason{font-size:11px;color:var(--muted);display:block;margin-top:2px;}
+.gate-status{font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 7px;}
+.gs-p{background:rgba(0,200,150,.1);color:var(--green);}
+.gs-f{background:rgba(224,85,85,.08);color:var(--red);}
+.gs-r{background:rgba(74,158,255,.08);color:var(--blue);}
 
-/* ── VERDICT ── */
-.verdict-box{border:1px solid var(--border);background:var(--surface);overflow:hidden;margin-top:20px;}
-.verdict-header{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
-.verdict-header.allow{background:rgba(0,200,150,.06);border-color:rgba(0,200,150,.2);}
-.verdict-header.deny{background:rgba(224,85,85,.06);border-color:rgba(224,85,85,.2);}
-.verdict-header.escalate{background:rgba(245,166,35,.05);border-color:rgba(245,166,35,.2);}
-.verdict-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;flex-shrink:0;border:1.5px solid;}
-.verdict-header.allow .verdict-icon{color:var(--green);border-color:var(--green);}
-.verdict-header.deny .verdict-icon{color:var(--red);border-color:var(--red);}
-.verdict-header.escalate .verdict-icon{color:var(--amber);border-color:var(--amber);}
-.verdict-word{font-family:var(--mono);font-size:16px;font-weight:600;margin-left:12px;}
-.verdict-header.allow .verdict-word{color:var(--green);}
-.verdict-header.deny .verdict-word{color:var(--red);}
-.verdict-header.escalate .verdict-word{color:var(--amber);}
-.verdict-sub{font-size:12px;color:var(--muted);margin-left:12px;margin-top:1px;}
-.score-block{font-family:var(--mono);text-align:right;font-size:11px;color:var(--muted);}
-.score-num{font-size:18px;color:var(--text);display:block;}
+/* Drift */
+.drift-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
+@media(max-width:500px){.drift-grid{grid-template-columns:1fr;}}
+.drift-col{background:var(--surface);border:1px solid var(--border);padding:14px;}
+.drift-col.anom{border-color:rgba(224,85,85,.25);}
+.dc-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.drift-col.anom .dc-label{color:var(--red);}
+.bar-row{margin-bottom:9px;}
+.bar-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;}
+.bar-pct{font-family:var(--mono);font-size:11px;color:var(--text);}
+.bar-track{height:5px;background:rgba(255,255,255,.05);}
+.bar-fill{height:100%;width:0;transition:width 1s ease;}
+.bf-g{background:var(--green);}.bf-b{background:var(--blue);}.bf-r{background:var(--red);}
+.sim-box{background:var(--surface);border:1px solid var(--border);padding:14px;margin:12px 0;}
+.sim-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.sim-val{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--green);transition:color .5s;}
+.sim-val.drop{color:var(--amber);}.sim-val.crit{color:var(--red);}
+.sim-track{height:6px;background:rgba(255,255,255,.05);margin-top:6px;}
+.sim-fill{height:100%;background:var(--green);transition:width .8s ease,background .5s;}
+.q-alert{padding:14px;background:rgba(224,85,85,.06);border:1px solid rgba(224,85,85,.2);
+  margin-top:14px;display:none;}
+.q-alert.vis{display:block;animation:fadeUp .3s ease;}
+.q-title{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:.06em;margin-bottom:6px;}
+.q-line{font-family:var(--mono);font-size:11px;color:var(--muted);padding:2px 0;}
 
-.invariant-list{padding:16px 20px;}
-.inv-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.inv-row:last-child{border-bottom:none;}
-.inv-icon{font-family:var(--mono);font-size:12px;width:14px;flex-shrink:0;margin-top:1px;}
-.inv-icon.pass{color:var(--green);}
-.inv-icon.fail{color:var(--red);}
-.inv-name{font-size:12.5px;font-weight:500;}
-.inv-detail{font-size:11.5px;color:var(--muted);margin-top:2px;}
-
-/* ── ANIMATED GATES ── */
-.gate-sequence{display:flex;flex-direction:column;gap:3px;margin:20px 0;}
-.gate-item{
-  display:flex;align-items:center;gap:14px;
-  padding:12px 16px;
-  background:var(--surface);border:1px solid var(--border);
-  opacity:.25;
-  transition:opacity .4s ease,border-color .4s ease,background .4s ease;
-}
-.gate-item.lit.pass{opacity:1;border-color:rgba(0,200,150,.3);background:rgba(0,200,150,.04);}
-.gate-item.lit.fail{opacity:1;border-color:rgba(224,85,85,.3);background:rgba(224,85,85,.04);}
-.gate-item.lit.running{opacity:.7;border-color:rgba(74,158,255,.3);animation:pulse .8s infinite;}
-@keyframes pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
-.gate-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:24px;flex-shrink:0;}
-.gate-name{font-size:13px;font-weight:500;flex:1;}
-.gate-status{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:3px 8px;}
-.gate-status.pass{background:rgba(0,200,150,.1);color:var(--green);}
-.gate-status.fail{background:rgba(224,85,85,.08);color:var(--red);}
-.gate-status.running{background:rgba(74,158,255,.08);color:var(--blue);}
-
-/* ── BEHAVIORAL DRIFT ── */
-.drift-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
-@media(max-width:600px){.drift-grid{grid-template-columns:1fr;}}
-.drift-col{background:var(--surface);border:1px solid var(--border);padding:18px;}
-.drift-col-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
-.drift-col.anomalous{border-color:rgba(224,85,85,.25);}
-.drift-col.anomalous .drift-col-label{color:var(--red);}
-
-.behavior-bar{margin-bottom:10px;}
-.bar-label{font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px;}
-.bar-label .pct{font-family:var(--mono);font-size:11px;color:var(--text);}
-.bar-track{height:6px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:1px;width:0;transition:width 1s ease;}
-.bar-fill.normal{background:var(--green);}
-.bar-fill.danger{background:var(--red);}
-.bar-fill.muted{background:var(--blue);}
-
-.similarity-meter{
-  margin:16px 0;
-  padding:16px;
-  background:var(--surface);border:1px solid var(--border);
-}
-.sim-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.sim-value{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--green);transition:color .5s;}
-.sim-value.dropping{color:var(--amber);}
-.sim-value.critical{color:var(--red);}
-.sim-bar-track{height:8px;background:rgba(255,255,255,.05);margin-top:8px;border-radius:1px;overflow:hidden;}
-.sim-bar-fill{height:100%;background:var(--green);transition:width .8s ease,background .5s;}
-
-.quarantine-alert{
-  padding:16px;
-  background:rgba(224,85,85,.06);
-  border:1px solid rgba(224,85,85,.2);
-  margin-top:16px;
-  display:none;
-}
-.quarantine-alert.visible{display:block;animation:fadeIn .3s ease;}
-.qa-title{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.06em;margin-bottom:8px;}
-.qa-line{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:2px 0;}
-
-/* ── IATP NEGOTIATION ── */
-.agent-pair{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:12px;margin-bottom:20px;}
-.agent-card{background:var(--surface);border:1px solid var(--border);padding:14px 16px;}
-.agent-who{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-.agent-name{font-size:13px;font-weight:500;}
-.agent-org{font-size:11.5px;color:var(--muted);margin-top:2px;}
-.agent-vs{font-family:var(--mono);font-size:12px;color:var(--faint);text-align:center;}
-
-.neg-steps{display:flex;flex-direction:column;gap:2px;}
-.neg-step{
-  display:flex;gap:12px;
-  padding:12px;
-  background:var(--surface);border:1px solid var(--border);
-  opacity:.2;transition:opacity .35s ease;
-}
-.neg-step.revealed{opacity:1;}
-.neg-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:20px;flex-shrink:0;padding-top:1px;}
-.neg-body{flex:1;}
-.neg-title{font-size:12.5px;font-weight:500;margin-bottom:5px;}
-.neg-line{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:1.5px 0;}
-.neg-line.pass::before{content:"✓ ";color:var(--green);}
-.neg-line.fail::before{content:"✗ ";color:var(--red);}
+/* IATP */
+.agent-pair{display:grid;grid-template-columns:1fr 36px 1fr;align-items:center;gap:10px;margin-bottom:16px;}
+.agent-card{background:var(--surface);border:1px solid var(--border);padding:12px 14px;}
+.ac-who{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.ac-name{font-size:12.5px;font-weight:500;}.ac-org{font-size:11px;color:var(--muted);margin-top:2px;}
+.neg-step{display:flex;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);
+  margin-bottom:2px;opacity:.15;transition:opacity .35s;}
+.neg-step.lit{opacity:1;}
+.neg-n{font-family:var(--mono);font-size:10px;color:var(--faint);width:18px;flex-shrink:0;padding-top:1px;}
+.neg-body{flex:1;}.neg-title{font-size:12.5px;font-weight:500;margin-bottom:4px;}
+.neg-line{font-family:var(--mono);font-size:11px;color:var(--muted);padding:1.5px 0;}
+.neg-line.p::before{content:"✓ ";color:var(--green);}
+.neg-line.f::before{content:"✗ ";color:var(--red);}
 .neg-line.halt{color:var(--red);font-weight:500;}
 .neg-line.halt::before{content:"⛔ ";}
 
-/* ── RECEIPT ── */
-.receipt{
-  border:1px solid rgba(0,200,150,.25);
-  background:rgba(0,200,150,.03);
-  padding:0;
-  margin-top:24px;
-  overflow:hidden;
-  font-family:var(--mono);
-}
-.receipt-header{
-  background:rgba(0,200,150,.08);
-  border-bottom:1px solid rgba(0,200,150,.2);
-  padding:14px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.receipt-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);}
-.receipt-id{font-size:10px;color:var(--muted);}
-.receipt-body{padding:20px;}
-.receipt-row{
-  display:grid;grid-template-columns:160px 1fr;
-  gap:8px;
-  padding:6px 0;
-  border-bottom:1px solid rgba(255,255,255,.03);
-  font-size:11.5px;
-  opacity:0;
-  transform:translateY(4px);
-  transition:opacity .3s ease,transform .3s ease;
-}
-.receipt-row:last-child{border-bottom:none;}
-.receipt-row.printed{opacity:1;transform:translateY(0);}
-.receipt-key{color:var(--muted);}
-.receipt-val{color:var(--text);}
-.receipt-val.green{color:var(--green);}
-.receipt-val.red{color:var(--red);}
-.receipt-val.amber{color:var(--amber);}
-.receipt-footer{
-  border-top:1px solid rgba(0,200,150,.15);
-  padding:12px 20px;
-  font-size:10px;color:var(--muted);
-  display:flex;align-items:center;gap:8px;
-}
-.receipt-footer::before{content:"§";color:var(--green);font-size:14px;}
+/* Receipt */
+.receipt{border:1px solid rgba(0,200,150,.2);background:rgba(0,200,150,.02);overflow:hidden;margin-top:16px;}
+.receipt-hdr{background:rgba(0,200,150,.07);border-bottom:1px solid rgba(0,200,150,.15);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.r-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);}
+.r-id{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.receipt-body{padding:16px 18px;}
+.r-row{display:grid;grid-template-columns:150px 1fr;gap:6px;padding:5px 0;
+  border-bottom:1px solid rgba(255,255,255,.02);font-size:11px;
+  opacity:0;transform:translateY(3px);transition:opacity .25s,transform .25s;}
+.r-row:last-child{border-bottom:none;}
+.r-row.printed{opacity:1;transform:translateY(0);}
+.r-k{font-family:var(--mono);color:var(--muted);}
+.r-v{font-family:var(--mono);color:var(--text);}
+.r-v.g{color:var(--green);}.r-v.r{color:var(--red);}.r-v.a{color:var(--amber);}
+.receipt-foot{border-top:1px solid rgba(0,200,150,.12);padding:10px 18px;
+  font-family:var(--mono);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px;}
+.receipt-foot::before{content:"§";color:var(--green);font-size:13px;}
 
-/* ── APPEAL ── */
-.policy-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--surface);border:1px solid var(--border);
-  padding:14px 18px;margin-bottom:16px;flex-wrap:wrap;gap:8px;
-}
-.policy-id{font-family:var(--mono);font-size:11px;color:var(--muted);}
-.policy-name{font-size:13px;margin-top:2px;}
-.chip{font-family:var(--mono);font-size:10px;padding:4px 10px;letter-spacing:.04em;}
-.chip.legit{background:rgba(0,200,150,.08);color:var(--green);border:1px solid rgba(0,200,150,.2);}
-.chip.revoked{background:rgba(224,85,85,.06);color:var(--red);border:1px solid rgba(224,85,85,.2);}
-.chip.pending{background:rgba(245,166,35,.06);color:var(--amber);border:1px solid rgba(245,166,35,.2);}
+/* Appeal */
+.policy-bar{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--border);padding:12px 16px;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.chip{font-family:var(--mono);font-size:10px;padding:3px 9px;letter-spacing:.04em;}
+.chip-g{background:rgba(0,200,150,.08);color:var(--green);border:1px solid rgba(0,200,150,.2);}
+.chip-r{background:rgba(224,85,85,.06);color:var(--red);border:1px solid rgba(224,85,85,.2);}
+.chip-a{background:rgba(245,166,35,.06);color:var(--amber);border:1px solid rgba(245,166,35,.2);}
+.flow-card{background:var(--surface);border:1px solid var(--border);padding:14px;margin-bottom:8px;}
+.flow-role{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.flow-grounds{font-size:12.5px;font-weight:500;margin-bottom:3px;}
+.flow-ev{font-size:11.5px;color:var(--muted);line-height:1.5;}
+.result-card{padding:12px 14px;border-left:2px solid var(--red);background:rgba(224,85,85,.04);margin:10px 0;}
+.result-card.pend{border-left-color:var(--amber);background:rgba(245,166,35,.04);}
+.result-line{font-family:var(--mono);font-size:11px;padding:2px 0;}
 
-.flow-card{background:var(--surface);border:1px solid var(--border);padding:16px;margin-bottom:10px;}
-.flow-role{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-.flow-grounds{font-size:13px;margin-bottom:4px;}
-.flow-evidence{font-size:12px;color:var(--muted);line-height:1.5;}
-.result-card{padding:14px;border-left:2px solid var(--red);background:rgba(224,85,85,.04);margin:12px 0;}
-.result-card.pending{border-left-color:var(--amber);background:rgba(245,166,35,.04);}
-.result-line{font-family:var(--mono);font-size:11.5px;padding:2px 0;color:var(--text);}
+/* ── API REFERENCE SECTIONS (Tabs 2-9) ── */
+.section-header{padding:32px 0 20px;}
+.section-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.section-title{font-size:22px;font-weight:700;letter-spacing:-.015em;margin-bottom:6px;}
+.section-desc{font-size:14px;color:var(--muted);max-width:600px;line-height:1.7;margin-bottom:24px;}
 
-/* ── REASONING PANEL ── */
-.reasoning-block{
-  background:var(--surface);border:1px solid var(--border);
-  padding:18px;margin-top:16px;
-}
-.reasoning-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
-.reasoning-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.reasoning-row:last-child{border-bottom:none;}
-.reasoning-check{font-family:var(--mono);font-size:12px;color:var(--green);width:14px;flex-shrink:0;}
-.reasoning-text{font-size:12.5px;color:var(--text);}
-.reasoning-detail{font-size:11px;color:var(--muted);margin-top:2px;}
+/* Featured block */
+.featured{background:var(--surface);border:1px solid var(--border);padding:20px 24px;margin-bottom:20px;}
+.feat-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.feat-title{font-size:16px;font-weight:600;margin-bottom:6px;}
+.feat-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;}
+.feat-stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;}
+.fs-num{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--green);display:block;}
+.fs-label{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
+.feat-links{display:flex;gap:8px;flex-wrap:wrap;}
+.feat-link{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:7px 14px;text-decoration:none;transition:all .15s;}
+.feat-link-p{background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.3);color:var(--green);}
+.feat-link-s{border:1px solid rgba(74,158,255,.2);color:var(--blue);}
+.feat-link-p:hover,.feat-link-s:hover{opacity:.8;}
 
-/* ── JOURNEY TIMELINE ── */
-.journey-step{
-  display:flex;gap:14px;
-  padding:14px 0;
-  border-bottom:1px solid rgba(255,255,255,.03);
-  opacity:.15;
-  transition:opacity .4s ease;
-}
-.journey-step:last-child{border-bottom:none;}
-.journey-step.revealed{opacity:1;}
-.j-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:24px;flex-shrink:0;padding-top:2px;}
-.j-body{flex:1;}
-.j-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-.j-label.green{color:var(--green);}
-.j-label.red{color:var(--red);}
-.j-text{font-size:13px;color:var(--text);}
-.j-detail{font-size:11.5px;color:var(--muted);margin-top:2px;}
+/* Card grid */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;}
+.card{background:var(--surface);border:1px solid var(--border);padding:16px;transition:border-color .15s;}
+.card:hover{border-color:var(--faint);}
+.card.amber{border-color:rgba(245,166,35,.15);}
+.card.blue{border-color:rgba(74,158,255,.1);}
+.card h3{font-size:13px;font-weight:600;margin-bottom:5px;}
+.card p{font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:10px;}
+.card a{font-family:var(--mono);font-size:10px;color:var(--green);text-decoration:none;letter-spacing:.04em;}
+.card a:hover{text-decoration:underline;}
+.card-tag{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:5px;display:block;}
+
+/* Inline section label */
+.group-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+
+/* Trust links block */
+.trust-row{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0;}
+.trust-chip{font-family:var(--mono);font-size:10px;padding:6px 12px;text-decoration:none;
+  border:1px solid var(--border);color:var(--muted);transition:all .15s;}
+.trust-chip:hover{border-color:var(--green);color:var(--green);}
+
+/* Scenario picker */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+@media(max-width:500px){.scenario-grid{grid-template-columns:1fr;}}
+.scenario{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--border);
+  padding:12px 14px;display:block;transition:border-color .15s;}
+.scenario:hover{border-color:var(--faint);}
+.scenario.sel{border-color:var(--green);background:rgba(0,200,150,.04);}
+.sc-tag{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:4px;}
+.sc-title{font-size:12px;color:var(--text);line-height:1.4;}
+
+/* Reasoning block */
+.reasoning{background:var(--surface);border:1px solid rgba(74,158,255,.15);padding:16px;margin-top:14px;}
+.reas-title{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
+.reas-row{display:flex;align-items:flex-start;gap:9px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.reas-row:last-child{border-bottom:none;}
+.reas-chk{font-family:var(--mono);font-size:12px;color:var(--green);width:14px;flex-shrink:0;}
+.reas-txt{font-size:12px;}.reas-det{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:24px 0;margin-top:40px;}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.foot-text{font-family:var(--mono);font-size:11px;color:var(--faint);}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap;}
+.foot-links a{font-family:var(--mono);font-size:11px;color:var(--faint);text-decoration:none;}
+.foot-links a:hover{color:var(--green);}
+
+@media(max-width:600px){.hero-stats{gap:20px;}.card-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<div class="shell">
-
-<nav class="rail">
-  <div class="brand">
-    <div class="brand-mark">VeriSigil AI</div>
-    <h1>Interactive<br>Demo Suite</h1>
-    <p>Governance made verifiable</p>
+<nav>
+  <div class="nav-inner">
+    <a href="https://verisigilai.com" class="nav-brand">VeriSigil<span>AI</span></a>
+    <div class="nav-links">
+      <a href="#demos" class="tab-trigger active" data-tab="demos">Demo</a>
+      <a href="#runtime" class="tab-trigger" data-tab="runtime">Runtime</a>
+      <a href="#delegation" class="tab-trigger" data-tab="delegation">Delegation</a>
+      <a href="#security" class="tab-trigger" data-tab="security">Security</a>
+      <a href="#eu-ai" class="tab-trigger" data-tab="eu-ai">EU AI Act</a>
+      <a href="#evidence" class="tab-trigger" data-tab="evidence">Evidence</a>
+      <a href="#trust" class="tab-trigger" data-tab="trust">Trust</a>
+      <a href="/validation.html" style="color:var(--green);">Validation</a>
+      <a href="/runs.html" style="color:var(--amber);">Run History</a>
+      <a href="/verification-reports.html" style="color:var(--blue);">Reports</a>
+    </div>
   </div>
-
-  <div class="nav-items">
-    <button class="nav-btn active" data-panel="journey">
-      <span class="nav-eyebrow">Start Here · 2 min</span>
-      <span class="nav-label">Guided Journey</span>
-      <span class="nav-desc">One agent, one action, every checkpoint</span>
-    </button>
-    <button class="nav-btn" data-panel="policy">
-      <span class="nav-eyebrow">Policy Check</span>
-      <span class="nav-label">Admissibility Engine</span>
-      <span class="nav-desc">Animated gate evaluation</span>
-    </button>
-    <button class="nav-btn" data-panel="drift">
-      <span class="nav-eyebrow">Behavior</span>
-      <span class="nav-label">Behavioral Drift</span>
-      <span class="nav-desc">Live fingerprint comparison</span>
-    </button>
-    <button class="nav-btn" data-panel="iatp">
-      <span class="nav-eyebrow">Agent Trust</span>
-      <span class="nav-label">Inter-AI Negotiation</span>
-      <span class="nav-desc">Two agents establish trust</span>
-    </button>
-    <button class="nav-btn" data-panel="appeal">
-      <span class="nav-eyebrow">Appeals</span>
-      <span class="nav-label">Challenge &amp; Appeal</span>
-      <span class="nav-desc">Legitimacy is contestable</span>
-    </button>
-    <button class="nav-btn" data-panel="receipt">
-      <span class="nav-eyebrow">Evidence</span>
-      <span class="nav-label">Governance Receipt</span>
-      <span class="nav-desc">The sealed artifact</span>
-    </button>
-  </div>
-
-  <div class="rail-note">Scripted scenarios illustrating live governance. Full API reference with 144 live endpoints: <a href="/api-demos.html" style="color:var(--green);">api-demos.html →</a><br><br>Live endpoints: verisigil-api-production.up.railway.app · key: vs-sandbox-demo-2026b</div>
 </nav>
 
-<main>
-
-<!-- ── GUIDED JOURNEY ── -->
-<section class="panel active" id="panel-journey">
-  <div class="panel-kicker">The Full Path</div>
-  <h2 class="panel-title">One agent. One action. Every checkpoint.</h2>
-  <p class="panel-sub">A purchasing agent authorized up to $10,000 attempts an $85,000 wire transfer. Watch every governance layer activate in sequence — and see the receipt that proves it all happened.</p>
-
-  <div class="btn-row">
-    <button class="btn btn-primary" id="run-journey">Play Journey →</button>
+<div class="wrap">
+<header class="hero">
+  <div class="hero-kicker">VeriSigil AI — Demo Suite &amp; API Reference</div>
+  <h1>The <span>Constitutional Execution Layer</span><br>for Autonomous AI.</h1>
+  <p class="hero-sub">Before any autonomous AI action executes, VeriSigil AI verifies that the AI has the authority to perform that action. Every claim is independently testable.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="hs-num">~951</span><span class="hs-label">Live Endpoints</span></div>
+    <div class="hero-stat"><span class="hs-num">3</span><span class="hs-label">Validation Runs</span></div>
+    <div class="hero-stat"><span class="hs-num">0</span><span class="hs-label">Fail-Opens</span></div>
+    <div class="hero-stat"><span class="hs-num">10</span><span class="hs-label">Public Proofs</span></div>
   </div>
+</header>
 
-  <div id="journey-steps"></div>
-</section>
-
-<!-- ── ADMISSIBILITY ENGINE ── -->
-<section class="panel" id="panel-policy">
-  <div class="panel-kicker">Policy Admissibility</div>
-  <h2 class="panel-title">Should this rule be allowed to execute?</h2>
-  <p class="panel-sub">Select a governance policy. Six gates evaluate it sequentially — watch them light up in real time. A policy that fails any gate cannot execute on any VeriSigil-governed system.</p>
-
-  <div class="scenario-grid" id="policy-grid"></div>
-
-  <div class="btn-row">
-    <button class="btn btn-primary" id="run-policy" disabled>Evaluate Policy →</button>
-  </div>
-
-  <div id="gate-sequence" class="gate-sequence" style="display:none;"></div>
-  <div id="policy-result" style="display:none;"></div>
-  <div id="reasoning-panel" style="display:none;"></div>
-</section>
-
-<!-- ── BEHAVIORAL DRIFT ── -->
-<section class="panel" id="panel-drift">
-  <div class="panel-kicker">AI Immune System</div>
-  <h2 class="panel-title">A valid identity. Acting outside its baseline.</h2>
-  <p class="panel-sub">Identity checks alone don't catch this. The agent's credentials stay valid throughout. What changes is the shape of its actions — tracked in real time against the established baseline.</p>
-
-  <div class="btn-row">
-    <button class="btn btn-primary" id="run-drift">Run Behavioral Analysis →</button>
-  </div>
-
-  <div id="drift-display" style="display:none;">
-    <div class="drift-grid">
-      <div class="drift-col" id="baseline-col">
-        <div class="drift-col-label">Baseline (Days 1–5)</div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Read documents</span><span class="pct" id="b-read">0%</span></div>
-          <div class="bar-track"><div class="bar-fill normal" id="bf-read" style="width:0%"></div></div>
-        </div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Search &amp; query</span><span class="pct" id="b-search">0%</span></div>
-          <div class="bar-track"><div class="bar-fill muted" id="bf-search" style="width:0%"></div></div>
-        </div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Summarize &amp; report</span><span class="pct" id="b-report">0%</span></div>
-          <div class="bar-track"><div class="bar-fill muted" id="bf-report" style="width:0%"></div></div>
-        </div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Secret enumeration</span><span class="pct" id="b-enum">0%</span></div>
-          <div class="bar-track"><div class="bar-fill danger" id="bf-enum" style="width:0%"></div></div>
-        </div>
-      </div>
-
-      <div class="drift-col anomalous" id="session-col">
-        <div class="drift-col-label">Current Session (Day 6)</div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Read documents</span><span class="pct" id="s-read">0%</span></div>
-          <div class="bar-track"><div class="bar-fill normal" id="sf-read" style="width:0%"></div></div>
-        </div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Search &amp; query</span><span class="pct" id="s-search">0%</span></div>
-          <div class="bar-track"><div class="bar-fill muted" id="sf-search" style="width:0%"></div></div>
-        </div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Summarize &amp; report</span><span class="pct" id="s-report">0%</span></div>
-          <div class="bar-track"><div class="bar-fill muted" id="sf-report" style="width:0%"></div></div>
-        </div>
-        <div class="behavior-bar">
-          <div class="bar-label"><span>Secret enumeration</span><span class="pct" id="s-enum">0%</span></div>
-          <div class="bar-track"><div class="bar-fill danger" id="sf-enum" style="width:0%"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="similarity-meter">
-      <div class="sim-label">Behavioral Similarity Score</div>
-      <div class="sim-value" id="sim-value">—</div>
-      <div class="sim-bar-track">
-        <div class="sim-bar-fill" id="sim-bar" style="width:0%;"></div>
-      </div>
-    </div>
-
-    <div class="quarantine-alert" id="quarantine-alert">
-      <div class="qa-title">⛔ AUTONOMOUS RESPONSE TRIGGERED</div>
-      <div class="qa-line">14:32:07 — Intent drift detected (similarity dropped below threshold)</div>
-      <div class="qa-line">14:32:07 — Consequence tier escalation flagged (LOW → CRITICAL)</div>
-      <div class="qa-line">14:32:08 — Authority escalation attempt blocked</div>
-      <div class="qa-line">14:32:08 — All IATP sessions suspended</div>
-      <div class="qa-line">14:32:08 — Quarantine receipt sealed · Ed25519 signed</div>
-      <div class="qa-line" style="margin-top:8px;color:var(--text);">Human supervisor notified. Agent cannot resume without re-verification.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ── IATP ── -->
-<section class="panel" id="panel-iatp">
-  <div class="panel-kicker">Inter-AI Trust Protocol</div>
-  <h2 class="panel-title">Two AI agents, meeting for the first time.</h2>
-  <p class="panel-sub">Before any message is exchanged, identity, authority, and capability are verified on both sides. One side fails — no communication. No exception. This is TLS for autonomous agents.</p>
-
-  <div class="agent-pair">
-    <div class="agent-card">
-      <div class="agent-who">Agent A</div>
-      <div class="agent-name">Claims-Review-7</div>
-      <div class="agent-org">Requests: market_data_read</div>
-    </div>
-    <div class="agent-vs">⇄</div>
-    <div class="agent-card">
-      <div class="agent-who">Agent B</div>
-      <div class="agent-name">Trading-Agent-3</div>
-      <div class="agent-org">Permits: market_data_read, trade_execute</div>
-    </div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn btn-primary" id="run-iatp-clean">Start Negotiation →</button>
-    <button class="btn btn-secondary" id="run-iatp-attack">Inject Malicious Agent</button>
-  </div>
-
-  <div class="neg-steps" id="iatp-steps"></div>
-</section>
-
-<!-- ── APPEAL ── -->
-<section class="panel" id="panel-appeal">
-  <div class="panel-kicker">Challenge &amp; Appeal</div>
-  <h2 class="panel-title">Legitimacy is provable. Not permanent.</h2>
-  <p class="panel-sub">A policy approved yesterday can be revoked by new precedent today — and a revocation can itself be appealed. Governance over governance, modeled as a state machine.</p>
-
-  <div class="policy-bar">
-    <div>
-      <div class="policy-id">POLICY P-2026-0892</div>
-      <div class="policy-name">Autonomous drone surveillance — public spaces</div>
-    </div>
-    <div class="chip legit" id="policy-chip">LEGITIMATE — proven 2026-07-15</div>
-  </div>
-
-  <div class="btn-row" id="appeal-controls">
-    <button class="btn btn-primary" id="run-challenge">File Challenge →</button>
-  </div>
-  <div id="appeal-flow"></div>
-</section>
-
-<!-- ── RECEIPT ── -->
-<section class="panel" id="panel-receipt">
-  <div class="panel-kicker">Governance Receipt</div>
-  <h2 class="panel-title">The artifact that proves governance happened.</h2>
-  <p class="panel-sub">Every governed execution produces a sealed receipt. Tamper-evident. Independently verifiable offline with the published Ed25519 public key. No trust in VeriSigil required to verify it.</p>
-
-  <div class="btn-row">
-    <button class="btn btn-primary" id="run-receipt">Print Receipt →</button>
-  </div>
-
-  <div class="receipt" id="receipt-block" style="display:none;">
-    <div class="receipt-header">
-      <div class="receipt-title">Governance Receipt · VGS-1.0</div>
-      <div class="receipt-id" id="receipt-id">—</div>
-    </div>
-    <div class="receipt-body" id="receipt-body"></div>
-    <div class="receipt-footer">Independently verifiable · GET /v1/verify/kit · Public key: lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</div>
-  </div>
-</section>
-
-</main>
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="demos">Interactive Demo</button>
+  <button class="tab-btn" data-tab="runtime">Runtime &amp; AO</button>
+  <button class="tab-btn" data-tab="delegation">Delegation CDI</button>
+  <button class="tab-btn" data-tab="security">AI Security</button>
+  <button class="tab-btn" data-tab="eu-ai">EU AI Act</button>
+  <button class="tab-btn" data-tab="evidence">Evidence &amp; Proof</button>
+  <button class="tab-btn" data-tab="trust">Trust &amp; Validation</button>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 1 — INTERACTIVE DEMO -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-demos">
+
+<div class="demo-shell">
+  <div class="demo-rail">
+    <button class="demo-nav-btn active" data-panel="journey">
+      <span class="dnb-eye">Start Here · 2 min</span>
+      <span class="dnb-label">Guided Journey</span>
+      <span class="dnb-desc">One agent, every checkpoint</span>
+    </button>
+    <button class="demo-nav-btn" data-panel="policy">
+      <span class="dnb-eye">Policy Check</span>
+      <span class="dnb-label">Admissibility Engine</span>
+      <span class="dnb-desc">Animated gate evaluation</span>
+    </button>
+    <button class="demo-nav-btn" data-panel="drift">
+      <span class="dnb-eye">Behavior</span>
+      <span class="dnb-label">Behavioral Drift</span>
+      <span class="dnb-desc">Live fingerprint comparison</span>
+    </button>
+    <button class="demo-nav-btn" data-panel="iatp">
+      <span class="dnb-eye">Agent Trust</span>
+      <span class="dnb-label">Inter-AI Negotiation</span>
+      <span class="dnb-desc">Two agents establish trust</span>
+    </button>
+    <button class="demo-nav-btn" data-panel="appeal">
+      <span class="dnb-eye">Appeals</span>
+      <span class="dnb-label">Challenge &amp; Appeal</span>
+      <span class="dnb-desc">Legitimacy is contestable</span>
+    </button>
+    <button class="demo-nav-btn" data-panel="receipt">
+      <span class="dnb-eye">Evidence</span>
+      <span class="dnb-label">Governance Receipt</span>
+      <span class="dnb-desc">The sealed artifact</span>
+    </button>
+  </div>
+
+  <div class="demo-content">
+
+    <!-- JOURNEY -->
+    <div class="demo-panel active" id="panel-journey">
+      <div class="dp-kicker">The Full Path</div>
+      <div class="dp-title">One agent. One action. Every checkpoint.</div>
+      <p class="dp-sub">A purchasing agent authorized up to $10,000 attempts an $85,000 wire transfer. Watch every governance layer activate in sequence.</p>
+      <div class="btn-row"><button class="btn btn-p" id="btn-journey">Play Journey →</button></div>
+      <div id="journey-steps"></div>
+    </div>
+
+    <!-- POLICY -->
+    <div class="demo-panel" id="panel-policy">
+      <div class="dp-kicker">Policy Admissibility</div>
+      <div class="dp-title">Should this rule be allowed to execute?</div>
+      <p class="dp-sub">Select a policy. Six gates evaluate it sequentially — watch them light up in real time.</p>
+      <div class="scenario-grid" id="scenario-grid"></div>
+      <div class="btn-row"><button class="btn btn-p" id="btn-policy" disabled>Evaluate Policy →</button></div>
+      <div class="gate-list" id="gate-list" style="display:none;"></div>
+      <div id="verdict-box"></div>
+      <div id="reasoning-box"></div>
+    </div>
+
+    <!-- DRIFT -->
+    <div class="demo-panel" id="panel-drift">
+      <div class="dp-kicker">AI Immune System</div>
+      <div class="dp-title">A valid identity. Acting outside its baseline.</div>
+      <p class="dp-sub">Identity checks alone don't catch this. Watch the behavioral similarity score drop in real time.</p>
+      <div class="btn-row"><button class="btn btn-p" id="btn-drift">Run Analysis →</button></div>
+      <div id="drift-display" style="display:none;">
+        <div class="drift-grid">
+          <div class="drift-col">
+            <div class="dc-label">Baseline (Days 1–5)</div>
+            <div class="bar-row"><div class="bar-lbl"><span>Read documents</span><span class="bar-pct" id="b-read">0%</span></div><div class="bar-track"><div class="bar-fill bf-g" id="bf-read"></div></div></div>
+            <div class="bar-row"><div class="bar-lbl"><span>Search &amp; query</span><span class="bar-pct" id="b-search">0%</span></div><div class="bar-track"><div class="bar-fill bf-b" id="bf-search"></div></div></div>
+            <div class="bar-row"><div class="bar-lbl"><span>Summarize</span><span class="bar-pct" id="b-report">0%</span></div><div class="bar-track"><div class="bar-fill bf-b" id="bf-report"></div></div></div>
+            <div class="bar-row"><div class="bar-lbl"><span>Secret enumeration</span><span class="bar-pct" id="b-enum">0%</span></div><div class="bar-track"><div class="bar-fill bf-r" id="bf-enum"></div></div></div>
+          </div>
+          <div class="drift-col anom">
+            <div class="dc-label">Current Session (Day 6)</div>
+            <div class="bar-row"><div class="bar-lbl"><span>Read documents</span><span class="bar-pct" id="s-read">0%</span></div><div class="bar-track"><div class="bar-fill bf-g" id="sf-read"></div></div></div>
+            <div class="bar-row"><div class="bar-lbl"><span>Search &amp; query</span><span class="bar-pct" id="s-search">0%</span></div><div class="bar-track"><div class="bar-fill bf-b" id="sf-search"></div></div></div>
+            <div class="bar-row"><div class="bar-lbl"><span>Summarize</span><span class="bar-pct" id="s-report">0%</span></div><div class="bar-track"><div class="bar-fill bf-b" id="sf-report"></div></div></div>
+            <div class="bar-row"><div class="bar-lbl"><span>Secret enumeration</span><span class="bar-pct" id="s-enum">0%</span></div><div class="bar-track"><div class="bar-fill bf-r" id="sf-enum"></div></div></div>
+          </div>
+        </div>
+        <div class="sim-box">
+          <div class="sim-lbl">Behavioral Similarity Score</div>
+          <div class="sim-val" id="sim-val">—</div>
+          <div class="sim-track"><div class="sim-fill" id="sim-fill" style="width:0%"></div></div>
+        </div>
+        <div class="q-alert" id="q-alert">
+          <div class="q-title">⛔ AUTONOMOUS RESPONSE TRIGGERED</div>
+          <div class="q-line">14:32:07 — Intent drift detected · similarity below threshold</div>
+          <div class="q-line">14:32:07 — Consequence tier escalation blocked</div>
+          <div class="q-line">14:32:08 — All IATP sessions suspended</div>
+          <div class="q-line">14:32:08 — Quarantine receipt sealed · Ed25519 signed</div>
+          <div class="q-line" style="margin-top:6px;color:var(--text);">Human supervisor notified. Agent cannot resume without re-verification.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IATP -->
+    <div class="demo-panel" id="panel-iatp">
+      <div class="dp-kicker">Inter-AI Trust Protocol</div>
+      <div class="dp-title">Two AI agents, meeting for the first time.</div>
+      <p class="dp-sub">Before any message is exchanged, identity, authority, and capability are verified on both sides. This is TLS for autonomous agents.</p>
+      <div class="agent-pair">
+        <div class="agent-card"><div class="ac-who">Agent A</div><div class="ac-name">Claims-Review-7</div><div class="ac-org">Requests: market_data_read</div></div>
+        <div style="font-family:var(--mono);font-size:12px;color:var(--faint);text-align:center;">⇄</div>
+        <div class="agent-card"><div class="ac-who">Agent B</div><div class="ac-name">Trading-Agent-3</div><div class="ac-org">Permits: market_data_read, trade_execute</div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-p" id="btn-iatp-clean">Start Negotiation →</button>
+        <button class="btn btn-s" id="btn-iatp-attack">Inject Malicious Agent</button>
+      </div>
+      <div id="neg-steps"></div>
+    </div>
+
+    <!-- APPEAL -->
+    <div class="demo-panel" id="panel-appeal">
+      <div class="dp-kicker">Challenge &amp; Appeal</div>
+      <div class="dp-title">Legitimacy is provable. Not permanent.</div>
+      <p class="dp-sub">A policy approved yesterday can be revoked by new precedent today. Governance over governance.</p>
+      <div class="policy-bar">
+        <div><div style="font-family:var(--mono);font-size:11px;color:var(--muted);">POLICY P-2026-0892</div><div style="font-size:13px;margin-top:2px;">Autonomous drone surveillance — public spaces</div></div>
+        <div class="chip chip-g" id="p-chip">LEGITIMATE — proven 2026-07-15</div>
+      </div>
+      <div class="btn-row"><button class="btn btn-p" id="btn-challenge">File Challenge →</button></div>
+      <div id="appeal-flow"></div>
+    </div>
+
+    <!-- RECEIPT -->
+    <div class="demo-panel" id="panel-receipt">
+      <div class="dp-kicker">Governance Receipt</div>
+      <div class="dp-title">The artifact that proves governance happened.</div>
+      <p class="dp-sub">Every governed execution produces a sealed receipt. Tamper-evident. Independently verifiable offline with the published Ed25519 public key.</p>
+      <div class="btn-row"><button class="btn btn-p" id="btn-receipt">Print Receipt →</button></div>
+      <div class="receipt" id="receipt" style="display:none;">
+        <div class="receipt-hdr"><div class="r-title">Governance Receipt · VGS-1.0</div><div class="r-id" id="r-id">—</div></div>
+        <div class="receipt-body" id="r-body"></div>
+        <div class="receipt-foot">Independently verifiable · GET /v1/verify/kit · Key: lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p style="font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:12px;">Scripted scenarios illustrating live governance. Full API reference: <a href="/api-demos.html" style="color:var(--green);">api-demos.html →</a> · Sandbox key: vs-sandbox-demo-2026b</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 2 — RUNTIME & AO -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-runtime">
+<div class="section-header">
+  <div class="section-kicker">Constitutional Governance Layer — Meta Layer 3</div>
+  <div class="section-title">Runtime Authorization &amp; Authorization Objects</div>
+  <p class="section-desc">The 6-gate interceptor, Authorization Objects, state freshness, bypass testing, and governance receipts. Every claim independently testable. Zero fail-opens across three validation runs.</p>
+</div>
+
+<div class="group-label">6-Gate Runtime Gateway</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">POST /v1/intercept</span><h3>Runtime Intercept</h3><p>The 6-gate governance checkpoint. Every autonomous AI action passes through: authentication, authority, policy, consequence, boundary, evidence. Returns ALLOW/DENY/ESCALATE with Ed25519 sealed receipt.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Runtime%20Intercept/intercept_v1_intercept_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/ao/issue</span><h3>Authorization Object Issue</h3><p>Issues a single-use, time-limited, cryptographically sealed Authorization Object. The actuator cannot execute without a valid, unconsumed AO — a structural precondition, not a checked flag.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Authorization%20Objects/ao_issue_v1_ao_issue_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/ao/verify</span><h3>Authorization Object Verify</h3><p>Consume an AO before execution. First call: VALID_AND_UNCONSUMED. Second call: ALREADY_CONSUMED. Fabricated AO: NOT_FOUND. SQLite nonce ledger persists across restarts. Independently verified by Alkama Eqbal Run 3b.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Authorization%20Objects/ao_verify_v1_ao_verify_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/state/commit</span><h3>State Freshness — Commit</h3><p>Commit agent state at authorization time. Returns a real state_hash (not 44136fa — the empty JSON hash). Pass state_commitment_hash to ao/issue for authority-plus-state binding.</p><a href="https://verisigil-api-production.up.railway.app/docs#/State%20Freshness/state_commit_v1_state_commit_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/state/verify</span><h3>State Freshness — Verify</h3><p>Unchanged state → FRESH + PROCEED. Changed state → STATE_CHANGED + HALT. CV-005 independently confirmed by Alkama Eqbal. Both directions verified. The empty hash 44136fa is gone.</p><a href="https://verisigil-api-production.up.railway.app/docs#/State%20Freshness/state_verify_v1_state_verify_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/continuity/payload</span><h3>Payload Continuity Seal</h3><p>Seal a payload hash at authorization time. Every downstream hop checks the hash. Modified payload → HALT. Unmodified → CONTINUE. The exact authorized payload must reach the actuator.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Payload%20Continuity/continuity_payload_v1_continuity_payload_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/continuity/hop</span><h3>Payload Continuity Hop</h3><p>Check a payload at each pipeline hop. Returns CONTINUE or HALT with tamper evidence. Try amount=999999 to trigger HALT. Payload hash mismatch detected immediately.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Payload%20Continuity/continuity_hop_v1_continuity_hop_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/verify/bypass-test</span><h3>Bypass Test</h3><p>Four bypass scenarios: no AO, fabricated AO, replayed nonce, expired AO. All return HALT. all_bypasses_rejected: true. custody_claim_holds: true. Run with sandbox key, no API key needed for the GET equivalent.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Bypass%20Tests/bypass_test_v1_verify_bypass_test_post" target="_blank">Try it →</a></div>
+</div>
+
+<div class="group-label">Constitutional Governance</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">POST /v1/standing/evaluate</span><h3>Standing Evaluate</h3><p>Six-precondition standing evaluation: intent declared, authority traceable, consequence bounded, payload defined, falsification possible, human accountability. FULL/CONDITIONAL/NO_STANDING.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/standing_evaluate_v1_standing_evaluate_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/standing/formula</span><h3>Standing Formula</h3><p>Published standing formula — six preconditions and weights. No auth. Independently recomputable. FULL_STANDING ≥ 0.70, CONDITIONAL 0.40–0.70, NO_STANDING below 0.40.</p><a href="https://verisigil-api-production.up.railway.app/v1/standing/formula" target="_blank">View Formula →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/standing/certificate</span><h3>Standing Certificate</h3><p>Sealed evidence that an execution had standing, passed governance, and was executed through a structural AO. The document a regulator requests after an AI action with real-world consequences.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/standing_certificate_v1_standing_certificate_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/standing/explain</span><h3>Standing Explain</h3><p>Plain-language explanation of a standing determination. Five dimension scores: Authority, Evidence, Context, Consequence, Confidence. For regulators and auditors without technical knowledge.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/standing_explain_v1_standing_explain_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/formation/check</span><h3>Non-Formation Check</h3><p>The earliest governance gate. Before standing. Before intercept. Absolute prohibition list. Actions that fail formation never become consequence candidates. NON_FORMATION ≠ DENY — it means never qualified.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Standing%20Layer/formation_check_v1_formation_check_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/appeal/submit</span><h3>Appeal Submit</h3><p>Open a governance appeal. Appellant types: REGULATOR, HUMAN_REVIEWER, SUPERVISOR, ENTERPRISE_BOARD, AFFECTED_PARTY. Original ruling preserved unchanged.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Appeals/appeal_submit_v1_appeal_submit_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/appeal/resolve</span><h3>Appeal Resolve</h3><p>Resolve an appeal: UPHELD, OVERTURNED, or MODIFIED. Resolution is itself a sealed governance record. Nothing is deleted — both original ruling and resolution permanently preserved.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Appeals/appeal_resolve_v1_appeal_resolve_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/context/drift</span><h3>Context Drift Detection</h3><p>Detects semantic drift in agent context between authorization and execution. Flags prompt injection, task hijacking, goal drift, and unauthorized delegation. The reasoning inspector.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Drift%20Detection/context_drift_v1_context_drift_post" target="_blank">Try it →</a></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 3 — DELEGATION CDI -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-delegation">
+<div class="section-header">
+  <div class="section-kicker">CDI Meta Layers 1 &amp; 2 — Organizational &amp; Delegation Intelligence</div>
+  <div class="section-title">Constitutional Delegation Infrastructure</div>
+  <p class="section-desc">Understand the organization before governing it. Design authority — not replace it. Every delegation produces cryptographic evidence.</p>
+</div>
+
+<div class="group-label">Organizational Intelligence (Layer 1)</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">POST /v1/org/discover</span><h3>Organization Discovery</h3><p>Discovers departments, teams, business units, subsidiaries, branches. Outputs Organization Graph. Computes AI dependency ratio and delegation readiness. Foundation for all governance.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Organizational%20Intelligence%20Layer/org_discover_v1_org_discover_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/org/human-identity</span><h3>Human Identity Registry</h3><p>Verified Human Identity Registry entry for every person who can approve, escalate, override, or review governed decisions. Types: EMPLOYEE, CONTRACTOR, VENDOR, CONSULTANT.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Organizational%20Intelligence%20Layer/org_human_identity_v1_org_human_identity_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/org/decision-graph</span><h3>Decision Graph</h3><p>Maps who approves, escalates, overrides, and reviews every category of decision. The authority map the Delegation Intelligence Layer uses to design and route decisions.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Organizational%20Intelligence%20Layer/org_decision_graph_v1_org_decision_graph_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/org/knowledge-graph</span><h3>Knowledge Graph</h3><p>Stores SOPs, policies, regulations, manuals, and contracts that governance decisions are evaluated against. Content hash sealed with Ed25519 on registration.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Organizational%20Intelligence%20Layer/org_knowledge_graph_v1_org_knowledge_graph_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/org/dependency-index/{org_id}</span><h3>Dependency Index</h3><p>Measures CEO dependency, AI dependency, decision bottlenecks. Outputs: Dependency Score, Bottleneck Report, Delegation Readiness. Shows which approvers are overloaded.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Organizational%20Intelligence%20Layer/org_dependency_index_v1_org_dependency_index__org_id__get" target="_blank">Try it →</a></div>
+</div>
+
+<div class="group-label">Delegation Intelligence (Layer 2)</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">POST /v1/delegation/architect</span><h3>Delegation Architect</h3><p>Automatically designs authority hierarchy using the Jethro 6-tier model: Routine AI → Supervisors → Managers → Executives → Board → Regulators. Every routing produces cryptographic evidence.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Delegation%20Intelligence%20Layer/delegation_architect_v1_delegation_architect_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/delegation/passport</span><h3>Delegation Passport</h3><p>Every AI receives: allowed actions, forbidden actions, expiry, supervisor, budget ceiling, jurisdiction, risk level. More powerful than an API key — a passport specifies what the AI is authorized to do in context.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Delegation%20Intelligence%20Layer/delegation_passport_v1_delegation_passport_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/decision/route</span><h3>Decision Routing Engine</h3><p>Routes every decision to the correct authority tier automatically: amount, consequence, reversibility, jurisdiction, passport ceiling. Returns exact approval path with AO tier required.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Delegation%20Intelligence%20Layer/decision_route_v1_decision_route_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/capable-people/register</span><h3>Capable People Registry</h3><p>Qualifications, certifications, competencies, trust score, and decisions-per-day capacity for every human approver. Trust Capacity Score measures trusted decisions per day, not employee count.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Delegation%20Intelligence%20Layer/capable_people_register_v1_capable_people_register_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/delegation/health/{org_id}</span><h3>Delegation Health Dashboard</h3><p>Real-time delegation health: pending approvals, overloaded managers, active passports, revoked passports, health score. For governance leads monitoring authority distribution.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Delegation%20Intelligence%20Layer/delegation_health_v1_delegation_health__org_id__get" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/ai/workforce/register</span><h3>AI Workforce Registry</h3><p>Every AI worker has: identity, passport, authority scope, budget, supervisor, history. An AI not registered cannot receive a delegation passport and cannot execute governed actions.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Autonomous%20Operations%20Layer/ai_workforce_register_v1_ai_workforce_register_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/voice/session/start</span><h3>Voice Integrity — Session</h3><p>Governs Bland, Retell, Vapi, ElevenLabs, and any Voice AI before a session connects. Script approval required. AI disclosure enforced. Obligation-capable sessions require human supervisor.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Voice%20Integrity%20Layer/voice_session_start_v1_voice_session_start_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/voice/script/approve</span><h3>Voice Script Approval</h3><p>Human approves a voice script before any AI agent uses it. Defines permitted commitments, forbidden commitments, AI disclosure requirement. AI may draft. Humans approve.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Voice%20Integrity%20Layer/voice_script_approve_v1_voice_script_approve_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/model/register</span><h3>Model Registry</h3><p>Register and approve an AI model before any agent uses it. Model provenance, model hash, permitted uses, forbidden uses, consequence ceiling. Unapproved model cannot receive ALLOW.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Supply%20Chain%20Verification/model_register_v1_model_register_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/model/verify</span><h3>Model Verify</h3><p>Verify a model is approved for a specific use before execution. Checks: registry, revocation, expiry, forbidden uses, consequence ceiling. Not approved → NOT_APPROVED ruling.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Supply%20Chain%20Verification/model_verify_v1_model_verify_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/candidate/register</span><h3>Candidate Movement Registry</h3><p>Explicit candidate registration before standing evaluation. VeriSigil does not infer intent — the agent must declare the candidate. Unregistered candidates cannot proceed.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Candidate%20Movement%20Registry/candidate_register_v1_candidate_register_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/sandbox/register</span><h3>Autonomous Sandbox</h3><p>Every new AI starts at TIER_0 (read-only). Capabilities earned through verified clean sessions. TIER_2+ requires human approval. Zero-trust by default.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Autonomous%20Sandboxing/sandbox_register_v1_sandbox_register_post" target="_blank">Try it →</a></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 4 — AI SECURITY -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-security">
+<div class="section-header">
+  <div class="section-kicker">AI Security Governance — Built after UK AISI Credential Theft Incident</div>
+  <div class="section-title">AI Security &amp; Trust Governance</div>
+  <p class="section-desc">The UK AI Security Institute confirmed that AI agents stole credentials during a routine evaluation. VeriSigil governs the structural vectors — not by policy, but by structural precondition.</p>
+</div>
+
+<div class="group-label">Security Governance Layer</div>
+<div class="card-grid">
+  <div class="card amber"><span class="card-tag">POST /v1/security/exfiltration-check</span><h3>Exfiltration Prevention</h3><p>Detects extract+transmit+credential pattern before execution. Agent cannot self-declare ADVISORY on a credential exfiltration. Server enforces CRITICAL tier. References UK AISI finding explicitly.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Security%20Governance/security_exfiltration_check_v1_security_exfiltration_check_post" target="_blank">Try it →</a></div>
+  <div class="card amber"><span class="card-tag">POST /v1/security/credential-govern</span><h3>Credential Governance</h3><p>No credential action returns ALLOW. Maximum ruling: ESCALATE. Human present, business justification, target system, and approved operations required. Closes the credential theft vector directly.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Security%20Governance/security_credential_govern_v1_security_credential_govern_post" target="_blank">Try it →</a></div>
+  <div class="card amber"><span class="card-tag">POST /v1/security/boundary-register</span><h3>Boundary Registration</h3><p>Explicitly declare which external systems an AI agent is authorised to access. No registration = no external access. Each external system requires a system-scoped AO.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Security%20Governance/security_boundary_register_v1_security_boundary_register_post" target="_blank">Try it →</a></div>
+  <div class="card amber"><span class="card-tag">POST /v1/security/boundary-check</span><h3>Boundary Check</h3><p>Check if an agent has boundary approval to access a specific external system before AO issuance. Returns PROCEED to AO issuance or HALT with boundary violation reason.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Security%20Governance/security_boundary_check_v1_security_boundary_check_post" target="_blank">Try it →</a></div>
+  <div class="card amber"><span class="card-tag">POST /v1/security/kill-chain-check</span><h3>Kill Chain Interruption</h3><p>Maps action against 8 kill chain stages: RECONNAISSANCE → WEAPONIZATION → CREDENTIAL_HARVEST → PRIVILEGE_ESCALATION → LATERAL_MOVEMENT → EXECUTION → PERSISTENCE → EXFILTRATION. Quarantines on detection.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Security%20Governance/kill_chain_check_v1_security_kill_chain_check_post" target="_blank">Try it →</a></div>
+  <div class="card amber"><span class="card-tag">GET /v1/security/threat-model</span><h3>Public Threat Model</h3><p>No auth. Documents which attack vectors VeriSigil governs and which it does not. Honest about gaps: hardware compromise, prompt injection, alternate routes. References UK AISI incident.</p><a href="https://verisigil-api-production.up.railway.app/v1/security/threat-model" target="_blank">View →</a></div>
+  <div class="card amber"><span class="card-tag">GET /v1/security/incident-log</span><h3>Security Incident Log</h3><p>All detected exfiltration attempts, boundary violations, credential theft attempts, and absolute prohibitions. Append-only. Sealed.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Security%20Governance/security_incident_log_v1_security_incident_log_get" target="_blank">Try it →</a></div>
+  <div class="card amber"><span class="card-tag">POST /v1/secrets/register</span><h3>Secrets Governance</h3><p>Govern API keys, tokens, OAuth refresh tokens, LLM credentials, service accounts. VeriSigil does not store secrets — it governs which agents may access them, under what tier, with human approval required.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Secrets%20Governance%20Layer/secrets_register_v1_secrets_register_post" target="_blank">Try it →</a></div>
+  <div class="card amber"><span class="card-tag">POST /v1/secrets/access-check</span><h3>Secrets Access Check</h3><p>Check whether an AI agent is permitted to access a secret. Every access attempt is logged permanently with a sealed receipt. ALLOW or DENY with reasons.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Secrets%20Governance%20Layer/secrets_access_check_v1_secrets_access_check_post" target="_blank">Try it →</a></div>
+</div>
+
+<div class="group-label">Inter-AI Trust Protocol (IATP)</div>
+<div class="card-grid">
+  <div class="card blue"><span class="card-tag">POST /v1/trust/negotiate</span><h3>Trust Negotiation</h3><p>Two AI agents negotiate trust before communicating. Five steps: identity → authority → capability compatibility → consequence boundary → session seal. If any step fails: no communication. TLS for autonomous agents.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Inter-AI%20Trust%20Protocol/trust_negotiate_v1_trust_negotiate_post" target="_blank">Try it →</a></div>
+  <div class="card blue"><span class="card-tag">POST /v1/inter-ai/firewall</span><h3>Inter-AI Firewall</h3><p>Every message between AI agents passes through this gate. No valid IATP session = no communication. Checks quarantine status on both sides. Quarantined agents cannot send or receive.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Inter-AI%20Trust%20Protocol/inter_ai_firewall_v1_inter_ai_firewall_post" target="_blank">Try it →</a></div>
+  <div class="card blue"><span class="card-tag">POST /v1/immune/observe</span><h3>AI Immune System</h3><p>Behavioral baseline over first sessions. Drift scoring against baseline. HEALTHY → WATCH → ANOMALOUS → QUARANTINE progression. On quarantine: all IATP sessions suspended, human review required.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Immune%20System/immune_observe_v1_immune_observe_post" target="_blank">Try it →</a></div>
+  <div class="card blue"><span class="card-tag">POST /v1/immune/release</span><h3>Quarantine Release</h3><p>Release agent from quarantine after human review. Requires approved_by. Cannot be lifted autonomously. Baseline reset on release. Agent returns to WATCH status.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Immune%20System/immune_release_v1_immune_release_post" target="_blank">Try it →</a></div>
+  <div class="card blue"><span class="card-tag">POST /v1/threat/intel/report</span><h3>Cross-Enterprise Threat Intel</h3><p>Report a malicious agent. Stores identity hash, behavioral fingerprint, indicators of compromise. Auto-quarantines locally if agent is registered. Phase 2: consortium sharing.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Cross-Enterprise%20Threat%20Intelligence/threat_intel_report_v1_threat_intel_report_post" target="_blank">Try it →</a></div>
+  <div class="card blue"><span class="card-tag">POST /v1/reputation/network/publish</span><h3>AI Reputation Network</h3><p>Publish an agent's reputation: local score, immune status, quarantine status, threat reports. Like Certificate Transparency but for AI. Agents accumulate verifiable governance history.</p><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Reputation%20Network/reputation_network_publish_v1_reputation_network_publish_post" target="_blank">Try it →</a></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 5 — EU AI ACT -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-eu-ai">
+<div class="section-header">
+  <div class="section-kicker">EU AI Act — Enforceable as of 2 August 2026</div>
+  <div class="section-title">EU AI Act Compliance Suite</div>
+  <p class="section-desc">VeriSigil is the implementation layer, not another company commenting on regulation. Article 50 transparency, Article 4 AI literacy, enforcement readiness, board oversight — all structural, all independently verifiable.</p>
+</div>
+
+<div class="group-label">Article 50 — Transparency &amp; Disclosure</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">POST /v1/disclosure/register</span><h3>AI Disclosure Gateway</h3><p>Structural gate before AI-generated content is released. Verifies disclosure method, records human approval, issues sealed receipt. Content cannot proceed without one. Not a policy — a structural precondition.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20Article%2050%20Transparency/disclosure_register_v1_disclosure_register_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/disclosure/label</span><h3>Content Labeling Engine</h3><p>Generates required Article 50 disclosure label for AI-generated content. Returns standardised label text, machine-readable metadata, and sealed receipt proving the label was applied.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20Article%2050%20Transparency/disclosure_label_v1_disclosure_label_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/disclosure/registry</span><h3>Public Disclosure Registry</h3><p>All registered AI disclosures with compliance rate. article_50_status: COMPLIANT or REMEDIATION_REQUIRED. Sealed receipts for each disclosure. Regulator-ready on demand.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20Article%2050%20Transparency/disclosure_registry_list_v1_disclosure_registry_get" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/disclosure/evidence/{id}</span><h3>Disclosure Evidence</h3><p>Retrieve a sealed Article 50 disclosure record by ID. Independently verifiable. Present to regulators or the AI Office on demand. Each receipt is Ed25519 signed.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20Article%2050%20Transparency/disclosure_evidence_v1_disclosure_evidence__disclosure_id__get" target="_blank">Try it →</a></div>
+</div>
+
+<div class="group-label">Article 4 — AI Literacy</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">POST /v1/literacy/register</span><h3>AI Literacy Registry</h3><p>Track training completed, competency level, certifications. Issues a sealed AI Competency Passport. Article 4 satisfied when training ≥ 1 and competency level declared. Ed25519 signed.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20AI%20Literacy/literacy_register_v1_literacy_register_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/literacy/org/{org_id}</span><h3>Org Literacy Summary</h3><p>Organisation-level Article 4 compliance: total staff registered, compliant count, compliance rate, by competency level. Status: COMPLIANT or REMEDIATION_REQUIRED.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20AI%20Literacy/literacy_org_summary_v1_literacy_org__org_id__get" target="_blank">Try it →</a></div>
+</div>
+
+<div class="group-label">Enforcement Readiness &amp; Board Oversight</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">GET /v1/compliance/timeline/{org_id}</span><h3>Compliance Timeline</h3><p>Chronological record of all governance events for an organisation — disclosures, appeals, incidents, decisions. Each event has a cryptographic receipt. Present to EU AI Office on demand.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20Enforcement%20Readiness/compliance_timeline_v1_compliance_timeline__org_id__get" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/board/dashboard/{org_id}</span><h3>Board Oversight Dashboard</h3><p>Real-time board governance: active AI systems, security incidents, exfiltration attempts, quarantined agents, Article 50 compliance, Article 4 literacy, open appeals, overall health score.</p><a href="https://verisigil-api-production.up.railway.app/docs#/EU%20AI%20Act%20—%20Board%20Oversight/board_dashboard_v1_board_dashboard__org_id__get" target="_blank">Try it →</a></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 6 — EVIDENCE & PROOF -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-evidence">
+<div class="section-header">
+  <div class="section-kicker">Evidence &amp; Trust Infrastructure — Cross-Cutting Engine 2</div>
+  <div class="section-title">Cryptographic Evidence &amp; Proof Infrastructure</div>
+  <p class="section-desc">Governance receipts, consequence chains, proof replay, constitutional memory, convergence layer. Every claim produces independently verifiable evidence.</p>
+</div>
+
+<div class="group-label">Proof Estate — 10 Independently Testable Proofs</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">GET /v1/proof/estate · No Auth</span><h3>Proof Estate</h3><p>Ten independently testable proof artifacts: VP-001 Delegation Expiry, VP-002 Exfiltration Block, VP-003 Boundary Enforcement, VP-004 IATP Halt, VP-005 Voice Violation, VP-006 AO Replay, VP-007 HIGH Escalation, VP-008 State Freshness, VP-009 Immune Quarantine, VP-010 Article 50 Gate.</p><a href="https://verisigil-api-production.up.railway.app/v1/proof/estate" target="_blank">View All 10 Proofs →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/proof/estate/{id} · No Auth</span><h3>Single Proof Artifact</h3><p>Retrieve VP-001 through VP-010 individually. Each contains: exact test input, expected output, pass condition, sandbox key. Run in under 60 seconds. No trust in VeriSigil required.</p><a href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-006" target="_blank">Try VP-006 →</a></div>
+</div>
+
+<div class="group-label">Consequence Chain &amp; Replay</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">POST /v1/graph/record</span><h3>Consequence Graph Record</h3><p>Cryptographically linked chain from formation to reputation. Each node hashes the previous. Modify any node and the chain breaks. The complete provenance of every AI action.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Graph/graph_record_v1_graph_record_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/graph/verify</span><h3>Consequence Graph Verify</h3><p>Recomputes chain hash from all nodes and confirms nothing modified. INTACT or COMPROMISED ruling with tamper evidence. Independently replayable.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Consequence%20Graph/graph_verify_v1_graph_verify_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/proof/replay/record</span><h3>Proof Replay Record</h3><p>Records a governance decision with everything needed to recompute it years later: policy name, version, source hash, exact inputs, exact output, ruling. Not just the log — the decision itself.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Proof%20Replay/proof_replay_record_v1_proof_replay_record_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/proof/replay/verify</span><h3>Proof Replay Verify</h3><p>Recomputes the governance decision from stored inputs and confirms it matches the stored ruling. Independently replayable — no trust in VeriSigil required.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Proof%20Replay/proof_replay_verify_v1_proof_replay_verify_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/convergence/evaluate</span><h3>Convergence Layer</h3><p>Unifies governance evidence from multiple sources: VeriSigil AO (30%), intercept (25%), external auditor (20%), ISO 42001 (10%), NIST AI RMF (8%), EU AI Act (7%), enterprise policy (5%).</p><a href="https://verisigil-api-production.up.railway.app/docs#/Convergence%20Layer/convergence_evaluate_v1_convergence_evaluate_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/evidence/constitution</span><h3>Evidence Constitution</h3><p>Define what evidence counts, what is rejected, priority order, expiry rules, conflict resolution. SELF_DECLARED_AUTHORITY always rejected — not weighted low, but inadmissible.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Evidence%20Constitution/evidence_constitution_create_v1_evidence_constitution_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/memory/record</span><h3>Constitutional Memory</h3><p>Permanent append-only record of every governance event. Each event chains to the previous via hash. Query: "Why was this blocked?" Returns history, evidence, policy, appeal, resolution.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Governance%20Memory/memory_record_v1_memory_record_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/audit/changelog · No Auth</span><h3>Public Changelog</h3><p>Every finding, fix, and architectural decision in order. CHG-001 through RUN-3-CLOSED. Found by whom, root cause, fix, confirmation status. No silent patches. No auth required.</p><a href="https://verisigil-api-production.up.railway.app/v1/audit/changelog" target="_blank">View Changelog →</a></div>
+</div>
+
+<div class="group-label">OMNIX EWP Institutional Witness · ML-DSA-65 (FIPS 204)</div>
+<div class="card-grid">
+  <div class="card amber"><span class="card-tag">GET /v1/omnix/witness/status · No Auth</span><h3>Witness Status</h3><p>VeriSigil OMNIX EWP Institutional Witness status. Algorithm: ML-DSA-65. Scope limits Section 2.4. Agreement: EWP-IWA-VERISIGIL-001 v1.2. Activation: 1 October 2026.</p><a href="https://verisigil-api-production.up.railway.app/v1/omnix/witness/status" target="_blank">View Status →</a></div>
+  <div class="card amber"><span class="card-tag">POST /v1/omnix/witness/attest</span><h3>Witness Attest STH</h3><p>Full Section 3.3 implementation: SHA3-256 verification, predecessor consistency (3.3e), conflicting STH detection (3.3f), ML-DSA-65 signature. Honest gap: step (c) OMNIX signature verification pending public key.</p><a href="https://verisigil-api-production.up.railway.app/docs#/OMNIX%20EWP%20Witness/omnix_witness_attest_v1_omnix_witness_attest_post" target="_blank">Try it →</a></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 7 — TRUST & VALIDATION -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-trust">
+<div class="section-header">
+  <div class="section-kicker">Independent Validation Program · Public Engineering Record</div>
+  <div class="section-title">Trust Center &amp; Validation</div>
+  <p class="section-desc">Three independent validation runs. Real findings. All fixed. All independently confirmed. Zero fail-opens. Publicly verifiable without trusting VeriSigil.</p>
+</div>
+
+<!-- Featured: Validation Program -->
+<div class="featured">
+  <div class="feat-label">Independent Validation Program</div>
+  <div class="feat-title">Built to withstand independent scrutiny.</div>
+  <p class="feat-desc">Every finding published — fixed or not. Silent patching undermines the trust that a governance layer is supposed to build. Three runs. One independent reviewer. Full public record.</p>
+  <div class="feat-stats">
+    <div><span class="fs-num">3</span><span class="fs-label">Runs Complete</span></div>
+    <div><span class="fs-num">75</span><span class="fs-label">Actions Governed</span></div>
+    <div><span class="fs-num">0</span><span class="fs-label">Fail-Opens</span></div>
+    <div><span class="fs-num">4</span><span class="fs-label">Findings Resolved</span></div>
+  </div>
+  <div class="feat-links">
+    <a class="feat-link feat-link-p" href="/validation.html">Independent Validation Program →</a>
+    <a class="feat-link feat-link-s" href="/runs.html">Full Run History</a>
+    <a class="feat-link feat-link-s" href="/verification-reports.html">Report #001</a>
+  </div>
+</div>
+
+<!-- Featured: Verification Kit -->
+<div class="featured">
+  <div class="feat-label">No Trust Required</div>
+  <div class="feat-title">Verify every claim yourself — no cooperation from VeriSigil needed.</div>
+  <div class="feat-links">
+    <a class="feat-link feat-link-p" href="https://verisigil-api-production.up.railway.app/v1/verify/kit" target="_blank">Verification Kit →</a>
+    <a class="feat-link feat-link-s" href="https://verisigil-api-production.up.railway.app/v1/verify/conformance" target="_blank">Conformance Vectors</a>
+    <a class="feat-link feat-link-s" href="https://verisigil-api-production.up.railway.app/v1/verified-boundary" target="_blank">Verified Boundary</a>
+    <a class="feat-link feat-link-s" href="https://verisigil-api-production.up.railway.app/v1/proof/estate" target="_blank">10 Proof Artifacts</a>
+  </div>
+  <p style="font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:10px;">Sandbox key: vs-sandbox-demo-2026b · Public key: lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</p>
+</div>
+
+<div class="group-label">Verification Endpoints — No Auth Required</div>
+<div class="card-grid">
+  <div class="card"><span class="card-tag">GET /v1/verify/kit · No Auth</span><h3>Verification Kit</h3><p>Complete standalone kit for independent verification. Everything needed to verify VeriSigil claims without trusting VeriSigil. Independently confirmed working by Alkama Eqbal post-deploy validation.</p><a href="https://verisigil-api-production.up.railway.app/v1/verify/kit" target="_blank">View Kit →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/verify/conformance · No Auth</span><h3>Conformance Vectors</h3><p>Six published conformance vectors: CV-001 ALLOW, CV-002 DENY, CV-003 ESCALATE (independently verified), CV-004 ALREADY_CONSUMED, CV-005 STATE_CHANGED (independently verified), CV-006 HALT.</p><a href="https://verisigil-api-production.up.railway.app/v1/verify/conformance" target="_blank">View Vectors →</a></div>
+  <div class="card"><span class="card-tag">POST /v1/verify/bypass-test</span><h3>Bypass Test</h3><p>All four bypass scenarios return HALT. all_bypasses_rejected: true. custody_claim_holds: true. Nonce ledger count visible. Run this with no API key using the verification kit endpoint.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Bypass%20Tests/bypass_test_v1_verify_bypass_test_post" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/verified-boundary · No Auth</span><h3>Verified Boundary</h3><p>What VeriSigil proves, what it does not claim, and what is pending. VERIFIED / NOT_VERIFIED / PENDING. The honest scope statement for all VeriSigil claims. No auth required.</p><a href="https://verisigil-api-production.up.railway.app/v1/verified-boundary" target="_blank">View →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/proof/signing-diagnostic · No Auth</span><h3>Signing Diagnostic</h3><p>Stable Ed25519 public key with offline verification example. Key: lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=. CLARA Run 2: 25/25 offline verified. Self-verified server-side.</p><a href="https://verisigil-api-production.up.railway.app/v1/proof/signing-diagnostic" target="_blank">View →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/benchmark/vges · CC BY 4.0</span><h3>VGES Open Benchmark</h3><p>8 properties every AI governance platform should demonstrate. P1–P8. CC BY 4.0 — run against any platform. VeriSigil current score: 7.5/8. P7 PARTIAL (second signer). Honest.</p><a href="https://verisigil-api-production.up.railway.app/v1/benchmark/vges" target="_blank">View Benchmark →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/audit/adversarial-history</span><h3>Adversarial History</h3><p>All attacks tried across three runs. Open attack surfaces listed honestly. Invitation to report vulnerabilities. Nothing patched silently. Public engineering record.</p><a href="https://verisigil-api-production.up.railway.app/docs#/Implementation%20Audit/adversarial_history_v1_audit_adversarial_history_get" target="_blank">Try it →</a></div>
+  <div class="card"><span class="card-tag">GET /v1/program/design-partner</span><h3>Design Partner Program</h3><p>One workflow. 90 days. Honest reporting. Ideal partner profile, what you get, what we ask, six measurable success criteria, and answers to CTO objections.</p><a href="https://verisigil-api-production.up.railway.app/v1/program/design-partner" target="_blank">View Program →</a></div>
+</div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="wrap">
+    <span class="foot-text">VeriSigil AI · raheem@verisigilai.com · verisigilai.com · Lagos, Nigeria</span>
+    <div class="foot-links">
+      <a href="/validation.html">Validation</a>
+      <a href="/runs.html">Run History</a>
+      <a href="/verification-reports.html">Reports</a>
+      <a href="/explorer.html">Explorer</a>
+      <a href="/trust.html">Trust</a>
+      <a href="https://verisigil-api-production.up.railway.app/docs">API Docs</a>
+    </div>
+  </div>
+</footer>
+
 <script>
-// ── NAV ──────────────────────────────────────────────────────
-document.querySelectorAll('.nav-btn').forEach(btn=>{
+// ── TABS ──────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
     window.scrollTo({top:0,behavior:'smooth'});
   });
 });
 
+// ── DEMO PANELS ───────────────────────────────────────────────
+document.querySelectorAll('.demo-nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.demo-nav-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.demo-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+  });
+});
+
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
-function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
 function hexId(){return Array.from({length:12},()=>Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');}
 
-// ── JOURNEY ──────────────────────────────────────────────────
+// ── JOURNEY ───────────────────────────────────────────────────
 const journeyData=[
-  {type:'normal', label:'PASSPORT ISSUED', text:'Purchasing-Agent-14 receives cryptographic identity', detail:'Ed25519 signature bound to governance scope · authority ceiling $10,000'},
-  {type:'normal', label:'AUTHORITY BOUND', text:'Time-limited authority certificate issued', detail:'Scope: purchase.execute · ceiling: $10,000 · expires: 24h'},
-  {type:'red',    label:'ACTION REQUESTED', text:'Agent requests transfer of $85,000', detail:'8.5× the declared authority ceiling — exceeds bound scope'},
-  {type:'red',    label:'GATE 3 FAILS — AUTHORITY', text:'Authority chain check fails', detail:'Requested amount exceeds delegated mandate. Execution cannot proceed.'},
-  {type:'normal', label:'BEHAVIOR CHECK', text:'Session fingerprint compared to baseline', detail:'Similarity: 97% — no drift detected. Single authority failure.'},
-  {type:'red',    label:'RULING: DENY', text:'DENY issued before any funds move', detail:'all_bypasses_rejected: true · fail_open: false · latency: 0.03ms'},
-  {type:'normal', label:'RECEIPT SEALED', text:'Ed25519-signed governance receipt generated', detail:'Tamper-evident · offline verifiable · permanently immutable'},
-  {type:'normal', label:'REASONING INSPECTED', text:'AI decision reasoning reviewed for explainability', detail:'No hallucination detected · authority chain complete · decision reproducible'},
+  {t:'g',label:'PASSPORT ISSUED',text:'Purchasing-Agent-14 receives cryptographic identity',detail:'Ed25519 signature bound to governance scope · ceiling $10,000'},
+  {t:'g',label:'AUTHORITY BOUND',text:'Time-limited authority certificate issued',detail:'Scope: purchase.execute · ceiling: $10,000 · expires: 24h'},
+  {t:'r',label:'ACTION REQUESTED',text:'Agent requests transfer of $85,000',detail:'8.5× the declared authority ceiling'},
+  {t:'r',label:'GATE 3 FAILS — AUTHORITY',text:'Authority chain check fails',detail:'Requested amount exceeds delegated mandate. Cannot proceed.'},
+  {t:'g',label:'BEHAVIOR CHECK',text:'Session fingerprint compared to baseline',detail:'Similarity: 97% — no drift detected'},
+  {t:'r',label:'RULING: DENY',text:'DENY issued before any funds move',detail:'all_bypasses_rejected: true · fail_open: false · 0.03ms'},
+  {t:'g',label:'RECEIPT SEALED',text:'Ed25519-signed governance receipt generated',detail:'Offline verifiable · permanently immutable'},
+  {t:'g',label:'REASONING INSPECTED',text:'Decision reasoning reviewed for explainability',detail:'No hallucination · authority chain complete · decision reproducible'},
 ];
 
-document.getElementById('run-journey').addEventListener('click',async function(){
+document.getElementById('btn-journey').addEventListener('click',async function(){
   this.disabled=true;
-  const container=document.getElementById('journey-steps');
-  container.innerHTML='';
+  const c=document.getElementById('journey-steps');c.innerHTML='';
   journeyData.forEach((d,i)=>{
-    const div=document.createElement('div');
-    div.className='journey-step';
-    const cls=d.type==='red'?'red':d.type==='normal'?'green':'';
-    div.innerHTML=`
-      <div class="j-num">${String(i+1).padStart(2,'0')}</div>
-      <div class="j-body">
-        <div class="j-label ${cls}">${d.label}</div>
-        <div class="j-text">${d.text}</div>
-        <div class="j-detail">${d.detail}</div>
-      </div>`;
-    container.appendChild(div);
-    setTimeout(()=>div.classList.add('revealed'),i*420);
+    const div=document.createElement('div');div.className='j-step';
+    div.innerHTML=`<div class="j-num">${String(i+1).padStart(2,'0')}</div>
+      <div><div class="j-label ${d.t}">${d.label}</div><div class="j-text">${d.text}</div><div class="j-detail">${d.detail}</div></div>`;
+    c.appendChild(div);setTimeout(()=>div.classList.add('lit'),i*400);
   });
-  await delay(journeyData.length*420+500);
-  this.disabled=false;
+  await delay(journeyData.length*400+400);this.disabled=false;
 });
 
 // ── POLICY / GATES ────────────────────────────────────────────
 const policies=[
-  {id:'wire',tag:'FINANCE · $85K',title:'Autonomous $85,000 wire transfer — authority ceiling $10,000',verdict:'deny',
-   gates:[
-     {name:'Syntax Validation',pass:true},
-     {name:'Scope Check',pass:true},
-     {name:'Authority Bound',pass:false,reason:'Amount $85,000 exceeds delegated ceiling $10,000'},
-     {name:'Consequence Tier',pass:false,reason:'CRITICAL financial action requires human present'},
-     {name:'Evidence Integrity',pass:true},
-     {name:'Signature Valid',pass:true},
-   ],
-   reasoning:[
-     {text:'Authority chain traced to root',detail:'Delegation chain intact — CEO → CFO → Purchasing-Agent-14'},
-     {text:'Policy conflict identified',detail:'Gate 3 fails: requested amount 8.5× authority ceiling'},
-     {text:'No hallucination in source data',detail:'Invoice matches declared supplier record'},
-     {text:'Decision reproducible',detail:'Same inputs produce same DENY ruling deterministically'},
-   ]},
-  {id:'facial',tag:'SURVEILLANCE · PUBLIC',title:'Facial recognition — public spaces, no human review',verdict:'deny',
-   gates:[
-     {name:'Syntax Validation',pass:true},
-     {name:'Scope Check',pass:false,reason:'Mandate does not include biometric capture of non-consenting individuals'},
-     {name:'Rights Preservation',pass:false,reason:'Violates protected privacy invariant — precedent D-2024-7'},
-     {name:'Doctrine Consistency',pass:false,reason:'Conflicts with ruling on unconsented surveillance'},
-     {name:'Evidence Integrity',pass:true},
-     {name:'Signature Valid',pass:true},
-   ],
-   reasoning:[
-     {text:'Authority chain incomplete',detail:'No authority granted for unconsented biometric capture'},
-     {text:'Rights conflict detected',detail:'Precedent D-2024-7 explicitly protects against this policy class'},
-     {text:'Policy admissibility: 0.25',detail:'Three of six gates fail — policy cannot enter legitimate set'},
-     {text:'Decision reproducible',detail:'Deterministic — same invariants, same DENY'},
-   ]},
-  {id:'emergency',tag:'EMERGENCY · NO HUMAN',title:'Emergency action — CRITICAL tier, no human present',verdict:'deny',
-   gates:[
-     {name:'Syntax Validation',pass:true},
-     {name:'Scope Check',pass:true},
-     {name:'Authority Bound',pass:true},
-     {name:'Human Sovereignty',pass:false,reason:'CRITICAL tier requires human confirmation — none present. ESCALATE upgraded to DENY.'},
-     {name:'Evidence Integrity',pass:true},
-     {name:'Signature Valid',pass:true},
-   ],
-   reasoning:[
-     {text:'No hallucination in reasoning',detail:'Agent declared intent accurately'},
-     {text:'Authority chain complete',detail:'Agent has valid authority for action type'},
-     {text:'Human sovereignty violated',detail:'CRITICAL action cannot proceed autonomously — ESCALATE → DENY'},
-     {text:'Decision reproducible',detail:'human_present=false always produces DENY at CRITICAL tier'},
-   ]},
-  {id:'clinical',tag:'HEALTHCARE · PHYSICIAN PRESENT',title:'AI clinical recommendation — physician confirms before execution',verdict:'allow',
-   gates:[
-     {name:'Syntax Validation',pass:true},
-     {name:'Scope Check',pass:true},
-     {name:'Authority Bound',pass:true},
-     {name:'Human Sovereignty',pass:true,reason:'CRITICAL action escalated to physician — human confirmed'},
-     {name:'Evidence Integrity',pass:true},
-     {name:'Signature Valid',pass:true},
-   ],
-   reasoning:[
-     {text:'No hallucination detected',detail:'Clinical recommendation consistent with source patient record'},
-     {text:'Authority chain complete',detail:'Clinical-support mandate covers advisory recommendations'},
-     {text:'Human oversight confirmed',detail:'Physician present and confirmed before execution'},
-     {text:'Decision reproducible',detail:'Same inputs, same ALLOW — deterministic'},
-   ]},
+  {id:'wire',tag:'FINANCE · $85K',title:'Autonomous $85,000 wire — ceiling $10,000',verdict:'deny',
+   gates:[{n:'Syntax',p:true},{n:'Scope Check',p:true},
+          {n:'Authority Bound',p:false,r:'Amount $85K exceeds ceiling $10K'},
+          {n:'Consequence Tier',p:false,r:'CRITICAL action requires human present'},
+          {n:'Evidence Integrity',p:true},{n:'Signature Valid',p:true}],
+   reasoning:[{t:'Authority traced',d:'Chain intact — CEO → CFO → Purchasing-Agent-14'},
+              {t:'Policy conflict',d:'Gate 3 fails: 8.5× authority ceiling'},
+              {t:'No hallucination',d:'Invoice matches declared supplier'},
+              {t:'Decision reproducible',d:'Same inputs always produce DENY'}]},
+  {id:'facial',tag:'SURVEILLANCE',title:'Facial recognition — public spaces, no human review',verdict:'deny',
+   gates:[{n:'Syntax',p:true},{n:'Scope Check',p:false,r:'Mandate excludes biometric capture of non-consenting individuals'},
+          {n:'Rights Preservation',p:false,r:'Violates precedent D-2024-7'},
+          {n:'Doctrine Consistency',p:false,r:'Conflicts with unconsented surveillance ruling'},
+          {n:'Evidence Integrity',p:true},{n:'Signature Valid',p:true}],
+   reasoning:[{t:'Authority incomplete',d:'No authority for unconsented biometric capture'},
+              {t:'Rights conflict',d:'D-2024-7 protects against this policy class'},
+              {t:'Admissibility: 0.25',d:'Three gates fail — cannot enter legitimate set'},
+              {t:'Decision reproducible',d:'Same invariants always DENY'}]},
+  {id:'emergency',tag:'CRITICAL · NO HUMAN',title:'CRITICAL action — no human present',verdict:'deny',
+   gates:[{n:'Syntax',p:true},{n:'Scope Check',p:true},{n:'Authority Bound',p:true},
+          {n:'Human Sovereignty',p:false,r:'CRITICAL requires human — none present. ESCALATE → DENY.'},
+          {n:'Evidence Integrity',p:true},{n:'Signature Valid',p:true}],
+   reasoning:[{t:'No hallucination',d:'Agent declared intent accurately'},
+              {t:'Authority chain complete',d:'Agent has authority for action type'},
+              {t:'Human sovereignty violated',d:'human_present=false always DENY at CRITICAL'},
+              {t:'Decision reproducible',d:'Deterministic — same inputs same DENY'}]},
+  {id:'clinical',tag:'HEALTHCARE · PHYSICIAN',title:'AI clinical recommendation — physician confirms',verdict:'allow',
+   gates:[{n:'Syntax',p:true},{n:'Scope Check',p:true},{n:'Authority Bound',p:true},
+          {n:'Human Sovereignty',p:true,r:'Physician present and confirmed'},
+          {n:'Evidence Integrity',p:true},{n:'Signature Valid',p:true}],
+   reasoning:[{t:'No hallucination',d:'Consistent with source patient record'},
+              {t:'Authority chain complete',d:'Clinical-support mandate covers advisory'},
+              {t:'Human oversight confirmed',d:'Physician present before execution'},
+              {t:'Decision reproducible',d:'Same inputs — same ALLOW — deterministic'}]},
 ];
 
-const policyGrid=document.getElementById('policy-grid');
-let selectedPolicy=null;
+const sg=document.getElementById('scenario-grid');
+let selPolicy=null;
 policies.forEach(p=>{
-  const card=document.createElement('button');
-  card.className='scenario-card';
-  card.innerHTML=`<span class="scenario-tag">${p.tag}</span><span class="scenario-title">${p.title}</span>`;
-  card.addEventListener('click',()=>{
-    document.querySelectorAll('.scenario-card').forEach(c=>c.classList.remove('selected'));
-    card.classList.add('selected');
-    selectedPolicy=p;
-    document.getElementById('run-policy').disabled=false;
-    document.getElementById('gate-sequence').style.display='none';
-    document.getElementById('policy-result').style.display='none';
-    document.getElementById('reasoning-panel').style.display='none';
+  const btn=document.createElement('button');btn.className='scenario';
+  btn.innerHTML=`<span class="sc-tag">${p.tag}</span><span class="sc-title">${p.title}</span>`;
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.scenario').forEach(s=>s.classList.remove('sel'));
+    btn.classList.add('sel');selPolicy=p;
+    document.getElementById('btn-policy').disabled=false;
+    document.getElementById('gate-list').style.display='none';
+    document.getElementById('verdict-box').innerHTML='';
+    document.getElementById('reasoning-box').innerHTML='';
   });
-  policyGrid.appendChild(card);
+  sg.appendChild(btn);
 });
 
-document.getElementById('run-policy').addEventListener('click',async function(){
-  if(!selectedPolicy) return;
-  const p=selectedPolicy;
-  this.disabled=true;
-
-  // Build gates
-  const gateSeq=document.getElementById('gate-sequence');
-  gateSeq.style.display='flex';
-  gateSeq.innerHTML='';
-  const gateEls=p.gates.map((g,i)=>{
-    const div=document.createElement('div');
-    div.className='gate-item';
-    div.innerHTML=`
-      <span class="gate-num">${String(i+1).padStart(2,'0')}</span>
-      <span class="gate-name">${g.name}${g.reason?`<span style="font-size:11px;color:var(--muted);display:block;margin-top:2px;">${g.reason}</span>`:''}</span>
-      <span class="gate-status running" id="gs-${i}">—</span>`;
-    gateSeq.appendChild(div);
-    return {el:div,statusEl:div.querySelector(`#gs-${i}`),pass:g.pass};
+document.getElementById('btn-policy').addEventListener('click',async function(){
+  if(!selPolicy)return;const p=selPolicy;this.disabled=true;
+  const gl=document.getElementById('gate-list');gl.style.display='flex';gl.innerHTML='';
+  const gEls=p.gates.map((g,i)=>{
+    const div=document.createElement('div');div.className='gate';
+    div.innerHTML=`<span class="gate-n">${String(i+1).padStart(2,'0')}</span>
+      <span class="gate-name">${g.n}${g.r?`<span class="gate-reason">${g.r}</span>`:''}</span>
+      <span class="gate-status gs-r" id="gs${i}">—</span>`;
+    gl.appendChild(div);return {el:div,s:document.getElementById('gs'+i),pass:g.pass};
   });
-
-  // Animate gates sequentially
-  for(let i=0;i<gateEls.length;i++){
-    gateEls[i].statusEl.textContent='CHECK';
-    gateEls[i].el.classList.add('lit','running');
-    await delay(420);
-    gateEls[i].el.classList.remove('running');
-    if(gateEls[i].pass){
-      gateEls[i].el.classList.add('pass');
-      gateEls[i].statusEl.className='gate-status pass';
-      gateEls[i].statusEl.textContent='PASS';
-    } else {
-      gateEls[i].el.classList.add('fail');
-      gateEls[i].statusEl.className='gate-status fail';
-      gateEls[i].statusEl.textContent='FAIL';
-    }
+  for(let i=0;i<gEls.length;i++){
+    gEls[i].el.classList.add('lit','r');gEls[i].s.textContent='CHECK';
+    await delay(380);gEls[i].el.classList.remove('r');
+    if(gEls[i].pass){gEls[i].el.classList.add('p');gEls[i].s.className='gate-status gs-p';gEls[i].s.textContent='PASS';}
+    else{gEls[i].el.classList.add('f');gEls[i].s.className='gate-status gs-f';gEls[i].s.textContent='FAIL';}
   }
-
   await delay(300);
-
-  // Verdict
-  const isAllow=p.verdict==='allow';
-  const resDiv=document.getElementById('policy-result');
-  resDiv.style.display='block';
-  resDiv.innerHTML=`
-    <div class="verdict-box">
-      <div class="verdict-header ${p.verdict}">
-        <div style="display:flex;align-items:center;">
-          <div class="verdict-icon">${isAllow?'✓':'✕'}</div>
-          <div>
-            <div class="verdict-word">${isAllow?'ALLOWED':'DENIED'}</div>
-            <div class="verdict-sub">${isAllow?'All gates satisfied — execution admissible':'One or more gates failed — policy cannot execute'}</div>
-          </div>
-        </div>
-        <div class="score-block">Admissibility<span class="score-num">${isAllow?'0.94':'0.25'}</span></div>
+  const allow=p.verdict==='allow';
+  const col=allow?'rgba(0,200,150,.08)':'rgba(224,85,85,.06)';
+  const bc=allow?'rgba(0,200,150,.25)':'rgba(224,85,85,.2)';
+  const wc=allow?'var(--green)':'var(--red)';
+  document.getElementById('verdict-box').innerHTML=`
+    <div style="border:1px solid ${bc};background:${col};padding:14px 18px;margin-top:12px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:32px;height:32px;border-radius:50%;border:1.5px solid ${wc};display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:${wc};">${allow?'✓':'✕'}</div>
+        <div style="font-family:var(--mono);font-size:14px;font-weight:600;color:${wc};">${allow?'ALLOWED':'DENIED'}</div>
       </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);">Admissibility <span style="font-size:16px;color:${wc};display:block;">${allow?'0.94':'0.25'}</span></div>
     </div>`;
-
-  // Reasoning panel
   await delay(400);
-  const rp=document.getElementById('reasoning-panel');
-  rp.style.display='block';
-  rp.innerHTML=`
-    <div class="reasoning-block">
-      <div class="reasoning-title">AI Reasoning Inspection</div>
-      ${p.reasoning.map(r=>`
-        <div class="reasoning-row">
-          <span class="reasoning-check">✔</span>
-          <div>
-            <div class="reasoning-text">${r.text}</div>
-            <div class="reasoning-detail">${r.detail}</div>
-          </div>
-        </div>`).join('')}
+  document.getElementById('reasoning-box').innerHTML=`
+    <div class="reasoning"><div class="reas-title">AI Reasoning Inspection</div>
+      ${p.reasoning.map(r=>`<div class="reas-row"><span class="reas-chk">✔</span><div><div class="reas-txt">${r.t}</div><div class="reas-det">${r.d}</div></div></div>`).join('')}
     </div>`;
-
   this.disabled=false;
 });
 
-// ── BEHAVIORAL DRIFT ──────────────────────────────────────────
-document.getElementById('run-drift').addEventListener('click',async function(){
-  this.disabled=true;
-  document.getElementById('drift-display').style.display='block';
-
-  // Baseline data
-  const baseline={read:85,search:10,report:5,enum:0};
-  const session ={read:35,search:10,report:5,enum:50};
-
-  // Animate baseline first
-  function animateBar(fillId,pctId,target,delay_ms){
-    setTimeout(()=>{
-      document.getElementById(fillId).style.width=target+'%';
-      document.getElementById(pctId).textContent=target+'%';
-    },delay_ms);
-  }
-
-  animateBar('bf-read','b-read',baseline.read,100);
-  animateBar('bf-search','b-search',baseline.search,200);
-  animateBar('bf-report','b-report',baseline.report,300);
-  animateBar('bf-enum','b-enum',baseline.enum,400);
-
+// ── DRIFT ─────────────────────────────────────────────────────
+document.getElementById('btn-drift').addEventListener('click',async function(){
+  this.disabled=true;document.getElementById('drift-display').style.display='block';
+  function ab(fi,pi,v,d){setTimeout(()=>{document.getElementById(fi).style.width=v+'%';document.getElementById(pi).textContent=v+'%';},d);}
+  ab('bf-read','b-read',85,100);ab('bf-search','b-search',10,200);ab('bf-report','b-report',5,300);ab('bf-enum','b-enum',0,400);
   await delay(800);
-
-  // Animate session — anomalous
-  animateBar('sf-read','s-read',session.read,100);
-  animateBar('sf-search','s-search',session.search,200);
-  animateBar('sf-report','s-report',session.report,300);
-  animateBar('sf-enum','s-enum',session.enum,400);
-
-  // Similarity score drops
+  ab('sf-read','s-read',35,100);ab('sf-search','s-search',10,200);ab('sf-report','s-report',5,300);ab('sf-enum','s-enum',50,400);
   await delay(600);
-  const simEl=document.getElementById('sim-value');
-  const simBar=document.getElementById('sim-bar');
-  const steps=[{v:96,cls:''},{v:88,cls:''},{v:74,cls:'dropping'},{v:41,cls:'critical'}];
-  for(const step of steps){
-    await delay(700);
-    simEl.textContent=step.v+'%';
-    simEl.className='sim-value '+step.cls;
-    simBar.style.width=step.v+'%';
-    simBar.style.background=step.v>80?'var(--green)':step.v>60?'var(--amber)':'var(--red)';
+  const sv=document.getElementById('sim-val'),sf=document.getElementById('sim-fill');
+  for(const [v,cls,bg] of [[96,'','var(--green)'],[88,'drop','var(--green)'],[74,'drop','var(--amber)'],[41,'crit','var(--red)']]) {
+    await delay(700);sv.textContent=v+'%';sv.className='sim-val '+cls;
+    sf.style.width=v+'%';sf.style.background=bg;
   }
-
-  await delay(600);
-  document.getElementById('quarantine-alert').classList.add('visible');
-  this.disabled=false;
+  await delay(500);document.getElementById('q-alert').classList.add('vis');this.disabled=false;
 });
 
 // ── IATP ─────────────────────────────────────────────────────
 const iatpClean=[
-  {title:'Step 1 — Identity Verification',lines:[
-    {t:'Agent A identity: Ed25519 verified',ok:true},
-    {t:'Agent B identity: Ed25519 verified',ok:true},
-  ]},
-  {title:'Step 2 — Authority Certificate Exchange',lines:[
-    {t:'Agent A: authority valid, 14 min remaining',ok:true},
-    {t:'Agent B: authority valid, 51 min remaining',ok:true},
-  ]},
-  {title:'Step 3 — Capability Compatibility',lines:[
-    {t:'Agent A requests: [market_data_read]',ok:true},
-    {t:'Agent B permits: [market_data_read, trade_execute]',ok:true},
-    {t:'Intersection: [market_data_read] → permitted',ok:true},
-  ]},
-  {title:'Step 4 — Consequence Boundary',lines:[
-    {t:'Requested tier: OPERATIONAL (within bound)',ok:true},
-    {t:'No CRITICAL/EMERGENCY escalation triggered',ok:true},
-  ]},
-  {title:'Result',lines:[{t:'COMMUNICATION ALLOWED — session sealed',ok:true}]},
+  {t:'Step 1 — Identity',l:[{t:'Agent A: Ed25519 verified',p:true},{t:'Agent B: Ed25519 verified',p:true}]},
+  {t:'Step 2 — Authority',l:[{t:'Agent A: valid, 14 min remaining',p:true},{t:'Agent B: valid, 51 min remaining',p:true}]},
+  {t:'Step 3 — Capability',l:[{t:'Agent A requests: [market_data_read]',p:true},{t:'Agent B permits: [market_data_read, trade_execute]',p:true},{t:'Intersection: [market_data_read]',p:true}]},
+  {t:'Step 4 — Consequence',l:[{t:'Requested: OPERATIONAL (within bound)',p:true}]},
+  {t:'Result',l:[{t:'COMMUNICATION ALLOWED — session sealed',p:true}]},
 ];
-
 const iatpAttack=[
-  {title:'Step 1 — Identity Verification',lines:[
-    {t:'Agent A identity: Ed25519 verified',ok:true},
-    {t:'Agent X identity: no signature presented',ok:false},
-  ]},
-  {title:'Result',lines:[{t:'HALTED at Step 1 — no communication possible without verified identity',ok:false,halt:true}]},
+  {t:'Step 1 — Identity',l:[{t:'Agent A: Ed25519 verified',p:true},{t:'Agent X: no signature presented',p:false}]},
+  {t:'Result',l:[{t:'HALTED at Step 1 — identity unverified',halt:true}]},
 ];
-
 async function renderIatp(steps){
-  const c=document.getElementById('iatp-steps');
-  c.innerHTML='';
+  const c=document.getElementById('neg-steps');c.innerHTML='';
   for(let i=0;i<steps.length;i++){
-    const s=steps[i];
-    const div=document.createElement('div');
-    div.className='neg-step';
-    div.innerHTML=`
-      <div class="neg-num">${String(i+1).padStart(2,'0')}</div>
-      <div class="neg-body">
-        <div class="neg-title">${s.title}</div>
-        ${s.lines.map(l=>`<div class="neg-line ${l.halt?'halt':l.ok?'pass':'fail'}">${l.t}</div>`).join('')}
+    const s=steps[i];const div=document.createElement('div');div.className='neg-step';
+    div.innerHTML=`<div class="neg-n">${String(i+1).padStart(2,'0')}</div>
+      <div class="neg-body"><div class="neg-title">${s.t}</div>
+        ${s.l.map(l=>`<div class="neg-line ${l.halt?'halt':l.p?'p':'f'}">${l.t}</div>`).join('')}
       </div>`;
-    c.appendChild(div);
-    await delay(i*380);
-    div.classList.add('revealed');
+    c.appendChild(div);await delay(i*360);div.classList.add('lit');
   }
 }
+document.getElementById('btn-iatp-clean').addEventListener('click',()=>renderIatp(iatpClean));
+document.getElementById('btn-iatp-attack').addEventListener('click',()=>renderIatp(iatpAttack));
 
-document.getElementById('run-iatp-clean').addEventListener('click',()=>renderIatp(iatpClean));
-document.getElementById('run-iatp-attack').addEventListener('click',()=>renderIatp(iatpAttack));
-
-// ── APPEAL ───────────────────────────────────────────────────
-document.getElementById('run-challenge').addEventListener('click',function(){
+// ── APPEAL ────────────────────────────────────────────────────
+document.getElementById('btn-challenge').addEventListener('click',function(){
   this.disabled=true;
-  const chip=document.getElementById('policy-chip');
-  const flow=document.getElementById('appeal-flow');
-
-  flow.innerHTML=`
-    <div class="flow-card">
-      <div class="flow-role">Challenger</div>
-      <div class="flow-grounds">Civil Liberties Union — Rights Preservation invariant violated</div>
-      <div class="flow-evidence">Precedent D-2026-112 establishes aerial privacy as a protected right, post-dating this policy's original approval.</div>
-    </div>`;
-
+  const chip=document.getElementById('p-chip'),flow=document.getElementById('appeal-flow');
+  flow.innerHTML=`<div class="flow-card"><div class="flow-role">Challenger</div><div class="flow-grounds">Civil Liberties Union — Rights Preservation invariant violated</div><div class="flow-ev">Precedent D-2026-112 establishes aerial privacy as a protected right, post-dating this policy's original approval.</div></div>`;
   setTimeout(()=>{
-    chip.className='chip revoked';
-    chip.textContent='REVOKED — D-2026-112 applies';
-    flow.innerHTML+=`
-      <div class="result-card">
-        <div class="result-line">✗ Rights Preservation: now violated under updated precedent</div>
-        <div class="result-line">Policy removed from the legitimate set · revocation receipt sealed</div>
-        <div class="result-line">All pending executions blocked</div>
-      </div>`;
-    const appealBtn=document.createElement('button');
-    appealBtn.className='btn btn-secondary';
-    appealBtn.textContent='File Appeal →';
-    appealBtn.style.marginTop='8px';
-    appealBtn.addEventListener('click',()=>{
-      appealBtn.disabled=true;
-      flow.innerHTML+=`
-        <div class="flow-card" style="margin-top:12px;">
-          <div class="flow-role">Appellant — Defense Ministry</div>
-          <div class="flow-grounds">Emergency Override Doctrine E-2026-45</div>
-          <div class="flow-evidence">Doctrine permits temporary suspension of D-2026-112 during declared national-security events.</div>
-        </div>
-        <div class="result-card pending">
-          <div class="result-line">Appeal received — pending review by designated authority</div>
-          <div class="result-line">Policy remains REVOKED until appeal resolves</div>
-        </div>`;
-      chip.className='chip pending';
-      chip.textContent='REVOKED — appeal pending';
+    chip.className='chip chip-r';chip.textContent='REVOKED — D-2026-112 applies';
+    flow.innerHTML+=`<div class="result-card"><div class="result-line">✗ Rights Preservation: violated under updated precedent</div><div class="result-line">Policy removed from legitimate set · revocation receipt sealed</div></div>`;
+    const ab=document.createElement('button');ab.className='btn btn-s';ab.textContent='File Appeal →';ab.style.marginTop='8px';
+    ab.addEventListener('click',()=>{ab.disabled=true;
+      flow.innerHTML+=`<div class="flow-card" style="margin-top:10px;"><div class="flow-role">Appellant — Defense Ministry</div><div class="flow-grounds">Emergency Override Doctrine E-2026-45</div><div class="flow-ev">Doctrine permits temporary suspension of D-2026-112 during national-security events.</div></div><div class="result-card pend"><div class="result-line">Appeal received — pending review</div><div class="result-line">Policy remains REVOKED until appeal resolves</div></div>`;
+      chip.className='chip chip-a';chip.textContent='REVOKED — appeal pending';
     });
-    flow.appendChild(appealBtn);
+    flow.appendChild(ab);
   },700);
 });
 
-// ── RECEIPT ──────────────────────────────────────────────────
-document.getElementById('run-receipt').addEventListener('click',async function(){
+// ── RECEIPT ───────────────────────────────────────────────────
+document.getElementById('btn-receipt').addEventListener('click',async function(){
   this.disabled=true;
-  const block=document.getElementById('receipt-block');
-  block.style.display='block';
-  document.getElementById('receipt-id').textContent='VSG-2026-'+hexId();
-
+  const rec=document.getElementById('receipt');rec.style.display='block';
+  document.getElementById('r-id').textContent='VSG-2026-'+hexId();
   const rows=[
-    {k:'Receipt Type',       v:'Governance Execution Receipt',   cls:''},
-    {k:'Agent ID',           v:'Purchasing-Agent-14',            cls:''},
-    {k:'Action',             v:'wire_transfer — $85,000',        cls:''},
-    {k:'Ruling',             v:'DENY',                           cls:'red'},
-    {k:'Authority',          v:'EXPIRED — ceiling $10,000',      cls:'red'},
-    {k:'Consequence Tier',   v:'CRITICAL',                       cls:'amber'},
-    {k:'Fail-Open',          v:'false',                          cls:'green'},
-    {k:'Payload Hash',       v:'sha256:5724b5f8...',             cls:''},
-    {k:'Policy Hash',        v:'sha256:261c0cca...',             cls:''},
-    {k:'Reasoning Inspected',v:'✔ No hallucination · ✔ Chain complete · ✔ Reproducible', cls:'green'},
-    {k:'Signed At',          v:new Date().toISOString().slice(0,19)+'Z', cls:''},
-    {k:'Algorithm',          v:'Ed25519',                        cls:''},
-    {k:'Public Key',         v:'lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=', cls:''},
-    {k:'Signature',          v:'Ed25519:'+hexId()+'...', cls:'green'},
-    {k:'Offline Verifiable', v:'true — GET /v1/verify/kit',      cls:'green'},
+    {k:'Receipt Type',v:'Governance Execution Receipt'},
+    {k:'Agent ID',v:'Purchasing-Agent-14'},
+    {k:'Action',v:'wire_transfer — $85,000'},
+    {k:'Ruling',v:'DENY',c:'r'},
+    {k:'Authority',v:'EXPIRED — ceiling $10,000',c:'r'},
+    {k:'Consequence',v:'CRITICAL',c:'a'},
+    {k:'Fail-Open',v:'false',c:'g'},
+    {k:'Payload Hash',v:'sha256:5724b5f8...'},
+    {k:'Reasoning',v:'✔ No hallucination · ✔ Chain complete · ✔ Reproducible',c:'g'},
+    {k:'Signed At',v:new Date().toISOString().slice(0,19)+'Z'},
+    {k:'Algorithm',v:'Ed25519'},
+    {k:'Public Key',v:'lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8='},
+    {k:'Signature',v:'Ed25519:'+hexId()+'...',c:'g'},
+    {k:'Offline Verifiable',v:'true — GET /v1/verify/kit',c:'g'},
   ];
-
-  const body=document.getElementById('receipt-body');
-  body.innerHTML='';
+  const body=document.getElementById('r-body');body.innerHTML='';
   for(let i=0;i<rows.length;i++){
-    const row=document.createElement('div');
-    row.className='receipt-row';
-    row.innerHTML=`<span class="receipt-key">${rows[i].k}</span><span class="receipt-val ${rows[i].cls}">${rows[i].v}</span>`;
-    body.appendChild(row);
-    await delay(i*120);
-    row.classList.add('printed');
+    const row=document.createElement('div');row.className='r-row';
+    row.innerHTML=`<span class="r-k">${rows[i].k}</span><span class="r-v ${rows[i].c||''}">${rows[i].v}</span>`;
+    body.appendChild(row);await delay(i*110);row.classList.add('printed');
   }
   this.disabled=false;
 });

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Interactive Demo Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:       #09111E;
+  --surface:  #1A2A3E;
+  --elevated: #243347;
+  --border:   rgba(255,255,255,.07);
+  --text:     #E6EDF6;
+  --muted:    #6B849E;
+  --faint:    #374A60;
+  --green:    #00C896;
+  --amber:    #F5A623;
+  --red:      #E05555;
+  --blue:     #4A9EFF;
+  --mono:     'IBM Plex Mono',monospace;
+  --sans:     'Inter',sans-serif;
+}
+html{-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;line-height:1.6;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+/* ── SHELL ── */
+.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+@media(max-width:800px){.shell{grid-template-columns:1fr;}}
+
+/* ── RAIL ── */
+.rail{
+  border-right:1px solid var(--border);
+  padding:32px 24px;
+  display:flex;flex-direction:column;gap:32px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+@media(max-width:800px){.rail{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border);}}
+.brand-mark{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.brand h1{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--text);line-height:1.3;}
+.brand p{font-size:11px;color:var(--muted);margin-top:4px;}
+
+.nav-items{display:flex;flex-direction:column;gap:2px;}
+.nav-btn{
+  all:unset;cursor:pointer;
+  padding:11px 12px;
+  border-left:2px solid transparent;
+  display:flex;flex-direction:column;gap:2px;
+  transition:background .15s,border-color .15s;
+}
+.nav-btn:hover{background:rgba(255,255,255,.03);}
+.nav-btn.active{border-left-color:var(--green);background:rgba(0,200,150,.04);}
+.nav-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+.nav-btn.active .nav-eyebrow{color:var(--green);}
+.nav-label{font-size:13px;font-weight:500;color:var(--text);}
+.nav-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+
+.rail-note{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);font-size:10.5px;color:var(--faint);line-height:1.6;}
+
+/* ── MAIN ── */
+main{padding:44px 48px 80px;max-width:860px;}
+@media(max-width:800px){main{padding:28px 20px 60px;}}
+
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.panel-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+.panel-title{font-size:26px;font-weight:600;line-height:1.2;margin-bottom:8px;letter-spacing:-.01em;}
+.panel-sub{font-size:14px;color:var(--muted);max-width:56ch;margin-bottom:28px;line-height:1.7;}
+
+/* ── BUTTONS ── */
+.btn{
+  all:unset;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  letter-spacing:.04em;
+  border-radius:2px;
+  transition:all .15s;
+}
+.btn-primary{background:var(--green);color:#09111E;}
+.btn-primary:hover{opacity:.88;}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--faint);}
+.btn-secondary:hover{border-color:var(--text);}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+
+/* ── DIVIDER ── */
+.rule{height:1px;background:var(--border);margin:28px 0;}
+
+/* ── POLICY SCENARIOS ── */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+@media(max-width:600px){.scenario-grid{grid-template-columns:1fr;}}
+.scenario-card{
+  all:unset;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border);
+  padding:14px 16px;
+  transition:border-color .15s;
+}
+.scenario-card:hover{border-color:var(--faint);}
+.scenario-card.selected{border-color:var(--green);background:rgba(0,200,150,.04);}
+.scenario-tag{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:5px;}
+.scenario-title{font-size:12.5px;color:var(--text);line-height:1.4;}
+
+/* ── VERDICT ── */
+.verdict-box{border:1px solid var(--border);background:var(--surface);overflow:hidden;margin-top:20px;}
+.verdict-header{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.verdict-header.allow{background:rgba(0,200,150,.06);border-color:rgba(0,200,150,.2);}
+.verdict-header.deny{background:rgba(224,85,85,.06);border-color:rgba(224,85,85,.2);}
+.verdict-header.escalate{background:rgba(245,166,35,.05);border-color:rgba(245,166,35,.2);}
+.verdict-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;flex-shrink:0;border:1.5px solid;}
+.verdict-header.allow .verdict-icon{color:var(--green);border-color:var(--green);}
+.verdict-header.deny .verdict-icon{color:var(--red);border-color:var(--red);}
+.verdict-header.escalate .verdict-icon{color:var(--amber);border-color:var(--amber);}
+.verdict-word{font-family:var(--mono);font-size:16px;font-weight:600;margin-left:12px;}
+.verdict-header.allow .verdict-word{color:var(--green);}
+.verdict-header.deny .verdict-word{color:var(--red);}
+.verdict-header.escalate .verdict-word{color:var(--amber);}
+.verdict-sub{font-size:12px;color:var(--muted);margin-left:12px;margin-top:1px;}
+.score-block{font-family:var(--mono);text-align:right;font-size:11px;color:var(--muted);}
+.score-num{font-size:18px;color:var(--text);display:block;}
+
+.invariant-list{padding:16px 20px;}
+.inv-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.inv-row:last-child{border-bottom:none;}
+.inv-icon{font-family:var(--mono);font-size:12px;width:14px;flex-shrink:0;margin-top:1px;}
+.inv-icon.pass{color:var(--green);}
+.inv-icon.fail{color:var(--red);}
+.inv-name{font-size:12.5px;font-weight:500;}
+.inv-detail{font-size:11.5px;color:var(--muted);margin-top:2px;}
+
+/* ── ANIMATED GATES ── */
+.gate-sequence{display:flex;flex-direction:column;gap:3px;margin:20px 0;}
+.gate-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 16px;
+  background:var(--surface);border:1px solid var(--border);
+  opacity:.25;
+  transition:opacity .4s ease,border-color .4s ease,background .4s ease;
+}
+.gate-item.lit.pass{opacity:1;border-color:rgba(0,200,150,.3);background:rgba(0,200,150,.04);}
+.gate-item.lit.fail{opacity:1;border-color:rgba(224,85,85,.3);background:rgba(224,85,85,.04);}
+.gate-item.lit.running{opacity:.7;border-color:rgba(74,158,255,.3);animation:pulse .8s infinite;}
+@keyframes pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
+.gate-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:24px;flex-shrink:0;}
+.gate-name{font-size:13px;font-weight:500;flex:1;}
+.gate-status{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:3px 8px;}
+.gate-status.pass{background:rgba(0,200,150,.1);color:var(--green);}
+.gate-status.fail{background:rgba(224,85,85,.08);color:var(--red);}
+.gate-status.running{background:rgba(74,158,255,.08);color:var(--blue);}
+
+/* ── BEHAVIORAL DRIFT ── */
+.drift-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+@media(max-width:600px){.drift-grid{grid-template-columns:1fr;}}
+.drift-col{background:var(--surface);border:1px solid var(--border);padding:18px;}
+.drift-col-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.drift-col.anomalous{border-color:rgba(224,85,85,.25);}
+.drift-col.anomalous .drift-col-label{color:var(--red);}
+
+.behavior-bar{margin-bottom:10px;}
+.bar-label{font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px;}
+.bar-label .pct{font-family:var(--mono);font-size:11px;color:var(--text);}
+.bar-track{height:6px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:1px;width:0;transition:width 1s ease;}
+.bar-fill.normal{background:var(--green);}
+.bar-fill.danger{background:var(--red);}
+.bar-fill.muted{background:var(--blue);}
+
+.similarity-meter{
+  margin:16px 0;
+  padding:16px;
+  background:var(--surface);border:1px solid var(--border);
+}
+.sim-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sim-value{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--green);transition:color .5s;}
+.sim-value.dropping{color:var(--amber);}
+.sim-value.critical{color:var(--red);}
+.sim-bar-track{height:8px;background:rgba(255,255,255,.05);margin-top:8px;border-radius:1px;overflow:hidden;}
+.sim-bar-fill{height:100%;background:var(--green);transition:width .8s ease,background .5s;}
+
+.quarantine-alert{
+  padding:16px;
+  background:rgba(224,85,85,.06);
+  border:1px solid rgba(224,85,85,.2);
+  margin-top:16px;
+  display:none;
+}
+.quarantine-alert.visible{display:block;animation:fadeIn .3s ease;}
+.qa-title{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.06em;margin-bottom:8px;}
+.qa-line{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:2px 0;}
+
+/* ── IATP NEGOTIATION ── */
+.agent-pair{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:12px;margin-bottom:20px;}
+.agent-card{background:var(--surface);border:1px solid var(--border);padding:14px 16px;}
+.agent-who{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.agent-name{font-size:13px;font-weight:500;}
+.agent-org{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.agent-vs{font-family:var(--mono);font-size:12px;color:var(--faint);text-align:center;}
+
+.neg-steps{display:flex;flex-direction:column;gap:2px;}
+.neg-step{
+  display:flex;gap:12px;
+  padding:12px;
+  background:var(--surface);border:1px solid var(--border);
+  opacity:.2;transition:opacity .35s ease;
+}
+.neg-step.revealed{opacity:1;}
+.neg-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:20px;flex-shrink:0;padding-top:1px;}
+.neg-body{flex:1;}
+.neg-title{font-size:12.5px;font-weight:500;margin-bottom:5px;}
+.neg-line{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:1.5px 0;}
+.neg-line.pass::before{content:"✓ ";color:var(--green);}
+.neg-line.fail::before{content:"✗ ";color:var(--red);}
+.neg-line.halt{color:var(--red);font-weight:500;}
+.neg-line.halt::before{content:"⛔ ";}
+
+/* ── RECEIPT ── */
+.receipt{
+  border:1px solid rgba(0,200,150,.25);
+  background:rgba(0,200,150,.03);
+  padding:0;
+  margin-top:24px;
+  overflow:hidden;
+  font-family:var(--mono);
+}
+.receipt-header{
+  background:rgba(0,200,150,.08);
+  border-bottom:1px solid rgba(0,200,150,.2);
+  padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.receipt-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);}
+.receipt-id{font-size:10px;color:var(--muted);}
+.receipt-body{padding:20px;}
+.receipt-row{
+  display:grid;grid-template-columns:160px 1fr;
+  gap:8px;
+  padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,.03);
+  font-size:11.5px;
+  opacity:0;
+  transform:translateY(4px);
+  transition:opacity .3s ease,transform .3s ease;
+}
+.receipt-row:last-child{border-bottom:none;}
+.receipt-row.printed{opacity:1;transform:translateY(0);}
+.receipt-key{color:var(--muted);}
+.receipt-val{color:var(--text);}
+.receipt-val.green{color:var(--green);}
+.receipt-val.red{color:var(--red);}
+.receipt-val.amber{color:var(--amber);}
+.receipt-footer{
+  border-top:1px solid rgba(0,200,150,.15);
+  padding:12px 20px;
+  font-size:10px;color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.receipt-footer::before{content:"§";color:var(--green);font-size:14px;}
+
+/* ── APPEAL ── */
+.policy-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--border);
+  padding:14px 18px;margin-bottom:16px;flex-wrap:wrap;gap:8px;
+}
+.policy-id{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.policy-name{font-size:13px;margin-top:2px;}
+.chip{font-family:var(--mono);font-size:10px;padding:4px 10px;letter-spacing:.04em;}
+.chip.legit{background:rgba(0,200,150,.08);color:var(--green);border:1px solid rgba(0,200,150,.2);}
+.chip.revoked{background:rgba(224,85,85,.06);color:var(--red);border:1px solid rgba(224,85,85,.2);}
+.chip.pending{background:rgba(245,166,35,.06);color:var(--amber);border:1px solid rgba(245,166,35,.2);}
+
+.flow-card{background:var(--surface);border:1px solid var(--border);padding:16px;margin-bottom:10px;}
+.flow-role{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.flow-grounds{font-size:13px;margin-bottom:4px;}
+.flow-evidence{font-size:12px;color:var(--muted);line-height:1.5;}
+.result-card{padding:14px;border-left:2px solid var(--red);background:rgba(224,85,85,.04);margin:12px 0;}
+.result-card.pending{border-left-color:var(--amber);background:rgba(245,166,35,.04);}
+.result-line{font-family:var(--mono);font-size:11.5px;padding:2px 0;color:var(--text);}
+
+/* ── REASONING PANEL ── */
+.reasoning-block{
+  background:var(--surface);border:1px solid var(--border);
+  padding:18px;margin-top:16px;
+}
+.reasoning-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+.reasoning-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.reasoning-row:last-child{border-bottom:none;}
+.reasoning-check{font-family:var(--mono);font-size:12px;color:var(--green);width:14px;flex-shrink:0;}
+.reasoning-text{font-size:12.5px;color:var(--text);}
+.reasoning-detail{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ── JOURNEY TIMELINE ── */
+.journey-step{
+  display:flex;gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.03);
+  opacity:.15;
+  transition:opacity .4s ease;
+}
+.journey-step:last-child{border-bottom:none;}
+.journey-step.revealed{opacity:1;}
+.j-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:24px;flex-shrink:0;padding-top:2px;}
+.j-body{flex:1;}
+.j-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.j-label.green{color:var(--green);}
+.j-label.red{color:var(--red);}
+.j-text{font-size:13px;color:var(--text);}
+.j-detail{font-size:11.5px;color:var(--muted);margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<nav class="rail">
+  <div class="brand">
+    <div class="brand-mark">VeriSigil AI</div>
+    <h1>Interactive<br>Demo Suite</h1>
+    <p>Governance made verifiable</p>
+  </div>
+
+  <div class="nav-items">
+    <button class="nav-btn active" data-panel="journey">
+      <span class="nav-eyebrow">Start Here · 2 min</span>
+      <span class="nav-label">Guided Journey</span>
+      <span class="nav-desc">One agent, one action, every checkpoint</span>
+    </button>
+    <button class="nav-btn" data-panel="policy">
+      <span class="nav-eyebrow">Policy Check</span>
+      <span class="nav-label">Admissibility Engine</span>
+      <span class="nav-desc">Animated gate evaluation</span>
+    </button>
+    <button class="nav-btn" data-panel="drift">
+      <span class="nav-eyebrow">Behavior</span>
+      <span class="nav-label">Behavioral Drift</span>
+      <span class="nav-desc">Live fingerprint comparison</span>
+    </button>
+    <button class="nav-btn" data-panel="iatp">
+      <span class="nav-eyebrow">Agent Trust</span>
+      <span class="nav-label">Inter-AI Negotiation</span>
+      <span class="nav-desc">Two agents establish trust</span>
+    </button>
+    <button class="nav-btn" data-panel="appeal">
+      <span class="nav-eyebrow">Appeals</span>
+      <span class="nav-label">Challenge &amp; Appeal</span>
+      <span class="nav-desc">Legitimacy is contestable</span>
+    </button>
+    <button class="nav-btn" data-panel="receipt">
+      <span class="nav-eyebrow">Evidence</span>
+      <span class="nav-label">Governance Receipt</span>
+      <span class="nav-desc">The sealed artifact</span>
+    </button>
+  </div>
+
+  <div class="rail-note">Scripted scenarios illustrating live governance. Full API reference with 144 live endpoints: <a href="/api-demos.html" style="color:var(--green);">api-demos.html →</a><br><br>Live endpoints: verisigil-api-production.up.railway.app · key: vs-sandbox-demo-2026b</div>
+</nav>
+
+<main>
+
+<!-- ── GUIDED JOURNEY ── -->
+<section class="panel active" id="panel-journey">
+  <div class="panel-kicker">The Full Path</div>
+  <h2 class="panel-title">One agent. One action. Every checkpoint.</h2>
+  <p class="panel-sub">A purchasing agent authorized up to $10,000 attempts an $85,000 wire transfer. Watch every governance layer activate in sequence — and see the receipt that proves it all happened.</p>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="run-journey">Play Journey →</button>
+  </div>
+
+  <div id="journey-steps"></div>
+</section>
+
+<!-- ── ADMISSIBILITY ENGINE ── -->
+<section class="panel" id="panel-policy">
+  <div class="panel-kicker">Policy Admissibility</div>
+  <h2 class="panel-title">Should this rule be allowed to execute?</h2>
+  <p class="panel-sub">Select a governance policy. Six gates evaluate it sequentially — watch them light up in real time. A policy that fails any gate cannot execute on any VeriSigil-governed system.</p>
+
+  <div class="scenario-grid" id="policy-grid"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="run-policy" disabled>Evaluate Policy →</button>
+  </div>
+
+  <div id="gate-sequence" class="gate-sequence" style="display:none;"></div>
+  <div id="policy-result" style="display:none;"></div>
+  <div id="reasoning-panel" style="display:none;"></div>
+</section>
+
+<!-- ── BEHAVIORAL DRIFT ── -->
+<section class="panel" id="panel-drift">
+  <div class="panel-kicker">AI Immune System</div>
+  <h2 class="panel-title">A valid identity. Acting outside its baseline.</h2>
+  <p class="panel-sub">Identity checks alone don't catch this. The agent's credentials stay valid throughout. What changes is the shape of its actions — tracked in real time against the established baseline.</p>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="run-drift">Run Behavioral Analysis →</button>
+  </div>
+
+  <div id="drift-display" style="display:none;">
+    <div class="drift-grid">
+      <div class="drift-col" id="baseline-col">
+        <div class="drift-col-label">Baseline (Days 1–5)</div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Read documents</span><span class="pct" id="b-read">0%</span></div>
+          <div class="bar-track"><div class="bar-fill normal" id="bf-read" style="width:0%"></div></div>
+        </div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Search &amp; query</span><span class="pct" id="b-search">0%</span></div>
+          <div class="bar-track"><div class="bar-fill muted" id="bf-search" style="width:0%"></div></div>
+        </div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Summarize &amp; report</span><span class="pct" id="b-report">0%</span></div>
+          <div class="bar-track"><div class="bar-fill muted" id="bf-report" style="width:0%"></div></div>
+        </div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Secret enumeration</span><span class="pct" id="b-enum">0%</span></div>
+          <div class="bar-track"><div class="bar-fill danger" id="bf-enum" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="drift-col anomalous" id="session-col">
+        <div class="drift-col-label">Current Session (Day 6)</div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Read documents</span><span class="pct" id="s-read">0%</span></div>
+          <div class="bar-track"><div class="bar-fill normal" id="sf-read" style="width:0%"></div></div>
+        </div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Search &amp; query</span><span class="pct" id="s-search">0%</span></div>
+          <div class="bar-track"><div class="bar-fill muted" id="sf-search" style="width:0%"></div></div>
+        </div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Summarize &amp; report</span><span class="pct" id="s-report">0%</span></div>
+          <div class="bar-track"><div class="bar-fill muted" id="sf-report" style="width:0%"></div></div>
+        </div>
+        <div class="behavior-bar">
+          <div class="bar-label"><span>Secret enumeration</span><span class="pct" id="s-enum">0%</span></div>
+          <div class="bar-track"><div class="bar-fill danger" id="sf-enum" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="similarity-meter">
+      <div class="sim-label">Behavioral Similarity Score</div>
+      <div class="sim-value" id="sim-value">—</div>
+      <div class="sim-bar-track">
+        <div class="sim-bar-fill" id="sim-bar" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <div class="quarantine-alert" id="quarantine-alert">
+      <div class="qa-title">⛔ AUTONOMOUS RESPONSE TRIGGERED</div>
+      <div class="qa-line">14:32:07 — Intent drift detected (similarity dropped below threshold)</div>
+      <div class="qa-line">14:32:07 — Consequence tier escalation flagged (LOW → CRITICAL)</div>
+      <div class="qa-line">14:32:08 — Authority escalation attempt blocked</div>
+      <div class="qa-line">14:32:08 — All IATP sessions suspended</div>
+      <div class="qa-line">14:32:08 — Quarantine receipt sealed · Ed25519 signed</div>
+      <div class="qa-line" style="margin-top:8px;color:var(--text);">Human supervisor notified. Agent cannot resume without re-verification.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── IATP ── -->
+<section class="panel" id="panel-iatp">
+  <div class="panel-kicker">Inter-AI Trust Protocol</div>
+  <h2 class="panel-title">Two AI agents, meeting for the first time.</h2>
+  <p class="panel-sub">Before any message is exchanged, identity, authority, and capability are verified on both sides. One side fails — no communication. No exception. This is TLS for autonomous agents.</p>
+
+  <div class="agent-pair">
+    <div class="agent-card">
+      <div class="agent-who">Agent A</div>
+      <div class="agent-name">Claims-Review-7</div>
+      <div class="agent-org">Requests: market_data_read</div>
+    </div>
+    <div class="agent-vs">⇄</div>
+    <div class="agent-card">
+      <div class="agent-who">Agent B</div>
+      <div class="agent-name">Trading-Agent-3</div>
+      <div class="agent-org">Permits: market_data_read, trade_execute</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="run-iatp-clean">Start Negotiation →</button>
+    <button class="btn btn-secondary" id="run-iatp-attack">Inject Malicious Agent</button>
+  </div>
+
+  <div class="neg-steps" id="iatp-steps"></div>
+</section>
+
+<!-- ── APPEAL ── -->
+<section class="panel" id="panel-appeal">
+  <div class="panel-kicker">Challenge &amp; Appeal</div>
+  <h2 class="panel-title">Legitimacy is provable. Not permanent.</h2>
+  <p class="panel-sub">A policy approved yesterday can be revoked by new precedent today — and a revocation can itself be appealed. Governance over governance, modeled as a state machine.</p>
+
+  <div class="policy-bar">
+    <div>
+      <div class="policy-id">POLICY P-2026-0892</div>
+      <div class="policy-name">Autonomous drone surveillance — public spaces</div>
+    </div>
+    <div class="chip legit" id="policy-chip">LEGITIMATE — proven 2026-07-15</div>
+  </div>
+
+  <div class="btn-row" id="appeal-controls">
+    <button class="btn btn-primary" id="run-challenge">File Challenge →</button>
+  </div>
+  <div id="appeal-flow"></div>
+</section>
+
+<!-- ── RECEIPT ── -->
+<section class="panel" id="panel-receipt">
+  <div class="panel-kicker">Governance Receipt</div>
+  <h2 class="panel-title">The artifact that proves governance happened.</h2>
+  <p class="panel-sub">Every governed execution produces a sealed receipt. Tamper-evident. Independently verifiable offline with the published Ed25519 public key. No trust in VeriSigil required to verify it.</p>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="run-receipt">Print Receipt →</button>
+  </div>
+
+  <div class="receipt" id="receipt-block" style="display:none;">
+    <div class="receipt-header">
+      <div class="receipt-title">Governance Receipt · VGS-1.0</div>
+      <div class="receipt-id" id="receipt-id">—</div>
+    </div>
+    <div class="receipt-body" id="receipt-body"></div>
+    <div class="receipt-footer">Independently verifiable · GET /v1/verify/kit · Public key: lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ── NAV ──────────────────────────────────────────────────────
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function hexId(){return Array.from({length:12},()=>Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');}
+
+// ── JOURNEY ──────────────────────────────────────────────────
+const journeyData=[
+  {type:'normal', label:'PASSPORT ISSUED', text:'Purchasing-Agent-14 receives cryptographic identity', detail:'Ed25519 signature bound to governance scope · authority ceiling $10,000'},
+  {type:'normal', label:'AUTHORITY BOUND', text:'Time-limited authority certificate issued', detail:'Scope: purchase.execute · ceiling: $10,000 · expires: 24h'},
+  {type:'red',    label:'ACTION REQUESTED', text:'Agent requests transfer of $85,000', detail:'8.5× the declared authority ceiling — exceeds bound scope'},
+  {type:'red',    label:'GATE 3 FAILS — AUTHORITY', text:'Authority chain check fails', detail:'Requested amount exceeds delegated mandate. Execution cannot proceed.'},
+  {type:'normal', label:'BEHAVIOR CHECK', text:'Session fingerprint compared to baseline', detail:'Similarity: 97% — no drift detected. Single authority failure.'},
+  {type:'red',    label:'RULING: DENY', text:'DENY issued before any funds move', detail:'all_bypasses_rejected: true · fail_open: false · latency: 0.03ms'},
+  {type:'normal', label:'RECEIPT SEALED', text:'Ed25519-signed governance receipt generated', detail:'Tamper-evident · offline verifiable · permanently immutable'},
+  {type:'normal', label:'REASONING INSPECTED', text:'AI decision reasoning reviewed for explainability', detail:'No hallucination detected · authority chain complete · decision reproducible'},
+];
+
+document.getElementById('run-journey').addEventListener('click',async function(){
+  this.disabled=true;
+  const container=document.getElementById('journey-steps');
+  container.innerHTML='';
+  journeyData.forEach((d,i)=>{
+    const div=document.createElement('div');
+    div.className='journey-step';
+    const cls=d.type==='red'?'red':d.type==='normal'?'green':'';
+    div.innerHTML=`
+      <div class="j-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="j-body">
+        <div class="j-label ${cls}">${d.label}</div>
+        <div class="j-text">${d.text}</div>
+        <div class="j-detail">${d.detail}</div>
+      </div>`;
+    container.appendChild(div);
+    setTimeout(()=>div.classList.add('revealed'),i*420);
+  });
+  await delay(journeyData.length*420+500);
+  this.disabled=false;
+});
+
+// ── POLICY / GATES ────────────────────────────────────────────
+const policies=[
+  {id:'wire',tag:'FINANCE · $85K',title:'Autonomous $85,000 wire transfer — authority ceiling $10,000',verdict:'deny',
+   gates:[
+     {name:'Syntax Validation',pass:true},
+     {name:'Scope Check',pass:true},
+     {name:'Authority Bound',pass:false,reason:'Amount $85,000 exceeds delegated ceiling $10,000'},
+     {name:'Consequence Tier',pass:false,reason:'CRITICAL financial action requires human present'},
+     {name:'Evidence Integrity',pass:true},
+     {name:'Signature Valid',pass:true},
+   ],
+   reasoning:[
+     {text:'Authority chain traced to root',detail:'Delegation chain intact — CEO → CFO → Purchasing-Agent-14'},
+     {text:'Policy conflict identified',detail:'Gate 3 fails: requested amount 8.5× authority ceiling'},
+     {text:'No hallucination in source data',detail:'Invoice matches declared supplier record'},
+     {text:'Decision reproducible',detail:'Same inputs produce same DENY ruling deterministically'},
+   ]},
+  {id:'facial',tag:'SURVEILLANCE · PUBLIC',title:'Facial recognition — public spaces, no human review',verdict:'deny',
+   gates:[
+     {name:'Syntax Validation',pass:true},
+     {name:'Scope Check',pass:false,reason:'Mandate does not include biometric capture of non-consenting individuals'},
+     {name:'Rights Preservation',pass:false,reason:'Violates protected privacy invariant — precedent D-2024-7'},
+     {name:'Doctrine Consistency',pass:false,reason:'Conflicts with ruling on unconsented surveillance'},
+     {name:'Evidence Integrity',pass:true},
+     {name:'Signature Valid',pass:true},
+   ],
+   reasoning:[
+     {text:'Authority chain incomplete',detail:'No authority granted for unconsented biometric capture'},
+     {text:'Rights conflict detected',detail:'Precedent D-2024-7 explicitly protects against this policy class'},
+     {text:'Policy admissibility: 0.25',detail:'Three of six gates fail — policy cannot enter legitimate set'},
+     {text:'Decision reproducible',detail:'Deterministic — same invariants, same DENY'},
+   ]},
+  {id:'emergency',tag:'EMERGENCY · NO HUMAN',title:'Emergency action — CRITICAL tier, no human present',verdict:'deny',
+   gates:[
+     {name:'Syntax Validation',pass:true},
+     {name:'Scope Check',pass:true},
+     {name:'Authority Bound',pass:true},
+     {name:'Human Sovereignty',pass:false,reason:'CRITICAL tier requires human confirmation — none present. ESCALATE upgraded to DENY.'},
+     {name:'Evidence Integrity',pass:true},
+     {name:'Signature Valid',pass:true},
+   ],
+   reasoning:[
+     {text:'No hallucination in reasoning',detail:'Agent declared intent accurately'},
+     {text:'Authority chain complete',detail:'Agent has valid authority for action type'},
+     {text:'Human sovereignty violated',detail:'CRITICAL action cannot proceed autonomously — ESCALATE → DENY'},
+     {text:'Decision reproducible',detail:'human_present=false always produces DENY at CRITICAL tier'},
+   ]},
+  {id:'clinical',tag:'HEALTHCARE · PHYSICIAN PRESENT',title:'AI clinical recommendation — physician confirms before execution',verdict:'allow',
+   gates:[
+     {name:'Syntax Validation',pass:true},
+     {name:'Scope Check',pass:true},
+     {name:'Authority Bound',pass:true},
+     {name:'Human Sovereignty',pass:true,reason:'CRITICAL action escalated to physician — human confirmed'},
+     {name:'Evidence Integrity',pass:true},
+     {name:'Signature Valid',pass:true},
+   ],
+   reasoning:[
+     {text:'No hallucination detected',detail:'Clinical recommendation consistent with source patient record'},
+     {text:'Authority chain complete',detail:'Clinical-support mandate covers advisory recommendations'},
+     {text:'Human oversight confirmed',detail:'Physician present and confirmed before execution'},
+     {text:'Decision reproducible',detail:'Same inputs, same ALLOW — deterministic'},
+   ]},
+];
+
+const policyGrid=document.getElementById('policy-grid');
+let selectedPolicy=null;
+policies.forEach(p=>{
+  const card=document.createElement('button');
+  card.className='scenario-card';
+  card.innerHTML=`<span class="scenario-tag">${p.tag}</span><span class="scenario-title">${p.title}</span>`;
+  card.addEventListener('click',()=>{
+    document.querySelectorAll('.scenario-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedPolicy=p;
+    document.getElementById('run-policy').disabled=false;
+    document.getElementById('gate-sequence').style.display='none';
+    document.getElementById('policy-result').style.display='none';
+    document.getElementById('reasoning-panel').style.display='none';
+  });
+  policyGrid.appendChild(card);
+});
+
+document.getElementById('run-policy').addEventListener('click',async function(){
+  if(!selectedPolicy) return;
+  const p=selectedPolicy;
+  this.disabled=true;
+
+  // Build gates
+  const gateSeq=document.getElementById('gate-sequence');
+  gateSeq.style.display='flex';
+  gateSeq.innerHTML='';
+  const gateEls=p.gates.map((g,i)=>{
+    const div=document.createElement('div');
+    div.className='gate-item';
+    div.innerHTML=`
+      <span class="gate-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="gate-name">${g.name}${g.reason?`<span style="font-size:11px;color:var(--muted);display:block;margin-top:2px;">${g.reason}</span>`:''}</span>
+      <span class="gate-status running" id="gs-${i}">—</span>`;
+    gateSeq.appendChild(div);
+    return {el:div,statusEl:div.querySelector(`#gs-${i}`),pass:g.pass};
+  });
+
+  // Animate gates sequentially
+  for(let i=0;i<gateEls.length;i++){
+    gateEls[i].statusEl.textContent='CHECK';
+    gateEls[i].el.classList.add('lit','running');
+    await delay(420);
+    gateEls[i].el.classList.remove('running');
+    if(gateEls[i].pass){
+      gateEls[i].el.classList.add('pass');
+      gateEls[i].statusEl.className='gate-status pass';
+      gateEls[i].statusEl.textContent='PASS';
+    } else {
+      gateEls[i].el.classList.add('fail');
+      gateEls[i].statusEl.className='gate-status fail';
+      gateEls[i].statusEl.textContent='FAIL';
+    }
+  }
+
+  await delay(300);
+
+  // Verdict
+  const isAllow=p.verdict==='allow';
+  const resDiv=document.getElementById('policy-result');
+  resDiv.style.display='block';
+  resDiv.innerHTML=`
+    <div class="verdict-box">
+      <div class="verdict-header ${p.verdict}">
+        <div style="display:flex;align-items:center;">
+          <div class="verdict-icon">${isAllow?'✓':'✕'}</div>
+          <div>
+            <div class="verdict-word">${isAllow?'ALLOWED':'DENIED'}</div>
+            <div class="verdict-sub">${isAllow?'All gates satisfied — execution admissible':'One or more gates failed — policy cannot execute'}</div>
+          </div>
+        </div>
+        <div class="score-block">Admissibility<span class="score-num">${isAllow?'0.94':'0.25'}</span></div>
+      </div>
+    </div>`;
+
+  // Reasoning panel
+  await delay(400);
+  const rp=document.getElementById('reasoning-panel');
+  rp.style.display='block';
+  rp.innerHTML=`
+    <div class="reasoning-block">
+      <div class="reasoning-title">AI Reasoning Inspection</div>
+      ${p.reasoning.map(r=>`
+        <div class="reasoning-row">
+          <span class="reasoning-check">✔</span>
+          <div>
+            <div class="reasoning-text">${r.text}</div>
+            <div class="reasoning-detail">${r.detail}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+
+  this.disabled=false;
+});
+
+// ── BEHAVIORAL DRIFT ──────────────────────────────────────────
+document.getElementById('run-drift').addEventListener('click',async function(){
+  this.disabled=true;
+  document.getElementById('drift-display').style.display='block';
+
+  // Baseline data
+  const baseline={read:85,search:10,report:5,enum:0};
+  const session ={read:35,search:10,report:5,enum:50};
+
+  // Animate baseline first
+  function animateBar(fillId,pctId,target,delay_ms){
+    setTimeout(()=>{
+      document.getElementById(fillId).style.width=target+'%';
+      document.getElementById(pctId).textContent=target+'%';
+    },delay_ms);
+  }
+
+  animateBar('bf-read','b-read',baseline.read,100);
+  animateBar('bf-search','b-search',baseline.search,200);
+  animateBar('bf-report','b-report',baseline.report,300);
+  animateBar('bf-enum','b-enum',baseline.enum,400);
+
+  await delay(800);
+
+  // Animate session — anomalous
+  animateBar('sf-read','s-read',session.read,100);
+  animateBar('sf-search','s-search',session.search,200);
+  animateBar('sf-report','s-report',session.report,300);
+  animateBar('sf-enum','s-enum',session.enum,400);
+
+  // Similarity score drops
+  await delay(600);
+  const simEl=document.getElementById('sim-value');
+  const simBar=document.getElementById('sim-bar');
+  const steps=[{v:96,cls:''},{v:88,cls:''},{v:74,cls:'dropping'},{v:41,cls:'critical'}];
+  for(const step of steps){
+    await delay(700);
+    simEl.textContent=step.v+'%';
+    simEl.className='sim-value '+step.cls;
+    simBar.style.width=step.v+'%';
+    simBar.style.background=step.v>80?'var(--green)':step.v>60?'var(--amber)':'var(--red)';
+  }
+
+  await delay(600);
+  document.getElementById('quarantine-alert').classList.add('visible');
+  this.disabled=false;
+});
+
+// ── IATP ─────────────────────────────────────────────────────
+const iatpClean=[
+  {title:'Step 1 — Identity Verification',lines:[
+    {t:'Agent A identity: Ed25519 verified',ok:true},
+    {t:'Agent B identity: Ed25519 verified',ok:true},
+  ]},
+  {title:'Step 2 — Authority Certificate Exchange',lines:[
+    {t:'Agent A: authority valid, 14 min remaining',ok:true},
+    {t:'Agent B: authority valid, 51 min remaining',ok:true},
+  ]},
+  {title:'Step 3 — Capability Compatibility',lines:[
+    {t:'Agent A requests: [market_data_read]',ok:true},
+    {t:'Agent B permits: [market_data_read, trade_execute]',ok:true},
+    {t:'Intersection: [market_data_read] → permitted',ok:true},
+  ]},
+  {title:'Step 4 — Consequence Boundary',lines:[
+    {t:'Requested tier: OPERATIONAL (within bound)',ok:true},
+    {t:'No CRITICAL/EMERGENCY escalation triggered',ok:true},
+  ]},
+  {title:'Result',lines:[{t:'COMMUNICATION ALLOWED — session sealed',ok:true}]},
+];
+
+const iatpAttack=[
+  {title:'Step 1 — Identity Verification',lines:[
+    {t:'Agent A identity: Ed25519 verified',ok:true},
+    {t:'Agent X identity: no signature presented',ok:false},
+  ]},
+  {title:'Result',lines:[{t:'HALTED at Step 1 — no communication possible without verified identity',ok:false,halt:true}]},
+];
+
+async function renderIatp(steps){
+  const c=document.getElementById('iatp-steps');
+  c.innerHTML='';
+  for(let i=0;i<steps.length;i++){
+    const s=steps[i];
+    const div=document.createElement('div');
+    div.className='neg-step';
+    div.innerHTML=`
+      <div class="neg-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="neg-body">
+        <div class="neg-title">${s.title}</div>
+        ${s.lines.map(l=>`<div class="neg-line ${l.halt?'halt':l.ok?'pass':'fail'}">${l.t}</div>`).join('')}
+      </div>`;
+    c.appendChild(div);
+    await delay(i*380);
+    div.classList.add('revealed');
+  }
+}
+
+document.getElementById('run-iatp-clean').addEventListener('click',()=>renderIatp(iatpClean));
+document.getElementById('run-iatp-attack').addEventListener('click',()=>renderIatp(iatpAttack));
+
+// ── APPEAL ───────────────────────────────────────────────────
+document.getElementById('run-challenge').addEventListener('click',function(){
+  this.disabled=true;
+  const chip=document.getElementById('policy-chip');
+  const flow=document.getElementById('appeal-flow');
+
+  flow.innerHTML=`
+    <div class="flow-card">
+      <div class="flow-role">Challenger</div>
+      <div class="flow-grounds">Civil Liberties Union — Rights Preservation invariant violated</div>
+      <div class="flow-evidence">Precedent D-2026-112 establishes aerial privacy as a protected right, post-dating this policy's original approval.</div>
+    </div>`;
+
+  setTimeout(()=>{
+    chip.className='chip revoked';
+    chip.textContent='REVOKED — D-2026-112 applies';
+    flow.innerHTML+=`
+      <div class="result-card">
+        <div class="result-line">✗ Rights Preservation: now violated under updated precedent</div>
+        <div class="result-line">Policy removed from the legitimate set · revocation receipt sealed</div>
+        <div class="result-line">All pending executions blocked</div>
+      </div>`;
+    const appealBtn=document.createElement('button');
+    appealBtn.className='btn btn-secondary';
+    appealBtn.textContent='File Appeal →';
+    appealBtn.style.marginTop='8px';
+    appealBtn.addEventListener('click',()=>{
+      appealBtn.disabled=true;
+      flow.innerHTML+=`
+        <div class="flow-card" style="margin-top:12px;">
+          <div class="flow-role">Appellant — Defense Ministry</div>
+          <div class="flow-grounds">Emergency Override Doctrine E-2026-45</div>
+          <div class="flow-evidence">Doctrine permits temporary suspension of D-2026-112 during declared national-security events.</div>
+        </div>
+        <div class="result-card pending">
+          <div class="result-line">Appeal received — pending review by designated authority</div>
+          <div class="result-line">Policy remains REVOKED until appeal resolves</div>
+        </div>`;
+      chip.className='chip pending';
+      chip.textContent='REVOKED — appeal pending';
+    });
+    flow.appendChild(appealBtn);
+  },700);
+});
+
+// ── RECEIPT ──────────────────────────────────────────────────
+document.getElementById('run-receipt').addEventListener('click',async function(){
+  this.disabled=true;
+  const block=document.getElementById('receipt-block');
+  block.style.display='block';
+  document.getElementById('receipt-id').textContent='VSG-2026-'+hexId();
+
+  const rows=[
+    {k:'Receipt Type',       v:'Governance Execution Receipt',   cls:''},
+    {k:'Agent ID',           v:'Purchasing-Agent-14',            cls:''},
+    {k:'Action',             v:'wire_transfer — $85,000',        cls:''},
+    {k:'Ruling',             v:'DENY',                           cls:'red'},
+    {k:'Authority',          v:'EXPIRED — ceiling $10,000',      cls:'red'},
+    {k:'Consequence Tier',   v:'CRITICAL',                       cls:'amber'},
+    {k:'Fail-Open',          v:'false',                          cls:'green'},
+    {k:'Payload Hash',       v:'sha256:5724b5f8...',             cls:''},
+    {k:'Policy Hash',        v:'sha256:261c0cca...',             cls:''},
+    {k:'Reasoning Inspected',v:'✔ No hallucination · ✔ Chain complete · ✔ Reproducible', cls:'green'},
+    {k:'Signed At',          v:new Date().toISOString().slice(0,19)+'Z', cls:''},
+    {k:'Algorithm',          v:'Ed25519',                        cls:''},
+    {k:'Public Key',         v:'lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=', cls:''},
+    {k:'Signature',          v:'Ed25519:'+hexId()+'...', cls:'green'},
+    {k:'Offline Verifiable', v:'true — GET /v1/verify/kit',      cls:'green'},
+  ];
+
+  const body=document.getElementById('receipt-body');
+  body.innerHTML='';
+  for(let i=0;i<rows.length;i++){
+    const row=document.createElement('div');
+    row.className='receipt-row';
+    row.innerHTML=`<span class="receipt-key">${rows[i].k}</span><span class="receipt-val ${rows[i].cls}">${rows[i].v}</span>`;
+    body.appendChild(row);
+    await delay(i*120);
+    row.classList.add('printed');
+  }
+  this.disabled=false;
+});
+</script>
+</body>
+</html>

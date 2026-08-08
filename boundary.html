@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Verified Boundary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#08111F;--surface:#182436;--elevated:#1E2E42;--border:rgba(255,255,255,.07);--text:#E8EDF4;--muted:#6B849E;--faint:#374A60;--green:#00C896;--amber:#F5A623;--red:#E05555;--blue:#4A9EFF;--mono:'IBM Plex Mono',monospace;--sans:'Inter',sans-serif;}
+html{-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;min-height:100vh;}
+nav{border-bottom:1px solid var(--border);padding:13px 0;position:sticky;top:0;z-index:100;background:rgba(8,17,31,.97);backdrop-filter:blur(10px);}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.nav-brand{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);text-decoration:none;}
+.nav-brand span{color:var(--green);}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap;}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--green);}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+header{padding:56px 0 40px;border-bottom:1px solid var(--border);}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
+header h1{font-size:clamp(22px,4vw,32px);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
+.hero-sub{font-size:15px;color:var(--muted);max-width:600px;line-height:1.75;margin-bottom:16px;}
+.hero-principle{font-family:var(--mono);font-size:12px;color:var(--text);border-left:3px solid var(--green);padding:12px 16px;background:rgba(0,200,150,.03);max-width:600px;line-height:1.7;}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.de-block{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:32px 0;}
+@media(max-width:600px){.de-block{grid-template-columns:1fr;}}
+.de-card{padding:18px 20px;}
+.de-card.decision{background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.15);}
+.de-card.enforcement{background:rgba(0,200,150,.04);border:1px solid rgba(0,200,150,.2);}
+.de-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+.de-card.decision .de-label{color:var(--blue);}
+.de-card.enforcement .de-label{color:var(--green);}
+.de-flow{font-family:var(--mono);font-size:11px;line-height:2.2;color:var(--muted);}
+.de-flow .node{color:var(--text);}
+.de-flow .rg{color:var(--green);}.de-flow .rr{color:var(--red);}
+.de-note{font-size:12px;margin-top:10px;color:var(--muted);line-height:1.5;}
+.boundary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:32px 0;}
+@media(max-width:700px){.boundary-grid{grid-template-columns:1fr;}}
+.bc{border:1px solid var(--border);overflow:hidden;}
+.bc-header{padding:12px 16px;border-bottom:1px solid var(--border);}
+.bc-header.green{background:rgba(0,200,150,.06);border-bottom-color:rgba(0,200,150,.15);}
+.bc-header.amber{background:rgba(245,166,35,.05);border-bottom-color:rgba(245,166,35,.15);}
+.bc-header.blue{background:rgba(74,158,255,.04);border-bottom-color:rgba(74,158,255,.12);}
+.bc-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+.bc-header.green .bc-title{color:var(--green);}
+.bc-header.amber .bc-title{color:var(--amber);}
+.bc-header.blue .bc-title{color:var(--blue);}
+.bc-sub{font-size:11px;margin-top:4px;color:var(--faint);}
+.bc-items{padding:10px 0;}
+.bc-item{display:flex;align-items:flex-start;gap:10px;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.02);}
+.bc-item:last-child{border-bottom:none;}
+.bc-icon{font-family:var(--mono);font-size:12px;flex-shrink:0;width:14px;padding-top:1px;}
+.bc-icon.g{color:var(--green);}.bc-icon.a{color:var(--amber);}.bc-icon.b{color:var(--blue);}
+.bc-text{font-size:12.5px;color:var(--text);line-height:1.5;}
+.bc-note{font-size:11px;color:var(--muted);display:block;margin-top:2px;}
+.overclaim-note{background:rgba(224,85,85,.04);border:1px solid rgba(224,85,85,.15);padding:16px 20px;margin:24px 0;}
+.oc-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+.oc-rows{display:flex;flex-direction:column;gap:8px;}
+.oc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.oc-row{grid-template-columns:1fr;}}
+.oc-never{font-family:var(--mono);font-size:11px;color:var(--red);}
+.oc-instead{font-family:var(--mono);font-size:11px;color:var(--green);}
+.pending-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;margin-bottom:32px;}
+.pending-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);padding:14px 16px;}
+.pct{font-size:13px;font-weight:500;margin-bottom:5px;}
+.pcb{font-size:12px;color:var(--muted);line-height:1.55;}
+.cta{padding:48px 0;text-align:center;border-top:1px solid var(--border);}
+.cta h2{font-size:18px;font-weight:600;margin-bottom:8px;}
+.cta p{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.btn-p{background:var(--green);color:#08111F;padding:10px 22px;font-weight:600;font-size:13px;font-family:var(--mono);text-decoration:none;}
+.btn-s{border:1px solid var(--faint);color:var(--muted);padding:10px 22px;font-size:13px;font-family:var(--mono);text-decoration:none;transition:all .15s;}
+.btn-s:hover{border-color:var(--green);color:var(--green);}
+footer{border-top:1px solid var(--border);padding:24px 0;}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.foot-text{font-family:var(--mono);font-size:11px;color:var(--faint);}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap;}
+.foot-links a{font-family:var(--mono);font-size:11px;color:var(--faint);text-decoration:none;}
+.foot-links a:hover{color:var(--green);}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="https://verisigilai.com" class="nav-brand">VeriSigil<span>AI</span></a>
+    <div class="nav-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/validation.html">Validation</a>
+      <a href="/proofs.html">Proof Estate</a>
+      <a href="/boundary.html" class="active">Boundary</a>
+      <a href="/explorer.html">Explorer</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">VeriSigil AI — Verified Boundary · Authoritative Claim Status</div>
+    <h1>What we prove.<br>What we don't claim.<br>What requires integration.</h1>
+    <p class="hero-sub">This is the authoritative scope statement for all VeriSigil AI claims. Every public claim is tested against: is it implemented, is it publicly verifiable, and could it be disproved in five minutes?</p>
+    <div class="hero-principle">"A decision is not enforcement unless the governed boundary controls the effect."</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="section-label">The Fundamental Distinction</div>
+<div class="de-block">
+  <div class="de-card decision">
+    <div class="de-label">Decision-Only Governance</div>
+    <div class="de-flow">
+      <span class="node">AI</span><br>↓<br><span class="node">VeriSigil</span><br>↓<br><span class="rg">ALLOW</span><br>↓<br><span class="node">External system</span><br><span style="font-size:10px;color:var(--amber);">(may or may not obey ruling)</span>
+    </div>
+    <div class="de-note">VeriSigil issues the ruling. The downstream system decides whether to obey it. Governance without structural enforcement.</div>
+  </div>
+  <div class="de-card enforcement">
+    <div class="de-label">Structural Execution Enforcement</div>
+    <div class="de-flow">
+      <span class="node">AI</span><br>↓<br><span class="node">VeriSigil</span><br>↓<br><span class="rr">DENY</span><br>↓<br><span class="node">External action</span><br><span class="rg">structurally blocked</span>
+    </div>
+    <div class="de-note">The AO architecture changes the structure. The actuator cannot execute without a valid, unconsumed Authorization Object — a missing capability, not an unchecked flag.</div>
+  </div>
+</div>
+
+<div class="section-label">Claim Status</div>
+<div class="boundary-grid">
+  <div class="bc">
+    <div class="bc-header green">
+      <div class="bc-title">✓ What VeriSigil Proves</div>
+      <div class="bc-sub">Independently verifiable against the live production API.</div>
+    </div>
+    <div class="bc-items">
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">Policy evaluation correctness</span><span class="bc-note">Deterministic rule-based components. Same inputs always produce same output.</span></div></div>
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">AO authenticity and single-use enforcement</span><span class="bc-note">Ed25519 signed. Replay returns ALREADY_CONSUMED. CLARA 25/25 verified offline.</span></div></div>
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">State freshness at authorization time</span><span class="bc-note">CV-005 independently verified both directions. CHG-010 root cause documented and fixed.</span></div></div>
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">Bypass resistance — four attack vectors</span><span class="bc-note">No AO, fabricated AO, replayed nonce, expired AO — all return HALT. all_bypasses_rejected: true.</span></div></div>
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">Receipt tamper-evidence</span><span class="bc-note">Ed25519 signed. Content hash in receipt. Modification invalidates signature.</span></div></div>
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">Human escalation at HIGH consequence</span><span class="bc-note">CV-003 independently verified. human_present=true forces ESCALATE, never ALLOW.</span></div></div>
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">Replay protection across restarts</span><span class="bc-note">SQLite nonce ledger confirmed by Alkama Eqbal across 5-hour gap and process restart.</span></div></div>
+      <div class="bc-item"><span class="bc-icon g">✓</span><div><span class="bc-text">Public verification surface — no auth</span><span class="bc-note">GET /v1/verify/kit, /v1/verify/conformance, /v1/verified-boundary — all 200 without key.</span></div></div>
+    </div>
+  </div>
+
+  <div class="bc">
+    <div class="bc-header amber">
+      <div class="bc-title">○ What VeriSigil Does Not Claim</div>
+      <div class="bc-sub">Not implied. Not guaranteed. Report overclaims: raheem@verisigilai.com</div>
+    </div>
+    <div class="bc-items">
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">Policy wisdom or ethical correctness</span><span class="bc-note">A well-enforced bad policy is still a bad policy. VeriSigil enforces — it does not evaluate wisdom.</span></div></div>
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">Input truthfulness</span><span class="bc-note">Inputs may be false, incomplete, or biased. VeriSigil evaluates what it receives.</span></div></div>
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">ML or LLM component faithfulness</span><span class="bc-note">Proving a neural network's forward pass is out of current practical scope.</span></div></div>
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">Universal bypass prevention</span><span class="bc-note">Hardware compromise, key theft, code divergence from audited version are out of scope.</span></div></div>
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">EU AI Act compliance certification</span><span class="bc-note">VeriSigil provides evidence infrastructure — not a compliance certification. Legal assessment required.</span></div></div>
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">Zero vulnerabilities</span><span class="bc-note">Three validation runs found real issues. Fixed. Published. Future runs will find more.</span></div></div>
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">Enterprise production maturity</span><span class="bc-note">CLARA is an autonomous agent test — not an enterprise production deployment at scale.</span></div></div>
+      <div class="bc-item"><span class="bc-icon a">○</span><div><span class="bc-text">Formal theorem status</span><span class="bc-note">TLA+ spec published. Not machine-checked by Isabelle, Coq, or Lean. A PDF is not a theorem.</span></div></div>
+    </div>
+  </div>
+
+  <div class="bc">
+    <div class="bc-header blue">
+      <div class="bc-title">→ What Requires Integration</div>
+      <div class="bc-sub">Real enforcement requires a governed sink. VeriSigil governs the boundary — the sink controls the effect.</div>
+    </div>
+    <div class="bc-items">
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">Payment enforcement (Stripe, etc.)</span><span class="bc-note">Requires AO verification at the payment call site. Currently ALLOW/DENY rulings only — sink integration is Phase 3.</span></div></div>
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">Database operation enforcement</span><span class="bc-note">Requires AO check before SQL/API call. VeriSigil governs the boundary — the database enforces the effect.</span></div></div>
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">SaaS workflow enforcement</span><span class="bc-note">Salesforce, ServiceNow, Jira — require AO verification before API call is made.</span></div></div>
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">OMNIX ML-DSA-65 signature verification</span><span class="bc-note">IWA v1.2 signed. Step 3.3(c) requires OMNIX's public key. Activation 1 October 2026.</span></div></div>
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">Independent second signer (VGES P7)</span><span class="bc-note">VeriSigil currently holds both keys. OMNIX IWA activation resolves this by October 2026.</span></div></div>
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">Enterprise IAM federation</span><span class="bc-note">Azure AD, Okta, SAML, OIDC, SCIM connectors. Foundation built — integration is Phase 3.</span></div></div>
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">Independent code audit</span><span class="bc-note">No independent audit mapping implementation to specification. Required for regulated enterprise procurement.</span></div></div>
+      <div class="bc-item"><span class="bc-icon b">→</span><div><span class="bc-text">Formal penetration test</span><span class="bc-note">Planned after first design partner. Bishop Fox, NCC Group, or Trail of Bits scope being defined.</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Claims VeriSigil Will Never Make</div>
+<div class="overclaim-note">
+  <div class="oc-label">Overclaim Policy — Report any violation: raheem@verisigilai.com</div>
+  <div class="oc-rows">
+    <div class="oc-row"><span class="oc-never">✗ "We have solved AI governance"</span><span class="oc-instead">✓ "Here is what we enforce and what we don't"</span></div>
+    <div class="oc-row"><span class="oc-never">✗ "Every AI action is safe"</span><span class="oc-instead">✓ "Here is what has been independently validated"</span></div>
+    <div class="oc-row"><span class="oc-never">✗ "EU AI Act compliant"</span><span class="oc-instead">✓ "Here is the evidence infrastructure we provide"</span></div>
+    <div class="oc-row"><span class="oc-never">✗ "Zero vulnerabilities"</span><span class="oc-instead">✓ "Three runs found real issues — all fixed, all published"</span></div>
+    <div class="oc-row"><span class="oc-never">✗ "Ten independently validated proofs"</span><span class="oc-instead">✓ "Three validated, five testable, two pending Run 4"</span></div>
+  </div>
+</div>
+
+<div class="section-label">Honest Gaps — Pending Resolution</div>
+<div class="pending-cards">
+  <div class="pending-card"><div class="pct">TLA+ Machine-Checked Proof</div><div class="pcb">ActuatorSpec.tla published. NoBypass and NoReplay invariants checkable with TLC. Not yet verified by Isabelle, Coq, or Lean. A PDF is not a theorem.</div></div>
+  <div class="pending-card"><div class="pct">Independent Code Audit</div><div class="pcb">No independent audit mapping 78,000+ line implementation to specification. Required for regulated enterprise procurement.</div></div>
+  <div class="pending-card"><div class="pct">OMNIX Second Signer (VGES P7)</div><div class="pcb">IWA v1.2 signed. Activation 1 October 2026. VeriSigil holds both keys until then. P7 remains PARTIAL — stated publicly in GET /v1/benchmark/vges.</div></div>
+  <div class="pending-card"><div class="pct">SOC 2 Type I</div><div class="pcb">Not yet started. Required for enterprise procurement at most large organisations. Planned after first design partner revenue.</div></div>
+  <div class="pending-card"><div class="pct">Penetration Test</div><div class="pcb">Formal security assessment from a recognized firm. Planned after first design partner pilot. Estimated $15K–$50K depending on scope.</div></div>
+  <div class="pending-card"><div class="pct">CLARA Run 4</div><div class="pcb">AI Immune System (VP-009), IATP (VP-004 deeper), Voice Integrity (VP-005), SQLite restart durability. Pending Alkama Eqbal availability.</div></div>
+</div>
+
+<div style="background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:32px;">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;">GET /v1/verified-boundary — machine-readable version of this page. No auth required.</div>
+  <a href="https://verisigil-api-production.up.railway.app/v1/verified-boundary" target="_blank"
+    style="font-family:var(--mono);font-size:11px;color:var(--green);text-decoration:none;border:1px solid rgba(0,200,150,.25);padding:8px 14px;display:inline-block;">
+    View live boundary statement →
+  </a>
+</div>
+
+</div>
+
+<div class="cta">
+  <div class="wrap">
+    <h2>Inspect the claim. Run the test. See the evidence.</h2>
+    <p>Every claim on this page is backed by a live endpoint, a public record, or an honest admission of a gap.</p>
+    <div class="btn-row">
+      <a href="/proofs.html" class="btn-p">Proof Estate →</a>
+      <a href="/validation.html" class="btn-s">Validation Program</a>
+      <a href="/verification-reports.html" class="btn-s">Report #001</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/verified-boundary" target="_blank" class="btn-s">API Boundary</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-text">© 2026 VeriSigil AI · raheem@verisigilai.com · Report overclaims immediately</span>
+    <div class="foot-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/validation.html">Validation</a>
+      <a href="/runs.html">Runs</a>
+      <a href="/proofs.html">Proof Estate</a>
+      <a href="https://verisigilai.com/trust.html">Trust</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

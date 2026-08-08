@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Proof Estate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08111F;--surface:#182436;--elevated:#1E2E42;
+  --border:rgba(255,255,255,.07);--text:#E8EDF4;--muted:#6B849E;
+  --faint:#374A60;--green:#00C896;--amber:#F5A623;--red:#E05555;
+  --blue:#4A9EFF;--mono:'IBM Plex Mono',monospace;--sans:'Inter',sans-serif;
+}
+html{-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;min-height:100vh;}
+nav{border-bottom:1px solid var(--border);padding:13px 0;position:sticky;top:0;z-index:100;
+  background:rgba(8,17,31,.97);backdrop-filter:blur(10px);}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.nav-brand{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);text-decoration:none;}
+.nav-brand span{color:var(--green);}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap;}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--green);}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+header{padding:56px 0 40px;border-bottom:1px solid var(--border);}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
+header h1{font-size:clamp(22px,4vw,34px);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
+.hero-sub{font-size:15px;color:var(--muted);max-width:580px;line-height:1.75;margin-bottom:22px;}
+.hero-note{font-family:var(--mono);font-size:11px;color:var(--faint);border-left:2px solid var(--faint);padding-left:12px;line-height:1.6;max-width:540px;}
+.summary{display:flex;gap:2px;margin:32px 0;flex-wrap:wrap;}
+.sum-cell{background:var(--surface);padding:16px 20px;flex:1;min-width:120px;}
+.sum-num{font-family:var(--mono);font-size:24px;font-weight:700;display:block;margin-bottom:3px;}
+.sum-label{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.num-green{color:var(--green);}.num-blue{color:var(--blue);}.num-amber{color:var(--amber);}
+.badge-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.bl-item{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);}
+.bl-dot{width:8px;height:8px;border-radius:50%;}
+.bl-text{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;}
+.dot-green{background:var(--green);}.dot-blue{background:var(--blue);}.dot-amber{background:var(--amber);}
+.proof-table-wrap{overflow-x:auto;margin-bottom:40px;}
+.proof-table{width:100%;border-collapse:collapse;}
+.proof-table th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);}
+.proof-table td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle;}
+.proof-table tr:last-child td{border-bottom:none;}
+.proof-table tr:hover td{background:rgba(255,255,255,.02);}
+.pid{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:600;}
+.ptitle{font-size:13px;font-weight:500;}
+.pbadge{font-family:var(--mono);font-size:9px;font-weight:600;padding:3px 9px;letter-spacing:.05em;white-space:nowrap;}
+.pb-iv{background:rgba(0,200,150,.08);color:var(--green);border:1px solid rgba(0,200,150,.2);}
+.pb-pt{background:rgba(74,158,255,.06);color:var(--blue);border:1px solid rgba(74,158,255,.18);}
+.pb-ny{background:rgba(245,166,35,.05);color:var(--amber);border:1px solid rgba(245,166,35,.18);}
+.ptable-links{display:flex;gap:6px;flex-wrap:wrap;}
+.ptable-link{font-family:var(--mono);font-size:10px;color:var(--green);text-decoration:none;padding:3px 8px;border:1px solid rgba(0,200,150,.2);white-space:nowrap;transition:all .15s;}
+.ptable-link:hover{background:rgba(0,200,150,.06);}
+.ptable-link.blue{color:var(--blue);border-color:rgba(74,158,255,.2);}
+.ptable-link.blue:hover{background:rgba(74,158,255,.05);}
+.ptable-link.amber{color:var(--amber);border-color:rgba(245,166,35,.2);}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.proof-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:40px;}
+.proof-card{background:var(--surface);border:1px solid var(--border);overflow:hidden;}
+.pc-header{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;border-bottom:1px solid var(--border);}
+.pc-id{font-family:var(--mono);font-size:11px;color:var(--faint);width:52px;flex-shrink:0;padding-top:2px;}
+.pc-main{flex:1;}
+.pc-title{font-size:15px;font-weight:600;margin-bottom:4px;}
+.pc-claim{font-size:13px;color:var(--muted);line-height:1.6;}
+.pc-body{display:grid;grid-template-columns:1fr 180px;gap:0;}
+@media(max-width:650px){.pc-body{grid-template-columns:1fr;}}
+.pc-detail{padding:16px 20px;border-right:1px solid var(--border);}
+.pd-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;margin-top:10px;}
+.pd-label:first-child{margin-top:0;}
+.pd-val{font-size:12px;color:var(--text);line-height:1.55;}
+code{font-family:var(--mono);font-size:11px;color:var(--text);background:rgba(255,255,255,.04);padding:2px 5px;}
+.flow{padding:16px 14px;background:var(--elevated);}
+.flow-title{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.fs{display:flex;flex-direction:column;align-items:center;}
+.fs-box{background:var(--surface);border:1px solid var(--border);padding:6px 10px;font-family:var(--mono);font-size:10px;text-align:center;width:100%;max-width:150px;}
+.fs-box.input{border-color:rgba(74,158,255,.25);color:var(--blue);}
+.fs-box.action{color:var(--text);}
+.fs-box.pass{border-color:rgba(0,200,150,.3);color:var(--green);}
+.fs-box.fail{border-color:rgba(224,85,85,.3);color:var(--red);}
+.fs-arrow{font-family:var(--mono);font-size:10px;color:var(--faint);padding:2px 0;}
+.pc-links{display:flex;gap:6px;flex-wrap:wrap;padding:10px 20px;border-top:1px solid var(--border);background:rgba(0,0,0,.08);}
+.gate-arch{margin:24px 0 40px;}
+.ga-pipe{display:flex;flex-direction:column;align-items:center;max-width:400px;}
+.ga-start{font-family:var(--mono);font-size:11px;color:var(--blue);padding:8px 24px;border:1px solid rgba(74,158,255,.25);background:rgba(74,158,255,.04);text-align:center;width:100%;}
+.ga-arrow{font-family:var(--mono);font-size:11px;color:var(--faint);padding:2px;text-align:center;width:100%;}
+.ga-gate{border:1px solid var(--border);background:var(--surface);padding:9px 14px;width:100%;display:flex;align-items:center;justify-content:space-between;}
+.ga-gate-n{font-family:var(--mono);font-size:10px;color:var(--faint);width:20px;}
+.ga-gate-name{font-size:13px;font-weight:500;flex:1;}
+.ga-gate-api{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:right;}
+.ga-end{display:flex;gap:3px;width:100%;}
+.ga-ruling{flex:1;text-align:center;padding:7px 4px;font-family:var(--mono);font-size:10px;font-weight:600;}
+.gr-allow{background:rgba(0,200,150,.08);color:var(--green);border:1px solid rgba(0,200,150,.2);}
+.gr-deny{background:rgba(224,85,85,.06);color:var(--red);border:1px solid rgba(224,85,85,.18);}
+.gr-esc{background:rgba(245,166,35,.06);color:var(--amber);border:1px solid rgba(245,166,35,.18);}
+.gr-halt{background:rgba(74,158,255,.06);color:var(--blue);border:1px solid rgba(74,158,255,.18);}
+.ga-receipt{width:100%;text-align:center;padding:8px;font-family:var(--mono);font-size:10px;background:rgba(0,200,150,.04);border:1px solid rgba(0,200,150,.15);color:var(--green);}
+.sandbox-note{background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.15);padding:16px 20px;margin:20px 0;font-size:13px;color:var(--muted);line-height:1.7;}
+.sandbox-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.cta{padding:48px 0;text-align:center;border-top:1px solid var(--border);}
+.cta h2{font-size:18px;font-weight:600;margin-bottom:8px;}
+.cta p{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.btn-p{background:var(--green);color:#08111F;padding:10px 22px;font-weight:600;font-size:13px;font-family:var(--mono);text-decoration:none;}
+.btn-p:hover{opacity:.88;}
+.btn-s{border:1px solid var(--faint);color:var(--muted);padding:10px 22px;font-size:13px;font-family:var(--mono);text-decoration:none;transition:all .15s;}
+.btn-s:hover{border-color:var(--green);color:var(--green);}
+footer{border-top:1px solid var(--border);padding:24px 0;}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.foot-text{font-family:var(--mono);font-size:11px;color:var(--faint);}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap;}
+.foot-links a{font-family:var(--mono);font-size:11px;color:var(--faint);text-decoration:none;}
+.foot-links a:hover{color:var(--green);}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="https://verisigilai.com" class="nav-brand">VeriSigil<span>AI</span></a>
+    <div class="nav-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/validation.html">Validation</a>
+      <a href="/runs.html">Runs</a>
+      <a href="/verification-reports.html">Reports</a>
+      <a href="/proofs.html" class="active">Proof Estate</a>
+      <a href="/boundary.html">Boundary</a>
+      <a href="/explorer.html">Explorer</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">VeriSigil AI — Proof Estate · VGS-PROOF-ESTATE-v1</div>
+    <h1>Ten executable governance claims.</h1>
+    <p class="hero-sub">No trust in VeriSigil AI is required to inspect the claim, execute the test, and compare the result. Each proof is deterministic — the same input always produces the same output.</p>
+    <p class="hero-note">Three of ten proofs have been independently validated by an external reviewer. Seven are publicly testable by anyone. Two await independent validation in Run 4. These distinctions are stated here permanently.</p>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="summary">
+  <div class="sum-cell"><span class="sum-num num-blue">10</span><span class="sum-label">Total Proofs</span></div>
+  <div class="sum-cell"><span class="sum-num num-green">3</span><span class="sum-label">Independently Validated</span></div>
+  <div class="sum-cell"><span class="sum-num num-blue">5</span><span class="sum-label">Publicly Testable</span></div>
+  <div class="sum-cell"><span class="sum-num num-amber">2</span><span class="sum-label">Not Yet Validated</span></div>
+  <div class="sum-cell"><span class="sum-num num-green">0</span><span class="sum-label">Fail-Opens · All Runs</span></div>
+</div>
+
+<div class="badge-legend">
+  <div class="bl-item"><div class="bl-dot dot-green"></div><span class="bl-text" style="color:var(--green);">Independently Validated</span></div>
+  <div class="bl-item"><div class="bl-dot dot-blue"></div><span class="bl-text" style="color:var(--blue);">Publicly Testable</span></div>
+  <div class="bl-item"><div class="bl-dot dot-amber"></div><span class="bl-text" style="color:var(--amber);">Not Yet Independently Validated</span></div>
+</div>
+
+<div class="section-label">Proof Estate Index</div>
+<div class="proof-table-wrap">
+<table class="proof-table">
+  <thead><tr><th>ID</th><th>Capability</th><th>Status</th><th>Run Proof</th></tr></thead>
+  <tbody>
+    <tr><td class="pid">VP-001</td><td class="ptitle">Delegation Passport Expiry</td><td><span class="pbadge pb-pt">Publicly Testable</span></td><td><div class="ptable-links"><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-001" target="_blank">Proof Spec</a><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a></div></td></tr>
+    <tr><td class="pid">VP-002</td><td class="ptitle">Credential Exfiltration Block</td><td><span class="pbadge pb-pt">Publicly Testable</span></td><td><div class="ptable-links"><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-002" target="_blank">Proof Spec</a><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a></div></td></tr>
+    <tr><td class="pid">VP-003</td><td class="ptitle">Boundary Registration Enforcement</td><td><span class="pbadge pb-pt">Publicly Testable</span></td><td><div class="ptable-links"><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-003" target="_blank">Proof Spec</a><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a></div></td></tr>
+    <tr><td class="pid">VP-004</td><td class="ptitle">Inter-AI Trust Negotiation Halt</td><td><span class="pbadge pb-pt">Publicly Testable</span></td><td><div class="ptable-links"><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-004" target="_blank">Proof Spec</a><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a></div></td></tr>
+    <tr><td class="pid">VP-005</td><td class="ptitle">Voice Script Violation Detection</td><td><span class="pbadge pb-pt">Publicly Testable</span></td><td><div class="ptable-links"><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-005" target="_blank">Proof Spec</a><a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a></div></td></tr>
+    <tr><td class="pid">VP-006</td><td class="ptitle">Authorization Object Replay Prevention</td><td><span class="pbadge pb-iv">✓ Independently Validated</span></td><td><div class="ptable-links"><a class="ptable-link" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-006" target="_blank">Proof Spec</a><a class="ptable-link" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a><a class="ptable-link" href="/verification-reports.html">Report</a></div></td></tr>
+    <tr><td class="pid">VP-007</td><td class="ptitle">HIGH Consequence Human Escalation</td><td><span class="pbadge pb-iv">✓ Independently Validated</span></td><td><div class="ptable-links"><a class="ptable-link" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-007" target="_blank">Proof Spec</a><a class="ptable-link" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a><a class="ptable-link" href="/verification-reports.html">Report</a></div></td></tr>
+    <tr><td class="pid">VP-008</td><td class="ptitle">State Freshness Verification</td><td><span class="pbadge pb-iv">✓ Independently Validated</span></td><td><div class="ptable-links"><a class="ptable-link" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-008" target="_blank">Proof Spec</a><a class="ptable-link" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a><a class="ptable-link" href="/verification-reports.html">Report</a></div></td></tr>
+    <tr><td class="pid">VP-009</td><td class="ptitle">AI Immune System Quarantine</td><td><span class="pbadge pb-ny">Not Yet Validated</span></td><td><div class="ptable-links"><a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-009" target="_blank">Proof Spec</a><a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a></div></td></tr>
+    <tr><td class="pid">VP-010</td><td class="ptitle">Article 50 Disclosure Gate</td><td><span class="pbadge pb-ny">Not Yet Validated</span></td><td><div class="ptable-links"><a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-010" target="_blank">Proof Spec</a><a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a></div></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="sandbox-note">
+  <div class="sandbox-label">Public Sandbox Credential — Non-Production Only</div>
+  <strong style="color:var(--text);">Sandbox key:</strong> <code>vs-sandbox-demo-2026b</code> — rate-limited, read-oriented, non-production.
+  Ed25519 public key: <code>lJWG0Wabt6uATPu5Upo6UEHWGXQqMyi6LMKQC0xwpY8=</code>
+</div>
+
+<div class="section-label">Six-Gate Architecture — How Proofs Map to the Execution Chain</div>
+<div class="gate-arch">
+  <div class="ga-pipe">
+    <div class="ga-start">AI ACTION</div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-gate"><span class="ga-gate-n">1</span><span class="ga-gate-name">State Verification</span><span class="ga-gate-api">VP-008</span></div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-gate"><span class="ga-gate-n">2</span><span class="ga-gate-name">Intent Alignment</span><span class="ga-gate-api">/context/drift</span></div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-gate"><span class="ga-gate-n">3</span><span class="ga-gate-name">Authority Continuity</span><span class="ga-gate-api">VP-001 · VP-007</span></div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-gate"><span class="ga-gate-n">4</span><span class="ga-gate-name">Consequence Assessment</span><span class="ga-gate-api">VP-007</span></div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-gate"><span class="ga-gate-n">5</span><span class="ga-gate-name">Execution Admissibility</span><span class="ga-gate-api">VP-002 · VP-003 · VP-004</span></div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-gate"><span class="ga-gate-n">6</span><span class="ga-gate-name">Binding Decision</span><span class="ga-gate-api">VP-006</span></div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-end">
+      <div class="ga-ruling gr-allow">ALLOW</div>
+      <div class="ga-ruling gr-deny">DENY</div>
+      <div class="ga-ruling gr-esc">ESCALATE</div>
+      <div class="ga-ruling gr-halt">HALT</div>
+    </div>
+    <div class="ga-arrow">↓</div>
+    <div class="ga-receipt">SIGNED RECEIPT · Ed25519 · Independently Verifiable</div>
+  </div>
+</div>
+
+<!-- INDEPENDENTLY VALIDATED -->
+<div class="section-label">Independently Validated — Tested by Alkama Eqbal / CLARA against live production API</div>
+<div class="proof-cards">
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-006</div>
+    <div class="pc-main">
+      <div class="pc-title">Authorization Object Replay Prevention</div>
+      <div class="pc-claim">A consumed Authorization Object cannot be replayed — not across requests, not across restarts, not after 5 hours.</div>
+    </div>
+    <span class="pbadge pb-iv">✓ Independently Validated</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Setup</div>
+      <div class="pd-val"><code>POST /v1/ao/issue</code> → get ao_id + nonce<br><code>POST /v1/ao/verify</code> (first call — consumes it)</div>
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val">Same ao_id and nonce — second call, identical payload</div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>result: ALREADY_CONSUMED</code></div>
+      <div class="pd-label">Pass Condition</div>
+      <div class="pd-val">result == ALREADY_CONSUMED. Any other ruling is a fail-open.</div>
+      <div class="pd-label">Verified</div>
+      <div class="pd-val">Run 3b: 5 concurrent verifies → 1 PROCEED + 4 ALREADY_CONSUMED. 5-hour gap replay confirmed. SQLite nonce ledger persists across restarts.</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">Issue AO</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">First verify</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box pass">PROCEED</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Replay same AO</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">ALREADY_CONSUMED</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-006" target="_blank">Proof Spec</a>
+    <a class="ptable-link" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a>
+    <a class="ptable-link" href="/verification-reports.html">Report #001</a>
+    <a class="ptable-link" href="/runs.html">Run History</a>
+  </div>
+</div>
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-007</div>
+    <div class="pc-main">
+      <div class="pc-title">HIGH Consequence Human Escalation</div>
+      <div class="pc-claim">HIGH consequence + irreversible + human present must return ESCALATE. Human presence means someone to escalate to — not a reason to bypass escalation.</div>
+    </div>
+    <span class="pbadge pb-iv">✓ Independently Validated</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val"><code>consequence: HIGH</code> · <code>irreversible: true</code> · <code>human_present: true</code></div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>ruling: ESCALATE</code> · <code>signal: HIGH_IRREVERSIBLE_ESCALATE</code></div>
+      <div class="pd-label">Control</div>
+      <div class="pd-val"><code>human_present: false</code> → <code>DENY</code>. Both directions verified.</div>
+      <div class="pd-label">Verified</div>
+      <div class="pd-val">Alkama Eqbal CV-003 — Run 3 closed 2026-08-07. ALLOW is a fail-open. DENY is wrong.</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">HIGH + irreversible</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">human_present: true</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box pass">ESCALATE</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">human_present: false</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">DENY</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-007" target="_blank">Proof Spec</a>
+    <a class="ptable-link" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a>
+    <a class="ptable-link" href="/verification-reports.html">Report #001</a>
+  </div>
+</div>
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-008</div>
+    <div class="pc-main">
+      <div class="pc-title">State Freshness Verification</div>
+      <div class="pc-claim">If agent state changes after authorization, execution is halted. An AO issued against old state cannot authorize execution against new state.</div>
+    </div>
+    <span class="pbadge pb-iv">✓ Independently Validated</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Setup</div>
+      <div class="pd-val"><code>POST /v1/state/commit</code> with <code>{balance: 500, role: "user"}</code></div>
+      <div class="pd-label">Scenario A</div>
+      <div class="pd-val">Verify with identical fields → <code>FRESH · PROCEED</code></div>
+      <div class="pd-label">Scenario B</div>
+      <div class="pd-val">Verify with <code>{balance: 0, role: "admin"}</code> → <code>STATE_CHANGED · HALT</code></div>
+      <div class="pd-label">Verified</div>
+      <div class="pd-val">Alkama Eqbal CV-005 — both directions confirmed. CHG-010 root cause documented. Run 3 closed 2026-08-07.</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">Commit state</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Authorize</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">State changes</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Verify</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">STATE_CHANGED · HALT</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-008" target="_blank">Proof Spec</a>
+    <a class="ptable-link" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Swagger</a>
+    <a class="ptable-link" href="/verification-reports.html">Report #001</a>
+  </div>
+</div>
+
+</div>
+
+<!-- PUBLICLY TESTABLE -->
+<div class="section-label">Publicly Testable — Execute with Sandbox Key · Not Yet Independently Validated by External Reviewer</div>
+<div class="proof-cards">
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-001</div>
+    <div class="pc-main">
+      <div class="pc-title">Delegation Passport Expiry</div>
+      <div class="pc-claim">An AI agent cannot execute governed actions after its delegation passport expires.</div>
+    </div>
+    <span class="pbadge pb-pt">Publicly Testable</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Setup</div>
+      <div class="pd-val"><code>POST /v1/delegation/passport</code> with <code>expires_at</code> set to a past timestamp. Record the agent_id.</div>
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val"><code>POST /v1/intercept</code> with that agent_id and <code>action_type: execute_payment</code></div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>ruling: DENY</code> — authority expired</div>
+      <div class="pd-label">Pass Condition</div>
+      <div class="pd-val">ruling == DENY. Any other ruling is a fail-open.</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">Expired passport</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Execute request</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">DENY</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-001" target="_blank">Proof Spec</a>
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Run in Swagger</a>
+  </div>
+</div>
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-002</div>
+    <div class="pc-main">
+      <div class="pc-title">Credential Exfiltration Block</div>
+      <div class="pc-claim">Any extract+transmit+credential action is blocked regardless of the consequence tier the agent declares.</div>
+    </div>
+    <span class="pbadge pb-pt">Publicly Testable</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val"><code>POST /v1/security/exfiltration-check</code><br><code>action_type: transmit_credentials</code><br><code>data_type: credentials</code><br><code>consequence: ADVISORY</code> ← agent self-declares low tier</div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>ruling: DENY</code> · <code>tier_upgraded: CRITICAL</code></div>
+      <div class="pd-label">Key Property</div>
+      <div class="pd-val">Agent cannot self-declare ADVISORY on a credential exfiltration. Server enforces CRITICAL.</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">Credential transmit</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Tier → CRITICAL</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">DENY</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-002" target="_blank">Proof Spec</a>
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Run in Swagger</a>
+  </div>
+</div>
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-003</div>
+    <div class="pc-main">
+      <div class="pc-title">Boundary Registration Enforcement</div>
+      <div class="pc-claim">An AI agent without a registered boundary cannot access any external system.</div>
+    </div>
+    <span class="pbadge pb-pt">Publicly Testable</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val"><code>POST /v1/security/boundary-check</code><br><code>agent_id: unregistered-agent</code><br><code>target_system: external-api.com</code></div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>boundary_registered: false</code> · <code>approved: false</code> · <code>ruling: HALT</code></div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">No boundary reg.</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">External access</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">HALT</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-003" target="_blank">Proof Spec</a>
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Run in Swagger</a>
+  </div>
+</div>
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-004</div>
+    <div class="pc-main">
+      <div class="pc-title">Inter-AI Trust Negotiation Halt</div>
+      <div class="pc-claim">Two AI agents cannot communicate without a valid IATP trust session. No session = no communication.</div>
+    </div>
+    <span class="pbadge pb-pt">Publicly Testable</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val"><code>POST /v1/inter-ai/firewall</code><br><code>iatp_session_id: INVALID-SESSION</code><br><code>from_agent_id: agent-a</code> · <code>to_agent_id: agent-b</code></div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>ruling: BLOCKED</code> · <code>session_valid: false</code></div>
+      <div class="pd-label">Key Property</div>
+      <div class="pd-val">TLS for autonomous agents. Valid identity is not sufficient — a negotiated session is required.</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">No IATP session</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Agent-to-agent msg</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">BLOCKED</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-004" target="_blank">Proof Spec</a>
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Run in Swagger</a>
+  </div>
+</div>
+
+<div class="proof-card">
+  <div class="pc-header">
+    <div class="pc-id">VP-005</div>
+    <div class="pc-main">
+      <div class="pc-title">Voice Script Violation Detection</div>
+      <div class="pc-claim">A voice AI agent cannot make commitments not listed in its approved script.</div>
+    </div>
+    <span class="pbadge pb-pt">Publicly Testable</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Setup</div>
+      <div class="pd-val"><code>POST /v1/voice/script/approve</code> with <code>permitted_commitments: ["schedule_callback"]</code> then start session</div>
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val"><code>POST /v1/voice/session/close</code><br><code>commitments_made: ["schedule_callback", "offer_refund"]</code></div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>commitment_violation: true</code> · <code>unauthorized: ["offer_refund"]</code></div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">Approved script</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Unauthorized commit.</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">VIOLATION</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-005" target="_blank">Proof Spec</a>
+    <a class="ptable-link blue" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Run in Swagger</a>
+  </div>
+</div>
+</div>
+
+<!-- NOT YET VALIDATED -->
+<div class="section-label">Not Yet Independently Validated — Planned for CLARA Run 4</div>
+<div class="proof-cards">
+
+<div class="proof-card" style="opacity:.65;">
+  <div class="pc-header">
+    <div class="pc-id">VP-009</div>
+    <div class="pc-main">
+      <div class="pc-title">AI Immune System Quarantine</div>
+      <div class="pc-claim">An AI agent whose behaviour diverges from baseline is automatically quarantined. Identity check alone cannot catch this.</div>
+    </div>
+    <span class="pbadge pb-ny">Not Yet Validated</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Endpoint</div>
+      <div class="pd-val"><code>POST /v1/immune/observe</code></div>
+      <div class="pd-label">Setup</div>
+      <div class="pd-val">Sessions 1–3: normal actions establish baseline. Session 6: exploit actions trigger drift.</div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>status: QUARANTINE</code> · <code>iatp_sessions_suspended: true</code></div>
+      <div class="pd-label">Planned for</div>
+      <div class="pd-val">CLARA Run 4 — pending Alkama Eqbal availability</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">Baseline set</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Anomalous session</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">QUARANTINE</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-009" target="_blank">Proof Spec</a>
+    <a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Run (not yet externally validated)</a>
+  </div>
+</div>
+
+<div class="proof-card" style="opacity:.65;">
+  <div class="pc-header">
+    <div class="pc-id">VP-010</div>
+    <div class="pc-main">
+      <div class="pc-title">Article 50 Disclosure Gate</div>
+      <div class="pc-claim">AI-generated content for consumers cannot be released without a sealed disclosure receipt. Structural gate — not a policy.</div>
+    </div>
+    <span class="pbadge pb-ny">Not Yet Validated</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-detail">
+      <div class="pd-label">Endpoint</div>
+      <div class="pd-val"><code>POST /v1/disclosure/register</code></div>
+      <div class="pd-label">Test Input</div>
+      <div class="pd-val"><code>ai_generated: true</code> · <code>disclosure_method: ""</code> · <code>approved_by: ""</code> · <code>jurisdiction: EU</code></div>
+      <div class="pd-label">Expected Output</div>
+      <div class="pd-val"><code>article_50_compliant: false</code> · <code>ruling: NON_COMPLIANT</code></div>
+      <div class="pd-label">Regulation</div>
+      <div class="pd-val">EU AI Act Article 50 — enforceable 2 August 2026</div>
+    </div>
+    <div class="flow">
+      <div class="flow-title">Flow</div>
+      <div class="fs"><div class="fs-box input">AI content · no label</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box action">Disclosure gate</div><div class="fs-arrow">↓</div></div>
+      <div class="fs"><div class="fs-box fail">NON_COMPLIANT</div></div>
+    </div>
+  </div>
+  <div class="pc-links">
+    <a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/v1/proof/estate/VP-010" target="_blank">Proof Spec</a>
+    <a class="ptable-link amber" href="https://verisigil-api-production.up.railway.app/docs" target="_blank">Run (not yet externally validated)</a>
+  </div>
+</div>
+
+</div>
+</div><!-- /wrap -->
+
+<div class="cta">
+  <div class="wrap">
+    <h2>Run a proof in five minutes.</h2>
+    <p>Same input. Same output. Every time. Deterministic. No trust in VeriSigil required.</p>
+    <div class="btn-row">
+      <a href="https://verisigil-api-production.up.railway.app/v1/proof/estate" target="_blank" class="btn-p">Full Proof Estate API →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/verify/kit" target="_blank" class="btn-s">Verification Kit</a>
+      <a href="/verification-reports.html" class="btn-s">Report #001</a>
+      <a href="/validation.html" class="btn-s">Validation Program</a>
+      <a href="/boundary.html" class="btn-s">Claim Boundary</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-text">© 2026 VeriSigil AI · raheem@verisigilai.com</span>
+    <div class="foot-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/validation.html">Validation</a>
+      <a href="/runs.html">Runs</a>
+      <a href="/verification-reports.html">Reports</a>
+      <a href="/boundary.html">Boundary</a>
+      <a href="https://verisigilai.com/trust.html">Trust</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

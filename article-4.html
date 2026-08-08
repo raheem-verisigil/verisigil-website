@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Article 4 AI Literacy Governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08111F;--surface:#182436;--elevated:#1E2E42;
+  --border:rgba(255,255,255,.07);--text:#E8EDF4;--muted:#6B849E;
+  --faint:#374A60;--green:#00C896;--amber:#F5A623;--red:#E05555;
+  --blue:#4A9EFF;--mono:'IBM Plex Mono',monospace;--sans:'Inter',sans-serif;
+}
+html{-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;min-height:100vh;}
+nav{border-bottom:1px solid var(--border);padding:13px 0;position:sticky;top:0;z-index:100;background:rgba(8,17,31,.97);backdrop-filter:blur(10px);}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.nav-brand{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);text-decoration:none;}
+.nav-brand span{color:var(--green);}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap;}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--green);}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+
+/* Hero */
+header{padding:56px 0 40px;border-bottom:1px solid var(--border);}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
+header h1{font-size:clamp(22px,4vw,34px);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
+.hero-sub{font-size:15px;color:var(--muted);max-width:600px;line-height:1.75;margin-bottom:16px;}
+.important-note{background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.2);border-left:3px solid var(--amber);padding:14px 18px;font-size:13px;color:var(--muted);line-height:1.7;max-width:640px;margin-top:16px;}
+.important-note strong{color:var(--text);}
+
+/* Section */
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+
+/* Workflow pipeline */
+.pipeline{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:24px 0 32px;max-width:560px;}
+.pipe-step{display:flex;align-items:flex-start;gap:16px;padding:14px 0;}
+.pipe-connector{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:32px;}
+.pipe-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;flex-shrink:0;}
+.pc-green{background:rgba(0,200,150,.12);border:1.5px solid var(--green);color:var(--green);}
+.pc-blue{background:rgba(74,158,255,.1);border:1.5px solid var(--blue);color:var(--blue);}
+.pc-amber{background:rgba(245,166,35,.08);border:1.5px solid var(--amber);color:var(--amber);}
+.pipe-line{width:1px;background:var(--border);flex:1;min-height:14px;margin:3px 0;}
+.pipe-body{flex:1;padding-top:5px;}
+.pipe-title{font-size:13px;font-weight:600;margin-bottom:3px;}
+.pipe-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.pipe-endpoint{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:4px;}
+.pipe-endpoint a{color:var(--green);text-decoration:none;}
+.pipe-endpoint a:hover{text-decoration:underline;}
+
+/* Two col layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+@media(max-width:620px){.two-col{grid-template-columns:1fr;}}
+
+/* Info card */
+.info-card{background:var(--surface);border:1px solid var(--border);padding:18px 20px;}
+.ic-title{font-size:13px;font-weight:600;margin-bottom:8px;}
+.ic-body{font-size:12px;color:var(--muted);line-height:1.6;}
+.ic-list{list-style:none;padding:0;}
+.ic-list li{font-size:12px;color:var(--muted);padding:3px 0;line-height:1.5;}
+.ic-list li::before{content:"→ ";color:var(--green);font-family:var(--mono);}
+
+/* Status table */
+.status-table{width:100%;border-collapse:collapse;margin:16px 0;}
+.status-table th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:9px 14px;border-bottom:1px solid var(--border);}
+.status-table td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12.5px;vertical-align:middle;}
+.status-table tr:last-child td{border-bottom:none;}
+.badge{font-family:var(--mono);font-size:9px;font-weight:600;padding:3px 8px;white-space:nowrap;}
+.b-deployed{background:rgba(74,158,255,.06);color:var(--blue);border:1px solid rgba(74,158,255,.2);}
+.b-validated{background:rgba(0,200,150,.08);color:var(--green);border:1px solid rgba(0,200,150,.2);}
+.b-pending{background:rgba(245,166,35,.05);color:var(--amber);border:1px solid rgba(245,166,35,.2);}
+
+/* Live demo box */
+.live-demo{background:var(--surface);border:1px solid rgba(0,200,150,.15);padding:20px 24px;margin:20px 0;}
+.ld-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
+.ld-step{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.ld-step:last-child{border-bottom:none;}
+.ld-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:20px;flex-shrink:0;padding-top:2px;}
+.ld-body{flex:1;}
+.ld-action{font-size:13px;font-weight:500;margin-bottom:3px;}
+.ld-endpoint{font-family:var(--mono);font-size:11px;color:var(--green);}
+.ld-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5;}
+
+/* Architecture chain */
+.arch-chain{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:20px 0;padding:16px 20px;background:var(--surface);border:1px solid var(--border);}
+.arch-node{font-family:var(--mono);font-size:10px;color:var(--text);padding:6px 10px;border:1px solid var(--border);white-space:nowrap;}
+.arch-node.green{border-color:rgba(0,200,150,.3);color:var(--green);}
+.arch-arrow{font-family:var(--mono);font-size:11px;color:var(--faint);padding:0 4px;}
+
+/* Distinction block */
+.distinction{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0;}
+@media(max-width:550px){.distinction{grid-template-columns:1fr;}}
+.dist-card{padding:16px 18px;}
+.dist-card.before{background:rgba(224,85,85,.04);border:1px solid rgba(224,85,85,.15);}
+.dist-card.after{background:rgba(0,200,150,.04);border:1px solid rgba(0,200,150,.2);}
+.dist-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.dist-card.before .dist-label{color:var(--red);}
+.dist-card.after .dist-label{color:var(--green);}
+.dist-text{font-size:13px;color:var(--text);line-height:1.6;}
+
+/* Role matrix */
+.role-matrix{width:100%;border-collapse:collapse;margin:16px 0;}
+.role-matrix th{background:var(--elevated);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:9px 14px;border-bottom:1px solid var(--border);}
+.role-matrix td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;vertical-align:top;}
+.role-matrix tr:last-child td{border-bottom:none;}
+.role-matrix td:first-child{font-weight:500;}
+
+/* CTA */
+.cta{padding:48px 0;text-align:center;border-top:1px solid var(--border);}
+.cta h2{font-size:18px;font-weight:600;margin-bottom:8px;}
+.cta p{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.btn-p{background:var(--green);color:#08111F;padding:10px 22px;font-weight:600;font-size:13px;font-family:var(--mono);text-decoration:none;}
+.btn-p:hover{opacity:.88;}
+.btn-s{border:1px solid var(--faint);color:var(--muted);padding:10px 22px;font-size:13px;font-family:var(--mono);text-decoration:none;transition:all .15s;}
+.btn-s:hover{border-color:var(--green);color:var(--green);}
+footer{border-top:1px solid var(--border);padding:24px 0;}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.foot-text{font-family:var(--mono);font-size:11px;color:var(--faint);}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap;}
+.foot-links a{font-family:var(--mono);font-size:11px;color:var(--faint);text-decoration:none;}
+.foot-links a:hover{color:var(--green);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="https://verisigilai.com" class="nav-brand">VeriSigil<span>AI</span></a>
+    <div class="nav-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/validation.html">Validation</a>
+      <a href="/proofs.html">Proof Estate</a>
+      <a href="/boundary.html">Boundary</a>
+      <a href="/article-4.html" class="active">Article 4</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">EU AI Act — Article 4 · AI Literacy Governance</div>
+    <h1>Article 4 shouldn't end<br>with a training certificate.</h1>
+    <p class="hero-sub">The EU AI Act requires organisations to take measures to support AI literacy appropriate to their people, their role, and the AI systems they work with. The harder question is: can you demonstrate what you actually did?</p>
+    <div class="important-note">
+      <strong>Important distinction:</strong> VeriSigil AI is not a training provider and does not declare an organisation legally compliant with Article 4. We provide the governance and evidence infrastructure that helps organisations document, connect, and demonstrate the measures they have taken. Article 4 compliance is determined by national market-surveillance authorities.
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- The distinction -->
+<div class="section-label">The Problem</div>
+<div class="distinction">
+  <div class="dist-card before">
+    <div class="dist-label">Without governance infrastructure</div>
+    <div class="dist-text">"We have an AI literacy policy."<br><br>A PDF. A training course. A checkbox.<br><br>Cannot demonstrate what was assessed, who it applied to, what AI risks informed it, or how it connects to actual governance decisions.</div>
+  </div>
+  <div class="dist-card after">
+    <div class="dist-label">With VeriSigil AI</div>
+    <div class="dist-text">"Here is the evidence of what we assessed, what measures we took, who they applied to, what AI risks informed them, and how that evidence connects to our wider AI governance."<br><br>Cryptographically sealed. Independently verifiable. Regulator-ready.</div>
+  </div>
+</div>
+
+<!-- Architecture chain -->
+<div class="section-label">How Article 4 Connects to Runtime Governance</div>
+<div class="arch-chain">
+  <div class="arch-node green">Human Literacy</div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node">Human Authority</div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node">AI Identity</div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node">AI Boundaries</div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node">Runtime Admissibility</div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node">Evidence</div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node green">Revalidation</div>
+</div>
+<p style="font-size:12px;color:var(--muted);margin-bottom:8px;">Article 4 is the first link in this chain. A human supervisor with an expired or non-compliant literacy record cannot be a valid approver for a HIGH-consequence AI action — <code style="font-family:var(--mono);font-size:11px;">POST /v1/literacy/check-authorization</code> returns HOLD until revalidated.</p>
+
+<!-- Workflow pipeline -->
+<div class="section-label">Article 4 Governance Workflow — Live Endpoints</div>
+<div class="pipeline">
+
+  <div class="pipe-step">
+    <div class="pipe-connector">
+      <div class="pipe-circle pc-blue">01</div>
+      <div class="pipe-line"></div>
+    </div>
+    <div class="pipe-body">
+      <div class="pipe-title">Register the person</div>
+      <div class="pipe-desc">Record training completed, competency level, certifications, role, and org_id. Issues a sealed AI Competency Passport. Every record is Ed25519 signed and offline verifiable.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Literacy%20Governance%20—%20Article%204" target="_blank">POST /v1/literacy/register →</a></div>
+    </div>
+  </div>
+
+  <div class="pipe-step">
+    <div class="pipe-connector">
+      <div class="pipe-circle pc-blue">02</div>
+      <div class="pipe-line"></div>
+    </div>
+    <div class="pipe-body">
+      <div class="pipe-title">Create a risk-based literacy profile</div>
+      <div class="pipe-desc">Derives required literacy topics from the AI systems the person works with and their risk exposure. Provider role requires higher minimum competency than deployer role. Topics are specific to the actual AI risk — not a one-size-fits-all course list.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Literacy%20Governance%20—%20Article%204" target="_blank">POST /v1/literacy/profile →</a></div>
+    </div>
+  </div>
+
+  <div class="pipe-step">
+    <div class="pipe-connector">
+      <div class="pipe-circle pc-blue">03</div>
+      <div class="pipe-line"></div>
+    </div>
+    <div class="pipe-body">
+      <div class="pipe-title">Record guidance and acknowledgement</div>
+      <div class="pipe-desc">The Commission says organisations can maintain an internal record of training and guidance — a specific Article 4 certificate is not required. This endpoint creates that evidence record with a sealed receipt.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Literacy%20Governance%20—%20Article%204" target="_blank">POST /v1/literacy/acknowledge →</a></div>
+    </div>
+  </div>
+
+  <div class="pipe-step">
+    <div class="pipe-connector">
+      <div class="pipe-circle pc-green">04</div>
+      <div class="pipe-line"></div>
+    </div>
+    <div class="pipe-body">
+      <div class="pipe-title">Connect literacy to authorization</div>
+      <div class="pipe-desc">Before a human supervisor approves a HIGH-consequence AI action, VeriSigil checks whether their literacy profile is current and their competency is adequate. Expired literacy → HOLD. This is where Article 4 becomes operational — not just a training record.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Literacy%20Governance%20—%20Article%204" target="_blank">POST /v1/literacy/check-authorization →</a></div>
+    </div>
+  </div>
+
+  <div class="pipe-step">
+    <div class="pipe-connector">
+      <div class="pipe-circle pc-green">05</div>
+      <div class="pipe-line"></div>
+    </div>
+    <div class="pipe-body">
+      <div class="pipe-title">Generate the Article 4 Evidence Pack</div>
+      <div class="pipe-desc">Chronological record of all governance events: literacy registrations, acknowledgements, AI systems deployed, gaps identified, and remediation actions. Present to the national market-surveillance authority or AI Office as evidence of measures taken.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/AI%20Literacy%20Governance%20—%20Article%204" target="_blank">GET /v1/literacy/evidence/{org_id} →</a></div>
+    </div>
+  </div>
+
+  <div class="pipe-step">
+    <div class="pipe-connector">
+      <div class="pipe-circle pc-amber">06</div>
+    </div>
+    <div class="pipe-body">
+      <div class="pipe-title">Revalidation when circumstances change</div>
+      <div class="pipe-desc">When an AI system, role, risk level, or operating context changes, the literacy record triggers revalidation. High-risk AI systems require revalidation every 180 days. Standard profiles every 365 days. Article 26 additional requirements flagged for high-risk AI supervisors.</div>
+      <div class="pipe-endpoint" style="color:var(--amber);">Automatic — triggered by valid_until field + literacy/check-authorization</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Role matrix -->
+<div class="section-label">Provider vs Deployer — Different Obligations</div>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Article 4 obligations depend on whether your organisation provides AI systems or deploys AI built by others. VeriSigil derives the appropriate requirements automatically from the <code style="font-family:var(--mono);font-size:11px;">org_role</code> field.</p>
+<table class="role-matrix">
+  <thead><tr><th>Role</th><th>Minimum Competency</th><th>Key Topics</th><th>Article 26 Applies</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>DEPLOYER · Low risk</td>
+      <td><span class="badge b-deployed">BASIC</span></td>
+      <td>AI basics, hallucination awareness, disclosure, verification</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>DEPLOYER · High risk (HR, finance)</td>
+      <td><span class="badge b-deployed">INTERMEDIATE</span></td>
+      <td>+ Bias, human oversight, escalation, affected persons, prohibited uses</td>
+      <td>No — but recommended</td>
+    </tr>
+    <tr>
+      <td>DEPLOYER · Critical (autonomous AI supervisor)</td>
+      <td><span class="badge b-deployed">INTERMEDIATE+</span></td>
+      <td>+ Authorization, delegation, runtime boundaries, audit evidence, incident response</td>
+      <td>Likely</td>
+    </tr>
+    <tr>
+      <td>PROVIDER · Any risk</td>
+      <td><span class="badge b-validated">INTERMEDIATE–EXPERT</span></td>
+      <td>+ Documentation, conformity assessment, post-market monitoring, Article 26 competency</td>
+      <td>Yes — from 2027-08-02</td>
+    </tr>
+  </tbody>
+</table>
+<p style="font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:8px;">Note: These competency tiers are VeriSigil's governance operationalisation of Article 4 — not legal requirements. Article 4 is risk-, role-, knowledge-, experience-, and context-based. It does not prescribe universal competency tiers.</p>
+
+<!-- Live demo -->
+<div class="section-label">Try the Article 4 Workflow</div>
+<div class="live-demo">
+  <div class="ld-title">Live Demo — Article 4 Evidence Chain · Sandbox Key: vs-sandbox-demo-2026b</div>
+
+  <div class="ld-step">
+    <div class="ld-num">01</div>
+    <div class="ld-body">
+      <div class="ld-action">Register a staff member</div>
+      <div class="ld-endpoint">POST /v1/literacy/register</div>
+      <div class="ld-note">Try: <code>{"name":"Jane Smith","role":"AI Supervisor","org_id":"your-org","training_completed":["EU AI Act Basics"],"competency_level":"BASIC","assessed_by":"HR Manager"}</code><br>Returns: <code>article_4_satisfied</code>, competency passport, Ed25519 signature</div>
+    </div>
+  </div>
+
+  <div class="ld-step">
+    <div class="ld-num">02</div>
+    <div class="ld-body">
+      <div class="ld-action">Create a risk-based literacy profile</div>
+      <div class="ld-endpoint">POST /v1/literacy/profile</div>
+      <div class="ld-note">Try: <code>{"person_id":"jane-smith","role":"AI Supervisor","org_role":"DEPLOYER","risk_exposure":"HIGH"}</code><br>Returns: required_topics specific to HIGH risk, min_competency, revalidation_days</div>
+    </div>
+  </div>
+
+  <div class="ld-step">
+    <div class="ld-num">03</div>
+    <div class="ld-body">
+      <div class="ld-action">Test the literacy-to-authorization link</div>
+      <div class="ld-endpoint">POST /v1/literacy/check-authorization</div>
+      <div class="ld-note">Try with unregistered person: <code>{"person_id":"nobody","consequence":"HIGH","ai_system_risk":"HIGH"}</code><br>Expected: <code>ruling: HOLD</code> — cannot supervise high-consequence AI without literacy record</div>
+    </div>
+  </div>
+
+  <div class="ld-step">
+    <div class="ld-num">04</div>
+    <div class="ld-body">
+      <div class="ld-action">Generate the Article 4 Evidence Pack</div>
+      <div class="ld-endpoint">GET /v1/literacy/evidence/{org_id}</div>
+      <div class="ld-note">Returns: AI inventory, literacy summary, compliance rate, gaps identified, remediation actions, Ed25519 sealed governance evidence. Present to AI Office or national authority on demand.</div>
+    </div>
+  </div>
+
+  <div class="ld-step">
+    <div class="ld-num">05</div>
+    <div class="ld-body">
+      <div class="ld-action">Check regulatory requirements for your jurisdiction</div>
+      <div class="ld-endpoint">GET /v1/regulatory/requirements?jurisdiction=EU</div>
+      <div class="ld-note">Maps EU AI Act Articles 50(1)–(4) and Article 4 to specific governance controls and VeriSigil endpoints. Also supports: CA (SB 942), UK (AI Code of Practice).</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Endpoint status table -->
+<div class="section-label">Article 4 Endpoint Status — Honest Engineering Record</div>
+<table class="status-table">
+  <thead><tr><th>Endpoint</th><th>Purpose</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td style="font-family:var(--mono);font-size:11px;">POST /v1/literacy/register</td><td style="font-size:12px;">Register staff, issue competency passport</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">POST /v1/literacy/profile</td><td style="font-size:12px;">Risk-adaptive literacy requirements</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">POST /v1/literacy/acknowledge</td><td style="font-size:12px;">Guidance acknowledgement with evidence receipt</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">POST /v1/literacy/check-authorization</td><td style="font-size:12px;">Literacy-to-authorization link — HOLD if expired</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">GET /v1/literacy/org/{org_id}</td><td style="font-size:12px;">Organisation literacy compliance summary</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">GET /v1/literacy/evidence/{org_id}</td><td style="font-size:12px;">Article 4 Evidence Pack — regulator-ready</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">GET /v1/regulatory/requirements</td><td style="font-size:12px;">Regulatory requirement resolver (EU/CA/UK)</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">GET /v1/board/dashboard/{org_id}</td><td style="font-size:12px;">Board dashboard includes Article 4 status</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">GET /v1/compliance/timeline/{org_id}</td><td style="font-size:12px;">Timeline includes literacy events</td><td><span class="badge b-deployed">DEPLOYED</span></td></tr>
+    <tr><td style="font-family:var(--mono);font-size:11px;">All Article 4 endpoints</td><td style="font-size:12px;">Independent validation</td><td><span class="badge b-pending">NOT YET VALIDATED</span></td></tr>
+  </tbody>
+</table>
+<p style="font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:8px;">DEPLOYED = live on production API. NOT YET VALIDATED = not independently tested by an external reviewer. Independent validation is planned. The distinction matters — see <a href="/boundary.html" style="color:var(--green);">boundary.html</a>.</p>
+
+<!-- Two-col info -->
+<div class="section-label">What VeriSigil AI Does and Does Not Do</div>
+<div class="two-col">
+  <div class="info-card">
+    <div class="ic-title" style="color:var(--green);">✓ What VeriSigil provides</div>
+    <ul class="ic-list">
+      <li>Risk-based literacy requirement derivation</li>
+      <li>Governance evidence receipts (Ed25519 signed)</li>
+      <li>Literacy-to-authorization enforcement</li>
+      <li>Revalidation triggers when context changes</li>
+      <li>Article 4 Evidence Pack for regulators</li>
+      <li>Provider/deployer role classification</li>
+      <li>AI system risk mapping to literacy needs</li>
+      <li>Compliance timeline with literacy events</li>
+    </ul>
+  </div>
+  <div class="info-card">
+    <div class="ic-title" style="color:var(--amber);">○ What VeriSigil does not provide</div>
+    <ul class="ic-list">
+      <li>AI training content or curricula</li>
+      <li>Article 4 compliance certification</li>
+      <li>Legal advice on compliance obligations</li>
+      <li>Guarantee of regulatory safe harbour</li>
+      <li>Prescribed competency levels (those are Article 4's determination)</li>
+      <li>Substitute for human judgment on literacy adequacy</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<div class="cta">
+  <div class="wrap">
+    <h2>See the Article 4 workflow live.</h2>
+    <p>Every endpoint on this page is running on the production API. Run the demo in Swagger with the sandbox key.</p>
+    <div class="btn-row">
+      <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="btn-p">Open Swagger →</a>
+      <a href="https://verisigil-api-production.up.railway.app/v1/regulatory/requirements?jurisdiction=EU" target="_blank" class="btn-s">EU Regulatory Requirements</a>
+      <a href="/proofs.html" class="btn-s">Proof Estate</a>
+      <a href="/boundary.html" class="btn-s">Claim Boundary</a>
+    </div>
+    <p style="margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);">Sandbox key: vs-sandbox-demo-2026b · Not for production use</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-text">© 2026 VeriSigil AI · raheem@verisigilai.com</span>
+    <div class="foot-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/validation.html">Validation</a>
+      <a href="/proofs.html">Proofs</a>
+      <a href="/boundary.html">Boundary</a>
+      <a href="https://verisigilai.com/trust.html">Trust</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

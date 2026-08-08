@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriSigil AI — Article 25 Value-Chain Governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#08111F;--surface:#182436;--elevated:#1E2E42;--border:rgba(255,255,255,.07);--text:#E8EDF4;--muted:#6B849E;--faint:#374A60;--green:#00C896;--amber:#F5A623;--red:#E05555;--blue:#4A9EFF;--mono:'IBM Plex Mono',monospace;--sans:'Inter',sans-serif;}
+html{-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;min-height:100vh;}
+nav{border-bottom:1px solid var(--border);padding:13px 0;position:sticky;top:0;z-index:100;background:rgba(8,17,31,.97);backdrop-filter:blur(10px);}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.nav-brand{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);text-decoration:none;}
+.nav-brand span{color:var(--green);}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap;}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--green);}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+header{padding:56px 0 40px;border-bottom:1px solid var(--border);}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
+header h1{font-size:clamp(22px,4vw,34px);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
+.hero-sub{font-size:15px;color:var(--muted);max-width:600px;line-height:1.75;margin-bottom:16px;}
+.important-note{background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.2);border-left:3px solid var(--amber);padding:14px 18px;font-size:13px;color:var(--muted);line-height:1.7;max-width:640px;margin-top:16px;}
+.important-note strong{color:var(--text);}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+
+/* Responsibility table */
+.resp-table{width:100%;border-collapse:collapse;margin:16px 0;overflow-x:auto;display:block;}
+.resp-table th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap;}
+.resp-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;vertical-align:top;}
+.resp-table tr:last-child td{border-bottom:none;}
+.resp-table tr:hover td{background:rgba(255,255,255,.02);}
+.role-badge{font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 7px;white-space:nowrap;}
+.rb-provider{background:rgba(0,200,150,.08);color:var(--green);border:1px solid rgba(0,200,150,.2);}
+.rb-deployer{background:rgba(74,158,255,.06);color:var(--blue);border:1px solid rgba(74,158,255,.18);}
+.rb-integrator{background:rgba(245,166,35,.05);color:var(--amber);border:1px solid rgba(245,166,35,.18);}
+.rb-distributor{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border);}
+.status-ok{color:var(--green);font-family:var(--mono);font-size:10px;}
+.status-review{color:var(--amber);font-family:var(--mono);font-size:10px;}
+
+/* Workflow pipeline */
+.pipeline{display:flex;flex-direction:column;gap:0;margin:24px 0;max-width:560px;}
+.pipe-step{display:flex;align-items:flex-start;gap:14px;padding:13px 0;}
+.pipe-circle{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:600;flex-shrink:0;margin-top:2px;}
+.pc-green{background:rgba(0,200,150,.12);border:1.5px solid var(--green);color:var(--green);}
+.pc-blue{background:rgba(74,158,255,.1);border:1.5px solid var(--blue);color:var(--blue);}
+.pc-amber{background:rgba(245,166,35,.08);border:1.5px solid var(--amber);color:var(--amber);}
+.pipe-connector{display:flex;flex-direction:column;align-items:center;}
+.pipe-line{width:1px;background:var(--border);flex:1;min-height:10px;margin:2px 0;}
+.pipe-body{flex:1;}
+.pipe-title{font-size:13px;font-weight:600;margin-bottom:3px;}
+.pipe-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.pipe-endpoint{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:4px;}
+.pipe-endpoint a{color:var(--green);text-decoration:none;}
+.pipe-endpoint a:hover{text-decoration:underline;}
+
+/* Trigger cards */
+.trigger-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin:14px 0;}
+.trigger-card{background:var(--surface);border:1px solid rgba(245,166,35,.15);padding:14px;}
+.tc-title{font-size:12.5px;font-weight:600;margin-bottom:5px;color:var(--amber);}
+.tc-body{font-size:12px;color:var(--muted);line-height:1.55;}
+
+/* Architecture diagram */
+.arch-stack{display:flex;flex-direction:column;gap:2px;max-width:480px;margin:20px 0;}
+.arch-row{display:flex;align-items:center;gap:10px;}
+.arch-node{flex:1;text-align:center;padding:9px 12px;font-family:var(--mono);font-size:10px;font-weight:500;}
+.an-green{background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.25);color:var(--green);}
+.an-blue{background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);color:var(--blue);}
+.an-amber{background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.18);color:var(--amber);}
+.an-plain{background:var(--surface);border:1px solid var(--border);color:var(--text);}
+.arch-arrow{font-family:var(--mono);font-size:11px;color:var(--faint);}
+
+/* Two col */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+@media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+.info-card{background:var(--surface);border:1px solid var(--border);padding:16px 18px;}
+.ic-title{font-size:13px;font-weight:600;margin-bottom:8px;}
+.ic-list{list-style:none;padding:0;}
+.ic-list li{font-size:12px;color:var(--muted);padding:3px 0;line-height:1.5;}
+.ic-list li::before{content:"→ ";color:var(--green);font-family:var(--mono);}
+
+/* Live demo */
+.live-demo{background:var(--surface);border:1px solid rgba(0,200,150,.15);padding:20px 24px;margin:20px 0;}
+.ld-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
+.ld-step{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.ld-step:last-child{border-bottom:none;}
+.ld-num{font-family:var(--mono);font-size:10px;color:var(--faint);width:20px;flex-shrink:0;padding-top:2px;}
+.ld-body{flex:1;}
+.ld-action{font-size:13px;font-weight:500;margin-bottom:3px;}
+.ld-endpoint{font-family:var(--mono);font-size:11px;color:var(--green);}
+.ld-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5;}
+code{font-family:var(--mono);font-size:11px;color:var(--text);background:rgba(255,255,255,.04);padding:2px 5px;}
+
+.cta{padding:48px 0;text-align:center;border-top:1px solid var(--border);}
+.cta h2{font-size:18px;font-weight:600;margin-bottom:8px;}
+.cta p{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.btn-p{background:var(--green);color:#08111F;padding:10px 22px;font-weight:600;font-size:13px;font-family:var(--mono);text-decoration:none;}
+.btn-p:hover{opacity:.88;}
+.btn-s{border:1px solid var(--faint);color:var(--muted);padding:10px 22px;font-size:13px;font-family:var(--mono);text-decoration:none;transition:all .15s;}
+.btn-s:hover{border-color:var(--green);color:var(--green);}
+footer{border-top:1px solid var(--border);padding:24px 0;}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.foot-text{font-family:var(--mono);font-size:11px;color:var(--faint);}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap;}
+.foot-links a{font-family:var(--mono);font-size:11px;color:var(--faint);text-decoration:none;}
+.foot-links a:hover{color:var(--green);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="https://verisigilai.com" class="nav-brand">VeriSigil<span>AI</span></a>
+    <div class="nav-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/article-4.html">Article 4</a>
+      <a href="/article-25.html" class="active">Article 25</a>
+      <a href="/proofs.html">Proof Estate</a>
+      <a href="/boundary.html">Boundary</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">EU AI Act — Article 25 · Value-Chain Governance</div>
+    <h1>Who is responsible for your AI<br>across the value chain?</h1>
+    <p class="hero-sub">Modern enterprises rarely have one AI provider. They have models, applications, vendors, integrators, internal teams and deployers operating across the same AI lifecycle. Article 25 of the EU AI Act addresses where responsibility begins, shifts, and overlaps.</p>
+    <div class="important-note">
+      <strong>Important distinction:</strong> VeriSigil AI does not provide legal advice or declare an organisation legally compliant with Article 25. It provides governance infrastructure to help organisations map, govern and evidence AI responsibilities across the value chain. Legal determination of obligations requires qualified legal advice.
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- When downstream actors acquire provider obligations -->
+<div class="section-label">When Downstream Actors Acquire Provider Obligations — Article 25</div>
+<p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Article 25 recognises that responsibility is not fixed at the point of creation. Downstream actors can become subject to provider obligations under specified circumstances.</p>
+<div class="trigger-grid">
+  <div class="trigger-card">
+    <div class="tc-title">Own Name / Trademark</div>
+    <div class="tc-body">A distributor or deployer that puts its own name or trademark on a high-risk AI system takes on provider obligations for that system.</div>
+  </div>
+  <div class="trigger-card">
+    <div class="tc-title">Substantial Modification</div>
+    <div class="tc-body">An actor that makes a substantial modification to a high-risk AI system before placing it on the market becomes responsible as a provider.</div>
+  </div>
+  <div class="trigger-card">
+    <div class="tc-title">Third-Country Import</div>
+    <div class="tc-body">An importer placing a third-country AI system on the EU market acquires provider obligations where the original provider cannot be held to account.</div>
+  </div>
+  <div class="trigger-card">
+    <div class="tc-title">Places on Market</div>
+    <div class="tc-body">An actor placing a high-risk AI system on the market under its own name, regardless of the original provider, takes on provider obligations.</div>
+  </div>
+</div>
+
+<!-- Responsibility example table -->
+<div class="section-label">AI Responsibility Map — Example Enterprise View</div>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px;">VeriSigil generates this map from <code>POST /v1/value-chain/register</code>. Every row has a governance receipt.</p>
+<div style="overflow-x:auto;">
+<table class="resp-table">
+  <thead>
+    <tr>
+      <th>AI System</th>
+      <th>Actor</th>
+      <th>Role</th>
+      <th>Provider Obligations Triggered</th>
+      <th>Human Oversight</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HR Screening AI</td>
+      <td>Vendor A</td>
+      <td><span class="role-badge rb-provider">PROVIDER</span></td>
+      <td>Original provider — full obligations</td>
+      <td>HR Director</td>
+      <td class="status-ok">MAPPED</td>
+    </tr>
+    <tr>
+      <td>HR Screening AI</td>
+      <td>Company X (deployer)</td>
+      <td><span class="role-badge rb-deployer">DEPLOYER</span></td>
+      <td>No — standard deployment obligations</td>
+      <td>HR Manager</td>
+      <td class="status-ok">MAPPED</td>
+    </tr>
+    <tr>
+      <td>HR Screening AI</td>
+      <td>Integrator B</td>
+      <td><span class="role-badge rb-integrator">INTEGRATOR</span></td>
+      <td>Under review — modification scope unclear</td>
+      <td>Tech Lead</td>
+      <td class="status-review">REVIEW</td>
+    </tr>
+    <tr>
+      <td>Customer Service AI</td>
+      <td>Vendor C</td>
+      <td><span class="role-badge rb-provider">PROVIDER</span></td>
+      <td>Original provider — full obligations</td>
+      <td>CX Director</td>
+      <td class="status-ok">MAPPED</td>
+    </tr>
+    <tr>
+      <td>Customer Service AI</td>
+      <td>Company X (branded)</td>
+      <td><span class="role-badge rb-provider">PROVIDER</span></td>
+      <td>YES — own name/trademark applied</td>
+      <td>CX Director</td>
+      <td class="status-review">REVALIDATION REQUIRED</td>
+    </tr>
+    <tr>
+      <td>Document AI</td>
+      <td>Distributor D</td>
+      <td><span class="role-badge rb-distributor">DISTRIBUTOR</span></td>
+      <td>No modification — lighter obligations</td>
+      <td>Legal Counsel</td>
+      <td class="status-ok">MAPPED</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- Workflow pipeline -->
+<div class="section-label">Article 25 Governance Workflow — Seven Steps</div>
+<div class="pipeline">
+  <div class="pipe-step">
+    <div class="pipe-connector"><div class="pipe-circle pc-blue">01</div><div class="pipe-line"></div></div>
+    <div class="pipe-body">
+      <div class="pipe-title">Map the AI system</div>
+      <div class="pipe-desc">Register the AI system with name, type, risk classification, intended purpose, and jurisdiction.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/Article%2025%20—%20Value-Chain%20Governance" target="_blank">POST /v1/value-chain/register →</a></div>
+    </div>
+  </div>
+  <div class="pipe-step">
+    <div class="pipe-connector"><div class="pipe-circle pc-blue">02</div><div class="pipe-line"></div></div>
+    <div class="pipe-body">
+      <div class="pipe-title">Identify every actor</div>
+      <div class="pipe-desc">Register every actor in the value chain — model provider, application provider, integrator, distributor, deployer, internal teams.</div>
+    </div>
+  </div>
+  <div class="pipe-step">
+    <div class="pipe-connector"><div class="pipe-circle pc-blue">03</div><div class="pipe-line"></div></div>
+    <div class="pipe-body">
+      <div class="pipe-title">Determine each actor's role</div>
+      <div class="pipe-desc">VeriSigil evaluates whether own-name/trademark, substantial modification, or third-country import triggers provider obligations for each actor.</div>
+    </div>
+  </div>
+  <div class="pipe-step">
+    <div class="pipe-connector"><div class="pipe-circle pc-green">04</div><div class="pipe-line"></div></div>
+    <div class="pipe-body">
+      <div class="pipe-title">Map responsibility</div>
+      <div class="pipe-desc">Generate the responsibility map — each actor, their effective role, applicable obligations, human oversight owner, and evidence references.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/Article%2025%20—%20Value-Chain%20Governance" target="_blank">GET /v1/value-chain/{org_id}/responsibilities →</a></div>
+    </div>
+  </div>
+  <div class="pipe-step">
+    <div class="pipe-connector"><div class="pipe-circle pc-green">05</div><div class="pipe-line"></div></div>
+    <div class="pipe-body">
+      <div class="pipe-title">Record the evidence</div>
+      <div class="pipe-desc">Every determination is Ed25519 sealed. The evidence pack is independently verifiable and regulator-ready.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/Article%2025%20—%20Value-Chain%20Governance" target="_blank">GET /v1/value-chain/{org_id}/evidence →</a></div>
+    </div>
+  </div>
+  <div class="pipe-step">
+    <div class="pipe-connector"><div class="pipe-circle pc-amber">06</div><div class="pipe-line"></div></div>
+    <div class="pipe-body">
+      <div class="pipe-title">Detect responsibility changes</div>
+      <div class="pipe-desc">When an actor puts their name on a system, makes a substantial modification, or their role changes — record the change. Triggers automatic revalidation.</div>
+      <div class="pipe-endpoint"><a href="https://verisigil-api-production.up.railway.app/docs#/Article%2025%20—%20Value-Chain%20Governance" target="_blank">POST /v1/value-chain/{org_id}/changes →</a></div>
+    </div>
+  </div>
+  <div class="pipe-step">
+    <div class="pipe-connector"><div class="pipe-circle pc-amber">07</div></div>
+    <div class="pipe-body">
+      <div class="pipe-title">Revalidate governance</div>
+      <div class="pipe-desc">Responsibility is not static. Every registered change flags the affected actor for revalidation. The evidence pack records the full history.</div>
+    </div>
+  </div>
+</div>
+
+<!-- How it connects to the broader architecture -->
+<div class="section-label">How Article 25 Connects to the Full Governance Architecture</div>
+<div class="arch-stack">
+  <div class="arch-row"><div class="arch-node an-green">AI Literacy — Article 4</div></div>
+  <div class="arch-row"><div style="width:1px;height:8px;background:var(--faint);margin:0 auto;"></div></div>
+  <div class="arch-row"><div class="arch-node an-green">Value-Chain Responsibility — Article 25</div></div>
+  <div class="arch-row"><div style="width:1px;height:8px;background:var(--faint);margin:0 auto;"></div></div>
+  <div class="arch-row"><div class="arch-node an-blue">Human Oversight → Authorization</div></div>
+  <div class="arch-row"><div style="width:1px;height:8px;background:var(--faint);margin:0 auto;"></div></div>
+  <div class="arch-row"><div class="arch-node an-blue">Runtime Controls → Governance Decision</div></div>
+  <div class="arch-row"><div style="width:1px;height:8px;background:var(--faint);margin:0 auto;"></div></div>
+  <div class="arch-row"><div class="arch-node an-amber">Disclosure — Article 50</div></div>
+  <div class="arch-row"><div style="width:1px;height:8px;background:var(--faint);margin:0 auto;"></div></div>
+  <div class="arch-row"><div class="arch-node an-plain">Governance Receipt → Evidence → Proof</div></div>
+  <div class="arch-row"><div style="width:1px;height:8px;background:var(--faint);margin:0 auto;"></div></div>
+  <div class="arch-row"><div class="arch-node an-green">Revalidation when circumstances change</div></div>
+</div>
+
+<!-- Live demo -->
+<div class="section-label">Try the Article 25 Workflow — Live API</div>
+<div class="live-demo">
+  <div class="ld-title">Live Demo · Sandbox Key: vs-sandbox-demo-2026b</div>
+
+  <div class="ld-step">
+    <div class="ld-num">01</div>
+    <div class="ld-body">
+      <div class="ld-action">Register an AI system with its value chain</div>
+      <div class="ld-endpoint">POST /v1/value-chain/register</div>
+      <div class="ld-note">Include actors array with name, role, own_name_or_trademark, substantial_modification, human_oversight_owner. VeriSigil automatically determines if provider obligations are triggered for each actor.</div>
+    </div>
+  </div>
+
+  <div class="ld-step">
+    <div class="ld-num">02</div>
+    <div class="ld-body">
+      <div class="ld-action">Get the responsibility map</div>
+      <div class="ld-endpoint">GET /v1/value-chain/{org_id}/responsibilities</div>
+      <div class="ld-note">Returns the full responsibility table — every AI system, every actor, effective role, applicable obligations, and evidence status. Ready for governance review.</div>
+    </div>
+  </div>
+
+  <div class="ld-step">
+    <div class="ld-num">03</div>
+    <div class="ld-body">
+      <div class="ld-action">Record a responsibility change</div>
+      <div class="ld-endpoint">POST /v1/value-chain/{org_id}/changes</div>
+      <div class="ld-note">Try: <code>change_type: OWN_NAME_ADDED</code> — VeriSigil immediately flags the actor as having triggered provider obligations and marks the system for revalidation.</div>
+    </div>
+  </div>
+
+  <div class="ld-step">
+    <div class="ld-num">04</div>
+    <div class="ld-body">
+      <div class="ld-action">Get the evidence pack</div>
+      <div class="ld-endpoint">GET /v1/value-chain/{org_id}/evidence</div>
+      <div class="ld-note">Returns all governance receipts — Ed25519 sealed, offline verifiable. Present to national competent authority or AI Office as evidence of governance measures taken.</div>
+    </div>
+  </div>
+</div>
+
+<!-- What we do and don't do -->
+<div class="section-label">Scope</div>
+<div class="two-col">
+  <div class="info-card">
+    <div class="ic-title" style="color:var(--green);">✓ What VeriSigil provides</div>
+    <ul class="ic-list">
+      <li>AI system and actor registration</li>
+      <li>Automatic provider obligation trigger detection</li>
+      <li>Responsibility map with evidence receipts</li>
+      <li>Change detection and revalidation triggers</li>
+      <li>Ed25519 sealed governance certificates</li>
+      <li>Regulator-ready evidence pack</li>
+      <li>Integration with Article 4 and Article 50 layers</li>
+    </ul>
+  </div>
+  <div class="info-card">
+    <div class="ic-title" style="color:var(--amber);">○ What VeriSigil does not provide</div>
+    <ul class="ic-list">
+      <li>Legal advice on Article 25 obligations</li>
+      <li>Article 25 compliance certification</li>
+      <li>Determination of "substantial modification"</li>
+      <li>Substitute for qualified legal counsel</li>
+      <li>Guarantee of regulatory safe harbour</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div class="cta">
+  <div class="wrap">
+    <h2>Map your AI value chain.</h2>
+    <p>Register your AI systems and actors. Get a responsibility map with governance evidence.</p>
+    <div class="btn-row">
+      <a href="https://verisigil-api-production.up.railway.app/docs" target="_blank" class="btn-p">Open Swagger →</a>
+      <a href="/article-4.html" class="btn-s">Article 4 Literacy</a>
+      <a href="/boundary.html" class="btn-s">Claim Boundary</a>
+      <a href="/proofs.html" class="btn-s">Proof Estate</a>
+    </div>
+    <p style="margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);">Sandbox key: vs-sandbox-demo-2026b · Not for production use</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-text">© 2026 VeriSigil AI · raheem@verisigilai.com</span>
+    <div class="foot-links">
+      <a href="/demos.html">Demo</a>
+      <a href="/article-4.html">Article 4</a>
+      <a href="/proofs.html">Proofs</a>
+      <a href="/boundary.html">Boundary</a>
+      <a href="https://verisigilai.com/trust.html">Trust</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

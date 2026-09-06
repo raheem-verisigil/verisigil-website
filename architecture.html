@@ -1,459 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VeriSigil AI — Architecture</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#030A1A;--s1:#07122A;--s2:#0A1828;--s3:#0E2040;
-  --border:rgba(0,180,220,0.10);--b2:rgba(0,212,245,0.22);
-  --cyan:#00D4F5;--cyan2:#00A8C8;--cdim:rgba(0,212,245,0.08);
-  --text:#E8F4F8;--muted:#6B8FAA;--muted2:#3D5A70;
-  --green:#1FD47A;--red:#E2454A;--amber:#F0A030;--purple:#9B6DFF;
-  --mono:'JetBrains Mono',monospace;--sans:'Syne',system-ui,sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,245,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,245,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
-
-/* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(3,10,26,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--b2);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
-.nav-brand{font-size:15px;font-weight:700;color:var(--text);}
-.nav-sub{font-size:11px;color:var(--muted);font-family:var(--mono);}
-.nav-pill{background:var(--cdim);border:1px solid var(--b2);color:var(--cyan);font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);}
-
-/* HERO */
-.hero{text-align:center;padding:60px 24px 40px;position:relative;z-index:2;}
-.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--cdim);border:1px solid var(--b2);color:var(--cyan);font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;font-family:var(--mono);}
-.hero h1{font-size:48px;font-weight:800;line-height:1.08;margin-bottom:16px;letter-spacing:-.5px;}
-.hero h1 span{color:var(--cyan);}
-.hero p{font-size:16px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.7;}
-
-/* MAIN */
-.main{max-width:1200px;margin:0 auto;padding:0 20px 100px;position:relative;z-index:2;}
-
-/* SECTION */
-.sec-label{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.16em;font-family:var(--mono);margin-bottom:16px;margin-top:48px;}
-
-/* GOVERNANCE STACK */
-.stack{display:flex;flex-direction:column;gap:3px;margin-bottom:48px;}
-.stack-layer{display:grid;grid-template-columns:180px 1fr auto;gap:16px;align-items:center;padding:16px 20px;border-radius:8px;border:1px solid var(--border);background:var(--s1);position:relative;overflow:hidden;transition:border-color .2s;}
-.stack-layer::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
-.stack-layer:hover{border-color:rgba(0,212,245,.3);}
-.layer-l1::before{background:var(--cyan);}
-.layer-l2::before{background:var(--green);}
-.layer-l3::before{background:var(--amber);}
-.layer-l4::before{background:var(--purple);}
-.layer-l5::before{background:var(--red);}
-.layer-num{font-family:var(--mono);font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.12em;}
-.layer-name{font-size:14px;font-weight:700;color:var(--text);}
-.layer-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
-.layer-tags{display:flex;flex-wrap:wrap;gap:5px;}
-.tag{font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:4px;background:rgba(0,212,245,.07);border:1px solid rgba(0,212,245,.15);color:var(--cyan);}
-.layer-ep{font-size:11px;font-family:var(--mono);color:var(--muted);text-align:right;white-space:nowrap;}
-
-/* THREE COL */
-.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
-.two-col{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px;}
-
-/* CARD */
-.card{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:20px;transition:border-color .2s;}
-.card:hover{border-color:rgba(0,212,245,.25);}
-.card-icon{font-size:24px;margin-bottom:10px;}
-.card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.card-body{font-size:12px;color:var(--muted);line-height:1.7;}
-.card-endpoint{font-size:11px;font-family:var(--mono);color:var(--cyan);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
-
-/* FLOW DIAGRAM */
-.flow{display:flex;align-items:center;gap:0;margin-bottom:48px;overflow-x:auto;padding-bottom:8px;}
-.flow-step{flex-shrink:0;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-align:center;min-width:140px;}
-.flow-step.cyan{border-color:var(--b2);background:rgba(0,212,245,.06);}
-.flow-step.green{border-color:rgba(31,212,122,.25);background:rgba(31,212,122,.06);}
-.flow-step.red{border-color:rgba(226,69,74,.25);background:rgba(226,69,74,.06);}
-.flow-step.amber{border-color:rgba(240,160,48,.25);background:rgba(240,160,48,.06);}
-.flow-step-icon{font-size:20px;margin-bottom:6px;}
-.flow-step-label{font-size:11px;font-weight:700;color:var(--text);}
-.flow-step-sub{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
-.flow-arrow{flex-shrink:0;width:40px;text-align:center;color:var(--muted2);font-size:18px;}
-
-/* METRICS */
-.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:48px;}
-.metric{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;}
-.metric-val{font-size:28px;font-weight:700;font-family:var(--mono);color:var(--cyan);line-height:1;}
-.metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px;font-weight:600;}
-
-/* STAKEHOLDER MATRIX */
-.matrix{width:100%;border-collapse:collapse;margin-bottom:48px;}
-.matrix th{background:var(--s3);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);}
-.matrix td{padding:12px 14px;font-size:12px;border-bottom:1px solid var(--border);color:var(--muted);line-height:1.5;}
-.matrix tr:hover td{background:rgba(0,212,245,.03);}
-.matrix td:first-child{color:var(--text);font-weight:600;font-size:13px;}
-.matrix td:nth-child(2){color:var(--muted2);font-family:var(--mono);font-size:11px;}
-
-/* INVARIANTS */
-.inv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:48px;}
-.inv-card{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;gap:12px;align-items:flex-start;}
-.inv-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px;background:rgba(0,212,245,.1);color:var(--cyan);font-family:var(--mono);white-space:nowrap;flex-shrink:0;}
-.inv-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
-.inv-desc{font-size:12px;color:var(--muted);line-height:1.5;}
-
-/* FOOTER */
-footer{text-align:center;padding:40px 20px;font-size:12px;color:var(--muted2);font-family:var(--mono);border-top:1px solid var(--border);position:relative;z-index:2;}
-footer a{color:var(--muted);text-decoration:none;}
-
-@media(max-width:800px){
-  .three-col,.two-col{grid-template-columns:1fr;}
-  .metrics{grid-template-columns:repeat(2,1fr);}
-  .stack-layer{grid-template-columns:1fr;gap:8px;}
-  .hero h1{font-size:32px;}
-  .flow{flex-direction:column;}
-  .flow-arrow{transform:rotate(90deg);}
-  .inv-grid{grid-template-columns:1fr;}
-}
-</style>
-</head>
-<body>
-
-<nav>
-  <div>
-    <div class="nav-brand">VeriSigil AI</div>
-    <div class="nav-sub">Architecture & Governance Stack</div>
-  </div>
-  <div class="nav-pill">332 Endpoints Live</div>
-</nav>
-
-<div class="hero">
-  <div class="hero-tag">Sovereign Execution Infrastructure</div>
-  <h1>AI Governance<br><span>Operating System</span></h1>
-  <p>Not a dashboard. Not a compliance tool. Runtime enforcement infrastructure that makes autonomous AI execution independently verifiable, admissible, and sovereign-ready.</p>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>VeriSigil AI — Architecture</title><style>
+:root{--bg:#030A1A;--panel:#07122A;--border:rgba(0,212,245,.2);--cyan:#00D4F5;--text:#E8F4F8;--muted:#8AA6BA;--green:#1FD47A;--amber:#F0A030}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.65}nav{padding:18px 7%;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;align-items:center}nav a{color:var(--text);text-decoration:none}.tag{font:12px monospace;color:var(--cyan)}main{max-width:1050px;margin:auto;padding:70px 7%}.eyebrow{font:12px monospace;letter-spacing:.12em;color:var(--cyan);text-transform:uppercase}h1{font-size:clamp(40px,7vw,76px);line-height:1.02;margin:15px 0 22px}h2{margin-top:55px;font-size:30px}h3{font-size:19px;color:var(--cyan)}p,li{color:var(--muted)}.lead{font-size:21px;max-width:850px;color:var(--text)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}.card{background:var(--panel);border:1px solid var(--border);padding:22px;border-radius:10px}.status{display:inline-block;padding:4px 9px;border:1px solid var(--border);border-radius:99px;font:11px monospace;color:var(--green)}pre{overflow:auto;background:#020712;border:1px solid var(--border);padding:22px;border-radius:10px;color:#d9f7ff;font:13px monospace}a{color:var(--cyan)}.note{border-left:3px solid var(--amber);padding:12px 18px;background:rgba(240,160,48,.05)}footer{border-top:1px solid var(--border);padding:30px 7%;color:var(--muted);font-size:13px}
+</style></head><body><nav><a href="index.html"><strong>VeriSigil AI</strong></a><span class="tag">VERIFIABLE CONSEQUENCE BOUNDARIES</span><a href="trust.html">Trust / Evidence</a></nav><main>
+<div class="eyebrow">Architecture · frozen</div><h1>Verifiable Consequence Boundaries</h1><p class="lead">VeriSigil governs consequential AI actions at declared execution boundaries. The architectural question is whether a specific action is still authorized to become real under the conditions and exact parameters that will actually be executed.</p>
+<div class="note"><strong>Architecture freeze is in effect.</strong> This page is the canonical architectural explanation. It does not claim universal AI coverage, universal prevention, regulatory certification, or complete production coverage.</div>
+<h2>The boundary</h2><pre>AI / Agent
+    │
+    ▼
+Identity + existing authorization / policy
+    │
+    ▼
+VeriSigil
+    ├─ current authority
+    ├─ current conditions
+    ├─ exact action
+    ├─ exact parameters
+    └─ enforcement requirements
+       │
+       ├── REFUSE ──► no governed external effect
+       │
+       └── ALLOW ───► declared protected execution boundary
+                              │
+                              ▼
+                       external consequence
+                              │
+                              ▼
+                 Cryptographic Execution Receipt</pre>
+<h2>Architecture hierarchy</h2><div class="grid">
+<div class="card"><span class="status">ARCHITECTURE</span><h3>Verifiable Consequence Boundaries</h3><p>The boundary at which consequential AI actions are evaluated and enforced.</p></div>
+<div class="card"><span class="status">CAPABILITY</span><h3>Cryptographic Consequence Enforcement</h3><p>Enforcement and evidence mechanisms binding the decision to the declared execution boundary.</p></div>
+<div class="card"><span class="status">RUNTIME</span><h3>Runtime Authority</h3><p>Authority is evaluated at consequence time rather than assumed from an earlier state.</p></div>
+<div class="card"><span class="status">MECHANISMS</span><h3>Authority-at-Consequence</h3><p>Current authority and current conditions are evaluated for the action that is about to become real.</p></div>
+<div class="card"><span class="status">MECHANISMS</span><h3>Parameter-Locked Execution</h3><p>The governed decision is bound to the exact action and parameters being executed.</p></div>
+<div class="card"><span class="status">MECHANISMS</span><h3>Fail-Closed Runtime</h3><p>When required authority or conditions cannot be established, the governed path refuses rather than assuming permission.</p></div>
+<div class="card"><span class="status">EVIDENCE</span><h3>Cryptographic Execution Receipts</h3><p>Execution outcomes can carry independently verifiable cryptographic evidence.</p></div>
 </div>
-
-<div class="main">
-
-  <!-- METRICS -->
-  <div class="sec-label">Live System Metrics</div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-val">332</div><div class="metric-label">API Endpoints</div></div>
-    <div class="metric"><div class="metric-val">31K</div><div class="metric-label">Lines of Code</div></div>
-    <div class="metric"><div class="metric-val">2</div><div class="metric-label">DOI Publications</div></div>
-    <div class="metric"><div class="metric-val">10</div><div class="metric-label">ATF Invariants</div></div>
-    <div class="metric"><div class="metric-val">0</div><div class="metric-label">Violations in Production</div></div>
-  </div>
-
-  <!-- RUNTIME FLOW -->
-  <div class="sec-label">Runtime Execution Flow</div>
-  <div class="flow">
-    <div class="flow-step">
-      <div class="flow-step-icon">🤖</div>
-      <div class="flow-step-label">AI Agent</div>
-      <div class="flow-step-sub">requests action</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step cyan">
-      <div class="flow-step-icon">⚡</div>
-      <div class="flow-step-label">VeriSigil Gate</div>
-      <div class="flow-step-sub">intercepts</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-      <div class="flow-step-icon">🔍</div>
-      <div class="flow-step-label">5 Checks</div>
-      <div class="flow-step-sub">trust · policy · risk</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step green">
-      <div class="flow-step-icon">✅</div>
-      <div class="flow-step-label">ALLOW</div>
-      <div class="flow-step-sub">action executes</div>
-    </div>
-    <div class="flow-arrow">/</div>
-    <div class="flow-step red">
-      <div class="flow-step-icon">🚫</div>
-      <div class="flow-step-label">DENY</div>
-      <div class="flow-step-sub">blocked + sealed</div>
-    </div>
-    <div class="flow-arrow">/</div>
-    <div class="flow-step amber">
-      <div class="flow-step-icon">👤</div>
-      <div class="flow-step-label">HUMAN</div>
-      <div class="flow-step-sub">supervisor required</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step cyan">
-      <div class="flow-step-icon">🔒</div>
-      <div class="flow-step-label">SAC Record</div>
-      <div class="flow-step-sub">sealed · verifiable</div>
-    </div>
-  </div>
-
-  <!-- GOVERNANCE STACK -->
-  <div class="sec-label">Governance Stack — 8 Layers</div>
-  <div class="stack">
-
-    <div class="stack-layer layer-l1">
-      <div>
-        <div class="layer-num">Layer 8 — Operating System</div>
-        <div class="layer-name">Governance OS Kernel</div>
-        <div class="layer-desc">Unified orchestration runtime — policy engine, calibration, sovereign isolation, governance memory</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">GOS</span><span class="tag">Calibration</span><span class="tag">Sovereign</span><span class="tag">Memory</span>
-      </div>
-      <div class="layer-ep">14 endpoints</div>
-    </div>
-
-    <div class="stack-layer layer-l2">
-      <div>
-        <div class="layer-num">Layer 7 — Security</div>
-        <div class="layer-name">AI Security Layer</div>
-        <div class="layer-desc">Adversarial simulator, risk-based governance engine, fail-safe DENY, attack pattern library</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">Adversarial</span><span class="tag">Risk Engine</span><span class="tag">Fail-Safe</span>
-      </div>
-      <div class="layer-ep">5 endpoints</div>
-    </div>
-
-    <div class="stack-layer layer-l3">
-      <div>
-        <div class="layer-num">Layer 6 — Threat Defense</div>
-        <div class="layer-name">Advanced Threat Defense</div>
-        <div class="layer-desc">Inference corruption, semantic integrity, cognition poisoning, provider collapse, model registry</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">Inference</span><span class="tag">Semantic</span><span class="tag">Cognition</span><span class="tag">GSI</span>
-      </div>
-      <div class="layer-ep">12 endpoints</div>
-    </div>
-
-    <div class="stack-layer layer-l1">
-      <div>
-        <div class="layer-num">Layer 5 — Interoperability</div>
-        <div class="layer-name">ATF ↔ VGS Bridge</div>
-        <div class="layer-desc">Cross-protocol governance — ATF field spec v1.4, SPV binding, TAR↔TAP, RCR↔SAC, all invariants</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">ATF v1.4</span><span class="tag">SPV Binding</span><span class="tag">PQC Dilithium-3</span>
-      </div>
-      <div class="layer-ep">5 endpoints</div>
-    </div>
-
-    <div class="stack-layer layer-l4">
-      <div>
-        <div class="layer-num">Layer 4 — Accountability</div>
-        <div class="layer-name">Sovereign Accountability Chain VGS-024</div>
-        <div class="layer-desc">5 accountability layers — continuity, supervisor visibility, consequence binding, attribution graph, independent verifier</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">VER-INV-024</span><span class="tag">VER-INV-025</span><span class="tag">VER-INV-026</span><span class="tag">VER-INV-027</span>
-      </div>
-      <div class="layer-ep">9 endpoints</div>
-    </div>
-
-    <div class="stack-layer layer-l2">
-      <div>
-        <div class="layer-num">Layer 3 — Intelligence</div>
-        <div class="layer-name">Agent Intelligence — VGS-020 to VGS-023</div>
-        <div class="layer-desc">Agent inventory, shadow detection, topology mapping, governance dashboard, trust trajectory</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">Inventory</span><span class="tag">Shadow</span><span class="tag">Topology</span><span class="tag">Dashboard</span>
-      </div>
-      <div class="layer-ep">21 endpoints</div>
-    </div>
-
-    <div class="stack-layer layer-l3">
-      <div>
-        <div class="layer-num">Layer 2 — Integrity</div>
-        <div class="layer-name">Document & Inference Integrity</div>
-        <div class="layer-desc">Semantic drift, clause mutation, intent corruption, numerical inconsistency, inference corruption detection</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">Semantic</span><span class="tag">Clause Mutation</span><span class="tag">Integrity</span>
-      </div>
-      <div class="layer-ep">8 endpoints</div>
-    </div>
-
-    <div class="stack-layer layer-l5">
-      <div>
-        <div class="layer-num">Layer 1 — Core</div>
-        <div class="layer-name">Runtime Enforcement Core — VGS-000 to VGS-019</div>
-        <div class="layer-desc">Runtime gate, EAT tokens, trust scoring, audit chain, jurisdiction, escalation, fail-safe DENY by default</div>
-      </div>
-      <div class="layer-tags">
-        <span class="tag">Runtime Gate</span><span class="tag">EAT</span><span class="tag">Audit Chain</span><span class="tag">DENY Default</span>
-      </div>
-      <div class="layer-ep">229 endpoints</div>
-    </div>
-
-  </div>
-
-  <!-- LEGAL INVARIANTS -->
-  <div class="sec-label">Legal Invariants — VGS-024</div>
-  <div class="inv-grid">
-    <div class="inv-card">
-      <span class="inv-badge">VER-INV-024</span>
-      <div><div class="inv-name">Accountability Continuity</div><div class="inv-desc">Authority was valid and unbroken throughout the entire execution lifecycle — not just at initiation. Critical for legal disputes around revocation timing.</div></div>
-    </div>
-    <div class="inv-card">
-      <span class="inv-badge">VER-INV-025</span>
-      <div><div class="inv-name">Non-repudiation of Authority</div><div class="inv-desc">Authority is cryptographically bound to the agent, action, and timestamp. The authorizing party cannot deny having approved the action.</div></div>
-    </div>
-    <div class="inv-card">
-      <span class="inv-badge">VER-INV-026</span>
-      <div><div class="inv-name">Supervisory Visibility Fidelity</div><div class="inv-desc">Reconstructs exactly what the supervisor knew at the moment of authorization. Proves informed consent — not just that approval occurred.</div></div>
-    </div>
-    <div class="inv-card">
-      <span class="inv-badge">VER-INV-027</span>
-      <div><div class="inv-name">Irreversible Consequence Binding</div><div class="inv-desc">Binds what real-world effect became irreversible. Not what happened — what cannot be undone. Critical for finance, healthcare, defense.</div></div>
-    </div>
-  </div>
-
-  <!-- STAKEHOLDER MATRIX -->
-  <div class="sec-label">Stakeholder Language Matrix</div>
-  <table class="matrix">
-    <thead>
-      <tr>
-        <th>Stakeholder</th>
-        <th>Technical Concept</th>
-        <th>What It Means To Them</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Board of Directors</td>
-        <td>Runtime enforcement gate</td>
-        <td>Every AI decision is reviewed and approved before it takes effect — automatically, at scale</td>
-      </tr>
-      <tr>
-        <td>CISO</td>
-        <td>Fail-safe DENY posture</td>
-        <td>If our governance system goes offline, AI agents automatically stop — fail-closed, not fail-open</td>
-      </tr>
-      <tr>
-        <td>Chief Risk Officer</td>
-        <td>Consequence binding VER-INV-027</td>
-        <td>We know exactly what became irreversible and when — before litigation, not during</td>
-      </tr>
-      <tr>
-        <td>Regulator</td>
-        <td>Independent verifier package</td>
-        <td>Records can be verified without trusting VeriSigil — no platform dependency for compliance evidence</td>
-      </tr>
-      <tr>
-        <td>Government</td>
-        <td>Sovereign isolation mode</td>
-        <td>AI agents operate within sovereign boundaries — no external telemetry, local trust computation</td>
-      </tr>
-      <tr>
-        <td>Enterprise Architect</td>
-        <td>332 API endpoints + SDK</td>
-        <td>Drop into any Python stack in 15 minutes — LangChain, CrewAI, AutoGen, LangGraph native</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- FRAMEWORK CONNECTORS -->
-  <div class="sec-label">Agent Framework Connectors</div>
-  <div class="three-col">
-    <div class="card">
-      <div class="card-icon">🔗</div>
-      <div class="card-title">LangChain</div>
-      <div class="card-body">Subclass VeriSigilLangChainTool or use @governed_langchain_tool decorator. Every tool call governed before execution.</div>
-      <div class="card-endpoint">VeriSigilLangChainTool</div>
-    </div>
-    <div class="card">
-      <div class="card-icon">👥</div>
-      <div class="card-title">CrewAI</div>
-      <div class="card-body">VeriSigilCrewAIAgent wraps any CrewAI agent. Governance runs before every task execution. Denied tasks blocked automatically.</div>
-      <div class="card-endpoint">VeriSigilCrewAIAgent</div>
-    </div>
-    <div class="card">
-      <div class="card-icon">🤝</div>
-      <div class="card-title">AutoGen</div>
-      <div class="card-body">Govern functions, messages, and conversation initiation. Works with AssistantAgent, UserProxyAgent, and GroupChat.</div>
-      <div class="card-endpoint">VeriSigilAutoGenAgent</div>
-    </div>
-  </div>
-  <div class="two-col">
-    <div class="card">
-      <div class="card-icon">🗺️</div>
-      <div class="card-title">LangGraph</div>
-      <div class="card-body">Govern StateGraph nodes and conditional edges. On DENY, injects governance_denied into state rather than raising — clean graph flow.</div>
-      <div class="card-endpoint">VeriSigilLangGraphNode</div>
-    </div>
-    <div class="card">
-      <div class="card-icon">⚡</div>
-      <div class="card-title">Universal</div>
-      <div class="card-body">@govern() decorator works on any Python function — framework agnostic. One import, 15 minutes, any stack.</div>
-      <div class="card-endpoint">@govern(api_key=..., consequence=...)</div>
-    </div>
-  </div>
-
-  <!-- 5 THREATS -->
-  <div class="sec-label">5 Threat Defense Coverage</div>
-  <div class="three-col">
-    <div class="card">
-      <div class="card-icon">⚔️</div>
-      <div class="card-title">Model Wars</div>
-      <div class="card-body">Model governance registry detects unauthorized model switching and regulatory arbitrage. ATF↔VGS bridge enables cross-framework interoperability.</div>
-      <div class="card-endpoint">POST /v1/models/register</div>
-    </div>
-    <div class="card">
-      <div class="card-icon">📉</div>
-      <div class="card-title">Provider Collapse</div>
-      <div class="card-body">Trust trajectory monitoring, Governance Survivability Index, collapse risk scoring, automatic agent suspension on provider degradation.</div>
-      <div class="card-endpoint">GET /v1/governance/collapse-risk</div>
-    </div>
-    <div class="card">
-      <div class="card-icon">🎯</div>
-      <div class="card-title">Inference Corruption</div>
-      <div class="card-body">Entropy anomaly detection, PII leakage, semantic drift from input, memorization risk — caught before action executes.</div>
-      <div class="card-endpoint">POST /v1/inference/verify</div>
-    </div>
-  </div>
-  <div class="two-col">
-    <div class="card">
-      <div class="card-icon">🧩</div>
-      <div class="card-title">Semantic Fragmentation</div>
-      <div class="card-body">Context poisoning detection, meaning drift across agent chains, authority reinterpretation detection, intent preservation scoring.</div>
-      <div class="card-endpoint">POST /v1/semantic/chain-verify</div>
-    </div>
-    <div class="card">
-      <div class="card-icon">☠️</div>
-      <div class="card-title">Cognition Poisoning</div>
-      <div class="card-body">Synthetic data signature detection, training data memorization risk, behavioral drift from baseline, entropy collapse monitoring.</div>
-      <div class="card-endpoint">POST /v1/cognition/output-integrity</div>
-    </div>
-  </div>
-
-  <!-- PUBLICATIONS -->
-  <div class="sec-label">Formal Publications</div>
-  <div class="two-col">
-    <div class="card">
-      <div class="card-icon">📄</div>
-      <div class="card-title">VeriSigil Governance Stack — Formal Specification</div>
-      <div class="card-body">TLA+ verified formal specification of the VeriSigil Governance Stack architecture, invariants, and operational semantics.</div>
-      <div class="card-endpoint"><a href="https://doi.org/10.5281/zenodo.20264923" style="color:var(--cyan);text-decoration:none;">doi.org/10.5281/zenodo.20264923</a></div>
-    </div>
-    <div class="card">
-      <div class="card-icon">📄</div>
-      <div class="card-title">Sovereign Accountability Chain — Technical Paper</div>
-      <div class="card-body">Runtime enforcement architecture for autonomous AI governance. Includes ATF bridge validation results — 4/4 traces, zero violations.</div>
-      <div class="card-endpoint"><a href="https://doi.org/10.5281/zenodo.20349768" style="color:var(--cyan);text-decoration:none;">doi.org/10.5281/zenodo.20349768</a></div>
-    </div>
-  </div>
-
-</div><!-- /main -->
-
-<footer>
-  VeriSigil AI &nbsp;&middot;&nbsp; <a href="https://verisigilai.com">verisigilai.com</a> &nbsp;&middot;&nbsp;
-  <a href="https://verisigil-api-production.up.railway.app/docs">Live API</a> &nbsp;&middot;&nbsp;
-  <a href="https://verisigilai.com/demos.html">16 Live Demos</a> &nbsp;&middot;&nbsp;
-  Sovereign Execution Infrastructure for Autonomous AI
-</footer>
-
-</body>
-</html>
+<h2>What makes the boundary different</h2><p>Identity answers who is acting. Authorization describes what may be permitted. Policy defines rules. A gateway can provide a route. VeriSigil's narrower architectural concern is the transition from an AI-generated consequential action to an external effect: <strong>is this exact action still authorized now, and was the declared boundary actually enforced?</strong></p>
+<h2>Evidence, not narrative</h2><p>The model, agent framework, identity provider, policy system, and external actuator may change. The intended enforcement invariant is model- and provider-independent. Claims are limited by reproducible evidence.</p><ul><li>Implemented behavior is not automatically a tested claim.</li><li>A passing test is not automatically independent verification.</li><li>Independent verification is not automatically production-wide coverage.</li><li>A protected test path is not proof that every consequential path is protected.</li></ul>
+<h2>Current proof ceiling</h2><div class="grid"><div class="card"><h3>PROVEN / DEMONSTRATED</h3><p>Receipt integrity and offline verification, fail-closed behavior, STILL adversarial testing, tamper detection, and parameter-binding enforcement on tested paths.</p></div><div class="card"><h3>NOT YET PROVEN</h3><p>Real Paystack transaction execution/reference, complete endpoint coverage, multi-instance distributed atomicity, and the remaining independent delegation confirmation.</p></div><div class="card"><h3>NOT CLAIMABLE</h3><p>Universal AI governance, regulatory certification, or a general claim that all unauthorized consequences are prevented.</p></div></div>
+<h2>Long-term direction</h2><p>The architecture is intended to generalize across materially different consequence surfaces only after the invariant is proven beyond the current reference environment.</p><pre>AI system / agent runtime
+        │
+        ▼
+   VeriSigil enforcement
+        │
+        ├── payment
+        ├── database mutation
+        ├── deployment
+        ├── enterprise workflow
+        ├── government / external API
+        └── other consequential actuator</pre><p><strong>BUILD → PROVE → GENERALIZE → INTEROPERATE → STANDARDIZE → BECOME INFRASTRUCTURE</strong></p><p><em>Current phase: PROVE.</em></p>
+<h2>Authoritative evidence</h2><p>For current claims, limitations, and validation status, use the <a href="trust.html">Trust / Evidence page</a>, <a href="CHALLENGE.md">adversarial challenge protocol</a>, <a href="VERISIGIL_PROOF_REPORT_V1.md">proof report</a>, and <a href="CLAIMS_REGISTRY.md">claims registry</a>.</p>
+</main><footer>VeriSigil AI · Evidence before expansion. Reproduction before trust.</footer></body></html>

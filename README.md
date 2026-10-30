@@ -201,3 +201,17 @@ See [`CHALLENGE.md`](CHALLENGE.md) for the public adversarial testing protocol.
 - [Terms](https://verisigilai.com/terms.html)
 
 **Evidence before expansion. Reproduction before trust.**
+
+
+## NCS Assessment Record
+
+VeriSigilAI is registered as an NCS assessment subject under assessment ID `NCS-VSA-VCB-2026-001`.
+
+- Assessment status: **registered; execution not started**.
+- Record: `ncs/assessments/NCS-VSA-VCB-2026-001.json`.
+- Test plan: `ncs/assessments/README.md`.
+- Public status section: `trust.html#ncs-assessment`.
+
+The initial source review of the website repository did not establish an executable AI model/agent runtime, immutable model identity or repeatable model invocation path. Native Behavior Baseline and Policy Delta testing are therefore blocked until the actual VCB runtime subject is identified. Application assurance scenarios are specified but not yet executed.
+
+No NCS grade, certificate or independent validation is claimed. Every future run must be recorded immutably and mirrored to the NCS assessment registry with an identical result digest.

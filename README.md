@@ -225,3 +225,9 @@ No NCS grade, certificate or independent validation is claimed. Every future run
 - Record: `ncs/assessments/runs/NCS-VSA-VCB-2026-001-SR-001.json`.
 
 A separate NCS harness CI run in Cyraduct passed 71/71 tests. That verifies the NCS harness code only and is not a VeriSigilAI test result.
+
+
+### Runtime API and test-harness source audit
+The runtime governance API/SDK repository `raheem-verisigil/verisigil-api` has been identified. Its conformance suite declares 80 vectors. Static inspection found that 16 jurisdiction-resolution vectors (VEC-043–VEC-058) have expected outcomes but are not asserted by the current test runner; they enter a fallback `assert(true)` branch. This is a source-level finding, not a test execution. No NCS runtime tests have yet been executed against the VeriSigil API. The model/agent workload required for Native Behavior Baseline and Policy Delta remains unidentified.
+
+See `ncs/assessments/runs/NCS-VSA-VCB-2026-001-SR-002.json`.

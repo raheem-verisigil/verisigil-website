@@ -215,3 +215,13 @@ VeriSigilAI is registered as an NCS assessment subject under assessment ID `NCS-
 The initial source review of the website repository did not establish an executable AI model/agent runtime, immutable model identity or repeatable model invocation path. Native Behavior Baseline and Policy Delta testing are therefore blocked until the actual VCB runtime subject is identified. Application assurance scenarios are specified but not yet executed.
 
 No NCS grade, certificate or independent validation is claimed. Every future run must be recorded immutably and mirrored to the NCS assessment registry with an identical result digest.
+
+
+### Source-review run
+- Run ID: `NCS-VSA-VCB-2026-001-SR-001`.
+- Status: completed source review only.
+- Runtime tests executed: 0; native model tests: 0; policy-delta tests: 0; application-assurance tests: 0.
+- Outcome: executable model/agent runtime not identified in the reviewed website repository; runtime testing blocked pending subject identification.
+- Record: `ncs/assessments/runs/NCS-VSA-VCB-2026-001-SR-001.json`.
+
+A separate NCS harness CI run in Cyraduct passed 71/71 tests. That verifies the NCS harness code only and is not a VeriSigilAI test result.

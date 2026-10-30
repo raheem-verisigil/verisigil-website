@@ -37,3 +37,13 @@ Every run must record its exact subject commit, model/configuration identity, po
 - Independent review completed: **No**
 
 This is an assessment registration and source-review record, not a test pass, grade, certificate or independent validation.
+
+
+### Source-review run
+- Run ID: `NCS-VSA-VCB-2026-001-SR-001`.
+- Status: completed source review only.
+- Runtime tests executed: 0; native model tests: 0; policy-delta tests: 0; application-assurance tests: 0.
+- Outcome: executable model/agent runtime not identified in the reviewed website repository; runtime testing blocked pending subject identification.
+- Record: `ncs/assessments/runs/NCS-VSA-VCB-2026-001-SR-001.json`.
+
+A separate NCS harness CI run in Cyraduct passed 71/71 tests. That verifies the NCS harness code only and is not a VeriSigilAI test result.

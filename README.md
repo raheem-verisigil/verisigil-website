@@ -201,3 +201,33 @@ See [`CHALLENGE.md`](CHALLENGE.md) for the public adversarial testing protocol.
 - [Terms](https://verisigilai.com/terms.html)
 
 **Evidence before expansion. Reproduction before trust.**
+
+
+## NCS Assessment Record
+
+VeriSigilAI is registered as an NCS assessment subject under assessment ID `NCS-VSA-VCB-2026-001`.
+
+- Assessment status: **registered; execution not started**.
+- Record: `ncs/assessments/NCS-VSA-VCB-2026-001.json`.
+- Test plan: `ncs/assessments/README.md`.
+- Public status section: `trust.html#ncs-assessment`.
+
+The initial source review of the website repository did not establish an executable AI model/agent runtime, immutable model identity or repeatable model invocation path. Native Behavior Baseline and Policy Delta testing are therefore blocked until the actual VCB runtime subject is identified. Application assurance scenarios are specified but not yet executed.
+
+No NCS grade, certificate or independent validation is claimed. Every future run must be recorded immutably and mirrored to the NCS assessment registry with an identical result digest.
+
+
+### Source-review run
+- Run ID: `NCS-VSA-VCB-2026-001-SR-001`.
+- Status: completed source review only.
+- Runtime tests executed: 0; native model tests: 0; policy-delta tests: 0; application-assurance tests: 0.
+- Outcome: executable model/agent runtime not identified in the reviewed website repository; runtime testing blocked pending subject identification.
+- Record: `ncs/assessments/runs/NCS-VSA-VCB-2026-001-SR-001.json`.
+
+A separate NCS harness CI run in Cyraduct passed 71/71 tests. That verifies the NCS harness code only and is not a VeriSigilAI test result.
+
+
+### Runtime API and test-harness source audit
+The runtime governance API/SDK repository `raheem-verisigil/verisigil-api` has been identified. Its conformance suite declares 80 vectors. Static inspection found that 16 jurisdiction-resolution vectors (VEC-043–VEC-058) have expected outcomes but are not asserted by the current test runner; they enter a fallback `assert(true)` branch. This is a source-level finding, not a test execution. No NCS runtime tests have yet been executed against the VeriSigil API. The model/agent workload required for Native Behavior Baseline and Policy Delta remains unidentified.
+
+See `ncs/assessments/runs/NCS-VSA-VCB-2026-001-SR-002.json`.

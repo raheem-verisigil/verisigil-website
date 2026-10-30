@@ -204,5 +204,22 @@
     "show_certificate_badge": false,
     "allow_public_protocol_and_scope": true,
     "display_warning": "Registration and source review are not a completed NCS assessment. No runtime tests have been executed."
+  },
+  "source_review_run": {
+    "run_id": "NCS-VSA-VCB-2026-001-SR-001",
+    "status": "COMPLETED_SOURCE_REVIEW_ONLY",
+    "path": "runs/NCS-VSA-VCB-2026-001-SR-001.json",
+    "subject_commit": "81654df5a993b1492f01accc12f5fa00e384d134",
+    "runtime_tests_executed": 0,
+    "blocked_cases": 7,
+    "not_run_cases": 8
+  },
+  "related_platform_harness_ci": {
+    "repository": "raheem-verisigil/cyraduct",
+    "run_id": 41129013094,
+    "run_number": 127,
+    "commit_sha": "a9ee82b89a0e39a94da3a80beb7477bccb07ddb8",
+    "result": "71 passed, 0 failed",
+    "relevance": "NCS harness CI verification only; this is not a VeriSigilAI runtime test and must not be attributed to this subject assessment."
   }
 }

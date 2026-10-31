@@ -27,3 +27,7 @@ VeriSigilAI is an assessment subject. It does not issue its own NCS grade or cer
 The NCS staging package in Cyraduct has been expanded with draft governance operating controls, an interim CODEOWNERS placeholder, a dedicated authority repository transfer checklist, and a hardened evidence manifest verifier with adversarial smoke cases. The matching local Node.js 22 smoke execution passed 7/7. This is a local test, not a confirmed GitHub Actions workflow result. The NCS authority package is still not in a dedicated repository, independent reviewers have not been appointed, and the portal remains a pre-alpha preview.
 
 VeriSigilAI remains an assessment subject, not the authority. The outstanding VEC-043–058 assertion gap and missing live model workload remain unresolved. No grade or certificate is issued.
+
+
+## NCS compiler validation update (31 October 2026)
+The shared NCS staging compiler was hardened to reject malformed assessment records, invalid decision states, invalid stage states and duplicate stages. It now separates invalid records from incomplete evidence and structurally ready-for-authorized-review records. It never issues grades or certificates. Six compiler validation cases passed locally under Node.js; the expanded GitHub Actions workflow has not yet been confirmed. The dedicated NCS repository and independent governance remain outstanding.

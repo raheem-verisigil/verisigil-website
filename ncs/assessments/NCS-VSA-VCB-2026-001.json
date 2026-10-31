@@ -245,5 +245,22 @@
       "status": "COMPLETED_STATIC_REVIEW_ONLY"
     }
   ],
-  "access_limitation": "The connected GitHub integration denied branch creation in raheem-verisigil/verisigil-api (HTTP 403 Resource not accessible by integration). No files were written to that repository and no CI run was triggered there. Assessment records and mirrors are stored in the subject website repository and temporary NCS registry in Cyraduct."
+  "access_limitation": "The connected GitHub integration denied branch creation in raheem-verisigil/verisigil-api (HTTP 403 Resource not accessible by integration). No files were written to that repository and no CI run was triggered there. Assessment records and mirrors are stored in the subject website repository and temporary NCS registry in Cyraduct.",
+  "shared_ncs_verification": {
+    "authority_package_status": "PRE_ALPHA_STAGED_PENDING_DEDICATED_REPOSITORY",
+    "portal_preview": "https://github.com/raheem-verisigil/cyraduct/tree/ncs/experiment-runner-v0.1/ncs-authority/portal",
+    "portal_capabilities": [
+      "browser_local_sha256_manifest_digest_check",
+      "github_issue_challenge_draft",
+      "source_and_ci_evidence_links"
+    ],
+    "portal_limitations": [
+      "not_production_partner_service",
+      "no_authentication_or_durable_in_portal_challenge_registry",
+      "no_signature_or_transparency_log_verification",
+      "no_grade_or_certificate_issuance"
+    ],
+    "report": "ncs/assessments/reports/NCS-VSA-VCB-STATUS-2026-10-31.md",
+    "updated_at": "2026-10-31"
+  }
 }

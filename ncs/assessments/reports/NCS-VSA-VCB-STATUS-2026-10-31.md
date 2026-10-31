@@ -35,3 +35,9 @@ The shared NCS staging compiler was hardened to reject malformed assessment reco
 
 ## NCS staging CI validation confirmed (31 October 2026)
 The shared NCS Authority Package Checks workflow completed successfully on staging commit `bb1e16b0e3c83a6f2a35f4204cd446721561e632`: https://github.com/raheem-verisigil/cyraduct/actions/runs/41202010366 . Schema parse, Node.js syntax checks, evidence verifier smoke tests and compiler validation tests all passed. This is staging-branch engineering CI, not independent certification or model-conduct validation. Dedicated NCS repository creation and independent governance remain outstanding.
+
+
+## Dedicated NCS authority repository update — 31 October 2026
+The dedicated private NCS repository is now established at https://github.com/raheem-verisigil/naconstan, with the authority package present on main. Authority-transfer CI passed: https://github.com/raheem-verisigil/naconstan/actions/runs/41204731119. The latest governance/documentation correction branch also passed CI: https://github.com/raheem-verisigil/naconstan/actions/runs/41211453109; its pull request is pending review/merge.
+
+The repository is private and pre-alpha. Its default branch is not protected; CODEOWNERS remains an administrative placeholder and no independent board/reviewers have been appointed. The partner portal is not yet a public partner service. VeriSigilAI remains an assessment subject; its VEC-043–058 source assertion gap and missing live AI workload remain unresolved. No grade, certificate, runtime pass or independent validation is claimed.

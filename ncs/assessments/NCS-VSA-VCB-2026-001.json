@@ -4,7 +4,7 @@
   "programme_id": "NCS-IAP-2026-001",
   "title": "NCS × VeriSigilAI — VCB Assessment Registration",
   "record_status": "REGISTERED_EXECUTION_NOT_STARTED",
-  "record_authority": "NCS",
+  "record_authority": "NCS — dedicated authority repository raheem-verisigil/naconstan",
   "subject_owner": "VeriSigilAI",
   "subject": {
     "project": "VeriSigilAI / Verifiable Consequence Boundaries",
@@ -247,20 +247,19 @@
   ],
   "access_limitation": "The connected GitHub integration denied branch creation in raheem-verisigil/verisigil-api (HTTP 403 Resource not accessible by integration). No files were written to that repository and no CI run was triggered there. Assessment records and mirrors are stored in the subject website repository and temporary NCS registry in Cyraduct.",
   "shared_ncs_verification": {
-    "authority_package_status": "PRE_ALPHA_STAGED_PENDING_DEDICATED_REPOSITORY",
-    "portal_preview": "https://github.com/raheem-verisigil/cyraduct/tree/ncs/experiment-runner-v0.1/ncs-authority/portal",
-    "portal_capabilities": [
-      "browser_local_sha256_manifest_digest_check",
-      "github_issue_challenge_draft",
-      "source_and_ci_evidence_links"
-    ],
-    "portal_limitations": [
-      "not_production_partner_service",
-      "no_authentication_or_durable_in_portal_challenge_registry",
-      "no_signature_or_transparency_log_verification",
-      "no_grade_or_certificate_issuance"
-    ],
+    "authority_repository": "https://github.com/raheem-verisigil/naconstan",
+    "authority_package_status": "DEDICATED_PRIVATE_REPOSITORY_PRE_ALPHA",
+    "authority_branch": "main",
+    "authority_ci_run": "https://github.com/raheem-verisigil/naconstan/actions/runs/41204731119",
+    "latest_governance_ci_run": "https://github.com/raheem-verisigil/naconstan/actions/runs/41211453109",
+    "portal_preview": "https://github.com/raheem-verisigil/naconstan/blob/main/ncs-authority/portal/index.html",
     "report": "ncs/assessments/reports/NCS-VSA-VCB-STATUS-2026-10-31.md",
-    "updated_at": "2026-10-31"
+    "limitations": [
+      "private repository; partner access requires explicit collaborator access",
+      "pre-alpha static portal, no authenticated partner case-management",
+      "no signature or transparency-log verification",
+      "no grade or certificate issuance",
+      "independent governance and branch protection not yet established"
+    ]
   }
 }

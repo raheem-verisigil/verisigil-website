@@ -1019,6 +1019,25 @@ VerifyKey(pub).verify(canonical, sig)
   </div>
 </section>
 
+
+
+<!-- NCS CROSS-PROJECT CI CONTEXT: NOT A VERISIGILAI TEST -->
+<section class="section" id="ncs-ci-context">
+  <div class="container">
+    <div class="section-label">NCS · CROSS-PROJECT CI CONTEXT · 31 OCT 2026</div>
+    <h2>Assessment infrastructure verification</h2>
+    <p class="section-sub">The following CI results concern the NCS assessment harness and Cyraduct product suite. They are not VeriSigilAI runtime or model-conduct test results.</p>
+    <div class="grid">
+      <div class="card"><div class="card-title">NCS selected harness</div><div class="card-value">93/93</div><div class="card-note">Passed · 0 failed · 4 warnings · run #240</div></div>
+      <div class="card"><div class="card-title">Cyraduct full suite</div><div class="card-value">235/235</div><div class="card-note">Passed · 0 failed · 4 warnings · run #226</div></div>
+    </div>
+    <p>Both workflows completed successfully on Cyraduct commit <code>726babe4f76344493e7a340f260f49b1cd099a07</code>. The NCS harness result validates selected synthetic Finance Guard assessment code; the Cyraduct result validates its product test suite. Neither run assesses VeriSigilAI/VCB.</p>
+    <p>VeriSigilAI's own NCS assessment remains registered with runtime tests executed: <strong>0</strong>; native model tests: <strong>0</strong>; policy-delta tests: <strong>0</strong>; application-assurance tests: <strong>0</strong>. The 16-vector jurisdiction assertion gap in the separate legacy API test harness remains a static source finding pending repository write access and remediation.</p>
+    <p><a href="https://github.com/raheem-verisigil/cyraduct/actions/runs/41146994115" target="_blank" rel="noopener">NCS harness run #240</a> · <a href="https://github.com/raheem-verisigil/cyraduct/actions/runs/41146994204" target="_blank" rel="noopener">Cyraduct suite run #226</a> · <a href="ncs/assessments/NCS-VSA-VCB-2026-001.json">VeriSigilAI NCS assessment record</a></p>
+    <p><strong>No VeriSigilAI NCS grade, certificate, runtime pass or independent validation is claimed.</strong></p>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section">
   <div class="container">

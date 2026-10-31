@@ -231,3 +231,11 @@ A separate NCS harness CI run in Cyraduct passed 71/71 tests. That verifies the 
 The runtime governance API/SDK repository `raheem-verisigil/verisigil-api` has been identified. Its conformance suite declares 80 vectors. Static inspection found that 16 jurisdiction-resolution vectors (VEC-043–VEC-058) have expected outcomes but are not asserted by the current test runner; they enter a fallback `assert(true)` branch. This is a source-level finding, not a test execution. No NCS runtime tests have yet been executed against the VeriSigil API. The model/agent workload required for Native Behavior Baseline and Policy Delta remains unidentified.
 
 See `ncs/assessments/runs/NCS-VSA-VCB-2026-001-SR-002.json`.
+
+
+### NCS infrastructure CI context — 31 October 2026
+The separate NCS assessment harness and Cyraduct product suite have completed CI on Cyraduct commit `726babe4f76344493e7a340f260f49b1cd099a07`:
+- NCS selected synthetic Finance Guard harness: **93 passed, 0 failed, 4 warnings** ([run #240](https://github.com/raheem-verisigil/cyraduct/actions/runs/41146994115)).
+- Cyraduct full product suite: **235 passed, 0 failed, 4 warnings** ([run #226](https://github.com/raheem-verisigil/cyraduct/actions/runs/41146994204)).
+
+These results validate NCS harness/Cyraduct software only. They are **not VeriSigilAI test results**. VeriSigilAI's NCS assessment remains at zero runtime, native-model, policy-delta and application-assurance tests. The static 16-vector jurisdiction assertion finding in the separate legacy API repository remains open; no remediation or fresh runtime run is claimed. No NCS grade, certificate or independent validation is claimed.

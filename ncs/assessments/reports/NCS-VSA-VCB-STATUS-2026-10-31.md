@@ -31,3 +31,7 @@ VeriSigilAI remains an assessment subject, not the authority. The outstanding VE
 
 ## NCS compiler validation update (31 October 2026)
 The shared NCS staging compiler was hardened to reject malformed assessment records, invalid decision states, invalid stage states and duplicate stages. It now separates invalid records from incomplete evidence and structurally ready-for-authorized-review records. It never issues grades or certificates. Six compiler validation cases passed locally under Node.js; the expanded GitHub Actions workflow has not yet been confirmed. The dedicated NCS repository and independent governance remain outstanding.
+
+
+## NCS staging CI validation confirmed (31 October 2026)
+The shared NCS Authority Package Checks workflow completed successfully on staging commit `bb1e16b0e3c83a6f2a35f4204cd446721561e632`: https://github.com/raheem-verisigil/cyraduct/actions/runs/41202010366 . Schema parse, Node.js syntax checks, evidence verifier smoke tests and compiler validation tests all passed. This is staging-branch engineering CI, not independent certification or model-conduct validation. Dedicated NCS repository creation and independent governance remain outstanding.

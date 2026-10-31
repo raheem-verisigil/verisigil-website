@@ -1,0 +1,55 @@
+{
+  "schema_version": "ncs-product-adapter/0.1",
+  "product_id": "verisigilai",
+  "product_name": "VeriSigilAI / Verifiable Consequence Boundaries",
+  "product_version": "Current proof phase — exact commit to be pinned per test run",
+  "owner": "Raheem / project owner — legal entity and authority to be confirmed before external assessment",
+  "repository_ref": "https://github.com/raheem-verisigil/verisigil-website",
+  "ncs_roles": [
+    "EVIDENCE_PROVIDER",
+    "CONTROL_IMPLEMENTER",
+    "VERIFIER"
+  ],
+  "supported_policy_requirement_types": [
+    "PERMIT",
+    "RESTRICT",
+    "PROHIBIT",
+    "HUMAN_REVIEW",
+    "ESCALATE"
+  ],
+  "control_mappings": [
+    {
+      "policy_requirement_id": "CANDIDATE-NCS-POLICY-CONSEQUENCE-AUTHORITY-002",
+      "control_id": "Revalidate current authority, conditions, exact action and parameters at a declared protected execution boundary",
+      "enforcement_mode": "AUTOMATED",
+      "test_reference": "CHALLENGE.md; VERISIGIL_PROOF_REPORT_V1.md; trust.html; relevant proof scripts",
+      "evidence_reference": "cryptographic execution receipt, independent offline verification, refusal/allow outcome and tested actuator-boundary evidence"
+    }
+  ],
+  "evidence_outputs": [
+    "cryptographic execution receipt",
+    "independent offline receipt verification result",
+    "bounded allow/refuse/undetermined outcome",
+    "parameter-binding and tamper-detection test evidence"
+  ],
+  "change_events": [
+    "protected execution surface change",
+    "authority or policy binding change",
+    "action/parameter canonicalization change",
+    "receipt format or cryptographic key change",
+    "actuator/provider integration change",
+    "deployment or distributed-state architecture change"
+  ],
+  "limitations": [
+    "Scope is limited to declared protected workflows and execution surfaces",
+    "complete endpoint coverage is not proven",
+    "real Paystack transaction reference is not proven",
+    "multi-instance distributed atomicity is not proven",
+    "delegation live rerun remains pending independent confirmation",
+    "candidate NCS mapping has not been independently assessed"
+  ],
+  "authorization_and_disclosure": {
+    "test_authorization_ref": null,
+    "publication_permission_status": "NOT_GRANTED"
+  }
+}

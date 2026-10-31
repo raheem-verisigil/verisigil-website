@@ -21,3 +21,9 @@ VeriSigilAI is an assessment subject. It does not issue its own NCS grade or cer
 4. Complete independent review before any grade or certificate decision.
 
 **No NCS grade, certificate, runtime pass or independent validation is claimed.**
+
+
+## Shared NCS authority infrastructure update (31 October 2026)
+The NCS staging package in Cyraduct has been expanded with draft governance operating controls, an interim CODEOWNERS placeholder, a dedicated authority repository transfer checklist, and a hardened evidence manifest verifier with adversarial smoke cases. The matching local Node.js 22 smoke execution passed 7/7. This is a local test, not a confirmed GitHub Actions workflow result. The NCS authority package is still not in a dedicated repository, independent reviewers have not been appointed, and the portal remains a pre-alpha preview.
+
+VeriSigilAI remains an assessment subject, not the authority. The outstanding VEC-043–058 assertion gap and missing live model workload remain unresolved. No grade or certificate is issued.

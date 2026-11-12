@@ -90,7 +90,7 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 <article class="identity-proof-card"><span id="issuer-api-state" class="identity-state wait">CHECKING</span><h3>API liveness</h3><p id="issuer-api-detail">Checking the current production API.</p><a href="https://verisigil-api-production-b79a.up.railway.app/health" target="_blank" rel="noopener">Open live health response ↗</a></article>
 <article class="identity-proof-card"><span id="issuer-key-state" class="identity-state wait">CHECKING</span><h3>Public signing key</h3><p id="issuer-key-detail">Checking the published Ed25519 key.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/public-key" target="_blank" rel="noopener">Open public key JSON ↗</a></article>
 <article class="identity-proof-card"><span id="issuer-kit-state" class="identity-state wait">CHECKING</span><h3>Key consistency</h3><p id="issuer-kit-detail">Comparing the key with the public verification kit.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/verify/kit" target="_blank" rel="noopener">Open verification kit ↗</a></article>
-<article class="identity-proof-card"><span id="issuer-limits-state" class="identity-state wait">CHECKING</span><h3>Published proof limits</h3><p id="issuer-limits-detail">Checking the public claim-boundary record.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/platform/limits" target="_blank" rel="noopener">Open proof limits JSON ↗</a></article>
+<article class="identity-proof-card"><span id="issuer-limits-state" class="identity-state wait">CHECKING</span><h3>Published proof limits</h3><p id="issuer-limits-detail">Checking the public claim-boundary record.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/platform/limits" target="_blank" rel="noopener">Open proof limits JSON ↗</a></article><article class="identity-proof-card"><span id="issuer-diagnostic-state" class="identity-state wait">CHECKING</span><h3>Live signing diagnostic</h3><p id="issuer-diagnostic-detail">Checking a fixed signed sample and verifying it locally.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/signing-diagnostic" target="_blank" rel="noopener">Open signed sample JSON ↗</a></article>
 </div>
 <div class="identity-keybox"><label for="issuer-public-key">Ed25519 public key · Base64</label><code id="issuer-public-key">Loading from the live API…</code><label for="issuer-fingerprint">SHA-256 key fingerprint</label><code id="issuer-fingerprint">Calculating…</code><div class="identity-tools"><button type="button" id="copy-issuer-key">COPY PUBLIC KEY</button><button type="button" id="refresh-issuer-proof">RECHECK LIVE SOURCES</button></div></div>
 <div class="identity-verifier"><h3>Verify a signed record in this browser</h3><p>Paste the exact canonical JSON payload and its Ed25519 signature. Verification runs locally in your browser against the published key; the payload is not sent to VeriSigil.</p><label for="issuer-payload">Exact signed payload</label><textarea id="issuer-payload" spellcheck="false" placeholder='Paste the exact canonical JSON string used when the record was signed'></textarea><label for="issuer-signature">Ed25519 signature · Base64</label><input id="issuer-signature" autocomplete="off" spellcheck="false" placeholder="Ed25519:BASE64_SIGNATURE or BASE64_SIGNATURE"><button type="button" id="verify-issuer-signature">VERIFY LOCALLY</button><div id="issuer-verify-result" class="identity-result" aria-live="polite">Waiting for a payload and signature.</div><small>Use the exact canonical bytes that were signed (sorted keys, compact JSON). A valid signature proves integrity relative to this key; it does not prove that an action was safe, correct, or covered by every production path.</small></div>
@@ -163,16 +163,16 @@ const issuerState=(id,ok,label,detailId,detail)=>{const el=document.getElementBy
 const fromB64=s=>Uint8Array.from(atob(s.replace(/^Ed25519:/i,'').trim()),c=>c.charCodeAt(0));
 async function issuerJSON(path){const r=await fetch(ISSUER_API+path,{method:'GET',cache:'no-store',headers:{Accept:'application/json'}});if(!r.ok)throw new Error(path+' returned HTTP '+r.status);return r.json();}
 async function refreshIssuerProof(){
- ['issuer-api-state','issuer-key-state','issuer-kit-state','issuer-limits-state'].forEach(id=>{const e=document.getElementById(id);if(e){e.textContent='CHECKING';e.className='identity-state wait';}});
- const jobs=await Promise.allSettled([issuerJSON('/health'),issuerJSON('/v1/proof/public-key'),issuerJSON('/v1/verify/kit'),issuerJSON('/v1/platform/limits')]);
- const [health,key,kit,limits]=jobs.map(x=>x.status==='fulfilled'?x.value:null);
+ ['issuer-api-state','issuer-key-state','issuer-kit-state','issuer-limits-state','issuer-diagnostic-state'].forEach(id=>{const e=document.getElementById(id);if(e){e.textContent='CHECKING';e.className='identity-state wait';}});
+ const jobs=await Promise.allSettled([issuerJSON('/health'),issuerJSON('/v1/proof/public-key'),issuerJSON('/v1/verify/kit'),issuerJSON('/v1/platform/limits'),issuerJSON('/v1/proof/signing-diagnostic')]);
+ const [health,key,kit,limits,diagnostic]=jobs.map(x=>x.status==='fulfilled'?x.value:null);
  const err=(i)=>jobs[i].status==='rejected'?String(jobs[i].reason.message||jobs[i].reason):'';
  const live=!!health&&(health.status==='ok'||health.status==='healthy');
  issuerState('issuer-api-state',live,live?'LIVE':'UNAVAILABLE','issuer-api-detail',live?'Live API responded · '+(health.version||health.service||'service reachable'):err(0)||'API did not return a recognised liveness status.');
  const keyOk=!!key&&typeof key.public_key==='string'&&key.public_key.length>20&&String(key.algorithm||'').toLowerCase().includes('ed25519');
  issuerState('issuer-key-state',keyOk,keyOk?'PUBLISHED':'UNAVAILABLE','issuer-key-detail',keyOk?'Ed25519 public key returned by the live API.':'Public signing key could not be confirmed. '+err(1));
  const consistent=keyOk&&!!kit&&kit.public_key===key.public_key;
- issuerState('issuer-kit-state',consistent,consistent?'MATCH':'MISMATCH / UNAVAILABLE','issuer-kit-detail',consistent?'Verification kit and public-key endpoint publish the same key.':(kit&&keyOk?'Published keys differ. Do not rely on the kit for this key.':err(2)||'Key comparison could not be completed.'));
+ issuerState('issuer-kit-state',consistent,consistent?'MATCH':'MISMATCH / UNAVAILABLE','issuer-kit-detail',consistent?'Verification kit and public-key endpoint publish the same key.':(kit&&keyOk?'Published keys differ. Do not rely on this kit.':err(2)||'Key comparison could not be completed.'));
  const limitsOk=!!limits&&limits.schema==='VGS-LIMITS-v1';
  issuerState('issuer-limits-state',limitsOk,limitsOk?'AVAILABLE':'UNAVAILABLE','issuer-limits-detail',limitsOk?'Public proof-boundary record is available.':err(3)||'Expected proof-boundary schema was not returned.');
  const keyNode=document.getElementById('issuer-public-key'),fpNode=document.getElementById('issuer-fingerprint');
@@ -184,6 +184,18 @@ async function refreshIssuerProof(){
    catch(e){fpNode.textContent='Fingerprint unavailable: '+e.message;}
   }else fpNode.textContent=keyOk?'Browser SHA-256 is unavailable.':'Not available until the public key loads.';
  }
+ let diagnosticValid=false,diagnosticCanVerify=false,diagnosticMessage='';
+ if(diagnostic&&keyOk&&consistent&&diagnostic.schema==='VGS-SIGNING-DIAGNOSTIC-v1'&&diagnostic.public_key===key.public_key&&diagnostic.self_verified_server_side===true&&typeof diagnostic.canonical_json==='string'&&typeof diagnostic.signature_stripped_base64==='string'){
+  if(window.crypto&&crypto.subtle){
+   try{
+    const verifyKey=await crypto.subtle.importKey('raw',fromB64(diagnostic.public_key),{name:'Ed25519'},false,['verify']);
+    diagnosticValid=await crypto.subtle.verify({name:'Ed25519'},verifyKey,fromB64(diagnostic.signature_stripped_base64),new TextEncoder().encode(diagnostic.canonical_json));
+    diagnosticCanVerify=true;
+    diagnosticMessage=diagnosticValid?'Fixed sample '+(diagnostic.fixed_payload?.intercept_id||'')+' passed browser-local Ed25519 verification; key matches the public endpoint and verification kit.':'Browser-local signature check failed for the published diagnostic sample.';
+   }catch(e){diagnosticMessage='Local Ed25519 verification unavailable: '+e.message;}
+  }else diagnosticMessage='Browser Web Crypto is unavailable; use the raw diagnostic with an independent offline verifier.';
+ }else diagnosticMessage=diagnostic?'Diagnostic schema, key consistency or server self-check did not pass.':err(4)||'Live signing diagnostic unavailable.';
+ issuerState('issuer-diagnostic-state',diagnosticCanVerify?diagnosticValid:null,diagnosticCanVerify?(diagnosticValid?'LOCALLY VERIFIED':'SIGNATURE INVALID'):'LOCAL CHECK UNAVAILABLE','issuer-diagnostic-detail',diagnosticMessage);
 }
 const copyIssuer=document.getElementById('copy-issuer-key');
 if(copyIssuer)copyIssuer.addEventListener('click',async()=>{if(!window.verisigilIssuerKey)return;try{await navigator.clipboard.writeText(window.verisigilIssuerKey);copyIssuer.textContent='COPIED';}catch(e){copyIssuer.textContent='COPY BLOCKED';}});

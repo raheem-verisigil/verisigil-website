@@ -39,7 +39,7 @@ Earlier reference-environment work reported an 11/11 STILL adversarial result, r
 The controlling status, exact evaluation commit, test boundaries and remaining proof gates are maintained in the [API repository's Current Evidence Baseline](https://github.com/raheem-verisigil/verisigil-api/blob/main/EVIDENCE_BASELINE.md).
 
 - [Current bounded evaluation branch](https://github.com/raheem-verisigil/verisigil-api/tree/security/terry-fail-closed-execution-20261113)
-- [Current staging commit](https://github.com/raheem-verisigil/verisigil-api/commit/dfa626d309cf397f4e861a3449f258dcb6b5fdf5)
+- [Current staging commit](https://github.com/raheem-verisigil/verisigil-api/commit/5a26584360ad4abca503a625f9cd74e1b9abe652)
 - [Bounded challenge protocol](https://github.com/raheem-verisigil/verisigil-api/blob/main/CHALLENGE.md)
 - [Safe local reproduction guide](https://github.com/raheem-verisigil/verisigil-api/blob/main/QUICKSTART.md)
 

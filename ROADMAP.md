@@ -1,101 +1,61 @@
-# VeriSigil AI — Roadmap
+# VeriSigil AI — Engineering Roadmap
 
-## Current strategic position
+## Strategic position
 
 **Architecture:** Verifiable Consequence Boundaries  
 **Capability:** Cryptographic Consequence Enforcement  
 **Runtime:** Runtime Authority  
-**Evidence:** Cryptographic Execution Receipts
+**Evidence:** Cryptographic Execution Receipts  
+**Current phase:** PROVE
 
-The architecture and terminology are currently frozen. The roadmap therefore does **not** add new product categories or a long feature catalogue. The immediate objective is to prove the existing invariant rigorously enough to justify generalization.
-
----
+The architecture and terminology remain frozen during this phase. Work is directed at proving and strengthening the existing execution-boundary invariant, not adding unrelated product categories.
 
 ## Phase 1 — PROVE · Current
 
-**Objective:** establish independently reproducible evidence at the declared consequence boundary.
+**Objective:** establish independently reproducible evidence for the declared protected execution boundary.
 
-- Complete the remaining independent delegation confirmation.
-- Preserve the 9/9 composed proof result and 11/11 STILL result where conditions remain identical.
-- Maintain fail-closed behavior and structured refusal evidence.
-- Maintain receipt integrity, tamper detection, and offline verification.
-- Document the exact payment-path limitation: boundary enforcement is demonstrated; a real Paystack transaction reference is not proven.
-- Publish a dated proof report with exact conditions, scenarios, attacks, independent verification, exclusions, and claim ceiling.
-- Keep `PRODUCTION_CLAIM_ALLOWED=False` until evidence warrants a change.
+Engineering gates:
+1. Exercise receipt creation, retrieval and one-time consumption through the deployed staging API and Supabase REST—not only direct SQL and mocked tests.
+2. Prove receipt recovery after an independent process restart.
+3. Prove that simultaneous consume attempts through two independent API instances produce exactly one successful consumption.
+4. Establish durable persistence and freshness for authority/state registries, or explicitly exclude them from the current claim.
+5. Run focused security tests and the complete unit suite on the exact evaluation commit; retain raw CI output.
+6. Close the Temporal Standing gap by re-deriving live authority at the point of execution and testing both preserving and defeating changes.
+7. Integrate a controlled downstream actuator with an independently observable side effect before claiming actuator enforcement.
 
-**Success condition:** the current material claim boundaries are independently reproducible and the remaining limitations are explicit.
+Historical 9/9 composed-proof and 11/11 STILL results remain attributable to their original reference build and conditions. They are not substitutes for the current staging gates above.
 
----
+**Success condition:** the current declared execution boundary has reproducible, commit-linked evidence, explicit exclusions and independently reviewable results.
 
 ## Phase 2 — GENERALIZE · After proof closure
 
 **Objective:** determine whether the same invariant survives materially different consequence surfaces.
 
-Reference validation classes:
+Candidate validation classes:
+- financial action;
+- privileged database mutation;
+- production deployment;
+- sensitive-data export;
+- external filing;
+- delegated agent-to-agent action.
 
-1. financial action;
-2. privileged database mutation;
-3. production deployment;
-4. sensitive-data export;
-5. external or government filing;
-6. delegated agent-to-agent action.
+These are future validation targets, not claims of current production coverage.
 
-These are validation targets, not current claims of production coverage.
-
-**Success condition:** the same enforcement invariant is demonstrated across multiple materially different actuator classes, including direct-bypass testing and independent evidence verification.
-
----
+**Success condition:** direct-bypass and independent-verification tests demonstrate the same invariant across multiple materially different actuator classes.
 
 ## Phase 3 — INTEROPERATE · After generalization
 
-**Objective:** make the enforcement contract portable across independent environments.
+**Objective:** make the enforcement contract portable across independent AI runtimes, identity systems, policy systems, protected resources and enterprise execution environments.
 
-Validate integration with different combinations of:
+Adapters are accepted only when their behavior is tested against the same invariant and evidence contract.
 
-- AI / agent runtimes;
-- identity systems;
-- policy systems;
-- protected resources / actuators;
-- cloud and enterprise execution environments.
+## Phase 4 — STANDARDIZE · After interoperability
 
-The test is not whether VeriSigil can replace these systems. The test is whether VeriSigil can sit at the consequential boundary while preserving the invariant.
+**Objective:** publish a stable, versioned execution-boundary contract with conformance tests and independently reproducible reference implementations.
 
-**Success condition:** provider-neutral interoperability is demonstrated rather than asserted.
+No standardization or certification claim is made before this phase is achieved.
 
----
+## Change-control rule
 
-## Phase 4 — STANDARDIZE · Evidence-led
+A new feature does not enter the core architecture merely because a reviewer requests it. It must strengthen the declared invariant, close an evidenced gap, or be required for a validated integration. Every material claim must remain tied to a reproducible artifact, commit, environment and test result.
 
-Only after interoperability evidence exists should the project consider formalizing a stable external enforcement/evidence contract, reference implementations, conformance vectors, or broader ecosystem adoption.
-
-No standards claim is made today.
-
-**Success condition:** independent implementations can reproduce the required boundary behavior and verify the resulting evidence.
-
----
-
-## Phase 5 — INFRASTRUCTURE · Long term
-
-If the invariant proves portable, interoperable, and independently verifiable, VeriSigil can evolve from a reference implementation into infrastructure used across consequential AI execution environments.
-
-The intended progression is:
-
-**BUILD → PROVE → GENERALIZE → INTEROPERATE → STANDARDIZE → BECOME INFRASTRUCTURE**
-
-This is a strategic direction, not a current market or coverage claim.
-
----
-
-## Explicit non-goals
-
-This roadmap does not commit the project to becoming:
-
-- a universal AI governance suite;
-- a replacement for IAM, policy engines, enterprise security, or model safety;
-- a universal agent gateway;
-- a regulatory certification platform;
-- a dashboard-first governance product;
-- a feature-count competition;
-- a system claiming every AI action is currently protected.
-
-Evidence before expansion. Reproduction before trust.

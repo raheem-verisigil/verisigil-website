@@ -6,6 +6,8 @@
 
 ---
 
+> **Historical specification notice (2026-11-14):** This May 2026 specification records an earlier architectural design. It is not an attestation that every described primitive, endpoint, formal method, cryptographic algorithm, certification, or actuator control is implemented or active in the current system. Current product positioning and capability status are governed by the [current evidence baseline](https://github.com/raheem-verisigil/verisigil-api/blob/main/EVIDENCE_BASELINE.md) and the current [architecture page](architecture.html). Historical material is preserved for research context.
+
 ## Abstract
 
 This document defines the VeriSigil Governance Specification (VGS) — a formal infrastructure standard for governing autonomous AI agent execution. VGS defines the primitives required for deterministic, auditable, and forensically verifiable governance of AI agent actions at the execution boundary.

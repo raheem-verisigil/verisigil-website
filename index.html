@@ -75,14 +75,14 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 <div class="hero-meta"><span>Runtime authority</span><span>Parameter-bound execution</span><span>Verifiable receipts</span></div>
 </div></div></section>
 <div class="proof-strip"><div class="wrap proof-grid">
-<div class="proof-item"><strong>11/11</strong><span>STILL adversarial suite demonstrated on reference environment</span></div>
-<div class="proof-item"><strong>Verified</strong><span>Receipt integrity and independent offline verification</span></div>
-<div class="proof-item"><strong>Demonstrated</strong><span>Tamper detection on tested endpoint</span></div>
-<div class="proof-item"><strong>Bounded</strong><span>Parameter enforcement on tested payment path</span></div>
+<div class="proof-item"><strong>PROVE</strong><span>Current phase · bounded staging evaluation</span></div>
+<div class="proof-item"><strong>Implemented</strong><span>Durable receipt adapter and fail-closed authorization middleware</span></div>
+<div class="proof-item"><strong>SQL-level</strong><span>Atomic consume smoke test reported successful</span></div>
+<div class="proof-item"><strong>NOT PROVEN</strong><span>API round-trip, restart recovery and two-instance replay</span></div>
 </div></div>
 
 <section class="section" id="identity"><div class="wrap">
-<div class="section-head"><div class="kicker">Issuer identity · Public verification</div><h2>Know whose evidence you are inspecting.</h2><p>Inspect the public Ed25519 signing key published by VeriSigil's live API. This page checks the key against the public verification kit, computes its fingerprint in your browser and lets you verify a supplied signature locally.</p></div>
+<div class="section-head"><div class="kicker">Issuer identity · Public verification</div><h2>Know whose evidence you are inspecting.</h2><p>Inspect the public Ed25519 signing key published by VeriSigil's live API. This page checks the production issuer signing identity and lets you verify a supplied signature locally. This read-only identity check is separate from the current runtime evaluation, which is conducted on an isolated staging build.</p></div>
 <div class="identity-panel">
 <div class="identity-brand"><img src="/VeriSigilAI_Logo_1_.jpg" alt="Official VeriSigil AI logo" loading="lazy"><div class="eyebrow">ISSUER SIGNING IDENTITY</div><h3>VeriSigil AI</h3><p>verisigilai.com · Public evidence key</p><a href="https://github.com/raheem-verisigil/verisigil-website" target="_blank" rel="noopener">Website source repository ↗</a></div>
 <div class="identity-details">
@@ -128,18 +128,18 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 </div></div></section>
 <section class="section"><div class="wrap"><div class="section-head"><div class="kicker">Evidence status</div><h2>Commercial confidence starts with an honest claim boundary.</h2><p>We distinguish verified evidence, demonstrated behavior, pending confirmation and what is not yet proven.</p></div>
 <div class="status-grid">
-<article class="status-card"><span class="status verified">VERIFIED</span><h3>Receipt integrity</h3><p>Cryptographic receipt integrity and independent offline verification are demonstrated.</p></article>
-<article class="status-card"><span class="status verified">VERIFIED</span><h3>STILL adversarial suite</h3><p>11/11 demonstrated on the live Railway + Supabase reference environment.</p></article>
-<article class="status-card"><span class="status demonstrated">DEMONSTRATED</span><h3>Tamper detection</h3><p>Tampering with tested evidence is detected on the live endpoint.</p></article>
-<article class="status-card"><span class="status demonstrated">DEMONSTRATED</span><h3>Parameter binding</h3><p>Commitment enforcement demonstrated on the tested payment path.</p></article>
-<article class="status-card"><span class="status pending">PENDING</span><h3>Delegation rerun</h3><p>Independent confirmation of the live delegation result remains pending.</p></article>
-<article class="status-card"><span class="status pending">NOT PROVEN</span><h3>Production-wide coverage</h3><p>Real provider transaction references, complete endpoint coverage and multi-instance atomicity are not established.</p></article>
+<article class="status-card"><span class="status demonstrated">IMPLEMENTED</span><h3>Durable receipt adapter</h3><p>Supabase insert/read/consume code exists in the staging evaluation branch; deployed API round-trip is not yet independently verified.</p></article>
+<article class="status-card"><span class="status demonstrated">IMPLEMENTED</span><h3>Fail-closed authorization</h3><p>Middleware and synthetic tests cover missing receipts, proposal binding and one-time consumption. Exact full-suite result is pending.</p></article>
+<article class="status-card"><span class="status demonstrated">SQL TEST REPORTED</span><h3>Atomic receipt consumption</h3><p>A rollback-based SQL smoke test reported first consume succeeds and second returns no record. This is not a two-instance API test.</p></article>
+<article class="status-card"><span class="status pending">HISTORICAL</span><h3>Earlier 11/11 STILL result</h3><p>Previously reported on an earlier reference build. It is not evidence that the current Terry staging candidate passed live Supabase integration.</p></article>
+<article class="status-card"><span class="status pending">NOT PROVEN</span><h3>Restart and multi-instance recovery</h3><p>Authority/state registries remain in-memory in the current staging harness; restart recovery and independent-instance concurrency remain open.</p></article>
+<article class="status-card"><span class="status pending">NOT PROVEN</span><h3>Downstream actuator enforcement</h3><p>A VeriSigil authorization response does not yet prove that an external customer actuator cannot be bypassed.</p></article>
 </div>
-<p class="fine">Production-wide authorisation is not currently a permitted claim. No regulatory certification or universal AI safety claim is made. See the Trust & Evidence Center for the authoritative status.</p>
+<p class="fine">The Terry test currently uses a synthetic in-memory receipt store. The direct database smoke test is separate from API-level persistence. Production-wide authorization, universal prevention, regulatory certification and legal compliance are not permitted claims. See the <a href="https://github.com/raheem-verisigil/verisigil-api/blob/main/EVIDENCE_BASELINE.md">current evidence baseline</a>.</p>
 <a class="btn btn-outline" href="/trust.html">Open Trust & Evidence Center →</a>
 </div></section>
 <section class="section"><div class="wrap"><div class="trial-panel">
-<div><div class="kicker">Commercial integration · Defined scope</div><h2>Design integrations around real customer value.</h2><p>We prioritise platform and delivery partners with a named buyer, a consequential workflow and a credible route to paid assessment, plugin integration, licensing or deployment. We do not undertake open-ended unpaid validation or build work for unrelated projects.</p><div class="actions"><a class="btn btn-primary" href="/evaluation.html">Propose a commercial integration →</a><a class="btn btn-outline" href="https://verisigil-api-production-b79a.up.railway.app/docs" target="_blank" rel="noopener">Read API documentation →</a></div></div>
+<div><div class="kicker">Commercial integration · Defined scope</div><h2>Design integrations around real customer value.</h2><p>We prioritise platform and delivery partners with a named buyer, a consequential workflow and a credible route to paid assessment, plugin integration, licensing or deployment. We do not undertake open-ended unpaid validation or build work for unrelated projects.</p><div class="actions"><a class="btn btn-primary" href="/evaluation.html">Propose a commercial integration →</a><a class="btn btn-outline" href="https://verisigil-security-repair-test-staging.up.railway.app/docs" target="_blank" rel="noopener">Read staging API documentation →</a></div></div>
 <div class="trial-list"><div class="trial-point"><strong>Named buyer</strong>A real organisation or qualified customer opportunity</div><div class="trial-point"><strong>Defined workflow</strong>One consequential action and integration boundary</div><div class="trial-point"><strong>Scoped plugin design</strong>Clear technical owner, deliverables and acceptance criteria</div><div class="trial-point"><strong>Revenue pathway</strong>Paid assessment, integration fee, licensing or pilot</div></div>
 </div></div></section>
 <section class="section"><div class="wrap"><div class="section-head"><div class="kicker">Strategic partnerships</div><h2>Build the route to enterprise adoption together.</h2><p>We are open to commercial partners who can bring qualified customer workflows, complementary assurance capabilities or delivery capacity.</p></div>

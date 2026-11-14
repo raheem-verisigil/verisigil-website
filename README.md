@@ -1,203 +1,51 @@
-# VeriSigil AI
+# VeriSigil AI — Verifiable Consequence Boundaries
 
-## Verifiable Consequence Boundaries for AI Actions
+**Runtime control and evidence for consequential AI actions at declared execution boundaries.**
 
-VeriSigil provides infrastructure for governing **consequential AI actions at declared execution boundaries**, with independently verifiable evidence of the enforcement result.
+VeriSigil is being developed to answer a precise systems question: when an AI-driven action is about to change an external system, can the protected workflow re-establish authority and required conditions, bind the decision to the exact action and parameters, refuse when required evidence is missing or contradictory, and produce independently checkable evidence?
 
-**AI systems decide. VeriSigil determines whether registered consequential actions are authorized to become real, enforces that decision at declared execution boundaries, and produces independently verifiable evidence of the result.**
+The architecture is intentionally bounded. VeriSigil complements identity, IAM, policy, model-safety, human-governance and actuator systems; it does not replace them.
 
-> **Scope:** This describes registered protected workflows and declared enforcement surfaces. It is not a claim of universal AI coverage or universal prevention of unauthorized consequences.
+## Current product architecture
 
-### Approved architecture terminology
+- **Verifiable Consequence Boundaries** — the declared point where a consequential action is evaluated and controlled.
+- **Runtime Authority** — current authority and required conditions are checked for the action about to execute.
+- **Parameter-Locked Execution** — the decision is bound to the exact action and parameters.
+- **Fail-Closed Runtime** — inability to establish a required condition does not become implicit permission.
+- **Cryptographic Execution Receipts** — signed evidence supports independent verification of the recorded decision.
 
-- **Architecture:** Verifiable Consequence Boundaries
-- **Hero capability:** Cryptographic Consequence Enforcement
-- **Runtime control:** Runtime Authority
-- **Core mechanisms:** Authority-at-Consequence · Parameter-Locked Execution · Fail-Closed Runtime
-- **Evidence:** Cryptographic Execution Receipts
+The architectural direction is frozen during the current proof-closure phase. The immediate work is to strengthen the existing invariant, not add unrelated product layers.
 
-The terminology above is intentionally narrow. The project is under architecture and terminology freeze: evidence comes before expansion.
+## Current phase: PROVE
 
----
+The current evaluation candidate is the isolated staging branch of the API repository. It includes a Supabase-backed validation-receipt adapter and fail-closed execution-authorization middleware.
 
-## Why the boundary matters
+**Important:** the current Terry adversarial test substitutes an in-memory fake receipt store. The database schema and atomic consume function have been inspected, and an operator-reported rollback SQL smoke test showed first consume succeeds and second consume returns no record. The deployed API's complete Supabase insert/read/consume path has not yet been independently verified.
 
-AI systems can generate actions that have consequences outside the model: a payment, database mutation, deployment, data export, filing, or other external operation.
+Other current limitations:
+- Authority and state registries remain in-memory in the staging harness.
+- Process-restart recovery and cross-instance replay behavior are not yet proven.
+- Downstream actuator enforcement and real payment execution are not proven.
+- The current signing path uses Ed25519; post-quantum signing is not claimed.
+- Current Z3 proof execution is not claimed.
+- No production-wide coverage, universal AI safety, regulatory certification or legal compliance claim is made.
 
-The important question is not only whether an action was generated, or whether an identity and policy existed somewhere upstream. At the declared execution boundary, the system must establish whether the **specific action is still authorized now**, under the conditions and parameters that will actually be executed.
+## Historical reference evidence
 
-Conceptually:
+Earlier reference-environment work reported an 11/11 STILL adversarial result, receipt integrity/offline verification, tamper detection and parameter binding on tested paths. Those results are historical evidence for their own build and conditions. They must not be treated as proof that the current Terry staging candidate has passed live Supabase integration, restart recovery, multi-instance concurrency or downstream actuator tests.
 
-```text
-AI / Agent
-    |
-    v
-Identity + existing authorization / policy
-    |
-    v
-VeriSigil
-    |  current authority
-    |  current conditions
-    |  exact action
-    |  exact parameters
-    |  enforcement requirements
-    |
-    +---- REFUSE ----> no governed external effect
-    |
-    +---- ALLOW -----> declared protected execution boundary
-                              |
-                              v
-                       external consequence
-                              |
-                              v
-                 Cryptographic Execution Receipt
-``` 
+## Authoritative current evidence
 
-The model, agent framework, identity provider, policy engine, or external provider may change. The enforcement invariant is intended to remain stable.
+The controlling status, exact evaluation commit, test boundaries and remaining proof gates are maintained in the [API repository's Current Evidence Baseline](https://github.com/raheem-verisigil/verisigil-api/blob/main/EVIDENCE_BASELINE.md).
 
----
+- [Current bounded evaluation branch](https://github.com/raheem-verisigil/verisigil-api/tree/security/terry-fail-closed-execution-20261113)
+- [Current staging commit](https://github.com/raheem-verisigil/verisigil-api/commit/dfa626d309cf397f4e861a3449f258dcb6b5fdf5)
+- [Bounded challenge protocol](https://github.com/raheem-verisigil/verisigil-api/blob/main/CHALLENGE.md)
+- [Safe local reproduction guide](https://github.com/raheem-verisigil/verisigil-api/blob/main/QUICKSTART.md)
 
-## What is currently evidenced
+## Evidence rules
 
-The public proof program separates implementation, tested behavior, independent verification, and production claims.
+Implemented code is not automatically tested behavior. A test definition is not a passing test. A successful deployment is not a security result. A valid cryptographic signature proves integrity relative to a trusted key; it does not prove source-data truth, legal compliance, or downstream enforcement.
 
-| Area | Current status |
-|---|---|
-| Architecture freeze | **IN EFFECT** |
-| Production claim | **NOT ALLOWED** |
-| Locked production claim | **NOT YET DELIVERED** |
-| Receipt integrity and Ed25519 verification | **VERIFIED** |
-| Independent offline receipt verification | **VERIFIED** |
-| Honest `UNDETERMINED` behavior | **VERIFIED** |
-| STILL adversarial suite | **11/11 demonstrated on live Railway + Supabase** |
-| Tamper detection | **DEMONSTRATED on live endpoint** |
-| Parameter binding / commitment enforcement | **DEMONSTRATED on tested payment path** |
-| Inadmissible tested paths reaching Paystack | **0 in tested scenarios** |
-| Delegation live rerun | **PENDING independent confirmation** |
-| Real Paystack transaction reference | **NOT PROVEN** |
-| Multi-instance distributed atomicity | **NOT PROVEN** |
-| Complete endpoint coverage | **NOT PROVEN** |
-| Regulatory certification | **NOT CLAIMABLE** |
+**BUILD → PROVE → GENERALIZE → INTEROPERATE → STANDARDIZE**
 
-The authoritative public status and evidence surface is [`trust.html`](trust.html). Do not infer capabilities beyond the published evidence and limitations.
-
----
-
-## Reproduce before trusting
-
-The repository is intended to be a technical proof surface, not a feature catalogue.
-
-Start here:
-
-1. [`QUICKSTART.md`](QUICKSTART.md) — reproduce receipt verification and the expected bounded outcomes.
-2. [`CHALLENGE.md`](CHALLENGE.md) — open adversarial testing protocol and current challenge boundaries.
-3. [`VERISIGIL_PROOF_REPORT_V1.md`](VERISIGIL_PROOF_REPORT_V1.md) — consolidated proof report and claim ceiling.
-4. [`CLAIMS_REGISTRY.md`](CLAIMS_REGISTRY.md) — frozen claims registry.
-5. [`ActuatorSpec.md`](ActuatorSpec.md) — actuator-side contract and tested enforcement boundary, where present.
-
-Proof scripts and formal artifacts in the repository are retained as reproducibility evidence. Historical specifications may contain terminology or architectural claims that are no longer authoritative; current claims are governed by the claims registry and proof report.
-
-### Minimal research question
-
-A useful first experiment is:
-
-> Can an unauthorized variation of a consequential action be refused at the declared protected boundary, without the external state mutation occurring, while the result remains independently verifiable from the evidence?
-
-The answer must be established by the relevant test and its recorded evidence—not by this README.
-
----
-
-## Evidence hierarchy
-
-VeriSigil uses a deliberately conservative claim ladder:
-
-- **Implemented:** the mechanism exists in code.
-- **Tested:** the mechanism has passed a defined reproducible test.
-- **Independently verified:** evidence can be checked without relying on the originating runtime's narrative.
-- **Generalized:** the invariant survives materially different consequence surfaces.
-- **Interoperable:** the contract works across independent upstream and downstream environments.
-
-A stronger claim is not inferred from a weaker one.
-
----
-
-## What VeriSigil is not
-
-VeriSigil is not presented here as:
-
-- a universal AI safety system;
-- a replacement for identity, IAM, policy engines, or enterprise security controls;
-- a regulator, auditor, bank, payment institution, or government authority;
-- proof that every AI action is governed;
-- proof that every unauthorized consequence is prevented;
-- proof of model reasoning correctness or policy correctness;
-- regulatory certification or legal compliance certification;
-- proof of live-money production payment execution where no real provider reference has been established;
-- proof of complete distributed or multi-instance atomicity.
-
-These boundaries are part of the architecture's credibility, not omissions to be hidden.
-
----
-
-## Longer-term direction
-
-The long-term engineering objective is provider-neutral enforcement at consequential execution boundaries:
-
-```text
-AI system / agent runtime
-        |
-        v
-   VeriSigil enforcement
-        |
-        +----> payment
-        +----> database mutation
-        +----> deployment
-        +----> enterprise workflow
-        +----> government / external API
-        +----> other consequential actuator
-```
-
-This is a direction for generalization and interoperability, not a claim that all of these surfaces are currently protected in production.
-
-The sequence is deliberate:
-
-**BUILD → PROVE → GENERALIZE → INTEROPERATE → STANDARDIZE → BECOME INFRASTRUCTURE**
-
-The current phase is **PROVE**.
-
----
-
-## Formal and technical material
-
-The repository contains specifications, test vectors, verification tools, proof scripts, and formal artifacts. These should be read according to their status and date rather than treated as one undifferentiated product surface.
-
-Where applicable, the project maintains public research/specification records and DOI-linked material. The current proof report and claims registry remain the primary references for what can be claimed today.
-
----
-
-## Contributing / adversarial testing
-
-The most valuable contribution is evidence that falsifies or strengthens a bounded claim.
-
-Before proposing architectural changes:
-
-1. reproduce the existing behavior;
-2. inspect the current claims registry;
-3. identify the exact invariant or claim boundary being tested;
-4. record whether the result is PASS, FAIL, NOT_DIAGNOSTIC, or a NEW_FINDING;
-5. do not silently convert a test result into a broader claim.
-
-Architecture and terminology are currently frozen. New features, categories, and terminology are not being added merely to expand the surface area.
-
-See [`CHALLENGE.md`](CHALLENGE.md) for the public adversarial testing protocol.
-
----
-
-## Public surfaces
-
-- [Website](https://verisigilai.com/)
-- [Trust / evidence status](https://verisigilai.com/trust.html)
-- [Demo and API surface](https://verisigilai.com/demos.html)
-- [Terms](https://verisigilai.com/terms.html)
-
-**Evidence before expansion. Reproduction before trust.**

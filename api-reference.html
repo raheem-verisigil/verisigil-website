@@ -34,7 +34,7 @@ footer{padding:28px 0;border-top:1px solid var(--line);color:#8295a8;font-size:1
 <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
 <script>
 const schemas={
- staging:{url:'https://verisigil-security-repair-test-staging.up.railway.app/openapi.json',methods:['get','post','put','patch','delete','options','head']},
+ staging:{url:'https://verisigil-passport-staging-api-staging.up.railway.app/openapi.json',methods:[]},
  production:{url:'https://verisigil-api-production-b79a.up.railway.app/openapi.json',methods:[]}
 };
 let swaggerInstance=null;
@@ -64,7 +64,7 @@ function loadSchema(environment){
  mount.innerHTML='<div class="empty-state"><strong>Loading API contract</strong><p>Fetching the selected environment schema.</p></div>';
  if(typeof SwaggerUIBundle!=='function'){status.textContent='Swagger UI could not be loaded. Use the direct OpenAPI link below.';return;}
  try{
-  swaggerInstance=SwaggerUIBundle({url:config.url,dom_id:'#swagger-ui',deepLinking:true,displayRequestDuration:true,filter:true,tryItOutEnabled:environment==='staging'&&config.methods.length>0,supportedSubmitMethods:config.methods,persistAuthorization:false,validatorUrl:null,docExpansion:'list',defaultModelsExpandDepth:1,operationsSorter:'alpha',tagsSorter:'alpha',onComplete:function(){status.textContent=environment.toUpperCase()+' schema loaded · '+(config.methods.length?'Try it out enabled':'read-only until activation');},onFailure:function(){status.textContent='Schema could not be loaded. Check the direct OpenAPI link and CORS policy.';}});
+  swaggerInstance=SwaggerUIBundle({url:config.url,dom_id:'#swagger-ui',deepLinking:true,displayRequestDuration:true,filter:true,tryItOutEnabled:false,supportedSubmitMethods:config.methods,persistAuthorization:false,validatorUrl:null,docExpansion:'list',defaultModelsExpandDepth:1,operationsSorter:'alpha',tagsSorter:'alpha',onComplete:function(){status.textContent=environment.toUpperCase()+' schema loaded · '+(config.methods.length?'Try it out enabled':'read-only until activation');},onFailure:function(){status.textContent='Schema could not be loaded. Check the direct OpenAPI link and CORS policy.';}});
  }catch(error){status.textContent='Unable to initialise Swagger UI: '+error.message;}
 }
 document.getElementById('environment').addEventListener('change',event=>loadSchema(event.target.value));

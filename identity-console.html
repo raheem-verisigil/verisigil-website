@@ -55,7 +55,7 @@ main{padding:58px 0 82px}.eyebrow{font:600 10px var(--mono);letter-spacing:.16em
 <p class="fine"><strong>Security note:</strong> the publishable Supabase key below is designed for browser use. No service-role key, database password or agent private key is included in this page. The API's persistence service key remains server-side. Session tokens are held in memory only and are not written to localStorage.</p>
 </aside>
 </div>
-<p class="fine">If account confirmation is enabled, check your email before signing in. Interactive API operations remain read-only until staging persistence credentials and runtime checks are completed.</p>
+<p class="fine">If account confirmation is enabled, check your email before signing in. Supabase Auth must allow this console's origin in its redirect URL settings. Interactive API operations remain read-only until staging persistence credentials and runtime checks are completed.</p>
 </main>
 <footer><div class="wrap foot"><span>© 2026 VeriSigil AI · Evidence before expansion</span><span><a href="/trust.html">Trust & Evidence</a> · <a href="/api-reference.html">API explorer</a> · <a href="/">Home</a></span></div></footer>
 <script>
@@ -92,7 +92,7 @@ $('auth-form').addEventListener('submit',async event=>{
  $('auth-submit').disabled=true;
  try{
   if(mode==='signup'){
-   const data=await supabaseRequest('/auth/v1/signup',{email,password});
+   const redirectTo=encodeURIComponent(window.location.origin+window.location.pathname);\n   const data=await supabaseRequest('/auth/v1/signup?redirect_to='+redirectTo,{email,password});
    if(data.access_token){accessToken=data.access_token;currentUser=data.user;await showWorkspace();}
    else{setMode('signin');showStatus('account-status','Account created. Confirm your email if requested, then sign in to create your VeriSigil workspace.','success');}
   }else{

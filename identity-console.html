@@ -40,7 +40,7 @@ main{padding:58px 0 82px}.eyebrow{font:600 10px var(--mono);letter-spacing:.16em
 <div id="tenant-list"><div class="status">Loading tenant workspaces…</div></div>
 <form id="tenant-form">
 <label for="tenant-name">New workspace name</label><input id="tenant-name" type="text" required minlength="2" maxlength="120" placeholder="Your organisation or project name">
-<div class="actions"><button id="create-tenant" class="btn" type="submit">Create owner workspace</button><button id="refresh-tenants" class="btn secondary" type="button">Refresh</button><button id="signout" class="btn secondary" type="button">Sign out</button></div>
+<div class="actions"><button id="create-tenant" class="btn" type="submit" disabled>Create owner workspace</button><button id="refresh-tenants" class="btn secondary" type="button">Refresh</button><button id="signout" class="btn secondary" type="button">Sign out</button></div>
 </form>
 </div>
 </section>
@@ -111,6 +111,7 @@ async function showWorkspace(){
 async function refreshTenants(){
  try{
   const data=await apiRequest('/v1/agent-identity/tenants');
+  $('create-tenant').disabled=false;
   const list=$('tenant-list');list.replaceChildren();
   if(!data.tenants?.length){const empty=document.createElement('div');empty.className='status';empty.textContent='No workspace yet. Create your first tenant below.';list.appendChild(empty);return;}
   data.tenants.forEach(item=>{
@@ -120,7 +121,7 @@ async function refreshTenants(){
    const id=document.createElement('code');id.textContent='TENANT · '+item.tenant.org_id;
    card.append(name,role,id);list.appendChild(card);
   });
- }catch(error){showStatus('account-status',error.message,'error');}
+ }catch(error){$('create-tenant').disabled=true;showStatus('account-status','Your account is authenticated, but the VeriSigil tenant service is not yet activated. '+error.message,'error');}
 }
 $('tenant-form').addEventListener('submit',async event=>{
  event.preventDefault();const button=$('create-tenant');button.disabled=true;

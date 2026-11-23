@@ -66,6 +66,13 @@
 .passport-chain p{font-size:11px;color:var(--muted);margin:0}
 @media(max-width:760px){.passport-layout{grid-template-columns:1fr}.passport-photo{min-height:280px}.passport-chain{grid-template-columns:1fr}}
 @media(max-width:480px){.passport-card{padding:17px}.passport-fields{grid-template-columns:1fr}}
+.passport-review-cta{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:30px;background:linear-gradient(125deg,#102b49,#0a1b31);border:1px solid rgba(245,193,92,.35);border-radius:15px}
+.passport-review-cta h2{font:700 clamp(24px,3.4vw,35px) var(--display);line-height:1.15;margin:9px 0}
+.passport-review-cta p{max-width:650px;color:var(--muted);font-size:14px;margin:0}
+.passport-review-cta .actions{margin-top:0;flex-shrink:0}
+.identity-tools button:focus-visible,.identity-verifier button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media(max-width:760px){.passport-review-cta{align-items:flex-start;flex-direction:column}.passport-review-cta .actions{margin-top:4px}}
+
 
 @media(max-width:760px){.identity-panel{grid-template-columns:1fr;padding:18px}.identity-proof-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.identity-proof-grid{grid-template-columns:1fr}.identity-brand img{height:125px}}
@@ -88,7 +95,7 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 <header class="topbar"><div class="wrap nav">
 <a class="brand" href="/"><img class="brand-logo" src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI official logo"><span class="brand-name">VeriSigil <span>AI</span></span></a>
 <nav class="navlinks" id="navlinks" aria-label="Main navigation">
-<details><summary>Platform ▾</summary><div class="drop"><a href="/architecture.html">Architecture</a><a href="/demos.html">Proof & demonstrations</a><a href="/trust.html">Trust & evidence</a><a href="https://verisigil-api-production-b79a.up.railway.app/docs" target="_blank" rel="noopener">API documentation ↗</a><a href="/#identity">Issuer identity &amp; proof</a><a href="/#agent-identity">Agent identity &amp; passport</a></div></details>
+<details><summary>Platform ▾</summary><div class="drop"><a href="/architecture.html">Architecture</a><a href="/demos.html">Proof & demonstrations</a><a href="/trust.html">Trust & evidence</a><a href="/api-reference.html">Interactive API explorer ↗</a><a href="/#identity">Issuer identity &amp; proof</a><a href="/#agent-identity">Agent identity &amp; passport</a></div></details>
 <a href="/evaluation.html">Commercial integration</a><a href="/builder-mcp.html">Developer integration</a><a href="/pricing.html">Commercial model</a><a href="/partners.html">Partnerships</a><a href="/contact.html">Contact</a>
 </nav>
 <a class="nav-cta" href="/evaluation.html">Discuss integration <span>→</span></a>
@@ -119,9 +126,9 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 <article class="identity-proof-card"><span id="issuer-api-state" class="identity-state wait">CHECKING</span><h3>API liveness</h3><p id="issuer-api-detail">Checking the current production API.</p><a href="https://verisigil-api-production-b79a.up.railway.app/health" target="_blank" rel="noopener">Open live health response ↗</a></article>
 <article class="identity-proof-card"><span id="issuer-key-state" class="identity-state wait">CHECKING</span><h3>Public signing key</h3><p id="issuer-key-detail">Checking the published Ed25519 key.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/signing-diagnostic" target="_blank" rel="noopener">Open signed issuer diagnostic ↗</a></article>
 <article class="identity-proof-card"><span id="issuer-kit-state" class="identity-state wait">CHECKING</span><h3>Signing key consistency</h3><p id="issuer-kit-detail">Checking that the signing key and published issuer key agree.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/key-diagnostic" target="_blank" rel="noopener">Open signing key diagnostic ↗</a></article>
-<article class="identity-proof-card"><span id="issuer-limits-state" class="identity-state wait">CHECKING</span><h3>Published proof limits</h3><p id="issuer-limits-detail">Checking the public claim-boundary record.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/platform/limits" target="_blank" rel="noopener">Open proof limits JSON ↗</a></article><article class="identity-proof-card"><span id="issuer-diagnostic-state" class="identity-state wait">CHECKING</span><h3>Live signing diagnostic</h3><p id="issuer-diagnostic-detail">Checking a fixed signed sample and verifying it locally.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/signing-diagnostic" target="_blank" rel="noopener">Open signed sample JSON ↗</a></article>
+<article class="identity-proof-card"><span id="issuer-limits-state" class="identity-state wait">CHECKING</span><h3>Published proof limits</h3><p id="issuer-limits-detail">Checking the public claim-boundary record.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/platform/limits" target="_blank" rel="noopener">Open proof limits JSON ↗</a></article><article class="identity-proof-card"><span id="issuer-diagnostic-state" class="identity-state wait">CHECKING</span><h3>Live signing diagnostic</h3><p id="issuer-diagnostic-detail">Checking a fixed signed sample and verifying it locally.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/signing-diagnostic" target="_blank" rel="noopener">Open signed sample JSON ↗</a><div class="identity-tools"><button type="button" id="copy-issuer-diagnostic">COPY SIGNED DIAGNOSTIC</button></div></article>
 </div>
-<div class="identity-keybox"><label for="issuer-public-key">Ed25519 public key · Base64</label><code id="issuer-public-key">Loading from the live API…</code><label for="issuer-fingerprint">SHA-256 key fingerprint</label><code id="issuer-fingerprint">Calculating…</code><div class="identity-tools"><button type="button" id="copy-issuer-key">COPY PUBLIC KEY</button><button type="button" id="refresh-issuer-proof">RECHECK LIVE SOURCES</button></div></div>
+<div class="identity-keybox"><label for="issuer-public-key">Ed25519 public key · Base64</label><code id="issuer-public-key">Loading from the live API…</code><label for="issuer-fingerprint">SHA-256 key fingerprint</label><code id="issuer-fingerprint">Calculating…</code><div class="identity-tools"><button type="button" id="copy-issuer-key">COPY PUBLIC KEY</button><button type="button" id="copy-issuer-fingerprint">COPY FINGERPRINT</button><button type="button" id="refresh-issuer-proof">RECHECK LIVE SOURCES</button></div></div>
 <div class="identity-verifier"><h3>Verify a signed record in this browser</h3><p>Paste the exact canonical JSON payload and its Ed25519 signature. Verification runs locally in your browser against the published key; the payload is not sent to VeriSigil.</p><label for="issuer-payload">Exact signed payload</label><textarea id="issuer-payload" spellcheck="false" placeholder='Paste the exact canonical JSON string used when the record was signed'></textarea><label for="issuer-signature">Ed25519 signature · Base64</label><input id="issuer-signature" autocomplete="off" spellcheck="false" placeholder="Ed25519:BASE64_SIGNATURE or BASE64_SIGNATURE"><button type="button" id="verify-issuer-signature">VERIFY LOCALLY</button><div id="issuer-verify-result" class="identity-result" aria-live="polite">Waiting for a payload and signature.</div><small>Use the exact canonical bytes that were signed (sorted keys, compact JSON). A valid signature proves integrity relative to this key; it does not prove that an action was safe, correct, or covered by every production path.</small></div>
 </div></div>
 <p class="fine">Identity boundary: this is a technical signing-key identity and public verification surface, not a legal-entity certificate or third-party endorsement. For stronger assurance, compare the key fingerprint through a separately trusted channel and use an independent verifier.</p>
@@ -152,6 +159,12 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 <article><b>03 / EVIDENCE</b><strong>Execution Receipt</strong><p>Record the decision and provide evidence that can be independently verified.</p></article>
 </div>
 <p class="fine">Implementation status: the homepage design is illustrative. Agent Passport issuance, key lifecycle, delegation endpoints and runtime integration are not represented as live API capabilities until implemented and tested on the isolated staging branch. A passport is not a legal identity certificate or third-party endorsement.</p>
+</div></section>
+<section class="section"><div class="wrap">
+<div class="passport-review-cta">
+<div><div class="kicker">Identity review · Developer onboarding</div><h2>Bring an agent identity into a verifiable operating boundary.</h2><p>Request a scoped technical review of your agent identity, key lifecycle, delegation model, runtime authority or evidence integration.</p></div>
+<div class="actions"><a class="btn btn-primary" href="/identity-review.html">Request an identity review →</a><a class="btn btn-outline" href="/api-reference.html">Explore the interactive API</a></div>
+</div>
 </div></section>
 
 <section class="section"><div class="wrap split">
@@ -253,8 +266,23 @@ async function refreshIssuerProof(){
  }else diagnosticMessage=diagnostic?'Diagnostic schema, key consistency or server self-check did not pass.':err(4)||'Live signing diagnostic unavailable.';
  issuerState('issuer-diagnostic-state',diagnosticCanVerify?diagnosticValid:null,diagnosticCanVerify?(diagnosticValid?'LOCALLY VERIFIED':'SIGNATURE INVALID'):'LOCAL CHECK UNAVAILABLE','issuer-diagnostic-detail',diagnosticMessage);
 }
+async function copyToClipboard(value,button){
+ if(!value||/^(Loading|Calculating|Not available|Public key unavailable)/i.test(value.trim())){button.textContent='NOT AVAILABLE';return;}
+ const original=button.textContent;
+ try{
+  if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);
+  else{const area=document.createElement('textarea');area.value=value;area.setAttribute('readonly','');area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();const copied=document.execCommand('copy');area.remove();if(!copied)throw new Error('Clipboard permission unavailable');}
+  button.textContent='COPIED';button.setAttribute('aria-live','polite');
+ }catch(error){button.textContent='COPY BLOCKED';}
+ window.setTimeout(()=>{button.textContent=original;},1700);
+}
 const copyIssuer=document.getElementById('copy-issuer-key');
-if(copyIssuer)copyIssuer.addEventListener('click',async()=>{if(!window.verisigilIssuerKey)return;try{await navigator.clipboard.writeText(window.verisigilIssuerKey);copyIssuer.textContent='COPIED';}catch(e){copyIssuer.textContent='COPY BLOCKED';}});
+if(copyIssuer)copyIssuer.addEventListener('click',()=>copyToClipboard(window.verisigilIssuerKey||'',copyIssuer));
+const copyFingerprint=document.getElementById('copy-issuer-fingerprint');
+if(copyFingerprint)copyFingerprint.addEventListener('click',()=>copyToClipboard(document.getElementById('issuer-fingerprint')?.textContent||'',copyFingerprint));
+const copyDiagnostic=document.getElementById('copy-issuer-diagnostic');
+if(copyDiagnostic)copyDiagnostic.addEventListener('click',async()=>{copyDiagnostic.textContent='FETCHING…';try{const value=await issuerJSON('/v1/proof/signing-diagnostic');await copyToClipboard(JSON.stringify(value,null,2),copyDiagnostic);}catch(error){copyDiagnostic.textContent='UNAVAILABLE';}});
+
 const refreshIssuer=document.getElementById('refresh-issuer-proof');if(refreshIssuer)refreshIssuer.addEventListener('click',refreshIssuerProof);
 const verifyIssuer=document.getElementById('verify-issuer-signature');
 if(verifyIssuer)verifyIssuer.addEventListener('click',async()=>{

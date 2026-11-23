@@ -38,6 +38,35 @@
 .identity-verifier textarea{min-height:105px;resize:vertical}
 .identity-result{font:600 11px var(--mono);padding:10px;border-radius:7px;background:#10233a;color:#c2cedb;margin-top:10px;overflow-wrap:anywhere}
 .identity-result.good{background:#143c36;color:#7be0b8}.identity-result.bad{background:#482427;color:#ffaaaa}
+
+/* Cryptographic Passport — homepage identity layer */
+.passport-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px;align-items:stretch}
+.passport-photo{position:relative;min-height:390px;border-radius:15px;overflow:hidden;border:1px solid var(--line);background:#102945}
+.passport-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.passport-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,16,33,.86),rgba(4,16,33,.04) 72%)}
+.passport-photo-caption{position:absolute;z-index:1;left:22px;right:22px;bottom:20px}
+.passport-photo-caption strong{display:block;font:700 19px var(--display);color:#fff}
+.passport-photo-caption span{font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.passport-card{padding:25px;background:linear-gradient(145deg,#102b49,#06182d);border:1px solid rgba(78,155,255,.35);border-radius:15px}
+.passport-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.passport-card-head h3{font-size:20px;margin:6px 0 0}
+.passport-demo{font:600 9px var(--mono);letter-spacing:.08em;color:#f5c15c;background:#48371b;padding:6px 9px;border-radius:20px;white-space:nowrap}
+.passport-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 0}
+.passport-field label{display:block;font:600 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.passport-field strong,.passport-field code{display:block;color:#edf4fb;font:500 12px var(--mono);overflow-wrap:anywhere}
+.passport-field code{font-size:10px;color:#b9d5f1}
+.passport-capabilities{padding:15px;background:#041326;border:1px solid var(--line);border-radius:9px}
+.passport-capabilities label{display:block;font:600 9px var(--mono);letter-spacing:.1em;color:var(--muted);margin-bottom:9px}
+.passport-chip{display:inline-block;margin:0 5px 5px 0;padding:5px 8px;border:1px solid rgba(78,155,255,.3);border-radius:20px;color:#d8e9fa;font:10px var(--mono)}
+.passport-rule{margin-top:15px;padding:14px 15px;border-left:2px solid var(--gold);background:rgba(245,193,92,.07);color:#c8d6e4;font-size:12px}
+.passport-chain{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.passport-chain article{padding:17px;border:1px solid var(--line);border-radius:10px;background:#0a1e35}
+.passport-chain b{display:block;font:600 10px var(--mono);color:var(--gold);margin-bottom:7px}
+.passport-chain strong{display:block;font:700 15px var(--display);margin-bottom:5px}
+.passport-chain p{font-size:11px;color:var(--muted);margin:0}
+@media(max-width:760px){.passport-layout{grid-template-columns:1fr}.passport-photo{min-height:280px}.passport-chain{grid-template-columns:1fr}}
+@media(max-width:480px){.passport-card{padding:17px}.passport-fields{grid-template-columns:1fr}}
+
 @media(max-width:760px){.identity-panel{grid-template-columns:1fr;padding:18px}.identity-proof-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.identity-proof-grid{grid-template-columns:1fr}.identity-brand img{height:125px}}
 .proof-strip{background:#0a1d34;border-bottom:1px solid var(--line)}.proof-grid{display:grid;grid-template-columns:repeat(4,1fr)}.proof-item{padding:25px 24px;border-right:1px solid var(--line)}.proof-item:last-child{border:0}.proof-item strong{display:block;font:700 22px var(--display);color:var(--gold);margin-bottom:3px}.proof-item span{font-size:12px;color:var(--muted)}
@@ -59,7 +88,7 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 <header class="topbar"><div class="wrap nav">
 <a class="brand" href="/"><img class="brand-logo" src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI official logo"><span class="brand-name">VeriSigil <span>AI</span></span></a>
 <nav class="navlinks" id="navlinks" aria-label="Main navigation">
-<details><summary>Platform ▾</summary><div class="drop"><a href="/architecture.html">Architecture</a><a href="/demos.html">Proof & demonstrations</a><a href="/trust.html">Trust & evidence</a><a href="https://verisigil-api-production-b79a.up.railway.app/docs" target="_blank" rel="noopener">API documentation ↗</a><a href="/#identity">Issuer identity &amp; proof</a></div></details>
+<details><summary>Platform ▾</summary><div class="drop"><a href="/architecture.html">Architecture</a><a href="/demos.html">Proof & demonstrations</a><a href="/trust.html">Trust & evidence</a><a href="https://verisigil-api-production-b79a.up.railway.app/docs" target="_blank" rel="noopener">API documentation ↗</a><a href="/#identity">Issuer identity &amp; proof</a><a href="/#agent-identity">Agent identity &amp; passport</a></div></details>
 <a href="/evaluation.html">Commercial integration</a><a href="/builder-mcp.html">Developer integration</a><a href="/pricing.html">Commercial model</a><a href="/partners.html">Partnerships</a><a href="/contact.html">Contact</a>
 </nav>
 <a class="nav-cta" href="/evaluation.html">Discuss integration <span>→</span></a>
@@ -96,6 +125,33 @@ footer{padding:42px 0 30px;background:#041020}.foot-top{display:flex;justify-con
 <div class="identity-verifier"><h3>Verify a signed record in this browser</h3><p>Paste the exact canonical JSON payload and its Ed25519 signature. Verification runs locally in your browser against the published key; the payload is not sent to VeriSigil.</p><label for="issuer-payload">Exact signed payload</label><textarea id="issuer-payload" spellcheck="false" placeholder='Paste the exact canonical JSON string used when the record was signed'></textarea><label for="issuer-signature">Ed25519 signature · Base64</label><input id="issuer-signature" autocomplete="off" spellcheck="false" placeholder="Ed25519:BASE64_SIGNATURE or BASE64_SIGNATURE"><button type="button" id="verify-issuer-signature">VERIFY LOCALLY</button><div id="issuer-verify-result" class="identity-result" aria-live="polite">Waiting for a payload and signature.</div><small>Use the exact canonical bytes that were signed (sorted keys, compact JSON). A valid signature proves integrity relative to this key; it does not prove that an action was safe, correct, or covered by every production path.</small></div>
 </div></div>
 <p class="fine">Identity boundary: this is a technical signing-key identity and public verification surface, not a legal-entity certificate or third-party endorsement. For stronger assurance, compare the key fingerprint through a separately trusted channel and use an independent verifier.</p>
+</div></section>
+
+
+<section class="section" id="agent-identity"><div class="wrap">
+<div class="section-head"><div class="kicker">Cryptographic Passport · Agent identity layer</div><h2>Know which agent is acting. Re-check what it is allowed to do.</h2><p>A Cryptographic Passport is designed to make an AI agent's identity inspectable across systems: who issued it, which organisation it belongs to, which public key identifies it, what capabilities it declares, and whether the credential remains valid or has been revoked.</p></div>
+<div class="passport-layout">
+<div class="passport-photo"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1300&q=85" alt="Close-up photograph of a computer circuit board and electronic components" loading="lazy"><div class="passport-photo-caption"><span>Identity infrastructure</span><strong>One agent. One inspectable identity record.</strong></div></div>
+<div class="passport-card">
+<div class="passport-card-head"><div><div class="eyebrow">VERISIGIL · AGENT PASSPORT</div><h3>Agent identity record</h3></div><span class="passport-demo">ILLUSTRATIVE ONLY</span></div>
+<div class="passport-fields">
+<div class="passport-field"><label>Agent identifier</label><strong>agt-demo-042</strong></div>
+<div class="passport-field"><label>Credential status</label><strong>NOT ISSUED · DEMO</strong></div>
+<div class="passport-field"><label>Issuer</label><strong>Customer / trusted issuer</strong></div>
+<div class="passport-field"><label>Organisation</label><strong>Declared tenant</strong></div>
+<div class="passport-field"><label>Public key</label><code>Ed25519 · SHA-256 fingerprint</code></div>
+<div class="passport-field"><label>Validity</label><strong>Issued / expiry / revocation</strong></div>
+</div>
+<div class="passport-capabilities"><label>DECLARED CAPABILITIES · EXAMPLE ONLY</label><span class="passport-chip">read_records</span><span class="passport-chip">prepare_payment</span><span class="passport-chip">request_approval</span></div>
+<div class="passport-rule"><strong>Identity is not authority.</strong> A valid passport identifies an agent and its declared claims. It does not grant blanket permission. Current authority, delegation, policy, action parameters and required state must be re-evaluated at the protected execution boundary.</div>
+</div>
+</div>
+<div class="passport-chain">
+<article><b>01 / IDENTITY</b><strong>Cryptographic Passport</strong><p>Identify the agent, issuer, organisation, key and credential lifecycle.</p></article>
+<article><b>02 / DECISION</b><strong>Runtime Authority</strong><p>Re-check current standing and scope against the exact proposed action and parameters.</p></article>
+<article><b>03 / EVIDENCE</b><strong>Execution Receipt</strong><p>Record the decision and provide evidence that can be independently verified.</p></article>
+</div>
+<p class="fine">Implementation status: the homepage design is illustrative. Agent Passport issuance, key lifecycle, delegation endpoints and runtime integration are not represented as live API capabilities until implemented and tested on the isolated staging branch. A passport is not a legal identity certificate or third-party endorsement.</p>
 </div></section>
 
 <section class="section"><div class="wrap split">

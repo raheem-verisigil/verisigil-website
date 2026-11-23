@@ -132,7 +132,6 @@ $('tenant-form').addEventListener('submit',async event=>{
   showStatus('account-status','Workspace created. You are the owner. Tenant ID: '+data.tenant.org_id,'success');
   await refreshTenants();
  }catch(error){showStatus('account-status',error.message,'error');}
- finally{button.disabled=false;}
 });
 $('refresh-tenants').addEventListener('click',refreshTenants);
 $('signout').addEventListener('click',async()=>{

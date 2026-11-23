@@ -92,7 +92,8 @@ $('auth-form').addEventListener('submit',async event=>{
  $('auth-submit').disabled=true;
  try{
   if(mode==='signup'){
-   const redirectTo=encodeURIComponent(window.location.origin+window.location.pathname);\n   const data=await supabaseRequest('/auth/v1/signup?redirect_to='+redirectTo,{email,password});
+   const redirectTo=encodeURIComponent(window.location.origin+window.location.pathname);
+   const data=await supabaseRequest('/auth/v1/signup?redirect_to='+redirectTo,{email,password});
    if(data.access_token){accessToken=data.access_token;currentUser=data.user;await showWorkspace();}
    else{setMode('signin');showStatus('account-status','Account created. Confirm your email if requested, then sign in to create your VeriSigil workspace.','success');}
   }else{

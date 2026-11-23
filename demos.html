@@ -9,7 +9,7 @@
 <article class="card"><span id="key-state" class="state">CHECKING</span><h3>Issuer public key</h3><p id="key-detail">Checking Ed25519 key publication.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/signing-diagnostic" target="_blank" rel="noopener">Open signed diagnostic ↗</a></article>
 <article class="card"><span id="kit-state" class="state">CHECKING</span><h3>Signing key consistency</h3><p id="kit-detail">Checking that the signing key and published issuer key agree.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/key-diagnostic" target="_blank" rel="noopener">Open key diagnostic ↗</a></article>
 <article class="card"><span id="limits-state" class="state">CHECKING</span><h3>Published proof limits</h3><p id="limits-detail">Checking the public claim-boundary record.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/platform/limits" target="_blank" rel="noopener">Open raw limits ↗</a></article><article class="card"><span id="diagnostic-state" class="state">CHECKING</span><h3>Live signing diagnostic</h3><p id="diagnostic-detail">Checking a fixed signed sample in this browser.</p><a href="https://verisigil-api-production-b79a.up.railway.app/v1/proof/signing-diagnostic" target="_blank" rel="noopener">Open signed sample ↗</a></article>
-</div><h3>Issuer Ed25519 key</h3><code class="key" id="public-key">Loading from live API…</code><h3>SHA-256 fingerprint</h3><code class="key" id="fingerprint">Calculating…</code><p class="small">Compare this fingerprint through a separately trusted channel before relying on the issuer key.</p></section>
+</div><h3>Issuer Ed25519 key</h3><code class="key" id="public-key">Loading from live API…</code><h3>SHA-256 fingerprint</h3><code class="key" id="fingerprint">Calculating…</code><div class="actions"><button class="btn" type="button" id="copy-public-key">Copy public key</button><button class="btn" type="button" id="copy-fingerprint">Copy fingerprint</button><button class="btn" type="button" id="copy-signed-diagnostic">Copy signed diagnostic JSON</button></div><p class="small">These controls copy the actual public issuer key, its calculated fingerprint or the live signed diagnostic returned by the API. Compare the fingerprint through a separately trusted channel before relying on the issuer key.</p></section>
 <section class="panel"><div class="eyebrow">Bounded technical evidence</div><h2>Read the claim, then challenge it.</h2><p class="muted">The current staging candidate has a durable receipt adapter and fail-closed authorization middleware. The Terry tests use synthetic fixtures and a mocked receipt store. API-to-Supabase persistence, restart recovery, two-instance replay and downstream actuator enforcement remain unproven.</p><div class="actions"><a class="btn" href="/trust.html">Trust & Evidence Center</a><a class="btn" href="https://github.com/raheem-verisigil/verisigil-api/blob/main/CHALLENGE.md" target="_blank" rel="noopener">Challenge protocol ↗</a><a class="btn" href="https://github.com/raheem-verisigil/verisigil-api/blob/main/EVIDENCE_BASELINE.md" target="_blank" rel="noopener">Current evidence baseline ↗</a><a class="btn" href="https://verisigil-security-repair-test-staging.up.railway.app/docs" target="_blank" rel="noopener">Staging API docs ↗</a><a class="btn" href="https://verisigil-api-production-b79a.up.railway.app/docs" target="_blank" rel="noopener">API documentation ↗</a></div><div class="notice"><strong>Scope:</strong> A published key proves which key signed a payload only when the signature verifies and the key itself is trusted. It does not prove the legal identity of an organisation, correctness of an action, regulatory certification or production-wide coverage.</div></section>
 </main><footer><div class="wrap nav"><a class="brand" href="/"><img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI logo">VeriSigil AI</a><span>© 2026 · Evidence before expansion. Reproduction before trust.</span><a href="/#identity">Issuer identity</a></div></footer>
 <script>
@@ -35,9 +35,24 @@ async function refresh(){
  }else diagMsg=diagnostic?(crypto.subtle?'Diagnostic, server self-check or key consistency did not pass.':'This browser does not support Ed25519 Web Crypto.'):err(4)||'Diagnostic unavailable.';
  show('diagnostic-state',diagCan?diagOK:null,diagCan?(diagOK?'LOCALLY VERIFIED':'SIGNATURE INVALID'):'LOCAL CHECK UNAVAILABLE','diagnostic-detail',diagMsg);
  document.getElementById('public-key').textContent=keyOk?key.public_key:'Not available — inspect the live endpoint above.';
+ window.verisigilPublicKey=keyOk?key.public_key:'';
+ window.verisigilSignedDiagnostic=diagnostic?JSON.stringify(diagnostic,null,2):'';
  const fp=document.getElementById('fingerprint');
  if(keyOk&&crypto.subtle){try{const dig=await crypto.subtle.digest('SHA-256',b64(key.public_key));fp.textContent=Array.from(new Uint8Array(dig)).map(x=>x.toString(16).padStart(2,'0')).join(':').toUpperCase();}catch(e){fp.textContent='Fingerprint unavailable: '+e.message;}}
  else fp.textContent='Unavailable.';
 }
+async function copyEvidence(value,button){
+ const original=button.textContent;
+ if(!value){button.textContent='NOT AVAILABLE';return;}
+ try{
+  if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);
+  else{const area=document.createElement('textarea');area.value=value;area.setAttribute('readonly','');area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();const ok=document.execCommand('copy');area.remove();if(!ok)throw new Error('Clipboard unavailable');}
+  button.textContent='COPIED';
+ }catch(error){button.textContent='COPY BLOCKED';}
+ window.setTimeout(()=>{button.textContent=original;},1700);
+}
+document.getElementById('copy-public-key').addEventListener('click',event=>copyEvidence(window.verisigilPublicKey,event.currentTarget));
+document.getElementById('copy-fingerprint').addEventListener('click',event=>copyEvidence(document.getElementById('fingerprint').textContent,event.currentTarget));
+document.getElementById('copy-signed-diagnostic').addEventListener('click',event=>copyEvidence(window.verisigilSignedDiagnostic,event.currentTarget));
 document.getElementById('refresh').addEventListener('click',refresh);refresh();
 </script></body></html>

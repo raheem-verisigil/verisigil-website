@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Identity Console | VeriSigil AI</title>
+<meta name="description" content="Create a VeriSigil staging workspace and prepare an AI agent identity integration using Supabase Auth.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#07162b">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07162b;--panel:#0d2440;--line:#29415a;--white:#f5f8fc;--muted:#a8b9cb;--gold:#f5c15c;--cyan:#54c9e8;--font:'DM Sans',sans-serif;--display:'Manrope',sans-serif;--mono:'IBM Plex Mono',monospace}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 12%,rgba(42,105,145,.18),transparent 28%),var(--bg);color:var(--white);font:15px/1.65 var(--font)}a{color:var(--gold)}.wrap{width:min(1100px,calc(100% - 42px));margin:auto}
+header{position:sticky;top:0;z-index:10;background:rgba(5,17,34,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.nav{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;color:var(--white);text-decoration:none;font:800 17px var(--display)}.brand img{width:38px;height:38px;object-fit:contain;background:#fff;border-radius:9px;padding:3px}.brand b{color:var(--gold)}.navlinks{display:flex;gap:20px}.navlinks a{font-size:13px;color:var(--muted);text-decoration:none}.navlinks a:hover{color:var(--gold)}
+main{padding:58px 0 82px}.eyebrow{font:600 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}h1,h2,h3{font-family:var(--display);letter-spacing:-.035em}h1{font-size:clamp(36px,5vw,56px);line-height:1.08;margin:13px 0 15px;max-width:850px}h1 em{font-style:normal;color:var(--gold)}.lead{max-width:780px;color:#d1deea;font-size:17px}.notice{margin:24px 0;padding:15px 18px;border:1px solid rgba(245,193,92,.38);border-left:3px solid var(--gold);background:#102b49;color:#d1deea;border-radius:8px;font-size:13px}.notice strong{color:#fff}
+.layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:22px;margin-top:26px}.panel{background:linear-gradient(145deg,rgba(13,36,64,.98),rgba(8,27,49,.98));border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.16)}.panel h2{font-size:23px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 20px}.tabs{display:flex;gap:8px;margin:0 0 18px}.tabs button{border:1px solid #42617d;background:#081c32;color:var(--muted);border-radius:7px;padding:9px 14px;font:600 12px var(--font);cursor:pointer}.tabs button[aria-pressed=true]{background:#1a3856;color:#fff;border-color:var(--gold)}label{display:block;color:#c4d3e1;font:600 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;margin:13px 0 6px}input{width:100%;background:#06182d;color:var(--white);border:1px solid #42617d;border-radius:7px;padding:12px 13px;font:14px var(--font)}input:focus{outline:2px solid var(--cyan);outline-offset:2px}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--gold);background:var(--gold);color:#172338;border-radius:7px;padding:11px 16px;font:700 12px var(--mono);letter-spacing:.03em;cursor:pointer;margin-top:17px}.btn:disabled{opacity:.5;cursor:not-allowed}.btn.secondary{background:transparent;color:var(--gold)}.actions{display:flex;gap:10px;flex-wrap:wrap}.status{min-height:48px;margin-top:16px;padding:12px 13px;background:#071a30;border:1px solid var(--line);border-radius:8px;color:#c8d6e4;font-size:12px;white-space:pre-wrap}.status.error{border-color:#a94e59;color:#ffd3d8}.status.success{border-color:#327d70;color:#bff3e3}.hidden{display:none!important}.tenant{border:1px solid var(--line);border-radius:9px;padding:13px 14px;margin:10px 0;background:#081c32}.tenant strong{display:block;color:#fff}.tenant code{display:block;color:#9bb4c9;font:11px var(--mono);overflow-wrap:anywhere;margin-top:4px}.tenant small{color:var(--cyan)}.steps{list-style:none;padding:0;margin:16px 0}.steps li{padding:12px 0;border-bottom:1px solid rgba(41,65,90,.75);color:var(--muted);font-size:13px}.steps b{color:var(--gold);font:600 10px var(--mono);display:block;margin-bottom:3px}.fine{color:#8197ac;font-size:11px;margin-top:22px}.fine strong{color:#c9d7e5}footer{padding:25px 0;border-top:1px solid var(--line);color:#8295a8;font-size:12px}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.nav{height:auto;min-height:68px;align-items:flex-start;padding:13px 0;flex-direction:column}.navlinks{gap:14px;flex-wrap:wrap}.panel{padding:19px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="/"><img src="/VeriSigilAI_Logo_1_.jpg" alt="VeriSigil AI logo">VeriSigil <b>AI</b></a><nav class="navlinks" aria-label="Developer navigation"><a href="/">Platform</a><a href="/#agent-identity">Cryptographic Passport</a><a href="/api-reference.html">API explorer</a><a href="/partners.html">Partnerships</a></nav></div></header>
+<main class="wrap">
+<div class="eyebrow">Developer onboarding · Isolated staging</div>
+<h1>Establish your agent identity. <em>Then test its boundary.</em></h1>
+<p class="lead">Create a VeriSigil workspace using Supabase Auth. The first authenticated user becomes the tenant owner. Your workspace is isolated from other organisations and ready for synthetic Passport integration tests.</p>
+<div class="notice"><strong>Staging boundary.</strong> This console currently connects to the isolated VeriSigil staging environment. Use synthetic data only. Do not submit live customer information, production agent credentials, payment instructions or private keys. Agent private keys stay with your agent and must never be uploaded.</div>
+<div class="layout">
+<section class="panel" aria-labelledby="account-title">
+<h2 id="account-title">Account access</h2><p class="sub">Sign up or sign in with your organisation email.</p>
+<div class="tabs"><button id="tab-signin" type="button" aria-pressed="true">Sign in</button><button id="tab-signup" type="button" aria-pressed="false">Create account</button></div>
+<form id="auth-form">
+<label for="email">Work email</label><input id="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@company.com">
+<label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128" placeholder="At least 8 characters">
+<button id="auth-submit" class="btn" type="submit">Sign in</button>
+</form>
+<div id="account-status" class="status" role="status" aria-live="polite">Your session stays in this browser tab only. Sign in again after closing or refreshing the page.</div>
+<div id="workspace" class="hidden">
+<div class="status success" id="user-status" aria-live="polite"></div>
+<h3 style="margin:22px 0 4px">Your workspaces</h3><p class="sub">A tenant is your organisation's isolated identity and authority boundary.</p>
+<div id="tenant-list"><div class="status">Loading tenant workspaces…</div></div>
+<form id="tenant-form">
+<label for="tenant-name">New workspace name</label><input id="tenant-name" type="text" required minlength="2" maxlength="120" placeholder="Your organisation or project name">
+<div class="actions"><button id="create-tenant" class="btn" type="submit" disabled>Create owner workspace</button><button id="refresh-tenants" class="btn secondary" type="button">Refresh</button><button id="signout" class="btn secondary" type="button">Sign out</button></div>
+</form>
+</div>
+</section>
+<aside class="panel">
+<div class="eyebrow">What happens next</div><h2>From account to verified agent</h2>
+<ul class="steps">
+<li><b>01 · AUTHENTICATE</b>Create or sign in to your account. Supabase validates the access token.</li>
+<li><b>02 · CREATE TENANT</b>VeriSigil creates your tenant and owner membership in one database transaction.</li>
+<li><b>03 · REGISTER AGENT</b>Use the API explorer to issue a one-time challenge and register an Ed25519 public key.</li>
+<li><b>04 · TEST AUTHORITY</b>Evaluate an exact action, consume a one-time commitment and inspect the signed receipt.</li>
+</ul>
+<p class="fine"><strong>Security note:</strong> the publishable Supabase key below is designed for browser use. No service-role key, database password or agent private key is included in this page. The API's persistence service key remains server-side. Session tokens are held in memory only and are not written to localStorage.</p>
+</aside>
+</div>
+<p class="fine">If account confirmation is enabled, check your email before signing in. Supabase Auth must allow this console's origin in its redirect URL settings. Interactive API operations remain read-only until staging persistence credentials and runtime checks are completed.</p>
+</main>
+<footer><div class="wrap foot"><span>© 2026 VeriSigil AI · Evidence before expansion</span><span><a href="/trust.html">Trust & Evidence</a> · <a href="/api-reference.html">API explorer</a> · <a href="/">Home</a></span></div></footer>
+<script>
+const SUPABASE_URL='https://lgyxxxvlxlynylhjxbxb.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_gysib9EKgdCN1W5dgq1dxA_3vKYRSjw';
+const API_BASE='https://verisigil-passport-staging-api-staging.up.railway.app';
+let accessToken=null;
+let currentUser=null;
+let mode='signin';
+const $=id=>document.getElementById(id);
+function showStatus(id,message,type=''){const el=$(id);el.textContent=message;el.className='status'+(type?' '+type:'');}
+async function supabaseRequest(path,body,token=null){
+ const headers={'apikey':SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'};
+ if(token)headers.Authorization='Bearer '+token;
+ const response=await fetch(SUPABASE_URL+path,{method:'POST',headers,body:JSON.stringify(body),credentials:'omit'});
+ let data={};try{data=await response.json();}catch(e){}
+ if(!response.ok)throw new Error(data.msg||data.message||data.error_description||data.error||('Authentication request failed ('+response.status+').'));
+ return data;
+}
+async function apiRequest(path,method='GET',body=null){
+ if(!accessToken)throw new Error('Sign in again to continue.');
+ const headers={'Authorization':'Bearer '+accessToken,'Accept':'application/json'};
+ if(body!==null)headers['Content-Type']='application/json';
+ const response=await fetch(API_BASE+path,{method,headers,body:body===null?undefined:JSON.stringify(body),credentials:'omit'});
+ let data={};try{data=await response.json();}catch(e){}
+ if(!response.ok)throw new Error(data.detail?.message||data.detail||data.message||('VeriSigil staging API returned '+response.status+'.'));
+ return data;
+}
+function setMode(next){mode=next;$('tab-signin').setAttribute('aria-pressed',String(mode==='signin'));$('tab-signup').setAttribute('aria-pressed',String(mode==='signup'));$('auth-submit').textContent=mode==='signin'?'Sign in':'Create account';$('password').autocomplete=mode==='signin'?'current-password':'new-password';}
+$('tab-signin').addEventListener('click',()=>setMode('signin'));
+$('tab-signup').addEventListener('click',()=>setMode('signup'));
+$('auth-form').addEventListener('submit',async event=>{
+ event.preventDefault();const email=$('email').value.trim();const password=$('password').value;
+ $('auth-submit').disabled=true;
+ try{
+  if(mode==='signup'){
+   const redirectTo=encodeURIComponent(window.location.origin+window.location.pathname);
+   const data=await supabaseRequest('/auth/v1/signup?redirect_to='+redirectTo,{email,password});
+   if(data.access_token){accessToken=data.access_token;currentUser=data.user;await showWorkspace();}
+   else{setMode('signin');showStatus('account-status','Account created. Confirm your email if requested, then sign in to create your VeriSigil workspace.','success');}
+  }else{
+   const data=await supabaseRequest('/auth/v1/token?grant_type=password',{email,password});
+   accessToken=data.access_token;currentUser=data.user;await showWorkspace();
+  }
+ }catch(error){showStatus('account-status',error.message,'error');}
+ finally{$('auth-submit').disabled=false;}
+});
+async function showWorkspace(){
+ $('workspace').classList.remove('hidden');$('auth-form').classList.add('hidden');$('tab-signin').classList.add('hidden');$('tab-signup').classList.add('hidden');
+ $('user-status').textContent='Authenticated as '+(currentUser?.email||'verified user')+'. Access token held in memory only.';
+ showStatus('account-status','Authentication successful. Loading your tenant workspaces…','success');
+ await refreshTenants();
+}
+async function refreshTenants(){
+ try{
+  const data=await apiRequest('/v1/agent-identity/tenants');
+  $('create-tenant').disabled=false;
+  const list=$('tenant-list');list.replaceChildren();
+  if(!data.tenants?.length){const empty=document.createElement('div');empty.className='status';empty.textContent='No workspace yet. Create your first tenant below.';list.appendChild(empty);return;}
+  data.tenants.forEach(item=>{
+   const card=document.createElement('div');card.className='tenant';
+   const name=document.createElement('strong');name.textContent=item.tenant.tenant_name||'VeriSigil workspace';
+   const role=document.createElement('small');role.textContent='ROLE · '+(item.membership.role||'member');
+   const id=document.createElement('code');id.textContent='TENANT · '+item.tenant.org_id;
+   card.append(name,role,id);list.appendChild(card);
+  });
+ }catch(error){$('create-tenant').disabled=true;showStatus('account-status','Your account is authenticated, but the VeriSigil tenant service is not yet activated. '+error.message,'error');}
+}
+$('tenant-form').addEventListener('submit',async event=>{
+ event.preventDefault();const button=$('create-tenant');button.disabled=true;
+ try{
+  const data=await apiRequest('/v1/agent-identity/tenants','POST',{tenant_name:$('tenant-name').value.trim()});
+  $('tenant-name').value='';
+  showStatus('account-status','Workspace created. You are the owner. Tenant ID: '+data.tenant.org_id,'success');
+  await refreshTenants();
+ }catch(error){showStatus('account-status',error.message,'error');}
+});
+$('refresh-tenants').addEventListener('click',refreshTenants);
+$('signout').addEventListener('click',async()=>{
+ const token=accessToken;accessToken=null;currentUser=null;
+ try{if(token)await supabaseRequest('/auth/v1/logout',{},token);}catch(e){}
+ $('workspace').classList.add('hidden');$('auth-form').classList.remove('hidden');$('tab-signin').classList.remove('hidden');$('tab-signup').classList.remove('hidden');$('password').value='';setMode('signin');
+ showStatus('account-status','Signed out. The in-memory session has been cleared.','success');
+});
+</script>
+</body></html>
